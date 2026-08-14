@@ -30,12 +30,13 @@
       <meta name="twitter:image" content="https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp" />
 
       <!--
-        NOTA (ver AUDITORIA_INEDITO_2026-07-16.md):
-        Para activar medición y retargeting en TODOS los visitantes, pega aquí
-        Google Analytics 4 y Meta Pixel con los IDs REALES (hoy no se cargan porque
-        dependen de localStorage). Ejemplo GA4 — reemplaza G-XXXXXXXXXX:
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-        <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+        Este archivo es el punto de entrada de Vite y, ya compilado, el que
+        render.php lee para sacar los hashes de los assets. Los visitantes NO
+        ven este HTML: render.php genera el suyo con los datos de MySQL.
+
+        Google Analytics y Meta Pixel NO van aquí. Se configuran como filas
+        'googleAnalytics' y 'facebookPixel' en la tabla seo_settings, y
+        render.php los inyecta solo. Ver docs/DESPLIEGUE.md.
       -->
 
       <script type="module" src="/src/main.tsx"></script>
