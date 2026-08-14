@@ -1,0 +1,25 @@
+<?php require __DIR__ . '/../inc/crud.php';
+crud('portafolio', [
+  'table'=>'portfolio','single'=>'Caso','plural'=>'Portafolio','title_field'=>'title','sub_field'=>'client',
+  'note'=>'Administrar aquí guarda en la base de datos (MySQL). Reflejar este contenido en el sitio público es una fase posterior.',
+  'fields'=>[
+    'title'=>['label'=>'Título','type'=>'text'],
+    'slug'=>['label'=>'Slug (URL)','type'=>'text','help'=>'Se genera del título si lo dejas vacío.'],
+    'client'=>['label'=>'Cliente','type'=>'text'],
+    'category'=>['label'=>'Categoría','type'=>'text'],
+    'image'=>['label'=>'Imagen principal (URL)','type'=>'text','wide'=>true],
+    'short_desc'=>['label'=>'Descripción corta','type'=>'textarea','wide'=>true],
+    'full_desc'=>['label'=>'Descripción completa','type'=>'textarea','wide'=>true],
+    'gallery'=>['label'=>'Galería (una URL por línea)','type'=>'textarea','wide'=>true],
+    'challenge'=>['label'=>'Reto / problema','type'=>'textarea','wide'=>true],
+    'solution'=>['label'=>'Solución','type'=>'textarea','wide'=>true],
+    'results'=>['label'=>'Resultados (métrica: valor, una por línea)','type'=>'textarea','wide'=>true],
+    'testimonial'=>['label'=>'Testimonial del cliente','type'=>'textarea','wide'=>true],
+    'testimonial_author'=>['label'=>'Autor del testimonial','type'=>'text'],
+    'testimonial_role'=>['label'=>'Cargo','type'=>'text'],
+    'meta_title'=>['label'=>'Meta Title (SEO)','type'=>'text'],
+    'meta_desc'=>['label'=>'Meta Description (SEO)','type'=>'text'],
+    'keywords'=>['label'=>'Keywords','type'=>'text','wide'=>true],
+    'status'=>['label'=>'Estado','type'=>'select','opts'=>['draft'=>'Borrador','published'=>'Publicado']],
+  ],
+]);

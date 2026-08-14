@@ -1,0 +1,23 @@
+# API de Inédito — permitir PHP, bloquear archivos sensibles, pasar Authorization
+
+<IfModule mod_rewrite.c>
+  RewriteEngine Off
+</IfModule>
+
+# Hacer que el header Authorization (Bearer token) llegue a PHP
+<IfModule mod_setenvif.c>
+  SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+</IfModule>
+
+# Bloquear descarga de configuración, esquema y documentación por HTTP
+<FilesMatch "\.(sql|md|json|ini|bak|log)$">
+  Require all denied
+</FilesMatch>
+
+# Estos .php son librerías incluidas por otros scripts, NO endpoints.
+# Bloquear su acceso directo evita respuestas vacías 200 y fugas por error.
+<FilesMatch "^(config|db|mailer|email_template|admin_token)\.php$">
+  Require all denied
+</FilesMatch>
+
+Options -Indexes

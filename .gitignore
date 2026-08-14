@@ -1,0 +1,55 @@
+# ============================================================
+# Inédito Digital — .gitignore
+# ============================================================
+
+# --- SECRETOS: nunca deben salir del servidor ---
+api/config.php
+panel/config.php
+*.env
+.env*
+
+# Credenciales sueltas en la carpeta de trabajo
+CLAVES*
+*CLAVES*
+*claves*
+*password*
+*credencial*
+*.pem
+*.key
+*.ppk
+
+# --- Volcados de base de datos (contienen datos personales de leads) ---
+*.sql
+!api/schema.sql
+
+# --- Dependencias ---
+node_modules/
+
+# --- Artefactos de compilación (se regeneran con `npm run build`) ---
+# Con barra inicial para NO ignorar un futuro src/assets/
+/dist/
+/assets/
+
+# --- Empaquetados y respaldos ---
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.bak
+*.bak.*
+*.old
+*_old
+*.orig
+
+# --- Logs y temporales ---
+error_log
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*~
