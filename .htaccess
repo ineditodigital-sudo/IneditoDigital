@@ -2,9 +2,13 @@
 # Inédito Digital — .htaccess de producción (/public_html/)
 #
 # IMPORTANTE: los subdominios de cPanel cuelgan de esta misma carpeta y
-# HEREDAN las cabeceras de este archivo. Por eso TODO lo que se añade aquí
-# va acotado por host (env INEDITO_MAIN) para no tocar los proyectos de
-# otros clientes en *.inedito.digital. Ver REGLAS_SERVIDOR_INEDITO.md.
+# HEREDAN las cabeceras de este archivo. Por eso todo va acotado por Host
+# con expr=, para no tocar los proyectos de otros clientes en
+# *.inedito.digital. Ver docs/REGLAS_SERVIDOR_INEDITO.md.
+#
+# Se usa expr= y NO la variable E= de mod_rewrite: en la redirección
+# interna hacia render.php, Apache renombra esas variables a REDIRECT_*
+# y las cabeceras dejarían de aplicarse.
 # ============================================================
 
 Options -Indexes
@@ -13,19 +17,11 @@ Options -Indexes
   RewriteEngine On
   RewriteBase /
 
-  # Marca: la petición es del sitio principal (no de un subdominio ajeno)
-  RewriteCond %{HTTP_HOST} ^(www\.)?inedito\.digital$ [NC]
-  RewriteRule ^ - [E=INEDITO_MAIN:1]
-
-  # Marca: asset con hash de Vite, solo en el sitio principal
-  RewriteCond %{HTTP_HOST} ^(www\.)?inedito\.digital$ [NC]
-  RewriteRule ^assets/ - [E=INEDITO_ASSET:1]
-
   # Bloquear archivos sensibles, solo en el sitio principal
   RewriteCond %{HTTP_HOST} ^(www\.)?inedito\.digital$ [NC]
   RewriteRule \.(sql|bak|log|env|zip|tar|gz|tgz)$ - [F,L]
 
-  # --- Canónica: apex -> www (coincidencia EXACTA, nunca subdominios) ---
+  # Canónica: apex -> www (coincidencia EXACTA, nunca subdominios)
   RewriteCond %{HTTP_HOST} ^inedito\.digital$ [NC]
   RewriteRule ^(.*)$ https://www.inedito.digital/$1 [R=301,L]
 
@@ -48,16 +44,16 @@ Options -Indexes
 </IfModule>
 
 <IfModule mod_headers.c>
-  # --- Cabeceras de seguridad (solo sitio principal) ---
-  Header always set X-Content-Type-Options "nosniff"                                    env=INEDITO_MAIN
-  Header always set X-Frame-Options "SAMEORIGIN"                                        env=INEDITO_MAIN
-  Header always set Referrer-Policy "strict-origin-when-cross-origin"                   env=INEDITO_MAIN
-  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"       env=INEDITO_MAIN
+  # --- Cabeceras de seguridad (solo el sitio principal) ---
+  Header always set X-Content-Type-Options "nosniff"                              "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/"
+  Header always set X-Frame-Options "SAMEORIGIN"                                  "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"             "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()" "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/"
   # HSTS sin includeSubDomains: hay ~60 subdominios que no controlamos desde aquí
-  Header always set Strict-Transport-Security "max-age=31536000"                        env=INEDITO_MAIN
+  Header always set Strict-Transport-Security "max-age=31536000"                  "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/"
 
-  # --- Caché: assets con hash, inmutables 1 año ---
-  Header set Cache-Control "public, max-age=31536000, immutable" env=INEDITO_ASSET
+  # --- Assets con hash en el nombre: caché de un año ---
+  Header set Cache-Control "public, max-age=31536000, immutable" "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/ && %{REQUEST_URI} =~ m#^/assets/#"
 
   # --- index.html nunca se cachea: render.php lee de ahí los hashes ---
   <FilesMatch "^index\.html$">
