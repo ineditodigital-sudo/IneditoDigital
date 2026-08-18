@@ -1,19 +1,22 @@
-import { ReactNode } from 'react';
-import { motion } from 'motion/react';
+import { useState, useEffect, useRef, ReactNode } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Nfc,
-  Smartphone,
   Zap,
   RefreshCw,
   Leaf,
   Sparkles as SparklesIcon,
   Check,
   ArrowLeft,
-  Share2,
   Wallet,
   Palette,
   Cpu,
   ArrowRight,
+  Hand,
+  Globe,
+  Instagram,
+  Phone,
+  Mail,
 } from 'lucide-react';
 import { Link } from 'react-router';
 import FAQAccordion from '../components/FAQAccordion';
@@ -21,59 +24,81 @@ import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
 
 /*
- * Identidad visual propia, distinta al resto del sitio a proposito:
+ * ESTRUCTURA A PROPOSITO DISTINTA al resto del sitio.
  *
- *   Resto del sitio            Esta pagina
- *   -----------------------    ---------------------------------
- *   franjas blanco/oscuro      lienzo oscuro continuo
- *   titulos centrados con      eyebrow numerado + titulo grande
- *   una palabra en morado      alineado a la izquierda
- *   GlassCard redondeadas      paneles con hairline, radio corto
- *   CTA en bloque morado       CTA oscuro enmarcado
- *   TopographyCanvas/Floating  grid de puntos + aurora propia
+ * Las paginas de servicio del sitio son todas la misma pila vertical de
+ * secciones a todo lo ancho: hero, que incluye, beneficios, como funciona,
+ * ideal para, FAQ, CTA. Cada una con su titulo y una rejilla debajo.
+ * Restilizar esos bloques no cambia que se lean igual.
  *
- * Lo que SI se mantiene: la paleta morada de marca, la tipografia Hanson
- * (.heading) y las animaciones.
+ * Aqui el recorrido es otro:
+ *
+ *   1. ESCENARIO INTERACTIVO   el producto se prueba, no se describe:
+ *                              tocas la tarjeta y el telefono responde
+ *   2. RECORRIDO PEGAJOSO      el visual queda fijo y el texto avanza con
+ *                              el scroll; cuatro pasos en UNA sola zona,
+ *                              no cuatro tarjetas en una rejilla
+ *   3. BENTO ASIMETRICO        beneficios, ficha y publico en una sola
+ *                              composicion de piezas de distinto tamano,
+ *                              en vez de tres secciones apiladas con titulo
+ *   4. CIERRE COMPACTO         FAQ y CTA juntos, no dos secciones mas
+ *
+ * Se mantiene: paleta morada de marca, tipografia Hanson y las animaciones.
  */
 
 const SERVICE_NAME = 'Tarjetas de Presentación Digital NFC';
 
-const specs = [
-  { label: 'Compartir', value: 'Un toque' },
-  { label: 'Apps que instalar', value: 'Ninguna' },
-  { label: 'Actualizaciones', value: 'Ilimitadas' },
-  { label: 'Entrega', value: '3–5 días' },
-];
-
-const includes = [
-  { k: 'Chip NFC programado', v: 'Vinculado a tu perfil digital, listo para usar' },
-  { k: 'Diseño personalizado', v: 'Tu marca, logo y colores sobre la tarjeta física' },
-  { k: 'Perfil digital propio', v: 'Contacto, redes y portafolio siempre en línea' },
-  { k: 'Ediciones ilimitadas', v: 'Cambia tu información sin reimprimir nada' },
-  { k: 'Compatibilidad total', v: 'Android e iPhone desde el modelo 7, sin apps' },
-  { k: 'Wallet', v: 'Se guarda en Apple Wallet y Google Wallet' },
+const steps = [
+  {
+    n: '01',
+    icon: Palette,
+    title: 'Diseño',
+    description: 'Creamos tu tarjeta con tu marca, logo y colores. Tú apruebas cómo se ve antes de producir nada.',
+    caption: 'Tu identidad sobre la tarjeta',
+  },
+  {
+    n: '02',
+    icon: Cpu,
+    title: 'Programación',
+    description: 'Configuramos el chip NFC y lo vinculamos a tu perfil digital: contacto, redes y portafolio.',
+    caption: 'Chip NFC vinculado a tu perfil',
+  },
+  {
+    n: '03',
+    icon: Nfc,
+    title: 'Un toque',
+    description: 'Acercas la tarjeta al celular de la otra persona. Sin apps, sin escribir nada, sin escanear códigos.',
+    caption: 'Se comparte al instante',
+  },
+  {
+    n: '04',
+    icon: RefreshCw,
+    title: 'Actualiza',
+    description: 'Cambias de número, puesto o empresa y lo editas en tu perfil. La tarjeta física nunca se reimprime.',
+    caption: 'Siempre al día, sin reimprimir',
+  },
 ];
 
 const benefits = [
-  { icon: Zap, title: 'Comparte en segundos', description: 'Un toque y tu contacto queda guardado en el teléfono de la otra persona, sin escribir nada a mano.' },
-  { icon: RefreshCw, title: 'Siempre actualizada', description: 'Cambia tu teléfono, correo o redes cuando quieras: la tarjeta física nunca cambia, el contenido sí.' },
+  { icon: Zap, title: 'Comparte en segundos', description: 'Un toque y tu contacto queda guardado, sin escribir nada a mano.' },
+  { icon: RefreshCw, title: 'Siempre actualizada', description: 'Cambia tu información cuando quieras: la tarjeta física no cambia.' },
   { icon: Leaf, title: 'Cero reimpresiones', description: 'Olvídate de tirar cajas de tarjetas viejas cada vez que cambia un dato.' },
-  { icon: SparklesIcon, title: 'Imagen profesional', description: 'Sorprende en cada reunión y networking con una experiencia moderna y memorable.' },
+  { icon: SparklesIcon, title: 'Imagen profesional', description: 'Una primera impresión moderna y memorable en cada reunión.' },
+];
+
+const specs = [
+  { label: 'Compartir', value: 'Un toque' },
+  { label: 'Apps', value: 'Ninguna' },
+  { label: 'Ediciones', value: 'Ilimitadas' },
+  { label: 'Entrega', value: '3–5 días' },
 ];
 
 const idealFor = [
-  'Emprendedores y freelancers que hacen networking constantemente',
-  'Equipos comerciales que comparten contacto y portafolio al vuelo',
-  'Consultores y profesionales que actualizan su información con frecuencia',
-  'Empresas que quieren reforzar su imagen de marca en cada interacción',
-  'Agentes inmobiliarios, asesores y vendedores en eventos y ferias',
-];
-
-const howItWorks = [
-  { step: 1, icon: Palette, title: 'Diseño', description: 'Creamos tu tarjeta con tu marca, foto, redes y portafolio.' },
-  { step: 2, icon: Cpu, title: 'Programación', description: 'Configuramos el chip NFC y lo vinculamos a tu perfil digital.' },
-  { step: 3, icon: Nfc, title: 'Un toque', description: 'Acercas la tarjeta al celular y comparte todo al instante.' },
-  { step: 4, icon: RefreshCw, title: 'Actualiza', description: 'Cambia tu información desde tu perfil, sin reimprimir.' },
+  'Emprendedores y freelancers que hacen networking',
+  'Equipos comerciales que comparten contacto al vuelo',
+  'Consultores que actualizan su información seguido',
+  'Empresas que cuidan su imagen en cada interacción',
+  'Agentes inmobiliarios y asesores en ferias y eventos',
 ];
 
 const faqItems = [
@@ -83,118 +108,25 @@ const faqItems = [
   { q: '¿Cuánto tarda la entrega?', a: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' },
 ];
 
-/** Etiqueta numerada de sección. Reemplaza el título centrado del resto del sitio. */
-function Eyebrow({ index, children }: { index: string; children: ReactNode }) {
+/* ------------------------------------------------------------------ */
+/* Tarjeta con barrido holografico, reutilizada en varias zonas        */
+/* ------------------------------------------------------------------ */
+function HoloCard({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-3 mb-4">
-      <span className="text-[#CC66FF] text-[11px] tracking-[0.35em] font-bold">{index}</span>
-      <span className="h-px w-8 bg-[#9933FF]/40" />
-      <span className="text-white/40 text-[11px] tracking-[0.35em] uppercase">{children}</span>
-    </div>
-  );
-}
-
-/** Fondo propio: grid de puntos + aurora lenta. Sustituye a TopographyCanvas. */
-function CanvasBackdrop() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      <div
-        className="absolute inset-0 opacity-[0.18]"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(153,51,255,0.5) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-          maskImage: 'radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent)',
-          WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent)',
-        }}
-      />
-      <motion.div
-        className="absolute -top-1/3 left-1/4 w-[36rem] h-[36rem] rounded-full bg-[#7700CE]/20 blur-[130px]"
-        animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute -bottom-1/3 right-1/5 w-[30rem] h-[30rem] rounded-full bg-[#9933FF]/15 blur-[130px]"
-        animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-      />
-    </div>
-  );
-}
-
-/** Animación ambiental: la tarjeta "toca" el teléfono en loop y emite ondas NFC. */
-function NfcTapAnimation({ className = '' }: { className?: string }) {
-  return (
-    <div className={`relative flex items-center justify-center ${className}`}>
-      <div className="relative w-full max-w-sm aspect-square flex items-center justify-center">
-        {[0, 0.5, 1].map((delay) => (
-          <motion.div
-            key={delay}
-            className="absolute rounded-full border border-[#9933FF]/50"
-            style={{ width: 90, height: 90 }}
-            animate={{ scale: [1, 3.2], opacity: [0.7, 0] }}
-            transition={{ duration: 2, repeat: Infinity, delay, ease: 'easeOut' }}
-          />
-        ))}
-
-        <motion.div
-          className="absolute right-2 sm:right-6 w-24 h-44 sm:w-28 sm:h-52 rounded-[1.75rem] bg-white/[0.04] border border-white/15 backdrop-blur-sm flex items-center justify-center"
-          animate={{ boxShadow: ['0 0 0px rgba(153,51,255,0)', '0 0 45px rgba(153,51,255,0.45)', '0 0 0px rgba(153,51,255,0)'] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <Smartphone className="text-white/30" size={30} />
-          <motion.div
-            className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2 py-1 rounded-md bg-[#CC66FF] text-[9px] font-bold text-black whitespace-nowrap"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: [0, 0, 1, 1, 0], y: [6, 6, 0, 0, 6] }}
-            transition={{ duration: 2, repeat: Infinity, times: [0, 0.55, 0.65, 0.9, 1] }}
-          >
-            <Check size={11} strokeWidth={3} />
-            CONTACTO GUARDADO
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          className="absolute left-2 sm:left-6 w-32 h-20 sm:w-36 sm:h-24 rounded-lg bg-gradient-to-br from-[#7700CE] to-[#9933FF] shadow-[0_10px_40px_rgba(119,0,206,0.45)] flex flex-col justify-between p-3 overflow-hidden"
-          animate={{ x: [0, 58, 0], y: [0, -6, 0], rotate: [0, -4, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <div className="flex items-center justify-between">
-            <div className="w-4 h-3 rounded-sm bg-white/30" />
-            <Nfc className="text-white/80" size={16} />
-          </div>
-          <div className="space-y-1">
-            <div className="h-1.5 w-16 rounded-full bg-white/50" />
-            <div className="h-1.5 w-10 rounded-full bg-white/30" />
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-/** Tarjeta producto con barrido holográfico: material metálico, propio de una tarjeta NFC. */
-function HoloCard() {
-  return (
-    <motion.div
-      initial={{ rotate: -7, opacity: 0, y: 20 }}
-      whileInView={{ rotate: -7, opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ rotate: 0, scale: 1.04 }}
-      transition={{ duration: 0.6 }}
-      className="relative w-[19rem] h-[11.5rem] sm:w-[22rem] sm:h-[13rem] rounded-xl bg-gradient-to-br from-[#5500AA] via-[#7700CE] to-[#9933FF] shadow-[0_25px_70px_rgba(119,0,206,0.45)] p-6 flex flex-col justify-between overflow-hidden"
+    <div
+      className={`relative rounded-xl bg-gradient-to-br from-[#5500AA] via-[#7700CE] to-[#9933FF] shadow-[0_25px_70px_rgba(119,0,206,0.45)] flex flex-col justify-between overflow-hidden ${
+        compact ? 'w-52 h-32 p-4' : 'w-[19rem] h-[11.5rem] sm:w-[21rem] sm:h-[12.5rem] p-6'
+      }`}
     >
-      {/* Barrido holográfico en loop */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 45%, rgba(204,102,255,0.5) 55%, transparent 70%)',
+          background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.45) 45%, rgba(204,102,255,0.5) 55%, transparent 70%)',
           mixBlendMode: 'overlay',
         }}
         animate={{ x: ['-120%', '120%'] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 1.2 }}
       />
-      {/* Textura de circuito sutil */}
       <div
         className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
@@ -203,26 +135,344 @@ function HoloCard() {
           backgroundSize: '22px 22px',
         }}
       />
-
       <div className="relative flex items-start justify-between">
-        <div className="w-10 h-7 rounded bg-gradient-to-br from-white/50 to-white/20 border border-white/20" />
+        <div className={`rounded bg-gradient-to-br from-white/50 to-white/20 border border-white/20 ${compact ? 'w-7 h-5' : 'w-10 h-7'}`} />
+        <motion.div animate={{ opacity: [0.55, 1, 0.55] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
+          <Nfc className="text-white" size={compact ? 18 : 26} />
+        </motion.div>
+      </div>
+      <div className="relative">
+        <div className={`heading text-white tracking-wide ${compact ? 'text-sm' : 'text-xl mb-1'}`}>TU NOMBRE</div>
+        <div className={`text-white/65 uppercase tracking-[0.22em] ${compact ? 'text-[8px]' : 'text-[10px]'}`}>Tu puesto · Tu empresa</div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* ZONA 1 — Escenario interactivo: el producto se prueba               */
+/* ------------------------------------------------------------------ */
+function TapStage() {
+  const [plays, setPlays] = useState(0);
+  const [tapped, setTapped] = useState(false);
+
+  // Se reproduce sola al entrar, para que no se vea estatica
+  useEffect(() => {
+    const t = setTimeout(() => { setTapped(true); setPlays(1); }, 900);
+    return () => clearTimeout(t);
+  }, []);
+
+  const replay = () => {
+    setTapped(false);
+    setPlays((p) => p + 1);
+    setTimeout(() => setTapped(true), 420);
+  };
+
+  const contactRows = [
+    { icon: Phone, label: '+52 449 120 4353' },
+    { icon: Mail, label: 'tu@empresa.com' },
+    { icon: Globe, label: 'tuempresa.com' },
+    { icon: Instagram, label: '@tumarca' },
+  ];
+
+  return (
+    <div className="relative flex flex-col items-center">
+      <div className="relative flex items-center justify-center gap-4 sm:gap-10 h-[22rem] sm:h-[26rem]">
+        {/* Tarjeta que se acerca */}
         <motion.div
-          animate={{ opacity: [0.55, 1, 0.55] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          key={`card-${plays}`}
+          className="relative z-10"
+          initial={{ x: 0, rotate: -8 }}
+          animate={tapped ? { x: [0, 46, 0], rotate: [-8, -2, -8] } : { x: 0, rotate: -8 }}
+          transition={{ duration: 1.1, ease: 'easeInOut' }}
         >
-          <Nfc className="text-white" size={26} />
+          <HoloCard compact />
+          {/* Ondas NFC */}
+          <AnimatePresence>
+            {tapped &&
+              [0, 0.25, 0.5].map((d) => (
+                <motion.span
+                  key={`${plays}-${d}`}
+                  className="absolute top-1/2 right-0 -translate-y-1/2 rounded-full border border-[#CC66FF]/60"
+                  style={{ width: 60, height: 60 }}
+                  initial={{ scale: 0.5, opacity: 0.8 }}
+                  animate={{ scale: 3, opacity: 0 }}
+                  transition={{ duration: 1.2, delay: d, ease: 'easeOut' }}
+                />
+              ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Telefono que recibe */}
+        <motion.div
+          className="relative w-[9.5rem] h-[19rem] sm:w-44 sm:h-[21rem] rounded-[2rem] border border-white/15 bg-[#0B0910] overflow-hidden flex-shrink-0"
+          animate={
+            tapped
+              ? { boxShadow: ['0 0 0 rgba(153,51,255,0)', '0 0 55px rgba(153,51,255,0.5)', '0 0 22px rgba(153,51,255,0.22)'] }
+              : { boxShadow: '0 0 0 rgba(153,51,255,0)' }
+          }
+          transition={{ duration: 1.4, ease: 'easeInOut' }}
+        >
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-1 rounded-full bg-white/15" />
+          <div className="pt-8 px-4">
+            {/* Sin AnimatePresence: con mode="wait" la salida del estado inicial
+                no resolvia y el perfil nunca llegaba a montarse. */}
+            <div>
+              {!tapped ? (
+                <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2.5 pt-6">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="h-2 rounded-full bg-white/[0.06]" style={{ width: `${80 - i * 18}%` }} />
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.div key={`profile-${plays}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
+                  <motion.div
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.6, type: 'spring', stiffness: 220, damping: 16 }}
+                    className="w-11 h-11 rounded-full bg-gradient-to-br from-[#7700CE] to-[#CC66FF] mx-auto mb-2.5"
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.72 }}
+                    className="text-center mb-4"
+                  >
+                    <div className="heading text-white text-[11px]">TU NOMBRE</div>
+                    <div className="text-white/40 text-[8px] uppercase tracking-[0.18em]">Tu puesto</div>
+                  </motion.div>
+                  <div className="space-y-1.5">
+                    {contactRows.map((row, i) => (
+                      <motion.div
+                        key={row.label}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.85 + i * 0.09 }}
+                        className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-white/[0.04] border border-white/[0.06]"
+                      >
+                        <row.icon className="text-[#CC66FF] flex-shrink-0" size={10} />
+                        <span className="text-white/55 text-[8px] truncate">{row.label}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.3 }}
+                    className="mt-3 flex items-center justify-center gap-1 py-1.5 rounded-md bg-[#CC66FF] text-black text-[8px] font-bold"
+                  >
+                    <Check size={9} strokeWidth={3} />
+                    CONTACTO GUARDADO
+                  </motion.div>
+                </motion.div>
+              )}
+            </div>
+          </div>
         </motion.div>
       </div>
 
-      <div className="relative">
-        <div className="heading text-white text-xl mb-1 tracking-wide">TU NOMBRE</div>
-        <div className="text-white/65 text-[10px] uppercase tracking-[0.22em]">Tu puesto · Tu empresa</div>
+      <button
+        onClick={replay}
+        className="group mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/12 bg-white/[0.03] hover:border-[#CC66FF]/50 hover:bg-white/[0.06] transition-colors cursor-pointer"
+      >
+        <Hand className="text-[#CC66FF] group-hover:-translate-y-0.5 transition-transform" size={14} />
+        <span className="text-white/60 text-xs tracking-wide">Toca para verlo otra vez</span>
+      </button>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* ZONA 2 — Recorrido pegajoso: el visual se queda, el texto avanza    */
+/* ------------------------------------------------------------------ */
+function StickyJourney() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  /* Se calcula el paso desde el rect del contenedor en cada scroll.
+     Se probo useScroll de motion y no disparaba: mide en el montaje y aqui
+     el alto real cambia despues (fuentes, contenido diferido). Leer el rect
+     en el momento no depende de ese timing. */
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      const r = el.getBoundingClientRect();
+      const recorrido = r.height - window.innerHeight;
+      if (recorrido <= 0) return;
+      const p = Math.min(1, Math.max(0, -r.top / recorrido));
+      const i = Math.min(steps.length - 1, Math.floor(p * steps.length));
+      setActive((prev) => (prev === i ? prev : i));
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
+  const Current = steps[active];
+
+  return (
+    <>
+      {/* Escritorio: una sola zona alta con el visual fijo */}
+      <div ref={ref} className="hidden lg:block relative" style={{ height: `${steps.length * 85}vh` }}>
+        <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+          <div className="container mx-auto max-w-7xl px-4 w-full">
+            <div className="grid grid-cols-2 gap-16 items-center">
+              {/* Texto que avanza */}
+              <div>
+                <div className="flex items-center gap-2 mb-8">
+                  {steps.map((s, i) => (
+                    <div
+                      key={s.n}
+                      className={`h-0.5 rounded-full transition-all duration-500 ${i === active ? 'w-10 bg-[#CC66FF]' : 'w-5 bg-white/15'}`}
+                    />
+                  ))}
+                </div>
+
+                {/* motion.div con key, SIN AnimatePresence: con mode="wait" la
+                    salida no resolvia y el bloque se quedaba congelado en el
+                    primer paso. Al cambiar la key, React monta el nuevo y este
+                    entra animado; no hay salida que pueda bloquearse. */}
+                <motion.div
+                  key={Current.n}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <div className="flex items-center gap-4 mb-5">
+                    <span className="heading text-6xl text-white/[0.08]">{Current.n}</span>
+                    <div className="w-12 h-12 rounded-md border border-white/10 bg-white/[0.03] flex items-center justify-center">
+                      <Current.icon className="text-[#9933FF]" size={21} />
+                    </div>
+                  </div>
+                  <h3 className="heading text-4xl text-white mb-5">{Current.title}</h3>
+                  <p className="text-white/50 text-lg leading-relaxed max-w-md">{Current.description}</p>
+                </motion.div>
+              </div>
+
+              {/* Visual fijo */}
+              <div className="relative flex items-center justify-center h-[26rem]">
+                <motion.div
+                  animate={{ rotate: active === 2 ? 0 : -7, scale: active === 3 ? 0.94 : 1 }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                >
+                  <HoloCard />
+                </motion.div>
+
+                {/* Capa por paso */}
+                <AnimatePresence>
+                  {active === 1 && (
+                    <motion.div
+                      key="chip"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                    >
+                      {[0, 0.4].map((d) => (
+                        <motion.span
+                          key={d}
+                          className="absolute rounded-full border border-[#CC66FF]/50"
+                          style={{ width: 120, height: 120 }}
+                          animate={{ scale: [1, 2.4], opacity: [0.7, 0] }}
+                          transition={{ duration: 1.8, repeat: Infinity, delay: d, ease: 'easeOut' }}
+                        />
+                      ))}
+                    </motion.div>
+                  )}
+                  {active === 2 && (
+                    <motion.div
+                      key="tap"
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 40 }}
+                      className="absolute right-4 w-28 h-52 rounded-[1.5rem] border border-white/15 bg-[#0B0910] flex items-center justify-center"
+                    >
+                      <motion.div
+                        animate={{ opacity: [0.4, 1, 0.4] }}
+                        transition={{ duration: 1.6, repeat: Infinity }}
+                        className="flex flex-col items-center gap-2"
+                      >
+                        <Check className="text-[#CC66FF]" size={22} strokeWidth={3} />
+                        <span className="text-white/45 text-[9px] text-center px-3">Contacto guardado</span>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                  {active === 3 && (
+                    <motion.div
+                      key="update"
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 16 }}
+                      className="absolute -bottom-2 flex items-center gap-2 px-3 py-2 rounded-md border border-white/10 bg-[#0B0910]"
+                    >
+                      <motion.div animate={{ rotate: 360 }} transition={{ duration: 2.4, repeat: Infinity, ease: 'linear' }}>
+                        <RefreshCw className="text-[#CC66FF]" size={13} />
+                      </motion.div>
+                      <span className="text-white/50 text-xs">Perfil actualizado · sin reimprimir</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <motion.div
+                  key={`cap-${active}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="absolute -bottom-14 text-white/30 text-[11px] tracking-[0.25em] uppercase"
+                >
+                  {Current.caption}
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="relative flex items-center gap-1.5 text-white/55 text-[10px]">
-        <Share2 size={11} />
-        <span>Toca para compartir</span>
+      {/* Movil: mismo contenido, sin scroll pegajoso (no funciona bien en tactil) */}
+      <div className="lg:hidden px-4 py-16 space-y-5">
+        {steps.map((s, i) => (
+          <motion.div
+            key={s.n}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.06 }}
+            className="flex gap-4 border-l-2 border-[#9933FF]/30 pl-5 py-1"
+          >
+            <div className="flex-1">
+              <div className="flex items-center gap-2.5 mb-2">
+                <span className="heading text-2xl text-white/15">{s.n}</span>
+                <s.icon className="text-[#9933FF]" size={17} />
+              </div>
+              <h3 className="heading text-lg text-white mb-1.5">{s.title}</h3>
+              <p className="text-white/45 text-sm leading-relaxed">{s.description}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Pieza del bento                                                     */
+/* ------------------------------------------------------------------ */
+function Tile({ className = '', children, delay = 0 }: { className?: string; children: ReactNode; delay?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.45 }}
+      className={`relative border border-white/10 bg-white/[0.015] hover:bg-white/[0.035] hover:border-white/20 transition-colors overflow-hidden ${className}`}
+    >
+      {children}
     </motion.div>
   );
 }
@@ -239,276 +489,156 @@ export default function TarjetasDigitalesPage() {
         keywords={['tarjeta de presentacion digital', 'tarjeta nfc', 'tarjeta de presentacion nfc aguascalientes', 'business card nfc', 'tarjeta digital de contacto']}
       />
 
-      {/* Lienzo oscuro continuo: sin franjas blancas, a diferencia del resto del sitio */}
       <div className="relative bg-[#07060B]">
-        <CanvasBackdrop />
+        {/* Fondo propio: grid de puntos + aurora. No usa TopographyCanvas ni Floating3D. */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+          <div
+            className="absolute inset-0 opacity-[0.15]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, rgba(153,51,255,0.5) 1px, transparent 1px)',
+              backgroundSize: '34px 34px',
+              maskImage: 'radial-gradient(ellipse 75% 55% at 50% 30%, black, transparent)',
+              WebkitMaskImage: 'radial-gradient(ellipse 75% 55% at 50% 30%, black, transparent)',
+            }}
+          />
+          <motion.div
+            className="absolute -top-1/4 left-1/4 w-[34rem] h-[34rem] rounded-full bg-[#7700CE]/20 blur-[130px]"
+            animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
+            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
 
         <div className="relative z-10">
-          {/* HERO */}
-          <section className="px-4 pt-28 pb-16 md:pt-36 md:pb-24">
-            <div className="container mx-auto max-w-7xl">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 text-[11px] rounded-md border border-[#9933FF]/40 bg-[#9933FF]/10 text-[#CC66FF] font-bold tracking-[0.2em]">
-                      <Nfc size={13} />
-                      NFC
-                    </span>
-                    <span className="text-white/30 text-[11px] tracking-[0.3em] uppercase">Soluciones</span>
-                  </div>
+          {/* ---------- ZONA 1 — Escenario interactivo ---------- */}
+          <section className="px-4 pt-10 pb-16 md:pt-16 md:pb-20">
+            <div className="container mx-auto max-w-6xl">
+              <div className="flex flex-wrap items-center gap-3 mb-8">
+                <Link to="/servicios" className="inline-flex items-center gap-1.5 text-white/35 hover:text-white text-xs transition-colors group">
+                  <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" />
+                  Servicios
+                </Link>
+                <span className="text-white/15">/</span>
+                <span className="inline-flex items-center gap-1.5 text-[#CC66FF] text-xs font-bold tracking-[0.18em]">
+                  <Nfc size={12} />
+                  NFC
+                </span>
+              </div>
 
-                  <h1 className="heading mb-6 text-white leading-[1.05]">
-                    TU TARJETA DE<br />
-                    PRESENTACIÓN,<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">AHORA DIGITAL</span>
-                  </h1>
+              <TapStage />
 
-                  <p className="text-base md:text-lg text-white/55 max-w-lg mb-10 leading-relaxed">
-                    Comparte tu contacto, redes sociales y portafolio con un solo toque. Sin imprimir, sin apps, siempre al día.
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-5">
-                    <button
-                      onClick={cta}
-                      className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-md bg-white text-black hover:bg-[#CC66FF] transition-colors cursor-pointer"
-                    >
-                      <span className="heading text-sm tracking-[0.08em]">COTIZAR MI TARJETA</span>
-                      <ArrowRight size={17} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
-                    <Link to="/servicios" className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors group">
-                      <ArrowLeft size={15} className="group-hover:-translate-x-1 transition-transform" />
-                      <span>Volver a servicios</span>
-                    </Link>
-                  </div>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.2 }}>
-                  <NfcTapAnimation />
-                </motion.div>
+              <div className="max-w-3xl mx-auto text-center mt-12">
+                <h1 className="heading text-white leading-[1.08] mb-5">
+                  TU TARJETA DE PRESENTACIÓN,{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">AHORA DIGITAL</span>
+                </h1>
+                <p className="text-white/50 text-base md:text-lg leading-relaxed mb-8 max-w-xl mx-auto">
+                  Comparte tu contacto, redes y portafolio con un solo toque. Sin imprimir, sin apps, siempre al día.
+                </p>
+                <button
+                  onClick={cta}
+                  className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-md bg-white text-black hover:bg-[#CC66FF] transition-colors cursor-pointer"
+                >
+                  <span className="heading text-sm tracking-[0.08em]">COTIZAR MI TARJETA</span>
+                  <ArrowRight size={17} className="group-hover:translate-x-1 transition-transform" />
+                </button>
               </div>
             </div>
           </section>
 
-          {/* FICHA RÁPIDA — tira con hairlines, no franja blanca */}
-          <section className="px-4">
-            <div className="container mx-auto max-w-7xl">
-              <div className="grid grid-cols-2 md:grid-cols-4 border-t border-b border-white/10">
-                {specs.map((s, i) => (
-                  <motion.div
-                    key={s.label}
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                    className={[
-                      'py-7 px-5 border-white/10',
-                      // movil: rejilla 2x2 -> borde derecho en la columna izquierda,
-                      // borde inferior en la fila de arriba
-                      i % 2 === 0 ? 'border-r' : '',
-                      i < 2 ? 'border-b' : '',
-                      // escritorio: una sola fila de 4 -> solo separadores verticales
-                      'md:border-b-0',
-                      i < 3 ? 'md:border-r' : 'md:border-r-0',
-                    ].join(' ')}
-                  >
-                    <div className="text-white/35 text-[10px] tracking-[0.25em] uppercase mb-2">{s.label}</div>
-                    <div className="heading text-xl md:text-2xl text-white">{s.value}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
+          {/* ---------- ZONA 2 — Recorrido pegajoso ---------- */}
+          <StickyJourney />
 
-          {/* 01 — CÓMO FUNCIONA */}
+          {/* ---------- ZONA 3 — Bento asimetrico ---------- */}
           <section className="px-4 py-16 md:py-24">
             <div className="container mx-auto max-w-7xl">
-              <Eyebrow index="01">Cómo funciona</Eyebrow>
-              <h2 className="heading text-2xl md:text-4xl text-white mb-12 max-w-2xl leading-tight">
-                De la idea a tu primer contacto compartido
-              </h2>
-
-              <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border border-white/10">
-                {howItWorks.map((step, i) => (
-                  <motion.div
-                    key={step.step}
-                    initial={{ opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group relative bg-[#07060B] p-7 hover:bg-[#0C0A12] transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="heading text-4xl text-white/[0.07] group-hover:text-[#9933FF]/25 transition-colors">
-                        {step.step.toString().padStart(2, '0')}
-                      </span>
-                      <step.icon className="text-[#9933FF]" size={20} />
-                    </div>
-                    <h3 className="heading text-base text-white mb-2">{step.title}</h3>
-                    <p className="text-white/45 text-sm leading-relaxed">{step.description}</p>
-                    <div className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-[#9933FF] to-transparent group-hover:w-full transition-all duration-500" />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* 02 — LA TARJETA (momento producto) */}
-          <section className="px-4 py-16 md:py-24 border-t border-white/10">
-            <div className="container mx-auto max-w-7xl">
-              <div className="grid lg:grid-cols-2 gap-14 items-center">
-                <div className="flex justify-center order-first lg:order-last py-8">
+              <div className="grid grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(9rem,auto)] gap-px bg-white/10 border border-white/10">
+                {/* Pieza grande: la tarjeta */}
+                <Tile className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-5 p-8 !bg-[#07060B]">
                   <HoloCard />
-                </div>
-
-                <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-                  <Eyebrow index="02">La tarjeta</Eyebrow>
-                  <h2 className="heading text-2xl md:text-4xl text-white mb-6 leading-tight">
-                    Tu marca, en un objeto que la gente quiere tocar
-                  </h2>
-                  <p className="text-white/55 text-base leading-relaxed mb-8">
-                    Una tarjeta física con acabado premium y un chip NFC dentro. El diseño lo hacemos con tu identidad;
-                    el contenido que comparte lo cambias tú, cuando quieras, sin volver a imprimir.
-                  </p>
-                  <div className="inline-flex items-center gap-2.5 px-4 py-3 rounded-md border border-white/10 bg-white/[0.02]">
-                    <Wallet className="text-[#CC66FF]" size={17} />
-                    <span className="text-white/60 text-sm">Compatible con Apple Wallet y Google Wallet</span>
+                  <div className="text-center">
+                    <p className="text-white/45 text-sm max-w-xs leading-relaxed">
+                      Acabado premium con chip NFC dentro. El diseño es tuyo; el contenido lo cambias cuando quieras.
+                    </p>
                   </div>
-                </motion.div>
-              </div>
-            </div>
-          </section>
+                </Tile>
 
-          {/* 03 — QUÉ INCLUYE (ficha técnica con hairlines, no tarjetas) */}
-          <section className="px-4 py-16 md:py-24 border-t border-white/10">
-            <div className="container mx-auto max-w-5xl">
-              <Eyebrow index="03">Qué incluye</Eyebrow>
-              <h2 className="heading text-2xl md:text-4xl text-white mb-12 leading-tight">Todo lo que viene contigo</h2>
-
-              <div className="divide-y divide-white/10 border-t border-b border-white/10">
-                {includes.map((item, i) => (
-                  <motion.div
-                    key={item.k}
-                    initial={{ opacity: 0, x: -14 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06 }}
-                    className="group grid md:grid-cols-[1.5fr_2fr] gap-2 md:gap-8 py-5 hover:bg-white/[0.02] transition-colors px-2"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Check className="text-[#9933FF] flex-shrink-0" size={15} strokeWidth={3} />
-                      <span className="heading text-sm md:text-base text-white">{item.k}</span>
-                    </div>
-                    <span className="text-white/45 text-sm md:text-base pl-[26px] md:pl-0">{item.v}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* 04 — BENEFICIOS */}
-          <section className="px-4 py-16 md:py-24 border-t border-white/10">
-            <div className="container mx-auto max-w-7xl">
-              <Eyebrow index="04">Beneficios</Eyebrow>
-              <h2 className="heading text-2xl md:text-4xl text-white mb-12 leading-tight max-w-2xl">
-                Por qué conviene más que una tarjeta impresa
-              </h2>
-
-              <div className="grid sm:grid-cols-2 gap-px bg-white/10 border border-white/10">
+                {/* Beneficios */}
                 {benefits.map((b, i) => (
-                  <motion.div
-                    key={b.title}
-                    initial={{ opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                    className="group bg-[#07060B] p-7 md:p-9 hover:bg-[#0C0A12] transition-colors"
-                  >
-                    <div className="w-11 h-11 rounded-md border border-white/10 bg-white/[0.03] flex items-center justify-center mb-5 group-hover:border-[#9933FF]/40 transition-colors">
-                      <b.icon className="text-[#9933FF]" size={19} />
-                    </div>
-                    <h3 className="heading text-base md:text-lg text-white mb-2">{b.title}</h3>
-                    <p className="text-white/45 text-sm leading-relaxed">{b.description}</p>
-                  </motion.div>
+                  <Tile key={b.title} className="p-6 !bg-[#07060B]" delay={i * 0.05}>
+                    <b.icon className="text-[#9933FF] mb-3" size={19} />
+                    <h3 className="heading text-sm text-white mb-1.5">{b.title}</h3>
+                    <p className="text-white/40 text-xs leading-relaxed">{b.description}</p>
+                  </Tile>
                 ))}
+
+                {/* Ficha rapida */}
+                {specs.map((s, i) => (
+                  <Tile key={s.label} className="p-6 flex flex-col justify-center !bg-[#07060B]" delay={i * 0.05}>
+                    <div className="text-white/30 text-[10px] tracking-[0.22em] uppercase mb-1.5">{s.label}</div>
+                    <div className="heading text-xl text-white">{s.value}</div>
+                  </Tile>
+                ))}
+
+                {/* Publico */}
+                <Tile className="col-span-2 lg:col-span-3 p-7 !bg-[#07060B]">
+                  <div className="text-white/30 text-[10px] tracking-[0.25em] uppercase mb-4">Ideal para</div>
+                  <div className="flex flex-wrap gap-2">
+                    {idealFor.map((item) => (
+                      <span key={item} className="px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-white/55 text-xs">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </Tile>
+
+                {/* Wallet */}
+                <Tile className="col-span-2 lg:col-span-1 p-6 flex flex-col justify-center gap-2.5 !bg-[#07060B]">
+                  <Wallet className="text-[#CC66FF]" size={19} />
+                  <p className="text-white/50 text-xs leading-relaxed">Se guarda en Apple Wallet y Google Wallet</p>
+                </Tile>
               </div>
             </div>
           </section>
 
-          {/* 05 — IDEAL PARA */}
-          <section className="px-4 py-16 md:py-24 border-t border-white/10">
-            <div className="container mx-auto max-w-5xl">
-              <Eyebrow index="05">Ideal para</Eyebrow>
-              <h2 className="heading text-2xl md:text-4xl text-white mb-10 leading-tight">Para quién tiene más sentido</h2>
-
-              <div className="space-y-px bg-white/10 border border-white/10">
-                {idealFor.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -14 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.07 }}
-                    className="group flex items-center gap-4 bg-[#07060B] px-5 py-4 hover:bg-[#0C0A12] transition-colors"
-                  >
-                    <span className="text-[#9933FF]/40 text-[11px] tracking-[0.2em] font-bold w-6 flex-shrink-0">
-                      {(i + 1).toString().padStart(2, '0')}
-                    </span>
-                    <span className="text-white/60 text-sm md:text-base group-hover:text-white/90 transition-colors">{item}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* 06 — PREGUNTAS */}
-          <section className="px-4 py-16 md:py-24 border-t border-white/10">
-            <div className="container mx-auto max-w-4xl">
-              <Eyebrow index="06">Preguntas</Eyebrow>
-              <h2 className="heading text-2xl md:text-4xl text-white mb-10 leading-tight">Lo que suelen preguntarnos</h2>
-              <FAQAccordion items={faqItems} variant="dark" />
-            </div>
-          </section>
-
-          {/* CTA FINAL — enmarcado oscuro, no bloque morado */}
-          <section className="px-4 pb-24 pt-8">
-            <div className="container mx-auto max-w-5xl">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="relative border border-white/10 bg-white/[0.02] overflow-hidden"
-              >
-                <motion.div
-                  className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-[#7700CE]/25 blur-[100px]"
-                  animate={{ opacity: [0.5, 0.9, 0.5] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                />
-                <div className="relative z-10 p-8 md:p-14 text-center">
-                  <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                    className="inline-flex mb-6"
-                  >
-                    <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center shadow-[0_0_40px_rgba(119,0,206,0.45)]">
-                      <Nfc className="text-white" size={26} />
-                    </div>
-                  </motion.div>
-
-                  <h2 className="heading text-2xl md:text-4xl mb-4 text-white leading-tight">
-                    ¿Listo para modernizar tu tarjeta?
-                  </h2>
-                  <p className="text-white/50 text-sm md:text-base mb-8 max-w-xl mx-auto">
-                    Cotiza tu tarjeta de presentación digital NFC y empieza a compartir tu contacto con un solo toque.
-                  </p>
-                  <button
-                    onClick={cta}
-                    className="group inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-md bg-white text-black hover:bg-[#CC66FF] transition-colors cursor-pointer"
-                  >
-                    <span className="heading text-sm tracking-[0.08em]">COTIZAR AHORA</span>
-                    <ArrowRight size={17} className="group-hover:translate-x-1 transition-transform" />
-                  </button>
+          {/* ---------- ZONA 4 — Cierre compacto: FAQ + CTA juntos ---------- */}
+          <section className="px-4 pb-24">
+            <div className="container mx-auto max-w-7xl">
+              <div className="grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14 items-start">
+                <div>
+                  <div className="text-white/30 text-[10px] tracking-[0.25em] uppercase mb-5">Preguntas frecuentes</div>
+                  <FAQAccordion items={faqItems} variant="dark" />
                 </div>
-              </motion.div>
+
+                <div className="relative border border-white/10 bg-white/[0.02] overflow-hidden lg:sticky lg:top-28">
+                  <motion.div
+                    className="absolute -top-20 -right-12 w-56 h-56 rounded-full bg-[#7700CE]/25 blur-[90px]"
+                    animate={{ opacity: [0.5, 0.9, 0.5] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                  <div className="relative z-10 p-8">
+                    <motion.div
+                      animate={{ y: [0, -5, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                      className="inline-flex mb-5"
+                    >
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center shadow-[0_0_35px_rgba(119,0,206,0.45)]">
+                        <Nfc className="text-white" size={22} />
+                      </div>
+                    </motion.div>
+                    <h2 className="heading text-xl md:text-2xl mb-3 text-white leading-tight">¿Listo para modernizar tu tarjeta?</h2>
+                    <p className="text-white/45 text-sm mb-6 leading-relaxed">
+                      Cotiza tu tarjeta NFC y empieza a compartir tu contacto con un solo toque.
+                    </p>
+                    <button
+                      onClick={cta}
+                      className="group w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-md bg-white text-black hover:bg-[#CC66FF] transition-colors cursor-pointer"
+                    >
+                      <span className="heading text-sm tracking-[0.08em]">COTIZAR AHORA</span>
+                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </div>
