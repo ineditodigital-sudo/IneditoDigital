@@ -1,34 +1,57 @@
 import { Link } from 'react-router';
-import { marca } from '../cms';
+import { contenido, marca } from '../cms';
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
+/** Enlace del pie: <Link> para rutas del sitio, <a> para destinos externos. */
+function EnlacePie({ href, children, className }: { href: string; children: React.ReactNode; className: string }) {
+  const externo = /^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:');
+  if (externo) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export default function Footer() {
   const p = marca.pie();
+  const pS = contenido('marca', 'pie_servicios');
+  const pE = contenido('marca', 'pie_empresa');
+  const pL = contenido('marca', 'pie_legal');
   const r = marca.redes();
   const mLogo = marca.logo();
   const { settings } = useApp();
   const currentYear = new Date().getFullYear();
 
   const services = [
-    { name: 'Diseño y Desarrollo Web', href: '/servicios/diseno-y-desarrollo-web' },
-    { name: 'Chatbots y Agentes IA', href: '/servicios/chatbots-y-agentes' },
-    { name: 'Funnels de Venta', href: '/servicios/funnels-de-venta' },
-    { name: 'Posicionamiento Orgánico', href: '/servicios/posicionamiento-organico' },
-    { name: 'Google ADS', href: '/servicios/google-ads' },
-  ];
+    { ver: pS.visible('s1_ver'), name: pS('s1_nombre', 'Diseño y Desarrollo Web'), href: pS('s1_url', '/servicios/diseno-y-desarrollo-web') },
+    { ver: pS.visible('s2_ver'), name: pS('s2_nombre', 'Chatbots y Agentes IA'), href: pS('s2_url', '/servicios/chatbots-y-agentes') },
+    { ver: pS.visible('s3_ver'), name: pS('s3_nombre', 'Funnels de Venta'), href: pS('s3_url', '/servicios/funnels-de-venta') },
+    { ver: pS.visible('s4_ver'), name: pS('s4_nombre', 'Posicionamiento Orgánico'), href: pS('s4_url', '/servicios/posicionamiento-organico') },
+    { ver: pS.visible('s5_ver'), name: pS('s5_nombre', 'Google ADS'), href: pS('s5_url', '/servicios/google-ads') },
+  ].filter((i) => i.ver);
+
 
   const company = [
-    { name: 'Nosotros', href: '/nosotros' },
-    { name: 'Portafolio', href: '/portafolio' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contacto', href: '/contacto' },
-  ];
+    { ver: pE.visible('e1_ver'), name: pE('e1_nombre', 'Nosotros'), href: pE('e1_url', '/nosotros') },
+    { ver: pE.visible('e2_ver'), name: pE('e2_nombre', 'Portafolio'), href: pE('e2_url', '/portafolio') },
+    { ver: pE.visible('e3_ver'), name: pE('e3_nombre', 'Blog'), href: pE('e3_url', '/blog') },
+    { ver: pE.visible('e4_ver'), name: pE('e4_nombre', 'Contacto'), href: pE('e4_url', '/contacto') },
+  ].filter((i) => i.ver);
+
 
   const legal = [
-    { name: 'Política de Privacidad', href: '/privacidad' },
-    { name: 'Términos y Condiciones', href: '/terminos' },
-  ];
+    { ver: pL.visible('l1_ver'), name: pL('l1_nombre', 'Política de Privacidad'), href: pL('l1_url', '/privacidad') },
+    { ver: pL.visible('l2_ver'), name: pL('l2_nombre', 'Términos y Condiciones'), href: pL('l2_url', '/terminos') },
+  ].filter((i) => i.ver);
+
 
   return (
     <footer className="relative border-t border-white/10 bg-black/50 backdrop-blur-sm">
@@ -82,12 +105,9 @@ export default function Footer() {
             <ul className="space-y-2">
               {services.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    className="text-white/60 hover:text-white text-sm transition-colors"
-                  >
+                  <EnlacePie href={item.href} className="text-white/60 hover:text-white text-sm transition-colors">
                     {item.name}
-                  </Link>
+                  </EnlacePie>
                 </li>
               ))}
             </ul>
@@ -99,12 +119,9 @@ export default function Footer() {
             <ul className="space-y-2">
               {company.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    className="text-white/60 hover:text-white text-sm transition-colors"
-                  >
+                  <EnlacePie href={item.href} className="text-white/60 hover:text-white text-sm transition-colors">
                     {item.name}
-                  </Link>
+                  </EnlacePie>
                 </li>
               ))}
             </ul>
@@ -139,13 +156,9 @@ export default function Footer() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               {legal.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="text-white/40 hover:text-white text-sm transition-colors"
-                >
+                <EnlacePie key={item.name} href={item.href} className="text-white/40 hover:text-white text-sm transition-colors">
                   {item.name}
-                </Link>
+                </EnlacePie>
               ))}
             </div>
           </div>

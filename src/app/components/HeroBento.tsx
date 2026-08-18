@@ -14,6 +14,7 @@ function HeroBento() {
      si el campo queda vacío se usa eso, así la portada nunca se ve rota. */
   const t = contenido('home', 'portada');
   const c = contenido('home', 'cifras');
+  const b = contenido('home', 'bento');
   
   // Inicializar con detección más rápida para evitar layout shift
   const [isMobile, setIsMobile] = useState(() => {
@@ -56,7 +57,7 @@ function HeroBento() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7700CE]/20 border border-[#7700CE]/40 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(119,0,206,0.3)] animate-fadeIn-lcp" style={{ animationDelay: '0.1s' }}>
             <Sparkles className="text-[#7700CE]" size={16} />
-            <span className="text-xs text-white font-semibold tracking-wide">Agencia #1 en Aguascalientes</span>
+            <span className="text-xs text-white font-semibold tracking-wide">{t('etiqueta', 'Agencia #1 en Aguascalientes')}</span>
           </div>
 
           {/* Título Principal - Centrado - CRÍTICO PARA LCP */}
@@ -65,10 +66,7 @@ function HeroBento() {
               {t('titulo_1', 'MARKETING DIGITAL +')}
             </span>
             <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent text-[32px] leading-tight">
-              + INTELIGENCIA
-            </span>
-            <span className="block bg-gradient-to-r from-[#CC66FF] via-[#9933FF] to-[#7700CE] bg-clip-text text-transparent text-[32px] leading-tight">
-              ARTIFICIAL
+              {t('titulo_2', 'INTELIGENCIA ARTIFICIAL')}
             </span>
           </h1>
 
@@ -83,7 +81,7 @@ function HeroBento() {
               onClick={() => openAssistant(undefined, 'cotizar servicios de marketing digital')}
               className="w-full inline-flex items-center justify-center px-8 py-4 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 shadow-[0_0_30px_rgba(119,0,206,0.5)] hover:shadow-[0_0_50px_rgba(119,0,206,0.8)] active:scale-95 group cursor-pointer"
             >
-              <span className="font-bold tracking-wider text-base">COTIZAR AHORA</span>
+              <span className="font-bold tracking-wider text-base">{t('boton_1', 'COTIZAR AHORA')}</span>
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
             </button>
             
@@ -91,7 +89,7 @@ function HeroBento() {
               href="#servicios"
               className="w-full inline-flex items-center justify-center px-8 py-4 rounded-full bg-white/5 border-2 border-white/20 hover:bg-white/10 text-white transition-all duration-300 backdrop-blur-sm active:scale-95"
             >
-              <span className="font-bold tracking-wider text-base">VER SERVICIOS</span>
+              <span className="font-bold tracking-wider text-base">{t('boton_2', 'VER SERVICIOS')}</span>
             </a>
           </div>
 
@@ -100,24 +98,24 @@ function HeroBento() {
             <div className="text-center">
               <GlassCard className="py-4 px-2">
                 <Users className="text-[#7700CE] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">100+</div>
-                <div className="text-[10px] text-white/70 leading-tight">Clientes<br/>Activos</div>
+                <div className="heading text-2xl text-white mb-1">{c('cifra_1', '100+')}</div>
+                <div className="text-[10px] text-white/70 leading-tight">{c('texto_1', 'Clientes Activos')}</div>
               </GlassCard>
             </div>
 
             <div className="text-center">
               <GlassCard className="py-4 px-2">
                 <Award className="text-[#9933FF] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">5X</div>
-                <div className="text-[10px] text-white/70 leading-tight">ROI<br/>Promedio</div>
+                <div className="heading text-2xl text-white mb-1">{c('cifra_2', '5X')}</div>
+                <div className="text-[10px] text-white/70 leading-tight">{c('texto_2', 'ROI Promedio')}</div>
               </GlassCard>
             </div>
 
             <div className="text-center">
               <GlassCard className="py-4 px-2">
                 <TrendingUp className="text-[#CC66FF] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">200%</div>
-                <div className="text-[10px] text-white/70 leading-tight">Crecimiento<br/>Anual</div>
+                <div className="heading text-2xl text-white mb-1">{c('cifra_3', '200%')}</div>
+                <div className="text-[10px] text-white/70 leading-tight">{c('texto_3', 'Crecimiento')}</div>
               </GlassCard>
             </div>
           </div>
@@ -267,8 +265,8 @@ function HeroBento() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/40 to-[#9933FF]/40 z-10" />
                 <img
-                  src="https://imagenes.inedito.digital/INEDITO%20DIGITAL/feature-1-1.webp"
-                  alt="Marketing Digital Profesional"
+                  src={b('img_1', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/feature-1-1.webp')}
+                  alt={b('img_1_alt', 'Marketing Digital Profesional')}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 {/* Badge flotante */}
@@ -276,7 +274,7 @@ function HeroBento() {
                   <GlassCard className="px-2.5 py-1.5">
                     <div className="flex items-center gap-1.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-[#00ff88] animate-pulse" />
-                      <span className="text-[10px] md:text-xs font-medium text-white">Estrategia Digital</span>
+                      <span className="text-[10px] md:text-xs font-medium text-white">{b('etiqueta_1', 'Estrategia Digital')}</span>
                     </div>
                   </GlassCard>
                 </div>
@@ -291,8 +289,8 @@ function HeroBento() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#9933FF]/40 to-[#CC66FF]/40 z-10" />
                 <img
-                  src="https://imagenes.inedito.digital/INEDITO%20DIGITAL/helping-left-bg.webp"
-                  alt="Experto en Marketing"
+                  src={b('img_2', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/helping-left-bg.webp')}
+                  alt={b('img_2_alt', 'Experto en Marketing')}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 {/* Elemento decorativo */}
@@ -314,8 +312,8 @@ function HeroBento() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/40 to-[#5500AA]/40 z-10" />
                 <img
-                  src="https://imagenes.inedito.digital/INEDITO%20DIGITAL/pexels-mikhail-nilov-7681676-scaled.webp"
-                  alt="Tecnología y IA"
+                  src={b('img_3', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/pexels-mikhail-nilov-7681676-scaled.webp')}
+                  alt={b('img_3_alt', 'Tecnología y IA')}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
               </motion.div>
@@ -329,8 +327,8 @@ function HeroBento() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#9933FF]/40 to-[#7700CE]/40 z-10" />
                 <img
-                  src="https://imagenes.inedito.digital/INEDITO%20DIGITAL/imagen_2024-11-20_172844415.webp"
-                  alt="Equipo Colaborativo"
+                  src={b('img_4', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/imagen_2024-11-20_172844415.webp')}
+                  alt={b('img_4_alt', 'Equipo Colaborativo')}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 {/* Badge flotante */}
@@ -338,7 +336,7 @@ function HeroBento() {
                   <GlassCard className="px-2.5 py-1.5">
                     <div className="flex items-center gap-1.5">
                       <Sparkles className="text-[#7700CE]" size={14} />
-                      <span className="text-[10px] md:text-xs font-medium text-white">Equipo Experto</span>
+                      <span className="text-[10px] md:text-xs font-medium text-white">{b('etiqueta_2', 'Equipo Experto')}</span>
                     </div>
                   </GlassCard>
                 </div>

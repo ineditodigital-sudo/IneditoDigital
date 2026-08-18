@@ -9,48 +9,52 @@ import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
 import { contenido } from '../cms';
 
-const aiServicesData = [
+const soluciones = (t: (k: string, r: string) => string) => [
   {
     icon: MessageCircle,
-    title: 'IA para WhatsApp',
-    subtitle: 'Ventas y Soporte 24/7',
-    description: 'Tu mejor vendedor, disponible siempre. Agente inteligente que atiende, califica y da seguimiento automático.',
-    href: '/servicios-ia/whatsapp',
+    title: t('w_titulo', 'IA para WhatsApp'),
+    subtitle: t('w_sub', 'Ventas y Soporte 24/7'),
+    description: t('w_texto', 'Tu mejor vendedor, disponible siempre. Agente inteligente que atiende, califica y da seguimiento automático.'),
+    href: t('w_url', '/servicios-ia/whatsapp'),
     color: '#7700CE',
-    benefits: ['Atiende 24/7', 'Califica leads', 'Seguimiento auto']
+    benefits: [t('w_e1', 'Atiende 24/7'), t('w_e2', 'Califica leads'), t('w_e3', 'Seguimiento auto')]
   },
   {
     icon: Target,
-    title: 'IA de Ventas',
-    subtitle: 'Prospección Inteligente',
-    description: 'Automatiza prospección, califica leads y optimiza tu proceso comercial con inteligencia artificial.',
-    href: '/servicios-ia/ventas',
+    title: t('v_titulo', 'IA de Ventas'),
+    subtitle: t('v_sub', 'Prospección Inteligente'),
+    description: t('v_texto', 'Automatiza prospección, califica leads y optimiza tu proceso comercial con inteligencia artificial.'),
+    href: t('v_url', '/servicios-ia/ventas'),
     color: '#9933FF',
-    benefits: ['Prospección auto', 'Lead scoring', 'Optimización']
+    benefits: [t('v_e1', 'Prospección auto'), t('v_e2', 'Lead scoring'), t('v_e3', 'Optimización')]
   },
   {
     icon: TrendingUp,
-    title: 'IA para Marketing',
-    subtitle: 'Optimización Automática',
-    description: 'Marketing que piensa por ti. Analiza campañas, genera contenido y optimiza resultados automáticamente.',
-    href: '/servicios-ia/marketing',
+    title: t('m_titulo', 'IA para Marketing'),
+    subtitle: t('m_sub', 'Optimización Automática'),
+    description: t('m_texto', 'Marketing que piensa por ti. Analiza campañas, genera contenido y optimiza resultados automáticamente.'),
+    href: t('m_url', '/servicios-ia/marketing'),
     color: '#CC66FF',
-    benefits: ['Análisis auto', 'Contenido IA', 'ROI optimizado']
+    benefits: [t('m_e1', 'Análisis auto'), t('m_e2', 'Contenido IA'), t('m_e3', 'ROI optimizado')]
   },
   {
     icon: ShoppingCart,
-    title: 'IA para E-commerce',
-    subtitle: 'Convierte Más Visitas',
-    description: 'Asistente inteligente en tu tienda online que recupera carritos, recomienda productos y atiende 24/7.',
-    href: '/servicios-ia/ecommerce',
+    title: t('e_titulo', 'IA para E-commerce'),
+    subtitle: t('e_sub', 'Convierte Más Visitas'),
+    description: t('e_texto', 'Asistente inteligente en tu tienda online que recupera carritos, recomienda productos y atiende 24/7.'),
+    href: t('e_url', '/servicios-ia/ecommerce'),
     color: '#7700CE',
-    benefits: ['Recupera carritos', 'Recomendaciones', 'Soporte 24/7']
-  }
+    benefits: [t('e_e1', 'Recupera carritos'), t('e_e2', 'Recomendaciones'), t('e_e3', 'Soporte 24/7')]
+  },
 ];
 
 export default function AIServicesPage() {
   const t = contenido('servicios-ia', 'portada');
   const tSol = contenido('servicios-ia', 'soluciones');
+  const tCif = contenido('servicios-ia', 'cifras');
+  const tTar = contenido('servicios-ia', 'tarjetas');
+  const tPor = contenido('servicios-ia', 'por_que');
+  const tCie = contenido('servicios-ia', 'cierre');
   const { openAssistant } = useApp();
 
   return (
@@ -112,10 +116,10 @@ export default function AIServicesPage() {
             className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto"
           >
             {[
-              { value: '24/7', label: 'Disponibilidad' },
-              { value: '10x', label: 'Más Eficiencia' },
-              { value: '80%', label: 'Ahorro en Costos' },
-              { value: '100%', label: 'Automatizado' }
+              { value: tCif('c1_valor', '24/7'), label: tCif('c1_texto', 'Disponibilidad') },
+              { value: tCif('c2_valor', '10x'), label: tCif('c2_texto', 'Más Eficiencia') },
+              { value: tCif('c3_valor', '80%'), label: tCif('c3_texto', 'Ahorro en Costos') },
+              { value: tCif('c4_valor', '100%'), label: tCif('c4_texto', 'Automatizado') }
             ].map((stat, index) => (
               <GlassCard key={index} className="p-4 text-center">
                 <div className="heading text-3xl md:text-4xl text-[#7700CE] mb-1">{stat.value}</div>
@@ -169,7 +173,7 @@ export default function AIServicesPage() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {aiServicesData.map((service, index) => (
+            {soluciones(tTar).map((service, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -214,7 +218,7 @@ export default function AIServicesPage() {
 
                     {/* CTA */}
                     <div className="flex items-center text-[#7700CE] text-sm font-bold group-hover:gap-2 transition-all">
-                      <span>Ver más detalles</span>
+                      <span>{tTar('ver_mas', 'Ver más detalles')}</span>
                       <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </GlassCard>
@@ -238,10 +242,10 @@ export default function AIServicesPage() {
             className="text-center mb-16"
           >
             <h2 className="heading text-3xl md:text-4xl lg:text-5xl mb-4">
-              <span className="text-white">¿POR QUÉ</span>
+              <span className="text-white">{tPor('titulo_1', '¿POR QUÉ')}</span>
               <br />
               <span className="bg-gradient-to-r from-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
-                INTELIGENCIA ARTIFICIAL?
+                {tPor('titulo_2', 'INTELIGENCIA ARTIFICIAL?')}
               </span>
             </h2>
           </motion.div>
@@ -250,18 +254,18 @@ export default function AIServicesPage() {
             {[
               {
                 icon: Zap,
-                title: 'Velocidad',
-                description: 'Respuestas instantáneas, 24/7. Sin esperas, sin horarios, sin días festivos.'
+                title: tPor('r1_titulo', 'Velocidad'),
+                description: tPor('r1_texto', 'Respuestas instantáneas, 24/7. Sin esperas, sin horarios, sin días festivos.')
               },
               {
                 icon: TrendingUp,
-                title: 'Escalabilidad',
-                description: 'Atiende a 1 o 10,000 clientes simultáneamente sin aumentar tu equipo.'
+                title: tPor('r2_titulo', 'Escalabilidad'),
+                description: tPor('r2_texto', 'Atiende a 1 o 10,000 clientes simultáneamente sin aumentar tu equipo.')
               },
               {
                 icon: Target,
-                title: 'Precisión',
-                description: 'Análisis de datos en tiempo real y toma de decisiones basadas en métricas.'
+                title: tPor('r3_titulo', 'Precisión'),
+                description: tPor('r3_texto', 'Análisis de datos en tiempo real y toma de decisiones basadas en métricas.')
               }
             ].map((item, index) => (
               <motion.div
@@ -302,16 +306,15 @@ export default function AIServicesPage() {
             <Sparkles className="text-[#7700CE] mx-auto mb-6" size={48} />
             
             <h2 className="heading text-3xl md:text-4xl lg:text-5xl mb-6">
-              <span className="text-white">EMPIEZA A AUTOMATIZAR</span>
+              <span className="text-white">{tCie('titulo_1', 'EMPIEZA A AUTOMATIZAR')}</span>
               <br />
               <span className="bg-gradient-to-r from-[#7700CE] to-[#9933FF] bg-clip-text text-transparent">
-                TU NEGOCIO HOY
+                {tCie('titulo_2', 'TU NEGOCIO HOY')}
               </span>
             </h2>
 
             <p className="text-white/80 text-lg mb-10 max-w-2xl mx-auto">
-              Agenda una consultoría gratuita y descubre cómo la IA puede transformar 
-              tu forma de vender, hacer marketing y atender clientes.
+              {tCie('texto', 'Agenda una consultoría gratuita y descubre cómo la IA puede transformar tu forma de vender, hacer marketing y atender clientes.')}
             </p>
 
             <button
