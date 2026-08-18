@@ -13,79 +13,56 @@ export default function AISalesPage() {
   const { openAssistant } = useApp();
   const t = contenido('servicios-ia-ventas', 'portada');
   const tC = contenido('servicios-ia-ventas', 'cierre');
+  const tInc = contenido('servicios-ia-ventas', 'incluye');
+  const tBen = contenido('servicios-ia-ventas', 'beneficios');
+  const tHow = contenido('servicios-ia-ventas', 'como_funciona');
+  const tIde = contenido('servicios-ia-ventas', 'ideal_para');
+  const tImg = contenido('servicios-ia-ventas', 'imagenes');
 
   // Imágenes para las diferentes secciones
   const sectionImages = {
-    hero: 'https://images.unsplash.com/photo-1545535408-2b4d520cbd88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwc2FsZXN8ZW58MXx8fHwxNzY3NzI4ODU1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    features: 'https://images.unsplash.com/photo-1759752394755-1241472b589d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBhbmFseXRpY3MlMjBkYXNoYm9hcmR8ZW58MXx8fHwxNzY3Njc3NzA2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    collaboration: 'https://images.unsplash.com/photo-1496180470114-6ef490f3ff22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMG1lZXRpbmd8ZW58MXx8fHwxNzY3NjI2NDE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    growth: 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    cta: 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    hero: tImg('hero', 'https://images.unsplash.com/photo-1545535408-2b4d520cbd88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwc2FsZXN8ZW58MXx8fHwxNzY3NzI4ODU1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    features: tImg('features', 'https://images.unsplash.com/photo-1759752394755-1241472b589d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBhbmFseXRpY3MlMjBkYXNoYm9hcmR8ZW58MXx8fHwxNzY3Njc3NzA2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    collaboration: tImg('collaboration', 'https://images.unsplash.com/photo-1496180470114-6ef490f3ff22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMG1lZXRpbmd8ZW58MXx8fHwxNzY3NjI2NDE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    growth: tImg('growth', 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    cta: tImg('cta', 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')
   };
 
   const benefits = [
-    {
-      icon: Brain,
-      title: 'Prospección Inteligente',
-      description: 'Identifica y prioriza automáticamente leads con mayor probabilidad de conversión.',
-    },
-    {
-      icon: Target,
-      title: 'Lead Scoring Automático',
-      description: 'Califica cada prospecto con criterios personalizados y datos en tiempo real.',
-    },
-    {
-      icon: Zap,
-      title: 'Seguimiento Predictivo',
-      description: 'Sabe cuándo y cómo contactar cada lead para maximizar probabilidad de cierre.',
-    },
-    {
-      icon: DollarSign,
-      title: 'Optimización de Pipeline',
-      description: 'Identifica cuellos de botella y sugiere acciones para acelerar el ciclo de ventas.',
-    }
+    { icon: Brain, title: tBen('b1_titulo', 'Prospección Inteligente'), description: tBen('b1_texto', 'Identifica y prioriza automáticamente leads con mayor probabilidad de conversión.') },
+    { icon: Target, title: tBen('b2_titulo', 'Lead Scoring Automático'), description: tBen('b2_texto', 'Califica cada prospecto con criterios personalizados y datos en tiempo real.') },
+    { icon: Zap, title: tBen('b3_titulo', 'Seguimiento Predictivo'), description: tBen('b3_texto', 'Sabe cuándo y cómo contactar cada lead para maximizar probabilidad de cierre.') },
+    { icon: DollarSign, title: tBen('b4_titulo', 'Optimización de Pipeline'), description: tBen('b4_texto', 'Identifica cuellos de botella y sugiere acciones para acelerar el ciclo de ventas.') },
   ];
+
 
   const idealFor = [
-    'Equipos de ventas B2B que necesitan calificar leads rápidamente',
-    'Empresas SaaS con ciclos de venta complejos',
-    'Consultorías y agencias que prospectan empresas',
-    'Distribuidores mayoristas con grandes volúmenes de clientes',
-    'Startups tecnológicas en fase de crecimiento',
-    'Inmobiliarias comerciales con múltiples desarrollos'
+    tIde('i1', 'Equipos de ventas B2B que necesitan calificar leads rápidamente'),
+    tIde('i2', 'Empresas SaaS con ciclos de venta complejos'),
+    tIde('i3', 'Consultorías y agencias que prospectan empresas'),
+    tIde('i4', 'Distribuidores mayoristas con grandes volúmenes de clientes'),
+    tIde('i5', 'Startups tecnológicas en fase de crecimiento'),
+    tIde('i6', 'Inmobiliarias comerciales con múltiples desarrollos'),
   ];
+
 
   const features = [
-    'Enriquecimiento automático de datos de prospectos',
-    'Integración con LinkedIn, CRM y bases de datos comerciales',
-    'Análisis predictivo de comportamiento de compra',
-    'Secuencias de email y llamadas automatizadas',
-    'Dashboard con métricas de conversión en tiempo real',
-    'Alertas inteligentes de oportunidades de venta'
+    tInc('f1', 'Enriquecimiento automático de datos de prospectos'),
+    tInc('f2', 'Integración con LinkedIn, CRM y bases de datos comerciales'),
+    tInc('f3', 'Análisis predictivo de comportamiento de compra'),
+    tInc('f4', 'Secuencias de email y llamadas automatizadas'),
+    tInc('f5', 'Dashboard con métricas de conversión en tiempo real'),
+    tInc('f6', 'Alertas inteligentes de oportunidades de venta'),
   ];
 
+
   const howItWorks = [
-    {
-      step: 1,
-      title: 'Análisis',
-      description: 'La IA analiza tu histórico de ventas y perfil de cliente ideal.'
-    },
-    {
-      step: 2,
-      title: 'Prospección',
-      description: 'Busca y califica prospectos automáticamente en múltiples fuentes.'
-    },
-    {
-      step: 3,
-      title: 'Contacto',
-      description: 'Ejecuta secuencias personalizadas de email, LinkedIn y llamadas.'
-    },
-    {
-      step: 4,
-      title: 'Optimización',
-      description: 'Aprende de cada interacción para mejorar continuamente los resultados.'
-    }
+    { step: 1, title: tHow('p1_titulo', 'Análisis'), description: tHow('p1_texto', 'La IA analiza tu histórico de ventas y perfil de cliente ideal.') },
+    { step: 2, title: tHow('p2_titulo', 'Prospección'), description: tHow('p2_texto', 'Busca y califica prospectos automáticamente en múltiples fuentes.') },
+    { step: 3, title: tHow('p3_titulo', 'Contacto'), description: tHow('p3_texto', 'Ejecuta secuencias personalizadas de email, LinkedIn y llamadas.') },
+    { step: 4, title: tHow('p4_titulo', 'Optimización'), description: tHow('p4_texto', 'Aprende de cada interacción para mejorar continuamente los resultados.') },
   ];
+
 
   return (
     <>
@@ -151,7 +128,7 @@ export default function AISalesPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
-                  QUÉ <span className="text-[#7700CE]">INCLUYE</span>
+                  {tInc('titulo_1', 'QUÉ')} <span className="text-[#7700CE]">{tInc('titulo_2', 'INCLUYE')}</span>
                 </h2>
                 <div className="space-y-2.5 md:space-y-3">
                   {features.map((feature, i) => (
@@ -190,6 +167,7 @@ export default function AISalesPage() {
         </section>
 
         {/* BENEFICIOS */}
+        {tBen.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-7xl">
             <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
@@ -216,7 +194,7 @@ export default function AISalesPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
-                  BENEFICIOS <span className="text-[#7700CE]">PRINCIPALES</span>
+                  {tBen('titulo_1', 'BENEFICIOS')} <span className="text-[#7700CE]">{tBen('titulo_2', 'PRINCIPALES')}</span>
                 </h2>
                 <div className="space-y-4">
                   {benefits.map((benefit, i) => (
@@ -242,13 +220,15 @@ export default function AISalesPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CÓMO FUNCIONA */}
+        {tHow.visible() && (
         <section className="py-6 md:py-10 px-4 bg-white">
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
-                CÓMO <span className="text-[#7700CE]">FUNCIONA</span>
+                {tHow('titulo_1', 'CÓMO')} <span className="text-[#7700CE]">{tHow('titulo_2', 'FUNCIONA')}</span>
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Proceso inteligente de automatización comercial
@@ -298,13 +278,15 @@ export default function AISalesPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* IDEAL PARA */}
+        {tIde.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2">
-                IDEAL <span className="text-[#7700CE]">PARA</span>
+                {tIde('titulo_1', 'IDEAL')} <span className="text-[#7700CE]">{tIde('titulo_2', 'PARA')}</span>
               </h2>
             </div>
             
@@ -330,6 +312,7 @@ export default function AISalesPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CTA Final */}
         <section className="py-6 md:py-10 px-4 bg-white">
