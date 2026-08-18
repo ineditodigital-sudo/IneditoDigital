@@ -459,8 +459,7 @@ export const SERVICES: Service[] = [
       'Funciona con cualquier smartphone moderno, sin descargar ninguna app',
       'Diseño personalizado con tu marca, logo y colores',
       'Actualiza tu información cuando quieras sin reimprimir nada',
-      'Incluye tu perfil digital propio, siempre disponible en línea',
-      'Compatible con Apple Wallet y Google Wallet para guardar tu contacto'
+      'Incluye tu perfil digital propio, siempre disponible en línea'
     ],
     benefits: [
       'Comparte tu contacto en segundos, sin escribir nada a mano',
