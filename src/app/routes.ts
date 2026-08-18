@@ -31,16 +31,6 @@ const AISalesPage = lazy(() => import('./pages/AISalesPage'));
 const AIMarketingPage = lazy(() => import('./pages/AIMarketingPage'));
 const AIEcommercePage = lazy(() => import('./pages/AIEcommercePage'));
 
-// Admin pages - completely lazy loaded (not needed on initial load)
-const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
-const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'));
-const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
-const AdminSEOPage = lazy(() => import('./pages/admin/AdminSEOPage'));
-const AdminServicesPage = lazy(() => import('./pages/admin/AdminServicesPage'));
-const AdminBlogPage = lazy(() => import('./pages/admin/AdminBlogPage'));
-const AdminPortfolioPage = lazy(() => import('./pages/admin/AdminPortfolioPage'));
-const AdminLeadsPage = lazy(() => import('./pages/admin/AdminLeadsPage'));
-const AdminSettingsPage = lazy(() => import('./pages/admin/AdminSettingsPage'));
 
 export const router = createBrowserRouter([
   {
@@ -80,25 +70,6 @@ export const router = createBrowserRouter([
       { path: ':slug', Component: PaginaCMS },
       // 404 catch-all
       { path: '*', Component: NotFoundPage },
-    ],
-  },
-  {
-    path: '/admin',
-    children: [
-      { index: true, Component: AdminLoginPage },
-      {
-        path: 'dashboard',
-        Component: AdminLayout,
-        children: [
-          { index: true, Component: AdminDashboardPage },
-          { path: 'seo', Component: AdminSEOPage },
-          { path: 'servicios', Component: AdminServicesPage },
-          { path: 'blog', Component: AdminBlogPage },
-          { path: 'portafolio', Component: AdminPortfolioPage },
-          { path: 'leads', Component: AdminLeadsPage },
-          { path: 'ajustes', Component: AdminSettingsPage },
-        ],
-      },
     ],
   },
 ]);

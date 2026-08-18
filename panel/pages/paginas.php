@@ -193,13 +193,39 @@ $hayBorrador = !empty($fila['borrador']) && ($fila['borrador'] !== ($fila['conte
           if ($campo['tipo'] === 'switch') continue;
           $n = "c__{$sk}__{$ck}";
           $v = $val[$sk][$ck] ?? '';
-          $ancho = in_array($campo['tipo'], ['parrafo'], true);
+          $ancho = in_array($campo['tipo'], ['parrafo','imagen','enlace'], true);
           if ($ancho) echo '</div><div class="rowf" style="grid-template-columns:1fr">';
       ?>
         <div>
           <label style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--txt)"><?= e($campo['label']) ?></label>
           <?php if ($campo['tipo'] === 'parrafo'): ?>
             <textarea name="<?= $n ?>" style="min-height:90px"><?= e($v) ?></textarea>
+
+          <?php elseif ($campo['tipo'] === 'color'): ?>
+            <?php $cv = preg_match('/^#[0-9a-fA-F]{6}$/', $v) ? $v : ($campo['def'] ?? '#7700CE'); ?>
+            <div style="display:flex;gap:10px;align-items:center">
+              <input type="color" value="<?= e($cv) ?>" data-color-para="<?= $n ?>"
+                     style="width:52px;height:42px;padding:3px;cursor:pointer;flex:0 0 auto">
+              <input type="text" name="<?= $n ?>" value="<?= e($cv) ?>" data-color-txt="<?= $n ?>"
+                     style="flex:1" placeholder="#7700CE">
+            </div>
+
+          <?php elseif ($campo['tipo'] === 'imagen'):
+                  $bg = 'flex:0 0 78px;height:60px;border-radius:10px;border:1px solid var(--line);background:#0b0b12 center/cover no-repeat;';
+                  if ($v !== '') $bg .= "background-image:url('" . e($v) . "');";
+          ?>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="<?= $bg ?>" data-vista="<?= $n ?>"></div>
+              <div style="flex:1">
+                <input type="text" name="<?= $n ?>" value="<?= e($v) ?>" data-img="<?= $n ?>" placeholder="Pega aquí la dirección de la imagen">
+                <div class="mini" style="margin-top:5px">Por ahora se pega la dirección. La subida con arrastrar y soltar llega en la siguiente fase.</div>
+              </div>
+            </div>
+
+          <?php elseif ($campo['tipo'] === 'enlace'): ?>
+            <input type="text" name="<?= $n ?>" value="<?= e($v) ?>" placeholder="/contacto  o  https://...">
+            <div class="mini" style="margin-top:5px">Puede ser una parte de tu sitio (por ejemplo <code>/contacto</code>) o una dirección completa.</div>
+
           <?php else: ?>
             <input type="text" name="<?= $n ?>" value="<?= e($v) ?>">
           <?php endif; ?>
@@ -293,5 +319,25 @@ $hayBorrador = !empty($fila['borrador']) && ($fila['borrador'] !== ($fila['conte
   }
 
   form.addEventListener('input', marcar);
+
+  /* Selector de color: la muestra y el texto van sincronizados en los dos
+     sentidos, para que el cliente no tenga que escribir códigos raros. */
+  document.querySelectorAll('[data-color-para]').forEach(function (sel) {
+    var txt = document.querySelector('[data-color-txt="' + sel.dataset.colorPara + '"]');
+    if (!txt) return;
+    sel.addEventListener('input', function () { txt.value = sel.value; marcar(); });
+    txt.addEventListener('input', function () {
+      if (/^#[0-9a-fA-F]{6}$/.test(txt.value)) sel.value = txt.value;
+    });
+  });
+
+  /* Vista previa de la imagen mientras se pega la dirección. */
+  document.querySelectorAll('[data-img]').forEach(function (inp) {
+    var caja = document.querySelector('[data-vista="' + inp.dataset.img + '"]');
+    if (!caja) return;
+    inp.addEventListener('input', function () {
+      caja.style.backgroundImage = inp.value.trim() ? "url('" + inp.value.trim() + "')" : '';
+    });
+  });
 })();
 </script>

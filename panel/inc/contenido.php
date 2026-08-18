@@ -475,6 +475,91 @@ function registro_paginas(): array {
                 ],
             ],
         ],
+
+        /* ---------------------------------------------------------- */
+        'marca' => [
+            'nombre' => 'Marca y menús',
+            'ruta'   => '/',
+            'ayuda'  => 'Los colores, el logotipo, el menú de arriba y el pie de página. Cambian en TODO el sitio.',
+            'secciones' => [
+
+                'colores' => [
+                    'nombre' => 'Colores de marca',
+                    'ayuda'  => 'Se aplican en todo el sitio: botones, títulos y detalles. Elige con el selector, no hace falta escribir códigos.',
+                    'campos' => [
+                        'principal' => ['label' => 'Color principal', 'tipo' => 'color', 'def' => '#7700CE',
+                                        'ayuda' => 'El morado de los botones y los títulos destacados.'],
+                        'claro'     => ['label' => 'Color claro', 'tipo' => 'color', 'def' => '#9933FF',
+                                        'ayuda' => 'El tono con el que se hacen los degradados.'],
+                        'brillo'    => ['label' => 'Color de acento', 'tipo' => 'color', 'def' => '#CC66FF',
+                                        'ayuda' => 'El tono más claro, para detalles y resaltados.'],
+                    ],
+                ],
+
+                'logo' => [
+                    'nombre' => 'Logotipo',
+                    'campos' => [
+                        'imagen' => ['label' => 'Logotipo del sitio', 'tipo' => 'imagen',
+                                     'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp'],
+                        'alt'    => ['label' => 'Descripción del logotipo', 'tipo' => 'texto',
+                                     'def' => 'INÉDITO DIGITAL - Agencia de Marketing Digital en Aguascalientes'],
+                    ],
+                ],
+
+                'menu' => [
+                    'nombre' => 'Menú de arriba',
+                    'ayuda'  => 'Cómo se llama cada apartado en la barra superior.',
+                    'campos' => [
+                        'inicio'      => ['label' => 'Nombre de «Inicio»', 'tipo' => 'texto', 'def' => 'Inicio'],
+                        'servicios'   => ['label' => 'Nombre de «Servicios»', 'tipo' => 'texto', 'def' => 'Servicios'],
+                        'servicios_ia'=> ['label' => 'Nombre de «Servicios IA»', 'tipo' => 'texto', 'def' => 'Servicios IA'],
+                        'portafolio'  => ['label' => 'Nombre de «Portafolio»', 'tipo' => 'texto', 'def' => 'Portafolio'],
+                        'blog'        => ['label' => 'Nombre de «Blog»', 'tipo' => 'texto', 'def' => 'Blog'],
+                        'nosotros'    => ['label' => 'Nombre de «Nosotros»', 'tipo' => 'texto', 'def' => 'Nosotros'],
+                        'contacto'    => ['label' => 'Nombre de «Contacto»', 'tipo' => 'texto', 'def' => 'Contacto'],
+                        'boton'       => ['label' => 'Texto del botón del menú', 'tipo' => 'texto', 'def' => 'COTIZAR'],
+                    ],
+                ],
+
+                'menu_ia' => [
+                    'nombre' => 'Submenú de Servicios IA',
+                    'campos' => [
+                        'whatsapp'        => ['label' => 'IA para WhatsApp · nombre', 'tipo' => 'texto', 'def' => 'IA para WhatsApp'],
+                        'whatsapp_desc'   => ['label' => 'IA para WhatsApp · descripción', 'tipo' => 'texto', 'def' => 'Ventas y Soporte 24/7'],
+                        'ventas'          => ['label' => 'IA de Ventas · nombre', 'tipo' => 'texto', 'def' => 'IA de Ventas'],
+                        'ventas_desc'     => ['label' => 'IA de Ventas · descripción', 'tipo' => 'texto', 'def' => 'Prospección Inteligente'],
+                        'marketing'       => ['label' => 'IA para Marketing · nombre', 'tipo' => 'texto', 'def' => 'IA para Marketing'],
+                        'marketing_desc'  => ['label' => 'IA para Marketing · descripción', 'tipo' => 'texto', 'def' => 'Optimización Automática'],
+                        'ecommerce'       => ['label' => 'IA para E-commerce · nombre', 'tipo' => 'texto', 'def' => 'IA para E-commerce'],
+                        'ecommerce_desc'  => ['label' => 'IA para E-commerce · descripción', 'tipo' => 'texto', 'def' => 'Convierte Más Visitas'],
+                        'ver_todos'       => ['label' => 'Texto de «Ver todos»', 'tipo' => 'texto', 'def' => 'Ver todos los servicios →'],
+                    ],
+                ],
+
+                'pie' => [
+                    'nombre' => 'Pie de página',
+                    'campos' => [
+                        'descripcion'  => ['label' => 'Texto debajo del logotipo', 'tipo' => 'parrafo',
+                                           'def' => 'Agencia de Marketing Digital en Aguascalientes que impulsa tus ventas con IA y estrategias digitales comprobadas.'],
+                        'titulo_serv'  => ['label' => 'Título de la columna de servicios', 'tipo' => 'texto', 'def' => 'SERVICIOS'],
+                        'titulo_emp'   => ['label' => 'Título de la columna de empresa', 'tipo' => 'texto', 'def' => 'EMPRESA'],
+                        'titulo_cont'  => ['label' => 'Título de la columna de contacto', 'tipo' => 'texto', 'def' => 'CONTACTO'],
+                        'derechos'     => ['label' => 'Aviso de derechos', 'tipo' => 'texto',
+                                           'def' => '© 2026 INÉDITO DIGITAL. Todos los derechos reservados.'],
+                    ],
+                ],
+
+                'redes' => [
+                    'nombre' => 'Redes sociales',
+                    'ayuda'  => 'Déjalo vacío si no quieres que aparezca esa red.',
+                    'campos' => [
+                        'facebook'  => ['label' => 'Facebook', 'tipo' => 'enlace', 'def' => 'https://www.facebook.com/ineditoagenciadigital'],
+                        'instagram' => ['label' => 'Instagram', 'tipo' => 'enlace', 'def' => 'https://www.instagram.com/ineditodigital/'],
+                        'linkedin'  => ['label' => 'LinkedIn', 'tipo' => 'enlace', 'def' => 'https://www.linkedin.com/company/inedito-digital/'],
+                    ],
+                ],
+            ],
+        ],
     ];
 }
 
