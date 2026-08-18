@@ -208,3 +208,48 @@ CREATE TABLE IF NOT EXISTS `site_settings` (
 ALTER TABLE `site_settings`
   ADD PRIMARY KEY (`k`);
 
+
+
+-- ------------------------------------------------------------
+-- CMS · Fase 1: contenido editable de las páginas
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pages` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `slug` varchar(190) NOT NULL,
+  `nombre` varchar(160) NOT NULL,
+  `ruta` varchar(190) NOT NULL,
+  `tipo` varchar(20) NOT NULL DEFAULT 'codigo',
+  `contenido` mediumtext DEFAULT NULL,
+  `borrador` mediumtext DEFAULT NULL,
+  `seo_title` varchar(200) DEFAULT NULL,
+  `seo_desc` varchar(300) DEFAULT NULL,
+  `seo_image` text DEFAULT NULL,
+  `en_menu` tinyint(4) NOT NULL DEFAULT 0,
+  `orden` int(11) NOT NULL DEFAULT 0,
+  `status` varchar(20) NOT NULL DEFAULT 'published',
+  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_slug` (`slug`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `page_versions` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `page_id` int(10) UNSIGNED NOT NULL,
+  `contenido` mediumtext DEFAULT NULL,
+  `autor` varchar(60) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_page` (`page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `media` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `archivo` varchar(255) NOT NULL,
+  `alt` varchar(255) DEFAULT NULL,
+  `ancho` int(11) DEFAULT NULL,
+  `alto` int(11) DEFAULT NULL,
+  `peso` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

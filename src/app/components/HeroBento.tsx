@@ -6,9 +6,14 @@ import TopographyCanvas from './TopographyCanvas';
 import OptimizedImage from './OptimizedImage';
 import { useState, useEffect, memo } from 'react';
 import { useApp } from '../context/AppContext';
+import { contenido } from '../cms';
 
 function HeroBento() {
   const { openAssistant } = useApp();
+  /* Textos editables desde el panel. El segundo argumento es lo que hay hoy:
+     si el campo queda vacío se usa eso, así la portada nunca se ve rota. */
+  const t = contenido('home', 'portada');
+  const c = contenido('home', 'cifras');
   
   // Inicializar con detección más rápida para evitar layout shift
   const [isMobile, setIsMobile] = useState(() => {
@@ -57,7 +62,7 @@ function HeroBento() {
           {/* Título Principal - Centrado - CRÍTICO PARA LCP */}
           <h1 className="heading mb-4">
             <span className="block text-white mb-2 text-[28px] leading-tight">
-              MARKETING DIGITAL
+              {t('titulo_1', 'MARKETING DIGITAL +')}
             </span>
             <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent text-[32px] leading-tight">
               + INTELIGENCIA
@@ -69,7 +74,7 @@ function HeroBento() {
 
           {/* Descripción */}
           <p className="text-sm text-white/80 leading-relaxed mb-8 max-w-md mx-auto px-2 animate-fadeIn-lcp" style={{ animationDelay: '0.2s' }}>
-            Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.
+            {t('descripcion', 'Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.')}
           </p>
 
           {/* CTAs - Centrados y apilados */}
@@ -145,15 +150,15 @@ function HeroBento() {
           >
             {/* Título Principal - Limitado al 50% en desktop - CRÍTICO PARA LCP */}
             <h1 className="heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight lg:max-w-[90%]">
-              <span className="block text-white mb-1 md:mb-2">MARKETING DIGITAL +</span>
+              <span className="block text-white mb-1 md:mb-2">{t('titulo_1', 'MARKETING DIGITAL +')}</span>
               <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
-                INTELIGENCIA ARTIFICIAL
+                {t('titulo_2', 'INTELIGENCIA ARTIFICIAL')}
               </span>
             </h1>
 
             {/* Descripción */}
             <p className="text-xs sm:text-sm md:text-base text-white/70 max-w-xl leading-relaxed">
-              Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.
+              {t('descripcion', 'Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.')}
             </p>
 
             {/* Botones CTA */}
@@ -162,7 +167,7 @@ function HeroBento() {
                 onClick={() => openAssistant(undefined, 'cotizar servicios de marketing digital')}
                 className="inline-flex items-center justify-center px-6 md:px-7 py-3 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(119,0,206,0.6)] group cursor-pointer"
               >
-                <span className="text-sm md:text-base font-bold tracking-wider">COTIZAR AHORA</span>
+                <span className="text-sm md:text-base font-bold tracking-wider">{t('boton_1', 'COTIZAR AHORA')}</span>
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
               </button>
               
@@ -170,7 +175,7 @@ function HeroBento() {
                 href="#servicios"
                 className="inline-flex items-center justify-center px-6 md:px-7 py-3 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 text-white transition-all duration-300"
               >
-                <span className="text-sm md:text-base font-bold tracking-wider">VER SERVICIOS</span>
+                <span className="text-sm md:text-base font-bold tracking-wider">{t('boton_2', 'VER SERVICIOS')}</span>
               </a>
             </div>
 
@@ -181,8 +186,8 @@ function HeroBento() {
                   <Users className="text-[#7700CE]" size={20} />
                 </div>
                 <div>
-                  <div className="heading text-xl md:text-2xl text-white">100+</div>
-                  <div className="text-[10px] md:text-xs text-white/60">Clientes Activos</div>
+                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_1', '100+')}</div>
+                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_1', 'Clientes Activos')}</div>
                 </div>
               </div>
 
@@ -193,8 +198,8 @@ function HeroBento() {
                   <Award className="text-[#7700CE]" size={20} />
                 </div>
                 <div>
-                  <div className="heading text-xl md:text-2xl text-white">5X</div>
-                  <div className="text-[10px] md:text-xs text-white/60">ROI Promedio</div>
+                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_2', '5X')}</div>
+                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_2', 'ROI Promedio')}</div>
                 </div>
               </div>
 
@@ -205,8 +210,8 @@ function HeroBento() {
                   <TrendingUp className="text-[#7700CE]" size={20} />
                 </div>
                 <div>
-                  <div className="heading text-xl md:text-2xl text-white">200%</div>
-                  <div className="text-[10px] md:text-xs text-white/60">Crecimiento</div>
+                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_3', '200%')}</div>
+                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_3', 'Crecimiento')}</div>
                 </div>
               </div>
             </div>

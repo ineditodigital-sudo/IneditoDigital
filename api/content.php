@@ -56,6 +56,16 @@ try {
         $portfolio[] = $b;
     }
 
+    /* Contenido editable de las páginas. Solo lo PUBLICADO: el borrador
+       nunca sale al sitio. */
+    $paginas = [];
+    try {
+        foreach ($pdo->query("SELECT slug, contenido FROM pages WHERE status='published'") as $r) {
+            $c = json_decode((string)$r['contenido'], true);
+            if (is_array($c)) $paginas[$r['slug']] = $c;
+        }
+    } catch (Throwable $e) { /* si aún no existe la tabla, el sitio sigue igual */ }
+
     $ss = []; foreach ($pdo->query("SELECT k,v FROM site_settings") as $r) $ss[$r['k']] = $r['v'];
     $seo = []; foreach ($pdo->query("SELECT k,v FROM seo_settings") as $r) $seo[$r['k']] = $r['v'];
 } catch (Throwable $e) {
@@ -71,6 +81,6 @@ $settings = [
 $seo_global = ['siteName'=>$seo['siteName']??'','author'=>$seo['author']??'','defaultImage'=>$seo['defaultImage']??'','twitterHandle'=>$seo['twitterHandle']??'','googleAnalytics'=>$seo['googleAnalytics']??'','facebookPixel'=>$seo['facebookPixel']??'','googleSiteVerification'=>$seo['googleSiteVerification']??'','bingVerification'=>$seo['bingVerification']??''];
 $seo_schema = ['organizationName'=>$seo['orgName']??'','organizationType'=>$seo['orgType']??'ProfessionalService','phone'=>$seo['phone']??'','email'=>$seo['email']??'','priceRange'=>$seo['priceRange']??'$$','address'=>$seo['address']??'','city'=>$seo['city']??'','state'=>$seo['state']??'','zip'=>$seo['zip']??'','latitude'=>$seo['latitude']??'','longitude'=>$seo['longitude']??'','socialMedia'=>['facebook'=>$seo['facebook']??'','instagram'=>$seo['instagram']??'','linkedin'=>$seo['linkedin']??'']];
 
-$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema');
+$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema','paginas');
 $sig = md5(json_encode($payload));
 echo json_encode(['ok'=>true,'sig'=>$sig] + $payload);

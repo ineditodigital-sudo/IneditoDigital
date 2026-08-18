@@ -15,13 +15,18 @@ function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); retu
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
 // ---- cargar datos ----
-$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = [];
+$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = [];
 try {
   $pdo = db_connect($cfg);
   foreach ($pdo->query("SELECT k,v FROM site_settings") as $r) $settings[$r['k']] = $r['v'];
   foreach ($pdo->query("SELECT k,v FROM seo_settings") as $r) $seo[$r['k']] = $r['v'];
   foreach ($pdo->query("SELECT * FROM services WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); $o['shortDescription']=$r['short_desc']?:($o['shortDescription']??''); if($r['image'])$o['bannerImage']=$r['image']; $fl=lines($r['features']); if($fl)$o['features']=$fl; $bl=lines($r['benefits']); if($bl)$o['benefits']=$bl; $services[]=$o; }
   foreach ($pdo->query("SELECT * FROM blog_posts WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['excerpt'])$o['excerpt']=$r['excerpt']; if($r['content'])$o['content']=$r['content']; if($r['image'])$o['image']=$r['image']; if($r['author'])$o['author']=$r['author']; if($r['category'])$o['category']=$r['category']; $portfolio_meta=null; $blog[]=$o; }
+  foreach ($pdo->query("SELECT slug, contenido, seo_title, seo_desc, seo_image, ruta FROM pages WHERE status='published'") as $r) {
+    $c = json_decode((string)$r['contenido'], true);
+    $paginas[$r['slug']] = ['contenido' => is_array($c) ? $c : [], 'seo_title' => $r['seo_title'], 'seo_desc' => $r['seo_desc'], 'seo_image' => $r['seo_image'], 'ruta' => $r['ruta']];
+    $paginasPorRuta[$r['ruta']] = $r['slug'];
+  }
   foreach ($pdo->query("SELECT * FROM portfolio WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['short_desc'])$o['description']=$r['short_desc']; if($r['image'])$o['image']=$r['image']; if($r['client'])$o['client']=$r['client']; if($r['category'])$o['category']=$r['category']; $portfolio[]=$o; }
 } catch (Throwable $ex) { /* si falla la BD, servimos el SPA base */ }
 
@@ -142,6 +147,15 @@ else {
   }
 }
 
+/* SEO por página desde el panel: si el cliente lo llenó, manda sobre el
+   texto automático. Si lo dejó vacío, se conserva el de antes. */
+if (!$is404 && isset($paginasPorRuta[$path])) {
+  $pg = $paginas[$paginasPorRuta[$path]];
+  if (!empty($pg['seo_title'])) $title = $pg['seo_title'];
+  if (!empty($pg['seo_desc']))  $desc  = $pg['seo_desc'];
+  if (!empty($pg['seo_image'])) $GLOBALS['seoImagenPagina'] = $pg['seo_image'];
+}
+
 // --- 404 real: nada que indexar, y sin canonical propio ---
 if ($is404) {
   http_response_code(404);
@@ -182,7 +196,7 @@ $assetJs='/assets/index-CR3aYFRn.js'; $assetCss='/assets/index-BbJMuNT-.css';
 $idx=@file_get_contents(__DIR__.'/index.html');
 if ($idx) { if(preg_match('/src="(\/assets\/index-[^"]+\.js)"/',$idx,$m))$assetJs=$m[1]; if(preg_match('/href="(\/assets\/index-[^"]+\.css)"/',$idx,$m))$assetCss=$m[1]; }
 
-$ogImg = $seo['defaultImage'] ?: $logo;
+$ogImg = $GLOBALS['seoImagenPagina'] ?? ($seo['defaultImage'] ?: $logo);
 $gaId = $seo['googleAnalytics'] ?? ''; $pixel = $seo['facebookPixel'] ?? ''; $gsv = $seo['googleSiteVerification'] ?? '';
 
 $seo_global = ['siteName'=>$seo['siteName']??'','author'=>$seo['author']??'','defaultImage'=>$seo['defaultImage']??'','twitterHandle'=>$seo['twitterHandle']??'','googleAnalytics'=>$seo['googleAnalytics']??'','facebookPixel'=>$seo['facebookPixel']??'','googleSiteVerification'=>$seo['googleSiteVerification']??'','bingVerification'=>$seo['bingVerification']??''];
@@ -231,7 +245,9 @@ header('Cache-Control: no-cache');
 <?php endif; ?>
 <?php if (!$isBot):
   $FL = JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP;
-  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema];
+  $contenidoPaginas = [];
+  foreach ($paginas as $sl => $pg) $contenidoPaginas[$sl] = $pg['contenido'];
+  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas];
 ?>
 <script>try{
 <?php foreach($LS as $k=>$v): ?>localStorage.setItem(<?= json_encode($k) ?>, <?= json_encode(json_encode($v, JSON_UNESCAPED_UNICODE), $FL) ?>);
