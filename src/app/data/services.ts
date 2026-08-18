@@ -459,7 +459,8 @@ export const SERVICES: Service[] = [
       'Funciona con cualquier smartphone moderno, sin descargar ninguna app',
       'Diseño personalizado con tu marca, logo y colores',
       'Actualiza tu información cuando quieras sin reimprimir nada',
-      'Incluye tu propia página de contacto, siempre disponible en línea'
+      'Incluye tu propia página de contacto, siempre disponible en línea',
+      'Para una sola persona o para equipos completos: nos adaptamos'
     ],
     benefits: [
       'Comparte tu contacto en segundos, sin escribir nada a mano',
@@ -484,7 +485,8 @@ export const SERVICES: Service[] = [
       { question: '¿Necesito instalar una aplicación para usarla?', answer: 'No. Funciona con la tecnología NFC que ya traen los smartphones modernos, tanto Android como iPhone desde el modelo 7. Solo acercas la tarjeta.' },
       { question: '¿Qué pasa si cambio de número o de trabajo?', answer: 'Actualizas tu perfil digital en línea y el cambio se refleja al instante en tu tarjeta, sin reimprimir nada.' },
       { question: '¿Qué información puedo compartir?', answer: 'Contacto, redes sociales, sitio web, portafolio, ubicación y hasta un video de presentación, todo desde un solo toque.' },
-      { question: '¿Cuánto tarda la entrega?', answer: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' }
+      { question: '¿Cuánto tarda la entrega?', answer: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' },
+      { question: '¿Puedo pedir tarjetas para todo mi equipo?', answer: 'Sí. Cotizamos desde una sola persona hasta equipos completos, con diseño unificado para toda la empresa y una página de contacto propia para cada integrante. Nos adaptamos al tamaño de tu equipo.' }
     ],
     relatedServices: ['branding', 'servicios-qr'],
     order: 11
