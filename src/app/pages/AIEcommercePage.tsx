@@ -13,79 +13,56 @@ export default function AIEcommercePage() {
   const { openAssistant } = useApp();
   const t = contenido('servicios-ia-ecommerce', 'portada');
   const tC = contenido('servicios-ia-ecommerce', 'cierre');
+  const tInc = contenido('servicios-ia-ecommerce', 'incluye');
+  const tBen = contenido('servicios-ia-ecommerce', 'beneficios');
+  const tHow = contenido('servicios-ia-ecommerce', 'como_funciona');
+  const tIde = contenido('servicios-ia-ecommerce', 'ideal_para');
+  const tImg = contenido('servicios-ia-ecommerce', 'imagenes');
 
   // Imágenes para las diferentes secciones
   const sectionImages = {
-    hero: 'https://images.unsplash.com/photo-1658297063569-162817482fb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBvbmxpbmUlMjBzaG9wcGluZ3xlbnwxfHx8fDE3Njc3MjEzNTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    features: 'https://images.unsplash.com/photo-1648544365218-188e3d07dcac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaG9wcGluZyUyMGJhZ3MlMjByZXRhaWx8ZW58MXx8fHwxNzY3Njc2NDc0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    support: 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    growth: 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    cta: 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    hero: tImg('hero', 'https://images.unsplash.com/photo-1658297063569-162817482fb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBvbmxpbmUlMjBzaG9wcGluZ3xlbnwxfHx8fDE3Njc3MjEzNTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    features: tImg('features', 'https://images.unsplash.com/photo-1648544365218-188e3d07dcac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaG9wcGluZyUyMGJhZ3MlMjByZXRhaWx8ZW58MXx8fHwxNzY3Njc2NDc0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    support: tImg('support', 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    growth: tImg('growth', 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    cta: tImg('cta', 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')
   };
 
   const benefits = [
-    {
-      icon: ShoppingCart,
-      title: 'Recuperación de Carrito',
-      description: 'Identifica compradores que abandonaron y los contacta automáticamente con ofertas personalizadas.',
-    },
-    {
-      icon: Heart,
-      title: 'Recomendaciones Inteligentes',
-      description: 'Sugiere productos complementarios en el momento exacto para aumentar el ticket promedio.',
-    },
-    {
-      icon: MessageCircle,
-      title: 'Soporte Automático 24/7',
-      description: 'Resuelve dudas de producto, inventario, envíos y devoluciones sin intervención humana.',
-    },
-    {
-      icon: DollarSign,
-      title: 'Más Ventas, Menos Fricción',
-      description: 'Reduce abandono de compra con asistencia en tiempo real durante todo el proceso.',
-    }
+    { icon: ShoppingCart, title: tBen('b1_titulo', 'Recuperación de Carrito'), description: tBen('b1_texto', 'Identifica compradores que abandonaron y los contacta automáticamente con ofertas personalizadas.') },
+    { icon: Heart, title: tBen('b2_titulo', 'Recomendaciones Inteligentes'), description: tBen('b2_texto', 'Sugiere productos complementarios en el momento exacto para aumentar el ticket promedio.') },
+    { icon: MessageCircle, title: tBen('b3_titulo', 'Soporte Automático 24/7'), description: tBen('b3_texto', 'Resuelve dudas de producto, inventario, envíos y devoluciones sin intervención humana.') },
+    { icon: DollarSign, title: tBen('b4_titulo', 'Más Ventas, Menos Fricción'), description: tBen('b4_texto', 'Reduce abandono de compra con asistencia en tiempo real durante todo el proceso.') },
   ];
+
 
   const idealFor = [
-    'Tiendas online con más de 100 visitas diarias que necesitan vender más',
-    'Marcas propias (DTC) enfocadas en reducir costo de adquisición',
-    'Shopify Stores con instalación en minutos sin código',
-    'WooCommerce optimizado para WordPress con plugin nativo',
-    'Vendedores en marketplaces que quieren su propia tienda',
-    'Negocios de dropshipping que buscan automatizar atención'
+    tIde('i1', 'Tiendas online con más de 100 visitas diarias que necesitan vender más'),
+    tIde('i2', 'Marcas propias (DTC) enfocadas en reducir costo de adquisición'),
+    tIde('i3', 'Shopify Stores con instalación en minutos sin código'),
+    tIde('i4', 'WooCommerce optimizado para WordPress con plugin nativo'),
+    tIde('i5', 'Vendedores en marketplaces que quieren su propia tienda'),
+    tIde('i6', 'Negocios de dropshipping que buscan automatizar atención'),
   ];
+
 
   const features = [
-    'Chat inteligente que guía desde duda hasta compra',
-    'Upsell y cross-sell automático en momento ideal',
-    'Personalización 1:1 basada en comportamiento',
-    'Automatización de emails activados por acciones',
-    'Análisis predictivo de inventario y tendencias',
-    'Integración con Shopify, WooCommerce, Magento y más'
+    tInc('f1', 'Chat inteligente que guía desde duda hasta compra'),
+    tInc('f2', 'Upsell y cross-sell automático en momento ideal'),
+    tInc('f3', 'Personalización 1:1 basada en comportamiento'),
+    tInc('f4', 'Automatización de emails activados por acciones'),
+    tInc('f5', 'Análisis predictivo de inventario y tendencias'),
+    tInc('f6', 'Integración con Shopify, WooCommerce, Magento y más'),
   ];
 
+
   const howItWorks = [
-    {
-      step: 1,
-      title: 'Instalación',
-      description: 'Conectamos la IA a tu tienda en minutos, sin código.'
-    },
-    {
-      step: 2,
-      title: 'Entrenamiento',
-      description: 'La IA aprende tu catálogo, políticas y tono de voz.'
-    },
-    {
-      step: 3,
-      title: 'Automatización',
-      description: 'Empieza a asistir, recomendar y recuperar carritos.'
-    },
-    {
-      step: 4,
-      title: 'Optimización',
-      description: 'Mejora continua basada en conversiones reales.'
-    }
+    { step: 1, title: tHow('p1_titulo', 'Instalación'), description: tHow('p1_texto', 'Conectamos la IA a tu tienda en minutos, sin código.') },
+    { step: 2, title: tHow('p2_titulo', 'Entrenamiento'), description: tHow('p2_texto', 'La IA aprende tu catálogo, políticas y tono de voz.') },
+    { step: 3, title: tHow('p3_titulo', 'Automatización'), description: tHow('p3_texto', 'Empieza a asistir, recomendar y recuperar carritos.') },
+    { step: 4, title: tHow('p4_titulo', 'Optimización'), description: tHow('p4_texto', 'Mejora continua basada en conversiones reales.') },
   ];
+
 
   return (
     <>
@@ -151,7 +128,7 @@ export default function AIEcommercePage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
-                  QUÉ <span className="text-[#7700CE]">INCLUYE</span>
+                  {tInc('titulo_1', 'QUÉ')} <span className="text-[#7700CE]">{tInc('titulo_2', 'INCLUYE')}</span>
                 </h2>
                 <div className="space-y-2.5 md:space-y-3">
                   {features.map((feature, i) => (
@@ -190,6 +167,7 @@ export default function AIEcommercePage() {
         </section>
 
         {/* BENEFICIOS */}
+        {tBen.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-7xl">
             <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
@@ -216,7 +194,7 @@ export default function AIEcommercePage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
-                  BENEFICIOS <span className="text-[#7700CE]">PRINCIPALES</span>
+                  {tBen('titulo_1', 'BENEFICIOS')} <span className="text-[#7700CE]">{tBen('titulo_2', 'PRINCIPALES')}</span>
                 </h2>
                 <div className="space-y-4">
                   {benefits.map((benefit, i) => (
@@ -242,13 +220,15 @@ export default function AIEcommercePage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CÓMO FUNCIONA */}
+        {tHow.visible() && (
         <section className="py-6 md:py-10 px-4 bg-white">
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
-                CÓMO <span className="text-[#7700CE]">FUNCIONA</span>
+                {tHow('titulo_1', 'CÓMO')} <span className="text-[#7700CE]">{tHow('titulo_2', 'FUNCIONA')}</span>
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Instalación simple en tu tienda online
@@ -298,13 +278,15 @@ export default function AIEcommercePage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* IDEAL PARA */}
+        {tIde.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2">
-                IDEAL <span className="text-[#7700CE]">PARA</span>
+                {tIde('titulo_1', 'IDEAL')} <span className="text-[#7700CE]">{tIde('titulo_2', 'PARA')}</span>
               </h2>
             </div>
             
@@ -330,6 +312,7 @@ export default function AIEcommercePage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CTA Final */}
         <section className="py-6 md:py-10 px-4 bg-white">

@@ -13,79 +13,56 @@ export default function AIMarketingPage() {
   const { openAssistant } = useApp();
   const t = contenido('servicios-ia-marketing', 'portada');
   const tC = contenido('servicios-ia-marketing', 'cierre');
+  const tInc = contenido('servicios-ia-marketing', 'incluye');
+  const tBen = contenido('servicios-ia-marketing', 'beneficios');
+  const tHow = contenido('servicios-ia-marketing', 'como_funciona');
+  const tIde = contenido('servicios-ia-marketing', 'ideal_para');
+  const tImg = contenido('servicios-ia-marketing', 'imagenes');
 
   // Imágenes para las diferentes secciones
   const sectionImages = {
-    hero: 'https://images.unsplash.com/photo-1495055154266-57bbdeada43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc2NTEwNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    features: 'https://images.unsplash.com/photo-1767355272538-e7177d16f979?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwc2NyZWVuJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc3Mjk0MjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    analytics: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    team: 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3Njc2Nzg4ODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    cta: 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    hero: tImg('hero', 'https://images.unsplash.com/photo-1495055154266-57bbdeada43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc2NTEwNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    features: tImg('features', 'https://images.unsplash.com/photo-1767355272538-e7177d16f979?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwc2NyZWVuJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc3Mjk0MjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    analytics: tImg('analytics', 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    team: tImg('team', 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3Njc2Nzg4ODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    cta: tImg('cta', 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')
   };
 
   const benefits = [
-    {
-      icon: Brain,
-      title: 'Análisis Predictivo',
-      description: 'Identifica qué campañas funcionarán antes de gastar presupuesto. Decisiones basadas en datos.',
-    },
-    {
-      icon: Zap,
-      title: 'Automatización Total',
-      description: 'Genera contenido, programa publicaciones y optimiza anuncios sin intervención manual.',
-    },
-    {
-      icon: Target,
-      title: 'Segmentación Inteligente',
-      description: 'Crea audiencias hipersegmentadas que realmente convierten basadas en comportamiento real.',
-    },
-    {
-      icon: LineChart,
-      title: 'ROI Optimizado',
-      description: 'Ajusta presupuestos y pujas en tiempo real para maximizar retorno de inversión.',
-    }
+    { icon: Brain, title: tBen('b1_titulo', 'Análisis Predictivo'), description: tBen('b1_texto', 'Identifica qué campañas funcionarán antes de gastar presupuesto. Decisiones basadas en datos.') },
+    { icon: Zap, title: tBen('b2_titulo', 'Automatización Total'), description: tBen('b2_texto', 'Genera contenido, programa publicaciones y optimiza anuncios sin intervención manual.') },
+    { icon: Target, title: tBen('b3_titulo', 'Segmentación Inteligente'), description: tBen('b3_texto', 'Crea audiencias hipersegmentadas que realmente convierten basadas en comportamiento real.') },
+    { icon: LineChart, title: tBen('b4_titulo', 'ROI Optimizado'), description: tBen('b4_texto', 'Ajusta presupuestos y pujas en tiempo real para maximizar retorno de inversión.') },
   ];
+
 
   const idealFor = [
-    'Agencias de marketing que manejan múltiples clientes simultáneamente',
-    'E-commerce con presupuesto publicitario mensual mayor a $20,000 MXN',
-    'Empresas SaaS que necesitan generación constante de leads',
-    'Consultores independientes que buscan escalar su negocio',
-    'Marcas DTC (Direct to Consumer) enfocadas en crecimiento',
-    'Startups en fase de validación de product-market fit'
+    tIde('i1', 'Agencias de marketing que manejan múltiples clientes simultáneamente'),
+    tIde('i2', 'E-commerce con presupuesto publicitario mensual mayor a $20,000 MXN'),
+    tIde('i3', 'Empresas SaaS que necesitan generación constante de leads'),
+    tIde('i4', 'Consultores independientes que buscan escalar su negocio'),
+    tIde('i5', 'Marcas DTC (Direct to Consumer) enfocadas en crecimiento'),
+    tIde('i6', 'Startups en fase de validación de product-market fit'),
   ];
+
 
   const features = [
-    'Generación de contenido para redes sociales con IA',
-    'Optimización automática de campañas de Google y Meta Ads',
-    'A/B testing inteligente de creatividades y copy',
-    'Análisis de sentimiento y monitoreo de marca',
-    'Predicción de tendencias y oportunidades de mercado',
-    'Dashboard unificado con métricas de todas las plataformas'
+    tInc('f1', 'Generación de contenido para redes sociales con IA'),
+    tInc('f2', 'Optimización automática de campañas de Google y Meta Ads'),
+    tInc('f3', 'A/B testing inteligente de creatividades y copy'),
+    tInc('f4', 'Análisis de sentimiento y monitoreo de marca'),
+    tInc('f5', 'Predicción de tendencias y oportunidades de mercado'),
+    tInc('f6', 'Dashboard unificado con métricas de todas las plataformas'),
   ];
 
+
   const howItWorks = [
-    {
-      step: 1,
-      title: 'Conexión',
-      description: 'Integramos tus cuentas de ads, redes sociales y analytics.'
-    },
-    {
-      step: 2,
-      title: 'Análisis',
-      description: 'La IA estudia tu histórico y performance actual.'
-    },
-    {
-      step: 3,
-      title: 'Automatización',
-      description: 'Genera contenido, optimiza campañas y segmenta audiencias.'
-    },
-    {
-      step: 4,
-      title: 'Mejora Continua',
-      description: 'Aprende de resultados y ajusta estrategia automáticamente.'
-    }
+    { step: 1, title: tHow('p1_titulo', 'Conexión'), description: tHow('p1_texto', 'Integramos tus cuentas de ads, redes sociales y analytics.') },
+    { step: 2, title: tHow('p2_titulo', 'Análisis'), description: tHow('p2_texto', 'La IA estudia tu histórico y performance actual.') },
+    { step: 3, title: tHow('p3_titulo', 'Automatización'), description: tHow('p3_texto', 'Genera contenido, optimiza campañas y segmenta audiencias.') },
+    { step: 4, title: tHow('p4_titulo', 'Mejora Continua'), description: tHow('p4_texto', 'Aprende de resultados y ajusta estrategia automáticamente.') },
   ];
+
 
   return (
     <>
@@ -151,7 +128,7 @@ export default function AIMarketingPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
-                  QUÉ <span className="text-[#7700CE]">INCLUYE</span>
+                  {tInc('titulo_1', 'QUÉ')} <span className="text-[#7700CE]">{tInc('titulo_2', 'INCLUYE')}</span>
                 </h2>
                 <div className="space-y-2.5 md:space-y-3">
                   {features.map((feature, i) => (
@@ -190,6 +167,7 @@ export default function AIMarketingPage() {
         </section>
 
         {/* BENEFICIOS */}
+        {tBen.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-7xl">
             <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
@@ -216,7 +194,7 @@ export default function AIMarketingPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
-                  BENEFICIOS <span className="text-[#7700CE]">PRINCIPALES</span>
+                  {tBen('titulo_1', 'BENEFICIOS')} <span className="text-[#7700CE]">{tBen('titulo_2', 'PRINCIPALES')}</span>
                 </h2>
                 <div className="space-y-4">
                   {benefits.map((benefit, i) => (
@@ -242,13 +220,15 @@ export default function AIMarketingPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CÓMO FUNCIONA */}
+        {tHow.visible() && (
         <section className="py-6 md:py-10 px-4 bg-white">
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
-                CÓMO <span className="text-[#7700CE]">FUNCIONA</span>
+                {tHow('titulo_1', 'CÓMO')} <span className="text-[#7700CE]">{tHow('titulo_2', 'FUNCIONA')}</span>
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Implementación e integración completa
@@ -298,13 +278,15 @@ export default function AIMarketingPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* IDEAL PARA */}
+        {tIde.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2">
-                IDEAL <span className="text-[#7700CE]">PARA</span>
+                {tIde('titulo_1', 'IDEAL')} <span className="text-[#7700CE]">{tIde('titulo_2', 'PARA')}</span>
               </h2>
             </div>
             
@@ -330,6 +312,7 @@ export default function AIMarketingPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CTA Final */}
         <section className="py-6 md:py-10 px-4 bg-white">

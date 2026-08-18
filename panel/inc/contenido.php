@@ -413,6 +413,83 @@ function registro_paginas(): array {
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Tu mejor vendedor, siempre disponible. Atiende, califica y da seguimiento automático por WhatsApp.'],
                     ],
                 ],
+
+                'incluye' => [
+                    'nombre' => 'Qué incluye',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
+                        'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Conversaciones naturales con IA entrenada en tu negocio'],
+                        'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Integración con CRM, calendarios y sistemas de pago'],
+                        'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Calificación automática de leads con scoring inteligente'],
+                        'f4' => ['label' => 'Punto 4', 'tipo' => 'texto', 'def' => 'Análisis de sentimiento y priorización de urgencias'],
+                        'f5' => ['label' => 'Punto 5', 'tipo' => 'texto', 'def' => 'Dashboard con métricas en tiempo real'],
+                        'f6' => ['label' => 'Punto 6', 'tipo' => 'texto', 'def' => 'Notificaciones instantáneas de leads calificados'],
+                    ],
+                ],
+
+                'beneficios' => [
+                    'nombre' => 'Beneficios principales',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
+                        'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Respuestas Inmediatas'],
+                        'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Atiende a tus clientes las 24 horas, los 7 días de la semana, sin perder ninguna oportunidad.'],
+                        'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Calificación de Prospectos'],
+                        'b2_texto'  => ['label' => 'Beneficio 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica automáticamente leads de alta calidad y prioriza tu tiempo en lo que realmente importa.'],
+                        'b3_titulo' => ['label' => 'Beneficio 3 · título', 'tipo' => 'texto', 'def' => 'Seguimiento Automático'],
+                        'b3_texto'  => ['label' => 'Beneficio 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Nunca pierdas un prospecto. El agente hace seguimiento inteligente hasta concretar la venta.'],
+                        'b4_titulo' => ['label' => 'Beneficio 4 · título', 'tipo' => 'texto', 'def' => 'Agenda de Citas'],
+                        'b4_texto'  => ['label' => 'Beneficio 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Coordina y agenda reuniones automáticamente, sincronizado con tu calendario.'],
+                    ],
+                ],
+
+                'como_funciona' => [
+                    'nombre' => 'Cómo funciona',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
+                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
+                        'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Configuración'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Entrenamos la IA con información de tu negocio y flujos de conversación.'],
+                        'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Integración'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos el agente a tu WhatsApp Business en minutos.'],
+                        'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'El agente empieza a atender, calificar y dar seguimiento automáticamente.'],
+                        'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Mejora continua basada en datos reales y comportamiento de usuarios.'],
+                    ],
+                ],
+
+                'ideal_para' => [
+                    'nombre' => 'Ideal para',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
+                        'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Clínicas y consultorios médicos que necesitan agendar citas 24/7'],
+                        'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'Inmobiliarias que califican prospectos y coordinan visitas'],
+                        'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'E-commerce que procesa pedidos y resuelve dudas de productos'],
+                        'i4' => ['label' => 'Caso 4', 'tipo' => 'texto', 'def' => 'Servicios profesionales que cotizan y agenden reuniones'],
+                        'i5' => ['label' => 'Caso 5', 'tipo' => 'texto', 'def' => 'Empresas B2B que califican oportunidades comerciales'],
+                        'i6' => ['label' => 'Caso 6', 'tipo' => 'texto', 'def' => 'Instituciones educativas que gestionan inscripciones'],
+                    ],
+                ],
+
+                'imagenes' => [
+                    'nombre' => 'Imágenes de la página',
+                    'ayuda'  => 'Las fotos que acompañan cada sección.',
+                    'campos' => [
+                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1659355893994-bddb1ba8e3a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxlcyUyMHRlYW0lMjBzbWFydHBob25lJTIwYnVzaW5lc3N8ZW58MXx8fHwxNzY3NzMxMjQwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1611746872915-64382b5c76da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmclMjBkaXNjdXNzaW9ufGVufDF8fHx8MTc2NzYxNjIzN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'support' => ['label' => 'Imagen de support', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'business' => ['label' => 'Imagen de business', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
                 'cierre' => [
                     'nombre' => 'Llamado final',
                     'campos' => [
@@ -437,6 +514,83 @@ function registro_paginas(): array {
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Sistema de IA que automatiza prospección, califica leads y optimiza cada etapa de tu proceso comercial.'],
                     ],
                 ],
+
+                'incluye' => [
+                    'nombre' => 'Qué incluye',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
+                        'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Enriquecimiento automático de datos de prospectos'],
+                        'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Integración con LinkedIn, CRM y bases de datos comerciales'],
+                        'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Análisis predictivo de comportamiento de compra'],
+                        'f4' => ['label' => 'Punto 4', 'tipo' => 'texto', 'def' => 'Secuencias de email y llamadas automatizadas'],
+                        'f5' => ['label' => 'Punto 5', 'tipo' => 'texto', 'def' => 'Dashboard con métricas de conversión en tiempo real'],
+                        'f6' => ['label' => 'Punto 6', 'tipo' => 'texto', 'def' => 'Alertas inteligentes de oportunidades de venta'],
+                    ],
+                ],
+
+                'beneficios' => [
+                    'nombre' => 'Beneficios principales',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
+                        'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Prospección Inteligente'],
+                        'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica y prioriza automáticamente leads con mayor probabilidad de conversión.'],
+                        'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Lead Scoring Automático'],
+                        'b2_texto'  => ['label' => 'Beneficio 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Califica cada prospecto con criterios personalizados y datos en tiempo real.'],
+                        'b3_titulo' => ['label' => 'Beneficio 3 · título', 'tipo' => 'texto', 'def' => 'Seguimiento Predictivo'],
+                        'b3_texto'  => ['label' => 'Beneficio 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Sabe cuándo y cómo contactar cada lead para maximizar probabilidad de cierre.'],
+                        'b4_titulo' => ['label' => 'Beneficio 4 · título', 'tipo' => 'texto', 'def' => 'Optimización de Pipeline'],
+                        'b4_texto'  => ['label' => 'Beneficio 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica cuellos de botella y sugiere acciones para acelerar el ciclo de ventas.'],
+                    ],
+                ],
+
+                'como_funciona' => [
+                    'nombre' => 'Cómo funciona',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
+                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
+                        'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Análisis'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA analiza tu histórico de ventas y perfil de cliente ideal.'],
+                        'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Prospección'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Busca y califica prospectos automáticamente en múltiples fuentes.'],
+                        'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Contacto'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Ejecuta secuencias personalizadas de email, LinkedIn y llamadas.'],
+                        'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Aprende de cada interacción para mejorar continuamente los resultados.'],
+                    ],
+                ],
+
+                'ideal_para' => [
+                    'nombre' => 'Ideal para',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
+                        'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Equipos de ventas B2B que necesitan calificar leads rápidamente'],
+                        'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'Empresas SaaS con ciclos de venta complejos'],
+                        'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'Consultorías y agencias que prospectan empresas'],
+                        'i4' => ['label' => 'Caso 4', 'tipo' => 'texto', 'def' => 'Distribuidores mayoristas con grandes volúmenes de clientes'],
+                        'i5' => ['label' => 'Caso 5', 'tipo' => 'texto', 'def' => 'Startups tecnológicas en fase de crecimiento'],
+                        'i6' => ['label' => 'Caso 6', 'tipo' => 'texto', 'def' => 'Inmobiliarias comerciales con múltiples desarrollos'],
+                    ],
+                ],
+
+                'imagenes' => [
+                    'nombre' => 'Imágenes de la página',
+                    'ayuda'  => 'Las fotos que acompañan cada sección.',
+                    'campos' => [
+                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1545535408-2b4d520cbd88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwc2FsZXN8ZW58MXx8fHwxNzY3NzI4ODU1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1759752394755-1241472b589d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBhbmFseXRpY3MlMjBkYXNoYm9hcmR8ZW58MXx8fHwxNzY3Njc3NzA2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'collaboration' => ['label' => 'Imagen de collaboration', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1496180470114-6ef490f3ff22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMG1lZXRpbmd8ZW58MXx8fHwxNzY3NjI2NDE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'growth' => ['label' => 'Imagen de growth', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
                 'cierre' => [
                     'nombre' => 'Llamado final',
                     'campos' => [
@@ -461,6 +615,83 @@ function registro_paginas(): array {
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Automatiza contenido, optimiza campañas y multiplica resultados con inteligencia artificial.'],
                     ],
                 ],
+
+                'incluye' => [
+                    'nombre' => 'Qué incluye',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
+                        'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Generación de contenido para redes sociales con IA'],
+                        'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Optimización automática de campañas de Google y Meta Ads'],
+                        'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'A/B testing inteligente de creatividades y copy'],
+                        'f4' => ['label' => 'Punto 4', 'tipo' => 'texto', 'def' => 'Análisis de sentimiento y monitoreo de marca'],
+                        'f5' => ['label' => 'Punto 5', 'tipo' => 'texto', 'def' => 'Predicción de tendencias y oportunidades de mercado'],
+                        'f6' => ['label' => 'Punto 6', 'tipo' => 'texto', 'def' => 'Dashboard unificado con métricas de todas las plataformas'],
+                    ],
+                ],
+
+                'beneficios' => [
+                    'nombre' => 'Beneficios principales',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
+                        'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Análisis Predictivo'],
+                        'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica qué campañas funcionarán antes de gastar presupuesto. Decisiones basadas en datos.'],
+                        'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Automatización Total'],
+                        'b2_texto'  => ['label' => 'Beneficio 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Genera contenido, programa publicaciones y optimiza anuncios sin intervención manual.'],
+                        'b3_titulo' => ['label' => 'Beneficio 3 · título', 'tipo' => 'texto', 'def' => 'Segmentación Inteligente'],
+                        'b3_texto'  => ['label' => 'Beneficio 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Crea audiencias hipersegmentadas que realmente convierten basadas en comportamiento real.'],
+                        'b4_titulo' => ['label' => 'Beneficio 4 · título', 'tipo' => 'texto', 'def' => 'ROI Optimizado'],
+                        'b4_texto'  => ['label' => 'Beneficio 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Ajusta presupuestos y pujas en tiempo real para maximizar retorno de inversión.'],
+                    ],
+                ],
+
+                'como_funciona' => [
+                    'nombre' => 'Cómo funciona',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
+                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
+                        'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Conexión'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Integramos tus cuentas de ads, redes sociales y analytics.'],
+                        'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Análisis'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA estudia tu histórico y performance actual.'],
+                        'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Genera contenido, optimiza campañas y segmenta audiencias.'],
+                        'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Mejora Continua'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Aprende de resultados y ajusta estrategia automáticamente.'],
+                    ],
+                ],
+
+                'ideal_para' => [
+                    'nombre' => 'Ideal para',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
+                        'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Agencias de marketing que manejan múltiples clientes simultáneamente'],
+                        'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'E-commerce con presupuesto publicitario mensual mayor a $20,000 MXN'],
+                        'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'Empresas SaaS que necesitan generación constante de leads'],
+                        'i4' => ['label' => 'Caso 4', 'tipo' => 'texto', 'def' => 'Consultores independientes que buscan escalar su negocio'],
+                        'i5' => ['label' => 'Caso 5', 'tipo' => 'texto', 'def' => 'Marcas DTC (Direct to Consumer) enfocadas en crecimiento'],
+                        'i6' => ['label' => 'Caso 6', 'tipo' => 'texto', 'def' => 'Startups en fase de validación de product-market fit'],
+                    ],
+                ],
+
+                'imagenes' => [
+                    'nombre' => 'Imágenes de la página',
+                    'ayuda'  => 'Las fotos que acompañan cada sección.',
+                    'campos' => [
+                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1495055154266-57bbdeada43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc2NTEwNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1767355272538-e7177d16f979?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwc2NyZWVuJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc3Mjk0MjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'analytics' => ['label' => 'Imagen de analytics', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'team' => ['label' => 'Imagen de team', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3Njc2Nzg4ODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
                 'cierre' => [
                     'nombre' => 'Llamado final',
                     'campos' => [
@@ -485,6 +716,83 @@ function registro_paginas(): array {
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Asistente inteligente dentro de tu tienda que recupera carritos, recomienda productos y atiende 24/7.'],
                     ],
                 ],
+
+                'incluye' => [
+                    'nombre' => 'Qué incluye',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
+                        'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Chat inteligente que guía desde duda hasta compra'],
+                        'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Upsell y cross-sell automático en momento ideal'],
+                        'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Personalización 1:1 basada en comportamiento'],
+                        'f4' => ['label' => 'Punto 4', 'tipo' => 'texto', 'def' => 'Automatización de emails activados por acciones'],
+                        'f5' => ['label' => 'Punto 5', 'tipo' => 'texto', 'def' => 'Análisis predictivo de inventario y tendencias'],
+                        'f6' => ['label' => 'Punto 6', 'tipo' => 'texto', 'def' => 'Integración con Shopify, WooCommerce, Magento y más'],
+                    ],
+                ],
+
+                'beneficios' => [
+                    'nombre' => 'Beneficios principales',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
+                        'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Recuperación de Carrito'],
+                        'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica compradores que abandonaron y los contacta automáticamente con ofertas personalizadas.'],
+                        'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Recomendaciones Inteligentes'],
+                        'b2_texto'  => ['label' => 'Beneficio 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Sugiere productos complementarios en el momento exacto para aumentar el ticket promedio.'],
+                        'b3_titulo' => ['label' => 'Beneficio 3 · título', 'tipo' => 'texto', 'def' => 'Soporte Automático 24/7'],
+                        'b3_texto'  => ['label' => 'Beneficio 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Resuelve dudas de producto, inventario, envíos y devoluciones sin intervención humana.'],
+                        'b4_titulo' => ['label' => 'Beneficio 4 · título', 'tipo' => 'texto', 'def' => 'Más Ventas, Menos Fricción'],
+                        'b4_texto'  => ['label' => 'Beneficio 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Reduce abandono de compra con asistencia en tiempo real durante todo el proceso.'],
+                    ],
+                ],
+
+                'como_funciona' => [
+                    'nombre' => 'Cómo funciona',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
+                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
+                        'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Instalación'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos la IA a tu tienda en minutos, sin código.'],
+                        'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Entrenamiento'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA aprende tu catálogo, políticas y tono de voz.'],
+                        'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Empieza a asistir, recomendar y recuperar carritos.'],
+                        'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Mejora continua basada en conversiones reales.'],
+                    ],
+                ],
+
+                'ideal_para' => [
+                    'nombre' => 'Ideal para',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
+                        'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Tiendas online con más de 100 visitas diarias que necesitan vender más'],
+                        'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'Marcas propias (DTC) enfocadas en reducir costo de adquisición'],
+                        'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'Shopify Stores con instalación en minutos sin código'],
+                        'i4' => ['label' => 'Caso 4', 'tipo' => 'texto', 'def' => 'WooCommerce optimizado para WordPress con plugin nativo'],
+                        'i5' => ['label' => 'Caso 5', 'tipo' => 'texto', 'def' => 'Vendedores en marketplaces que quieren su propia tienda'],
+                        'i6' => ['label' => 'Caso 6', 'tipo' => 'texto', 'def' => 'Negocios de dropshipping que buscan automatizar atención'],
+                    ],
+                ],
+
+                'imagenes' => [
+                    'nombre' => 'Imágenes de la página',
+                    'ayuda'  => 'Las fotos que acompañan cada sección.',
+                    'campos' => [
+                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1658297063569-162817482fb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBvbmxpbmUlMjBzaG9wcGluZ3xlbnwxfHx8fDE3Njc3MjEzNTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1648544365218-188e3d07dcac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaG9wcGluZyUyMGJhZ3MlMjByZXRhaWx8ZW58MXx8fHwxNzY3Njc2NDc0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'support' => ['label' => 'Imagen de support', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'growth' => ['label' => 'Imagen de growth', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
                 'cierre' => [
                     'nombre' => 'Llamado final',
                     'campos' => [

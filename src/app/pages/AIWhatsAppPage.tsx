@@ -13,79 +13,56 @@ export default function AIWhatsAppPage() {
   const { openAssistant } = useApp();
   const t = contenido('servicios-ia-whatsapp', 'portada');
   const tC = contenido('servicios-ia-whatsapp', 'cierre');
+  const tInc = contenido('servicios-ia-whatsapp', 'incluye');
+  const tBen = contenido('servicios-ia-whatsapp', 'beneficios');
+  const tHow = contenido('servicios-ia-whatsapp', 'como_funciona');
+  const tIde = contenido('servicios-ia-whatsapp', 'ideal_para');
+  const tImg = contenido('servicios-ia-whatsapp', 'imagenes');
 
   // Imágenes para las diferentes secciones
   const sectionImages = {
-    hero: 'https://images.unsplash.com/photo-1659355893994-bddb1ba8e3a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxlcyUyMHRlYW0lMjBzbWFydHBob25lJTIwYnVzaW5lc3N8ZW58MXx8fHwxNzY3NzMxMjQwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    features: 'https://images.unsplash.com/photo-1611746872915-64382b5c76da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmclMjBkaXNjdXNzaW9ufGVufDF8fHx8MTc2NzYxNjIzN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    support: 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    business: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    cta: 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    hero: tImg('hero', 'https://images.unsplash.com/photo-1659355893994-bddb1ba8e3a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxlcyUyMHRlYW0lMjBzbWFydHBob25lJTIwYnVzaW5lc3N8ZW58MXx8fHwxNzY3NzMxMjQwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    features: tImg('features', 'https://images.unsplash.com/photo-1611746872915-64382b5c76da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmclMjBkaXNjdXNzaW9ufGVufDF8fHx8MTc2NzYxNjIzN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    support: tImg('support', 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    business: tImg('business', 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    cta: tImg('cta', 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')
   };
 
   const benefits = [
-    {
-      icon: Clock,
-      title: 'Respuestas Inmediatas',
-      description: 'Atiende a tus clientes las 24 horas, los 7 días de la semana, sin perder ninguna oportunidad.',
-    },
-    {
-      icon: Target,
-      title: 'Calificación de Prospectos',
-      description: 'Identifica automáticamente leads de alta calidad y prioriza tu tiempo en lo que realmente importa.',
-    },
-    {
-      icon: Zap,
-      title: 'Seguimiento Automático',
-      description: 'Nunca pierdas un prospecto. El agente hace seguimiento inteligente hasta concretar la venta.',
-    },
-    {
-      icon: Calendar,
-      title: 'Agenda de Citas',
-      description: 'Coordina y agenda reuniones automáticamente, sincronizado con tu calendario.',
-    }
+    { icon: Clock, title: tBen('b1_titulo', 'Respuestas Inmediatas'), description: tBen('b1_texto', 'Atiende a tus clientes las 24 horas, los 7 días de la semana, sin perder ninguna oportunidad.') },
+    { icon: Target, title: tBen('b2_titulo', 'Calificación de Prospectos'), description: tBen('b2_texto', 'Identifica automáticamente leads de alta calidad y prioriza tu tiempo en lo que realmente importa.') },
+    { icon: Zap, title: tBen('b3_titulo', 'Seguimiento Automático'), description: tBen('b3_texto', 'Nunca pierdas un prospecto. El agente hace seguimiento inteligente hasta concretar la venta.') },
+    { icon: Calendar, title: tBen('b4_titulo', 'Agenda de Citas'), description: tBen('b4_texto', 'Coordina y agenda reuniones automáticamente, sincronizado con tu calendario.') },
   ];
+
 
   const idealFor = [
-    'Clínicas y consultorios médicos que necesitan agendar citas 24/7',
-    'Inmobiliarias que califican prospectos y coordinan visitas',
-    'E-commerce que procesa pedidos y resuelve dudas de productos',
-    'Servicios profesionales que cotizan y agenden reuniones',
-    'Empresas B2B que califican oportunidades comerciales',
-    'Instituciones educativas que gestionan inscripciones'
+    tIde('i1', 'Clínicas y consultorios médicos que necesitan agendar citas 24/7'),
+    tIde('i2', 'Inmobiliarias que califican prospectos y coordinan visitas'),
+    tIde('i3', 'E-commerce que procesa pedidos y resuelve dudas de productos'),
+    tIde('i4', 'Servicios profesionales que cotizan y agenden reuniones'),
+    tIde('i5', 'Empresas B2B que califican oportunidades comerciales'),
+    tIde('i6', 'Instituciones educativas que gestionan inscripciones'),
   ];
+
 
   const features = [
-    'Conversaciones naturales con IA entrenada en tu negocio',
-    'Integración con CRM, calendarios y sistemas de pago',
-    'Calificación automática de leads con scoring inteligente',
-    'Análisis de sentimiento y priorización de urgencias',
-    'Dashboard con métricas en tiempo real',
-    'Notificaciones instantáneas de leads calificados'
+    tInc('f1', 'Conversaciones naturales con IA entrenada en tu negocio'),
+    tInc('f2', 'Integración con CRM, calendarios y sistemas de pago'),
+    tInc('f3', 'Calificación automática de leads con scoring inteligente'),
+    tInc('f4', 'Análisis de sentimiento y priorización de urgencias'),
+    tInc('f5', 'Dashboard con métricas en tiempo real'),
+    tInc('f6', 'Notificaciones instantáneas de leads calificados'),
   ];
 
+
   const howItWorks = [
-    {
-      step: 1,
-      title: 'Configuración',
-      description: 'Entrenamos la IA con información de tu negocio y flujos de conversación.'
-    },
-    {
-      step: 2,
-      title: 'Integración',
-      description: 'Conectamos el agente a tu WhatsApp Business en minutos.'
-    },
-    {
-      step: 3,
-      title: 'Automatización',
-      description: 'El agente empieza a atender, calificar y dar seguimiento automáticamente.'
-    },
-    {
-      step: 4,
-      title: 'Optimización',
-      description: 'Mejora continua basada en datos reales y comportamiento de usuarios.'
-    }
+    { step: 1, title: tHow('p1_titulo', 'Configuración'), description: tHow('p1_texto', 'Entrenamos la IA con información de tu negocio y flujos de conversación.') },
+    { step: 2, title: tHow('p2_titulo', 'Integración'), description: tHow('p2_texto', 'Conectamos el agente a tu WhatsApp Business en minutos.') },
+    { step: 3, title: tHow('p3_titulo', 'Automatización'), description: tHow('p3_texto', 'El agente empieza a atender, calificar y dar seguimiento automáticamente.') },
+    { step: 4, title: tHow('p4_titulo', 'Optimización'), description: tHow('p4_texto', 'Mejora continua basada en datos reales y comportamiento de usuarios.') },
   ];
+
 
   return (
     <>
@@ -154,7 +131,7 @@ export default function AIWhatsAppPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
-                  QUÉ <span className="text-[#7700CE]">INCLUYE</span>
+                  {tInc('titulo_1', 'QUÉ')} <span className="text-[#7700CE]">{tInc('titulo_2', 'INCLUYE')}</span>
                 </h2>
                 <div className="space-y-2.5 md:space-y-3">
                   {features.map((feature, i) => (
@@ -194,6 +171,7 @@ export default function AIWhatsAppPage() {
         </section>
 
         {/* BENEFICIOS - Layout: Imagen izquierda, Contenido derecha */}
+        {tBen.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-7xl">
             <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
@@ -222,7 +200,7 @@ export default function AIWhatsAppPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
-                  BENEFICIOS <span className="text-[#7700CE]">PRINCIPALES</span>
+                  {tBen('titulo_1', 'BENEFICIOS')} <span className="text-[#7700CE]">{tBen('titulo_2', 'PRINCIPALES')}</span>
                 </h2>
                 <div className="space-y-4">
                   {benefits.map((benefit, i) => (
@@ -248,16 +226,18 @@ export default function AIWhatsAppPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CÓMO FUNCIONA - Layout: Contenido + Grid con imagen de fondo */}
+        {tHow.visible() && (
         <section className="py-6 md:py-10 px-4 bg-white">
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
-                CÓMO <span className="text-[#7700CE]">FUNCIONA</span>
+                {tHow('titulo_1', 'CÓMO')} <span className="text-[#7700CE]">{tHow('titulo_2', 'FUNCIONA')}</span>
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
-                Implementación simple en 4 pasos
+                {tHow('bajada', 'Implementación simple en 4 pasos')}
               </p>
             </div>
 
@@ -307,13 +287,15 @@ export default function AIWhatsAppPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* IDEAL PARA - Layout centrado */}
+        {tIde.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2">
-                IDEAL <span className="text-[#7700CE]">PARA</span>
+                {tIde('titulo_1', 'IDEAL')} <span className="text-[#7700CE]">{tIde('titulo_2', 'PARA')}</span>
               </h2>
             </div>
             
@@ -339,6 +321,7 @@ export default function AIWhatsAppPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* CTA Final */}
         <section className="py-6 md:py-10 px-4 bg-white">
