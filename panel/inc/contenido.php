@@ -258,6 +258,14 @@ function registro_paginas(): array {
                         'v3_texto' => ['label' => 'Valor 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Tu éxito es nuestro éxito. Somos tu equipo de crecimiento.'],
                     ],
                 ],
+
+                'elegirnos' => [
+                    'nombre' => '¿Por qué elegirnos?',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo'  => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿POR QUÉ ELEGIRNOS?'],
+                    ],
+                ],
             ],
         ],
 
@@ -283,6 +291,34 @@ function registro_paginas(): array {
                         'boton'   => ['label' => 'Texto del botón de enviar', 'tipo' => 'texto', 'def' => 'ENVIAR MENSAJE'],
                         'gracias' => ['label' => 'Mensaje al enviar correctamente', 'tipo' => 'texto',
                                       'def' => '¡Mensaje enviado! Te contactaremos muy pronto.'],
+                    ],
+                ],
+
+                'tarjetas' => [
+                    'nombre' => 'Tarjetas de la columna derecha',
+                    'campos' => [
+                        'dir_titulo'  => ['label' => 'Nombre del dato de dirección', 'tipo' => 'texto', 'def' => 'Dirección'],
+                        'tel_titulo'  => ['label' => 'Nombre del dato de teléfono', 'tipo' => 'texto', 'def' => 'Teléfono'],
+                        'mail_titulo' => ['label' => 'Nombre del dato de email', 'tipo' => 'texto', 'def' => 'Email'],
+                        'wa_titulo'   => ['label' => 'Tarjeta de WhatsApp · título', 'tipo' => 'texto', 'def' => '¿PREFIERES WHATSAPP?'],
+                        'wa_texto'    => ['label' => 'Tarjeta de WhatsApp · texto', 'tipo' => 'texto', 'def' => 'Respuesta inmediata por WhatsApp'],
+                        'wa_boton'    => ['label' => 'Tarjeta de WhatsApp · botón', 'tipo' => 'texto', 'def' => 'CHATEAR AHORA'],
+                        'hor_titulo'  => ['label' => 'Tarjeta de horario · título', 'tipo' => 'texto', 'def' => 'HORARIO'],
+                    ],
+                ],
+
+                'campos_formulario' => [
+                    'nombre' => 'Textos dentro del formulario',
+                    'ayuda'  => 'Lo que se ve en gris dentro de cada casilla antes de escribir.',
+                    'campos' => [
+                        'ph_nombre'  => ['label' => 'Casilla de nombre', 'tipo' => 'texto', 'def' => 'Nombre completo *'],
+                        'ph_email'   => ['label' => 'Casilla de email', 'tipo' => 'texto', 'def' => 'Email *'],
+                        'ph_tel'     => ['label' => 'Casilla de teléfono', 'tipo' => 'texto', 'def' => 'Teléfono *'],
+                        'ph_empresa' => ['label' => 'Casilla de empresa', 'tipo' => 'texto', 'def' => 'Empresa'],
+                        'ph_mensaje' => ['label' => 'Casilla de mensaje', 'tipo' => 'texto', 'def' => '¿En qué podemos ayudarte? *'],
+                        'enviando'   => ['label' => 'Texto del botón mientras envía', 'tipo' => 'texto', 'def' => 'ENVIANDO…'],
+                        'error'      => ['label' => 'Aviso si no se pudo enviar', 'tipo' => 'texto', 'def' => 'No se pudo enviar. Escríbenos por WhatsApp, por favor.'],
+                        'sin_red'    => ['label' => 'Aviso si no hay conexión', 'tipo' => 'texto', 'def' => 'Error de conexión. Intenta de nuevo o escríbenos por WhatsApp.'],
                     ],
                 ],
             ],
@@ -459,6 +495,14 @@ function registro_paginas(): array {
                                        'def' => 'Descubre cómo hemos transformado negocios en Aguascalientes y México con diseño web excepcional, SEO estratégico y resultados medibles.'],
                     ],
                 ],
+
+                'filtros' => [
+                    'nombre' => 'Filtros del listado',
+                    'campos' => [
+                        'todos'  => ['label' => 'Botón de “ver todo”', 'tipo' => 'texto', 'def' => 'TODOS LOS PROYECTOS'],
+                        'volver' => ['label' => 'Enlace de regreso en cada proyecto', 'tipo' => 'texto', 'def' => 'Volver al portafolio'],
+                    ],
+                ],
             ],
         ],
 
@@ -475,6 +519,13 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'BLOG'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
                                        'def' => 'Estrategias, tips y tendencias de marketing digital que funcionan'],
+                    ],
+                ],
+
+                'navegacion' => [
+                    'nombre' => 'Navegación',
+                    'campos' => [
+                        'volver' => ['label' => 'Enlace de regreso en cada artículo', 'tipo' => 'texto', 'def' => 'Volver al blog'],
                     ],
                 ],
             ],
@@ -1073,6 +1124,49 @@ function registro_paginas(): array {
                         'fecha'  => ['label' => 'Fecha de última actualización', 'tipo' => 'texto', 'def' => 'Última actualización: Diciembre 16, 2024'],
                     ],
                 ],
+
+                'apartados' => [
+                    'nombre' => 'Apartados del aviso',
+                    'ayuda'  => 'Cada apartado del texto legal. Apaga el interruptor para quitar un apartado. Los tres últimos están libres para que agregues los tuyos.',
+                    'campos' => [
+                        'a1_ver'    => ['label' => 'Apartado 1 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a1_titulo' => ['label' => 'Apartado 1 · título', 'tipo' => 'texto', 'def' => '1. Información que Recopilamos'],
+                        'a1_texto'  => ['label' => 'Apartado 1 · texto', 'tipo' => 'parrafo', 'def' => 'Recopilamos información que nos proporcionas directamente al usar nuestros servicios: nombre, correo electrónico, teléfono, empresa, y cualquier otra información que decidas compartir.'],
+                        'a1_lista'  => ['label' => 'Apartado 1 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a2_ver'    => ['label' => 'Apartado 2 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a2_titulo' => ['label' => 'Apartado 2 · título', 'tipo' => 'texto', 'def' => '2. Uso de la Información'],
+                        'a2_texto'  => ['label' => 'Apartado 2 · texto', 'tipo' => 'parrafo', 'def' => 'Utilizamos la información recopilada para:'],
+                        'a2_lista'  => ['label' => 'Apartado 2 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => 'Proporcionar y mejorar nuestros servicios\nComunicarnos contigo sobre nuestros servicios\nEnviar información relevante de marketing (con tu consentimiento)\nAnalizar el uso de nuestro sitio web'],
+                        'a3_ver'    => ['label' => 'Apartado 3 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a3_titulo' => ['label' => 'Apartado 3 · título', 'tipo' => 'texto', 'def' => '3. Protección de Datos'],
+                        'a3_texto'  => ['label' => 'Apartado 3 · texto', 'tipo' => 'parrafo', 'def' => 'Implementamos medidas de seguridad diseñadas para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción.'],
+                        'a3_lista'  => ['label' => 'Apartado 3 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a4_ver'    => ['label' => 'Apartado 4 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a4_titulo' => ['label' => 'Apartado 4 · título', 'tipo' => 'texto', 'def' => '4. Cookies'],
+                        'a4_texto'  => ['label' => 'Apartado 4 · texto', 'tipo' => 'parrafo', 'def' => 'Utilizamos cookies y tecnologías similares para mejorar tu experiencia en nuestro sitio, analizar el tráfico y personalizar contenido.'],
+                        'a4_lista'  => ['label' => 'Apartado 4 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a5_ver'    => ['label' => 'Apartado 5 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a5_titulo' => ['label' => 'Apartado 5 · título', 'tipo' => 'texto', 'def' => '5. Tus Derechos'],
+                        'a5_texto'  => ['label' => 'Apartado 5 · texto', 'tipo' => 'parrafo', 'def' => 'Tienes derecho a acceder, corregir o eliminar tu información personal. Para ejercer estos derechos, contáctanos en contacto@inedito.digital'],
+                        'a5_lista'  => ['label' => 'Apartado 5 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a6_ver'    => ['label' => 'Apartado 6 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a6_titulo' => ['label' => 'Apartado 6 · título', 'tipo' => 'texto', 'def' => '6. Contacto'],
+                        'a6_texto'  => ['label' => 'Apartado 6 · texto', 'tipo' => 'parrafo', 'def' => 'Si tienes preguntas sobre esta política de privacidad, contáctanos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 583 9229'],
+                        'a6_lista'  => ['label' => 'Apartado 6 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a7_ver'    => ['label' => 'Apartado 7 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a7_titulo' => ['label' => 'Apartado 7 · título (libre)', 'tipo' => 'texto', 'def' => ''],
+                        'a7_texto'  => ['label' => 'Apartado 7 · texto', 'tipo' => 'parrafo', 'def' => ''],
+                        'a7_lista'  => ['label' => 'Apartado 7 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a8_ver'    => ['label' => 'Apartado 8 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a8_titulo' => ['label' => 'Apartado 8 · título (libre)', 'tipo' => 'texto', 'def' => ''],
+                        'a8_texto'  => ['label' => 'Apartado 8 · texto', 'tipo' => 'parrafo', 'def' => ''],
+                        'a8_lista'  => ['label' => 'Apartado 8 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a9_ver'    => ['label' => 'Apartado 9 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a9_titulo' => ['label' => 'Apartado 9 · título (libre)', 'tipo' => 'texto', 'def' => ''],
+                        'a9_texto'  => ['label' => 'Apartado 9 · texto', 'tipo' => 'parrafo', 'def' => ''],
+                        'a9_lista'  => ['label' => 'Apartado 9 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                    ],
+                ],
             ],
         ],
 
@@ -1090,10 +1184,126 @@ function registro_paginas(): array {
                         'fecha'  => ['label' => 'Fecha de última actualización', 'tipo' => 'texto', 'def' => 'Última actualización: Diciembre 16, 2024'],
                     ],
                 ],
+
+                'apartados' => [
+                    'nombre' => 'Apartados de los términos',
+                    'ayuda'  => 'Cada apartado del texto legal. Apaga el interruptor para quitar un apartado. Los tres últimos están libres para que agregues los tuyos.',
+                    'campos' => [
+                        'a1_ver'    => ['label' => 'Apartado 1 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a1_titulo' => ['label' => 'Apartado 1 · título', 'tipo' => 'texto', 'def' => '1. Aceptación de Términos'],
+                        'a1_texto'  => ['label' => 'Apartado 1 · texto', 'tipo' => 'parrafo', 'def' => 'Al acceder y usar los servicios de INÉDITO DIGITAL, aceptas estar sujeto a estos términos y condiciones.'],
+                        'a1_lista'  => ['label' => 'Apartado 1 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a2_ver'    => ['label' => 'Apartado 2 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a2_titulo' => ['label' => 'Apartado 2 · título', 'tipo' => 'texto', 'def' => '2. Servicios'],
+                        'a2_texto'  => ['label' => 'Apartado 2 · texto', 'tipo' => 'parrafo', 'def' => 'Ofrecemos servicios de marketing digital, desarrollo web, SEO, publicidad digital y consultoría. Los detalles específicos de cada servicio se acordarán en contratos individuales.'],
+                        'a2_lista'  => ['label' => 'Apartado 2 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a3_ver'    => ['label' => 'Apartado 3 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a3_titulo' => ['label' => 'Apartado 3 · título', 'tipo' => 'texto', 'def' => '3. Pagos y Facturación'],
+                        'a3_texto'  => ['label' => 'Apartado 3 · texto', 'tipo' => 'parrafo', 'def' => 'Los términos de pago se especificarán en cada propuesta comercial. Generalmente requerimos:'],
+                        'a3_lista'  => ['label' => 'Apartado 3 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => '50% de anticipo para iniciar el proyecto\n50% restante contra entrega\nServicios recurrentes: pago mensual anticipado'],
+                        'a4_ver'    => ['label' => 'Apartado 4 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a4_titulo' => ['label' => 'Apartado 4 · título', 'tipo' => 'texto', 'def' => '4. Garantías y Resultados'],
+                        'a4_texto'  => ['label' => 'Apartado 4 · texto', 'tipo' => 'parrafo', 'def' => 'Garantizamos esfuerzo máximo y entregas en tiempo. Sin embargo, resultados específicos (rankings, ventas, leads) dependen de múltiples factores externos y no pueden garantizarse.'],
+                        'a4_lista'  => ['label' => 'Apartado 4 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a5_ver'    => ['label' => 'Apartado 5 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a5_titulo' => ['label' => 'Apartado 5 · título', 'tipo' => 'texto', 'def' => '5. Propiedad Intelectual'],
+                        'a5_texto'  => ['label' => 'Apartado 5 · texto', 'tipo' => 'parrafo', 'def' => 'Una vez pagado en su totalidad, el cliente recibe derechos completos sobre el trabajo entregado. Nos reservamos el derecho de mostrar el trabajo en nuestro portafolio.'],
+                        'a5_lista'  => ['label' => 'Apartado 5 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a6_ver'    => ['label' => 'Apartado 6 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a6_titulo' => ['label' => 'Apartado 6 · título', 'tipo' => 'texto', 'def' => '6. Cancelación'],
+                        'a6_texto'  => ['label' => 'Apartado 6 · texto', 'tipo' => 'parrafo', 'def' => 'Los términos de cancelación se especifican en cada contrato. Generalmente:'],
+                        'a6_lista'  => ['label' => 'Apartado 6 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => 'Proyectos: El anticipo no es reembolsable\nServicios mensuales: Aviso de 30 días'],
+                        'a7_ver'    => ['label' => 'Apartado 7 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a7_titulo' => ['label' => 'Apartado 7 · título', 'tipo' => 'texto', 'def' => '7. Contacto'],
+                        'a7_texto'  => ['label' => 'Apartado 7 · texto', 'tipo' => 'parrafo', 'def' => 'Para preguntas sobre estos términos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 583 9229'],
+                        'a7_lista'  => ['label' => 'Apartado 7 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a8_ver'    => ['label' => 'Apartado 8 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a8_titulo' => ['label' => 'Apartado 8 · título (libre)', 'tipo' => 'texto', 'def' => ''],
+                        'a8_texto'  => ['label' => 'Apartado 8 · texto', 'tipo' => 'parrafo', 'def' => ''],
+                        'a8_lista'  => ['label' => 'Apartado 8 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a9_ver'    => ['label' => 'Apartado 9 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a9_titulo' => ['label' => 'Apartado 9 · título (libre)', 'tipo' => 'texto', 'def' => ''],
+                        'a9_texto'  => ['label' => 'Apartado 9 · texto', 'tipo' => 'parrafo', 'def' => ''],
+                        'a9_lista'  => ['label' => 'Apartado 9 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                        'a10_ver'    => ['label' => 'Apartado 10 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'a10_titulo' => ['label' => 'Apartado 10 · título (libre)', 'tipo' => 'texto', 'def' => ''],
+                        'a10_texto'  => ['label' => 'Apartado 10 · texto', 'tipo' => 'parrafo', 'def' => ''],
+                        'a10_lista'  => ['label' => 'Apartado 10 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
+                    ],
+                ],
             ],
         ],
 
         /* ---------------------------------------------------------- */
+
+        'asistente' => [
+            'nombre'    => 'Asistente virtual',
+            'ruta'      => 'La ventana de chat que abre el botón flotante',
+            'ayuda'     => 'Todo lo que dice el asistente. Escríbelo como si hablaras con un cliente.',
+            'secciones' => [
+
+                'ventana' => [
+                    'nombre' => 'La ventana',
+                    'campos' => [
+                        'titulo'      => ['label' => 'Nombre en la barra', 'tipo' => 'texto', 'def' => 'ASISTENTE IA'],
+                        'estado'      => ['label' => 'Texto del punto verde', 'tipo' => 'texto', 'def' => 'En línea'],
+                        'placeholder' => ['label' => 'Texto de la casilla de escritura', 'tipo' => 'texto', 'def' => 'Escribe tu respuesta...'],
+                    ],
+                ],
+
+                'conversacion' => [
+                    'nombre' => 'Lo que dice el asistente',
+                    'campos' => [
+                        'saludo'        => ['label' => 'Saludo inicial', 'tipo' => 'parrafo', 'def' => '¡Hola! 👋 Soy el asistente virtual de INÉDITO DIGITAL. Estoy aquí para ayudarte a encontrar la solución perfecta para hacer crecer tu negocio.'],
+                        'que_servicio'  => ['label' => 'Pregunta por el servicio', 'tipo' => 'texto', 'def' => '¿Qué servicio te interesa más?'],
+                        'entiendo'      => ['label' => 'Respuesta cuando describe su necesidad', 'tipo' => 'texto', 'def' => '¡Entiendo perfectamente! Esto es justo lo que hacemos. 🎯'],
+                        'pedir_datos'   => ['label' => 'Aviso antes de pedir los datos', 'tipo' => 'parrafo', 'def' => 'Déjame capturar tus datos para prepararte una cotización personalizada.'],
+                        'pedir_datos_2' => ['label' => 'Aviso antes de pedir los datos (tras describir el proyecto)', 'tipo' => 'parrafo', 'def' => 'Déjame capturar tus datos para que un especialista revise tu proyecto a detalle y te prepare una propuesta personalizada.'],
+                        'p_nombre'      => ['label' => 'Pregunta el nombre', 'tipo' => 'texto', 'def' => '¿Cuál es tu nombre?'],
+                        'p_email_mal'   => ['label' => 'Aviso si el correo está mal escrito', 'tipo' => 'texto', 'def' => 'Por favor ingresa un correo electrónico válido.'],
+                        'p_whatsapp'    => ['label' => 'Pregunta el WhatsApp', 'tipo' => 'texto', 'def' => 'Excelente. ¿Cuál es tu número de WhatsApp?'],
+                        'p_empresa'     => ['label' => 'Pregunta la empresa', 'tipo' => 'texto', 'def' => '¿De qué empresa nos contactas?'],
+                        'p_objetivo'    => ['label' => 'Pregunta el objetivo', 'tipo' => 'texto', 'def' => 'Perfecto. Ahora, ¿cuál es tu objetivo principal?'],
+                        'p_presupuesto' => ['label' => 'Pregunta el presupuesto', 'tipo' => 'texto', 'def' => '¿Cuál es tu presupuesto mensual aproximado?'],
+                        'p_cuando'      => ['label' => 'Pregunta cuándo empezar', 'tipo' => 'texto', 'def' => '¿Cuándo te gustaría comenzar?'],
+                    ],
+                ],
+
+                'opciones' => [
+                    'nombre' => 'Las opciones que ofrece',
+                    'ayuda'  => 'Las listas numeradas que el asistente muestra para elegir.',
+                    'campos' => [
+                        'obj_1' => ['label' => 'Objetivo 1', 'tipo' => 'texto', 'def' => 'Vender más'],
+                        'obj_2' => ['label' => 'Objetivo 2', 'tipo' => 'texto', 'def' => 'Generar leads'],
+                        'obj_3' => ['label' => 'Objetivo 3', 'tipo' => 'texto', 'def' => 'Posicionamiento de marca'],
+                        'obj_4' => ['label' => 'Objetivo 4', 'tipo' => 'texto', 'def' => 'Mejorar presencia digital'],
+                        'pre_1' => ['label' => 'Presupuesto 1', 'tipo' => 'texto', 'def' => '$5,000 - $15,000'],
+                        'pre_2' => ['label' => 'Presupuesto 2', 'tipo' => 'texto', 'def' => '$15,000 - $30,000'],
+                        'pre_3' => ['label' => 'Presupuesto 3', 'tipo' => 'texto', 'def' => '$30,000 - $50,000'],
+                        'pre_4' => ['label' => 'Presupuesto 4', 'tipo' => 'texto', 'def' => 'Más de $50,000'],
+                    ],
+                ],
+            ],
+        ],
+
+        'error-404' => [
+            'nombre'    => 'Página no encontrada (404)',
+            'ruta'      => 'Lo que ve alguien que llega a una dirección que no existe',
+            'secciones' => [
+                'contenido' => [
+                    'nombre' => 'Video y textos',
+                    'campos' => [
+                        'video'  => ['label' => 'Video de fondo', 'tipo' => 'imagen',
+                                     'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/Video-Pagina-404-Inedito-Web.mp4'],
+                        'poster' => ['label' => 'Imagen mientras carga el video', 'tipo' => 'imagen',
+                                     'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp'],
+                        'titulo' => ['label' => 'Título en el buscador', 'tipo' => 'texto', 'def' => 'Página no encontrada - 404 | INÉDITO DIGITAL'],
+                        'texto'  => ['label' => 'Descripción en el buscador', 'tipo' => 'parrafo', 'def' => 'La página que buscas no existe o ha sido movida.'],
+                    ],
+                ],
+            ],
+        ],
+
         'marca' => [
             'nombre' => 'Marca y menús',
             'ruta'   => '/',
@@ -1120,7 +1330,9 @@ function registro_paginas(): array {
                                      'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp'],
                         'alt'    => ['label' => 'Descripción del logotipo', 'tipo' => 'texto',
                                      'def' => 'INÉDITO DIGITAL - Agencia de Marketing Digital en Aguascalientes'],
-                    ],
+                            'favicon' => ['label' => 'Ícono de la pestaña del navegador', 'tipo' => 'imagen',
+                                      'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp'],
+                ],
                 ],
 
                 'menu' => [

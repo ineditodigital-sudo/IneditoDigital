@@ -3,8 +3,10 @@ import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
 import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
+import { contenido } from '../cms';
 
 export default function BlogPostPage() {
+  const tNav = contenido('blog', 'navegacion');
   const { slug } = useParams();
   const { blogPosts } = useApp();
   const post = blogPosts.find(p => p.slug === slug);
@@ -29,7 +31,7 @@ export default function BlogPostPage() {
         <div className="container mx-auto max-w-4xl">
           <Link to="/blog" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors">
             <ArrowLeft size={20} />
-            <span>Volver al blog</span>
+            <span>{tNav('volver', 'Volver al blog')}</span>
           </Link>
 
           <div className="mb-8">

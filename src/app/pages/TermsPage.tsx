@@ -1,9 +1,22 @@
 import SEO from '../components/SEO';
 import { contenido } from '../cms';
 import { GlassCard } from '../components/GlassCard';
+import ApartadosLegales, { Apartado } from '../components/ApartadosLegales';
+
+const APARTADOS: Apartado[] = [
+  { titulo: '1. Aceptación de Términos', texto: 'Al acceder y usar los servicios de INÉDITO DIGITAL, aceptas estar sujeto a estos términos y condiciones.', lista: '' },
+  { titulo: '2. Servicios', texto: 'Ofrecemos servicios de marketing digital, desarrollo web, SEO, publicidad digital y consultoría. Los detalles específicos de cada servicio se acordarán en contratos individuales.', lista: '' },
+  { titulo: '3. Pagos y Facturación', texto: 'Los términos de pago se especificarán en cada propuesta comercial. Generalmente requerimos:', lista: '50% de anticipo para iniciar el proyecto\n50% restante contra entrega\nServicios recurrentes: pago mensual anticipado' },
+  { titulo: '4. Garantías y Resultados', texto: 'Garantizamos esfuerzo máximo y entregas en tiempo. Sin embargo, resultados específicos (rankings, ventas, leads) dependen de múltiples factores externos y no pueden garantizarse.', lista: '' },
+  { titulo: '5. Propiedad Intelectual', texto: 'Una vez pagado en su totalidad, el cliente recibe derechos completos sobre el trabajo entregado. Nos reservamos el derecho de mostrar el trabajo en nuestro portafolio.', lista: '' },
+  { titulo: '6. Cancelación', texto: 'Los términos de cancelación se especifican en cada contrato. Generalmente:', lista: 'Proyectos: El anticipo no es reembolsable\nServicios mensuales: Aviso de 30 días' },
+  { titulo: '7. Contacto', texto: 'Para preguntas sobre estos términos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 583 9229', lista: '' },
+];
+
 
 export default function TermsPage() {
   const t = contenido('terminos', 'encabezado');
+  const tAp = contenido('terminos', 'apartados');
   return (
     <>
       <SEO
@@ -20,54 +33,7 @@ export default function TermsPage() {
           <GlassCard className="prose prose-invert max-w-none">
             <p className="text-white/70">{t('fecha', 'Última actualización: Diciembre 16, 2024')}</p>
 
-            <h2 className="heading text-2xl mt-8 mb-4">1. Aceptación de Términos</h2>
-            <p className="text-white/70">
-              Al acceder y usar los servicios de INÉDITO DIGITAL, aceptas estar sujeto a estos términos y condiciones.
-            </p>
-
-            <h2 className="heading text-2xl mt-8 mb-4">2. Servicios</h2>
-            <p className="text-white/70">
-              Ofrecemos servicios de marketing digital, desarrollo web, SEO, publicidad digital y consultoría.
-              Los detalles específicos de cada servicio se acordarán en contratos individuales.
-            </p>
-
-            <h2 className="heading text-2xl mt-8 mb-4">3. Pagos y Facturación</h2>
-            <p className="text-white/70">
-              Los términos de pago se especificarán en cada propuesta comercial. Generalmente requerimos:
-            </p>
-            <ul className="text-white/70 list-disc pl-6 space-y-2">
-              <li>50% de anticipo para iniciar el proyecto</li>
-              <li>50% restante contra entrega</li>
-              <li>Servicios recurrentes: pago mensual anticipado</li>
-            </ul>
-
-            <h2 className="heading text-2xl mt-8 mb-4">4. Garantías y Resultados</h2>
-            <p className="text-white/70">
-              Garantizamos esfuerzo máximo y entregas en tiempo. Sin embargo, resultados específicos
-              (rankings, ventas, leads) dependen de múltiples factores externos y no pueden garantizarse.
-            </p>
-
-            <h2 className="heading text-2xl mt-8 mb-4">5. Propiedad Intelectual</h2>
-            <p className="text-white/70">
-              Una vez pagado en su totalidad, el cliente recibe derechos completos sobre el trabajo entregado.
-              Nos reservamos el derecho de mostrar el trabajo en nuestro portafolio.
-            </p>
-
-            <h2 className="heading text-2xl mt-8 mb-4">6. Cancelación</h2>
-            <p className="text-white/70">
-              Los términos de cancelación se especifican en cada contrato. Generalmente:
-            </p>
-            <ul className="text-white/70 list-disc pl-6 space-y-2">
-              <li>Proyectos: El anticipo no es reembolsable</li>
-              <li>Servicios mensuales: Aviso de 30 días</li>
-            </ul>
-
-            <h2 className="heading text-2xl mt-8 mb-4">7. Contacto</h2>
-            <p className="text-white/70">
-              Para preguntas sobre estos términos:
-              <br />Email: contacto@inedito.digital
-              <br />Teléfono: +52 1 449 583 9229
-            </p>
+            <ApartadosLegales t={tAp} respaldo={APARTADOS} />
           </GlassCard>
         </div>
       </div>

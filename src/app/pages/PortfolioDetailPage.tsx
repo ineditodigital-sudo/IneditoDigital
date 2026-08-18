@@ -3,8 +3,10 @@ import { ArrowLeft, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
+import { contenido } from '../cms';
 
 export default function PortfolioDetailPage() {
+  const tFil = contenido('portafolio', 'filtros');
   const { slug } = useParams();
   const { portfolioItems } = useApp();
   const item = portfolioItems.find(p => p.slug === slug);
@@ -18,7 +20,7 @@ export default function PortfolioDetailPage() {
         <div className="container mx-auto max-w-5xl">
           <Link to="/portafolio" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors">
             <ArrowLeft size={20} />
-            <span>Volver al portafolio</span>
+            <span>{tFil('volver', 'Volver al portafolio')}</span>
           </Link>
           
           <div className="mb-8">

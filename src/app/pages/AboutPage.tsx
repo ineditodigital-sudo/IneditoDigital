@@ -8,6 +8,7 @@ export default function AboutPage() {
   const tEnc = contenido('nosotros', 'encabezado');
   const tMis = contenido('nosotros', 'mision');
   const tVal = contenido('nosotros', 'valores');
+  const tEle = contenido('nosotros', 'elegirnos');
   return (
     <>
       <SEO
@@ -68,7 +69,7 @@ export default function AboutPage() {
           )}
 
           <GlassCard glow className="text-center p-8">
-            <h2 className="heading text-3xl mb-4">¿POR QUÉ ELEGIRNOS?</h2>
+            <h2 className="heading text-3xl mb-4">{tEle('titulo', '¿POR QUÉ ELEGIRNOS?')}</h2>
             <p className="text-white/70 max-w-2xl mx-auto mb-6">
               No somos una agencia más. Combinamos años de experiencia en marketing tradicional con las últimas tecnologías de IA para crear estrategias que realmente funcionan.
             </p>

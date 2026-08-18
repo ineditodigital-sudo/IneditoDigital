@@ -41,6 +41,7 @@ const CustomNextArrow = (props: any) => {
 
 export default function PortfolioPage() {
   const t = contenido('portafolio', 'encabezado');
+  const tFil = contenido('portafolio', 'filtros');
   const { portfolioItems, openAssistant } = useApp();
   const [filter, setFilter] = useState('all');
 
@@ -120,7 +121,7 @@ export default function PortfolioPage() {
                     : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10'
                 }`}
               >
-                {cat === 'all' ? 'TODOS LOS PROYECTOS' : cat.toUpperCase()}
+                {cat === 'all' ? tFil('todos', 'TODOS LOS PROYECTOS') : cat.toUpperCase()}
               </button>
             ))}
           </motion.div>
