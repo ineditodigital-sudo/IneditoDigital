@@ -9,11 +9,13 @@ import {
   ArrowRight,
   ArrowDown,
   Palette,
-  Cpu,
+  Link2,
+  SlidersHorizontal,
+  MousePointer2,
   Globe,
   Instagram,
   Phone,
-  Mail,
+  MessageCircle,
   CreditCard,
 } from 'lucide-react';
 import { Link } from 'react-router';
@@ -45,36 +47,39 @@ const steps = [
   {
     n: '01',
     icon: Palette,
-    title: 'Partimos de cero',
-    description: 'Diseñamos tu tarjeta con tu logo, tus colores y tus datos. Tú la apruebas antes de que se produzca nada.',
+    title: 'Diseño personalizado a tu identidad de marca',
+    description: 'Tu logo, tus colores y tu tipografía sobre la tarjeta física. Tú la apruebas antes de que se produzca nada.',
     benefit: 'Tu marca, no una plantilla genérica',
-    building: 'Se imprime tu identidad',
+    building: 'Se aplica tu identidad',
   },
   {
     n: '02',
-    icon: Cpu,
-    title: 'Le ponemos el chip',
-    description: 'Dentro va un chip NFC que programamos y vinculamos a tu perfil digital: contacto, redes y portafolio.',
-    benefit: 'Toda tu información en un solo chip',
-    building: 'Se instala el chip NFC',
+    icon: Link2,
+    title: 'Conexión con tu propia página de contacto',
+    description: 'Creamos tu página de contacto y programamos el chip NFC para que apunte a ella. Tarjeta y página quedan vinculadas.',
+    benefit: 'Tu propia página, no un perfil de terceros',
+    building: 'Tarjeta y página vinculadas',
   },
   {
     n: '03',
     icon: Nfc,
-    title: 'La acercas a un celular',
-    description: 'Un toque y tus datos aparecen en su teléfono. Sin apps, sin escribir nada, sin escanear códigos.',
+    title: 'Acércala para compartir',
+    description: 'Acercas la tarjeta a cualquier celular y tu página de contacto se abre al instante. Sin apps y sin escanear códigos.',
     benefit: 'Compartes en 1 segundo, no en 1 minuto',
-    building: 'El teléfono recibe tus datos',
+    building: 'Tu página se abre en su celular',
   },
   {
     n: '04',
-    icon: RefreshCw,
-    title: 'Cambias lo que quieras',
-    description: 'Cambias de número, de puesto o de empresa y lo editas en tu perfil. La misma tarjeta sigue funcionando.',
-    benefit: 'Nunca vuelves a mandar a imprimir',
-    building: 'Se actualiza sin reimprimir',
+    icon: SlidersHorizontal,
+    title: 'Personaliza cualquier elemento de tu página',
+    description: 'Cambias colores, botones, enlaces, redes y secciones cuando quieras. La tarjeta física nunca se reimprime.',
+    benefit: 'Editas todo sin reimprimir nada',
+    building: 'Se edita en vivo',
   },
 ];
+
+/* Acentos que va probando la animacion de personalizacion del paso 04 */
+const acentos = ['#CC66FF', '#22D3EE', '#F59E0B'];
 
 const comparison = [
   { impresa: 'Dictas o tecleas tus datos', nfc: 'Un toque y queda guardado' },
@@ -105,9 +110,10 @@ const faqItems = [
   { q: '¿Cuánto tarda la entrega?', a: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' },
 ];
 
-const contactRows = [
-  { icon: Phone, label: '+52 449 120 4353' },
-  { icon: Mail, label: 'tu@empresa.com' },
+/* Botones de la pagina de contacto que abre la tarjeta */
+const accionesPagina = [
+  { icon: Phone, label: 'Guardar contacto', principal: true },
+  { icon: MessageCircle, label: 'WhatsApp' },
   { icon: Globe, label: 'tuempresa.com' },
   { icon: Instagram, label: '@tumarca' },
 ];
@@ -181,11 +187,21 @@ function BuildingCard({ step, compact = false }: { step: number; compact?: boole
 /* ------------------------------------------------------------------ */
 /* Telefono que recibe el perfil                                       */
 /* ------------------------------------------------------------------ */
-function PhoneScreen({ filled, cycle, updated = false }: { filled: boolean; cycle: number; updated?: boolean }) {
+function PhoneScreen({
+  filled,
+  cycle,
+  customizing = false,
+  accent = '#CC66FF',
+}: {
+  filled: boolean;
+  cycle: number;
+  customizing?: boolean;
+  accent?: string;
+}) {
   return (
     <div className="relative w-full h-full">
       <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-1 rounded-full bg-white/15" />
-      <div className="pt-8 px-4">
+      <div className="pt-8 px-3.5">
         {!filled ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2.5 pt-6">
             {[0, 1, 2].map((i) => (
@@ -193,40 +209,84 @@ function PhoneScreen({ filled, cycle, updated = false }: { filled: boolean; cycl
             ))}
           </motion.div>
         ) : (
-          <motion.div key={`p-${cycle}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
+          <motion.div key={`p-${cycle}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+            {/* Cabecera de la pagina: el color sigue al acento elegido */}
             <motion.div
               initial={{ scale: 0.6, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4, type: 'spring', stiffness: 220, damping: 16 }}
-              className="w-11 h-11 rounded-full bg-gradient-to-br from-[#7700CE] to-[#CC66FF] mx-auto mb-2.5"
-            />
-            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="text-center mb-4">
-              <div className="heading text-white text-[11px]">TU NOMBRE</div>
-              <div className="text-white/40 text-[8px] uppercase tracking-[0.18em]">Tu puesto</div>
+              transition={{ delay: 0.35, type: 'spring', stiffness: 220, damping: 16 }}
+              className="w-11 h-11 mx-auto mb-2"
+            >
+              <div
+                className="w-full h-full rounded-full transition-[background] duration-500"
+                style={{ background: `linear-gradient(135deg, ${accent}, #7700CE)` }}
+              />
             </motion.div>
+            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="text-center mb-3">
+              <div className="heading text-white text-[11px]">TU NOMBRE</div>
+              <div className="text-white/40 text-[8px] uppercase tracking-[0.18em]">Tu puesto · Tu empresa</div>
+            </motion.div>
+
             <div className="space-y-1.5">
-              {contactRows.map((row, i) => (
+              {accionesPagina.map((a, i) => (
                 <motion.div
-                  key={row.label}
+                  key={a.label}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + i * 0.08 }}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.06]"
+                  transition={{ delay: 0.55 + i * 0.08 }}
+                  className="relative"
                 >
-                  <row.icon className="text-[#CC66FF] flex-shrink-0" size={16} />
-                  <span className="text-white/55 text-[8px] truncate">{row.label}</span>
+                  {/* div plano, NO motion: motion aplica el style por su propio
+                      bucle de animacion y el cambio de color no llegaba. Aqui la
+                      transicion la hace CSS y el color siempre se aplica. */}
+                  <div
+                    className="flex items-center gap-2 px-2 py-1.5 rounded-xl border transition-colors duration-500"
+                    style={
+                      a.principal
+                        ? { background: accent, borderColor: accent }
+                        : { background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }
+                    }
+                  >
+                    <a.icon
+                      className="flex-shrink-0 transition-colors duration-500"
+                      style={{ color: a.principal ? '#000' : accent }}
+                      size={16}
+                    />
+                    <span className={`text-[8px] truncate ${a.principal ? 'text-black font-bold' : 'text-white/55'}`}>{a.label}</span>
+                  </div>
+
+                  {/* Marco de edicion: aparece en el paso de personalizacion */}
+                  {customizing && (
+                    <motion.span
+                      className="absolute -inset-[3px] rounded-xl border border-dashed pointer-events-none"
+                      style={{ borderColor: accent }}
+                      animate={{ opacity: [0.25, 1, 0.25] }}
+                      transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.18, ease: 'easeInOut' }}
+                    />
+                  )}
                 </motion.div>
               ))}
             </div>
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 }}
-              className="mt-3 flex items-center justify-center gap-1.5 py-2 rounded-full bg-[#CC66FF] text-black text-[8px] font-bold"
-            >
-              {updated ? <RefreshCw size={16} strokeWidth={3} /> : <Check size={16} strokeWidth={3} />}
-              {updated ? 'DATOS ACTUALIZADOS' : 'CONTACTO GUARDADO'}
-            </motion.div>
+
+            {/* Muestrario de color: hace evidente que se personaliza */}
+            {customizing && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-3 flex items-center justify-center gap-1.5 py-1.5 rounded-full bg-white/[0.05] border border-white/10"
+              >
+                <Palette size={16} style={{ color: accent }} />
+                <div className="flex gap-1">
+                  {acentos.map((c) => (
+                    <span
+                      key={c}
+                      className="w-2 h-2 rounded-full transition-[transform,opacity] duration-300"
+                      style={{ background: c, transform: c === accent ? 'scale(1.5)' : 'scale(1)', opacity: c === accent ? 1 : 0.4 }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </motion.div>
         )}
       </div>
@@ -338,6 +398,16 @@ function StickyJourney() {
 
   const Current = steps[active];
 
+  /* Paso 04: el acento va cambiando solo, en bucle, para que se vea que la
+     pagina se personaliza sin que el usuario tenga que hacer nada. */
+  const [acento, setAcento] = useState(0);
+  useEffect(() => {
+    if (active !== 3) return;
+    const t = setInterval(() => setAcento((a) => (a + 1) % acentos.length), 1800);
+    return () => clearInterval(t);
+  }, [active]);
+  const accent = active === 3 ? acentos[acento] : acentos[0];
+
   return (
     <>
       <div ref={ref} className="hidden lg:block relative" style={{ height: `${steps.length * 95}vh` }}>
@@ -430,19 +500,45 @@ function StickyJourney() {
                   <BuildingCard step={active} />
                 </div>
 
-                {/* Paso 02: ondas del chip recien instalado */}
-                {active === 1 &&
-                  [0, 0.4].map((d) => (
-                    <motion.span
-                      key={`chip-${d}`}
-                      className="absolute rounded-full border border-[#CC66FF]/50 pointer-events-none"
-                      style={{ width: 120, height: 120 }}
-                      animate={{ scale: [1, 2.4], opacity: [0.7, 0] }}
-                      transition={{ duration: 1.8, repeat: Infinity, delay: d, ease: 'easeOut' }}
-                    />
-                  ))}
+                {/* Paso 02: el vinculo entre la tarjeta y la pagina */}
+                {active === 1 && (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.85 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute right-0 flex flex-col items-center gap-2"
+                    >
+                      <div className="w-24 h-40 rounded-2xl border border-white/15 bg-[#0B0910] p-2 overflow-hidden">
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#CC66FF] to-[#7700CE] mx-auto mb-1.5" />
+                        <div className="h-1 w-12 rounded-full bg-white/20 mx-auto mb-2.5" />
+                        {[0, 1, 2].map((i) => (
+                          <div key={i} className="h-3 rounded-md bg-white/[0.06] mb-1" />
+                        ))}
+                      </div>
+                      <span className="text-white/35 text-[9px] tracking-[0.15em] uppercase">Tu página</span>
+                    </motion.div>
 
-                {/* Pasos 03 y 04: el telefono */}
+                    {/* Cable animado tarjeta -> pagina */}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+                      <motion.line
+                        x1="52%" y1="50%" x2="76%" y2="50%"
+                        stroke="#CC66FF" strokeWidth="2" strokeDasharray="6 6"
+                        animate={{ strokeDashoffset: [0, -24] }}
+                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                      />
+                    </svg>
+                    <motion.div
+                      className="absolute left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#0B0910] border border-[#CC66FF]/50 flex items-center justify-center"
+                      animate={{ scale: [1, 1.12, 1] }}
+                      transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                      <Link2 className="text-[#CC66FF]" size={16} />
+                    </motion.div>
+                  </>
+                )}
+
+                {/* Pasos 03 y 04: el celular abre tu pagina de contacto */}
                 {active >= 2 && (
                   <motion.div
                     initial={{ opacity: 0, x: 70, rotate: 6 }}
@@ -450,7 +546,32 @@ function StickyJourney() {
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute right-0 w-36 h-64 rounded-3xl border border-white/15 bg-[#0B0910] overflow-hidden shadow-[0_0_45px_rgba(153,51,255,0.35)]"
                   >
-                    <PhoneScreen filled cycle={active} updated={active === 3} />
+                    <PhoneScreen filled cycle={active} customizing={active === 3} accent={accent} />
+                  </motion.div>
+                )}
+
+                {/* Paso 03: ondas del toque */}
+                {active === 2 &&
+                  [0, 0.35].map((d) => (
+                    <motion.span
+                      key={`tap-${d}`}
+                      className="absolute right-24 rounded-full border border-[#CC66FF]/50 pointer-events-none"
+                      style={{ width: 70, height: 70 }}
+                      animate={{ scale: [1, 2.6], opacity: [0.7, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, delay: d, ease: 'easeOut' }}
+                    />
+                  ))}
+
+                {/* Paso 04: cursor que edita */}
+                {active === 3 && (
+                  <motion.div
+                    className="absolute right-8 bottom-6 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border"
+                    style={{ borderColor: accent, background: '#0B0910' }}
+                    animate={{ y: [0, -8, 0], opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <MousePointer2 size={16} style={{ color: accent }} />
+                    <span className="text-[9px] text-white/60">Editando</span>
                   </motion.div>
                 )}
 
