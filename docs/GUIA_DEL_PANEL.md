@@ -132,6 +132,9 @@ ser una imagen **cuadrada** de 256×256 o más. El logo horizontal no sirve:
 en la pestaña se ve de 16 píxeles de ancho y queda ilegible. Si lo dejas
 vacío usamos el isotipo de Inédito.
 
+El panel de administración usa siempre el isotipo de Inédito, sin importar
+lo que pongas en ese campo: es la marca de la herramienta, no la del sitio.
+
 Ojo: los navegadores guardan ese ícono con mucha insistencia. Si lo cambias
 y sigues viendo el anterior, cierra y vuelve a abrir la pestaña, o entra una
 vez en `tudominio.com/favicon.ico`.
