@@ -24,6 +24,7 @@ import { Link } from 'react-router';
 import FAQAccordion from '../components/FAQAccordion';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
+import { contenido } from '../cms';
 
 /*
  * ESTRUCTURA A PROPOSITO DISTINTA al resto del sitio.
@@ -740,6 +741,8 @@ function Tile({ className = '', children, delay = 0 }: { className?: string; chi
 
 export default function TarjetasDigitalesPage() {
   const { openAssistant } = useApp();
+  const tPort = contenido('tarjetas-de-presentacion-digital', 'portada');
+  const tEq   = contenido('tarjetas-de-presentacion-digital', 'equipos');
   const cta = () => openAssistant(SERVICE_NAME, 'cotizar tarjetas de presentación digital NFC');
 
   return (
@@ -788,17 +791,17 @@ export default function TarjetasDigitalesPage() {
 
               <div className="max-w-3xl mx-auto text-center mt-10">
                 <h1 className="heading text-white leading-[1.08] mb-5">
-                  TU TARJETA DE PRESENTACIÓN,{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">AHORA DIGITAL</span>
+                  {tPort('titulo_1', 'TU TARJETA DE PRESENTACIÓN,')}{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">{tPort('titulo_2', 'AHORA DIGITAL')}</span>
                 </h1>
                 <p className="text-white/50 text-base md:text-lg leading-relaxed mb-8 max-w-xl mx-auto">
-                  Comparte tu contacto, redes y portafolio con un solo toque. Sin imprimir, sin apps, siempre al día.
+                  {tPort('bajada', 'Comparte tu contacto, redes y portafolio con un solo toque. Sin imprimir, sin apps, siempre al día.')}
                 </p>
                 <button
                   onClick={cta}
                   className="group inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(119,0,206,0.45)] cursor-pointer"
                 >
-                  <span className="heading text-sm tracking-[0.08em]">COTIZAR MI TARJETA</span>
+                  <span className="heading text-sm tracking-[0.08em]">{tPort('boton', 'COTIZAR MI TARJETA')}</span>
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
@@ -862,13 +865,14 @@ export default function TarjetasDigitalesPage() {
       </section>
 
       {/* ---------- ZONA 4b — Una persona o equipo completo ---------- */}
+      {tEq.visible() && (
       <section className="px-4 pb-16 md:pb-24 bg-[#07060B]">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-10">
             <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-3">Cómo se cotiza</div>
             <h2 className="heading text-2xl md:text-4xl text-white leading-tight">
-              Para una persona o para{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">todo tu equipo</span>
+              {tEq('titulo_1', 'Para una persona o para')}{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">{tEq('titulo_2', 'todo tu equipo')}</span>
             </h2>
           </div>
 
@@ -932,19 +936,19 @@ export default function TarjetasDigitalesPage() {
             className="mt-6 rounded-2xl border border-[#9933FF]/30 bg-[#9933FF]/[0.07] p-6 md:p-7 text-center"
           >
             <p className="text-white/70 text-sm md:text-base mb-5 max-w-2xl mx-auto leading-relaxed">
-              ¿Son 3 personas? ¿Son 80? <span className="text-white">Nos adaptamos.</span> Dinos cuántas son y armamos la
-              cotización a la medida de tu equipo.
+              {tEq('nota', '¿Son 3 personas? ¿Son 80? Nos adaptamos. Dinos cuántas son y armamos la cotización a la medida de tu equipo.')}
             </p>
             <button
               onClick={cta}
               className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(119,0,206,0.45)] cursor-pointer"
             >
-              <span className="heading text-sm tracking-[0.08em]">COTIZAR PARA MI EQUIPO</span>
+              <span className="heading text-sm tracking-[0.08em]">{tEq('boton', 'COTIZAR PARA MI EQUIPO')}</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
         </div>
       </section>
+      )}
 
       {/* ---------- ZONA 5 — Cierre sobre BLANCO ---------- */}
       <section className="px-4 py-16 md:py-24 bg-white">
