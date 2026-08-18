@@ -126,6 +126,16 @@ Sí. En **Páginas › Marca y menús › Colores** eliges los tres tonos de la
 marca y se aplican en todo el sitio. El acomodo de las secciones sí está
 fijo, para que nunca se descuadre.
 
+**¿Cómo cambio el ícono de la pestaña del navegador?**
+En **Páginas › Marca y menús › Logo**, campo *Ícono de la pestaña*. Tiene que
+ser una imagen **cuadrada** de 256×256 o más. El logo horizontal no sirve:
+en la pestaña se ve de 16 píxeles de ancho y queda ilegible. Si lo dejas
+vacío usamos el isotipo de Inédito.
+
+Ojo: los navegadores guardan ese ícono con mucha insistencia. Si lo cambias
+y sigues viendo el anterior, cierra y vuelve a abrir la pestaña, o entra una
+vez en `tudominio.com/favicon.ico`.
+
 **¿Puedo quitar un enlace del pie o un apartado del aviso legal?**
 Sí, pero no borrando su texto: un campo vacío siempre vuelve al original.
 Cada enlace del pie y cada apartado legal tiene su propio interruptor

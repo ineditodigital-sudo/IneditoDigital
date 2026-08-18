@@ -263,7 +263,22 @@ header('Cache-Control: no-cache');
 <meta name="author" content="<?= e($siteName) ?>" />
 <meta name="robots" content="<?= $is404 ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' ?>" />
 <meta name="theme-color" content="#7700CE" />
-<link rel="icon" href="<?= e($paginas['marca']['contenido']['logo']['favicon'] ?? 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp') ?>" />
+<?php
+// Iconos. Si el cliente subio uno propio en el panel, manda ese; si no, el
+// juego que vive en public_html. El logo horizontal NO sirve aqui: en 16x16
+// queda ilegible, por eso el respaldo es un .ico cuadrado del isotipo.
+// Se ignora el logo horizontal: en 16x16 queda ilegible.
+$fav = trim((string)($paginas['marca']['contenido']['logo']['favicon'] ?? ''));
+$propio = $fav !== '' && $fav !== '/favicon.ico' && strpos($fav, 'LOGO%20INEDITO') === false;
+if ($propio): ?>
+<link rel="icon" href="<?= e($fav) ?>" />
+<link rel="apple-touch-icon" href="<?= e($fav) ?>" />
+<?php else: ?>
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<?php endif; ?>
 <?php if (!$is404): ?><link rel="canonical" href="<?= e($canonical) ?>" /><?php endif; ?>
 <?php if($gsv): ?><meta name="google-site-verification" content="<?= e($gsv) ?>" /><?php endif; ?>
 <meta property="og:type" content="<?= e($ogType) ?>" />
