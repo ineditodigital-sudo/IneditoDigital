@@ -133,3 +133,70 @@ Cosas que se configuran en la BD, sin recompilar. Se insertan como filas en
 | `defaultImage` | Imagen por defecto para Open Graph |
 
 Hoy ninguna de esas filas existe, por eso no hay medición de GA ni pixel.
+
+---
+
+## Conexión al servidor
+
+Validada el 18-08-2026. El usuario FTP aterriza en el **home de la cuenta**,
+no en `public_html`, así que todas las rutas van prefijadas con `public_html/`.
+
+| | |
+|---|---|
+| Host | `184.168.20.11` |
+| Puerto | `21` |
+| Usuario | `inedito` |
+| Modo | **FTPS explícito (AUTH TLS)** — funciona y cifra las credenciales |
+
+El puerto 21 sin TLS también acepta conexión, pero manda usuario y contraseña
+en claro por internet. **Usar siempre `--ssl-reqd`.** El certificado del
+servidor no valida contra el dominio, de ahí el `-k`.
+
+```bash
+curl --ssl-reqd --ftp-ssl-control -k -u "usuario:clave" ftp://184.168.20.11:21/public_html/ -l
+```
+
+Las credenciales viven en `deploy.env`, que está en `.gitignore`. Copiar
+`deploy.env.example` y rellenarlo.
+
+### Despliegue automatizado
+
+```bash
+npm run build
+bash deploy.sh
+```
+
+`deploy.sh` respalda producción, sube en el orden correcto y verifica al
+final. No sube `api/config.php` ni `panel/setup.php`.
+
+---
+
+## Dos trampas del servidor, comprobadas en producción
+
+### LiteSpeed ignora las cabeceras `Header` de `.htaccess` en respuestas PHP
+
+Los archivos estáticos sí las reciben; todo lo que pasa por `render.php` salía
+sin ninguna. Por eso las cinco cabeceras de seguridad se emiten **desde PHP**
+en `render.php` y `panel/bootstrap.php`. Las de `.htaccess` se quedan porque
+siguen cubriendo `/assets/` y los estáticos.
+
+Si algún día añades una cabecera nueva, ponla en los dos sitios o no cubrirá
+las páginas HTML.
+
+### Las variables `E=` de mod_rewrite no sobreviven a la redirección interna
+
+Apache las renombra a `REDIRECT_*` al reescribir hacia `render.php`, así que
+un `Header ... env=MIVAR` nunca se dispara en las páginas del sitio. Por eso
+el `.htaccess` usa `expr=%{HTTP_HOST} =~ ...` en vez de variables de entorno.
+
+### Cómo probar un `.htaccess` sin tumbar el sitio
+
+Un error de sintaxis devuelve 500 en **toda** `public_html`, incluidos los ~60
+subdominios de otros clientes. Antes de subirlo a la raíz:
+
+```bash
+# 1. crear un directorio de prueba con el .htaccess nuevo dentro
+# 2. pedir un archivo cualquiera de ese directorio
+curl -s -o /dev/null -w "%{http_code}\n" https://www.inedito.digital/_htcheck/prueba.txt
+# 500 = Apache rechaza alguna directiva. NO subirlo a la raíz.
+```
