@@ -18,7 +18,7 @@ export default function ServiceDetailPage() {
 
   if (!service) {
     return <div className="min-h-screen flex items-center justify-center">
-      <p className="text-white">Servicio no encontrado</p>
+      <p className="text-white">{contenido('servicio-detalle', 'encabezados')('no_encontrado', 'Servicio no encontrado')}</p>
     </div>;
   }
 

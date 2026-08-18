@@ -8,6 +8,7 @@ import { contenido } from '../cms';
 
 export default function BlogPage() {
   const t = contenido('blog', 'encabezado');
+  const tTar = contenido('blog', 'tarjeta');
   const { blogPosts } = useApp();
 
   return (
@@ -51,7 +52,7 @@ export default function BlogPage() {
                     <h2 className="heading text-xl mb-3 group-hover:text-[#7700CE] transition-colors">{post.title}</h2>
                     <p className="text-white/60 text-sm mb-4">{post.excerpt}</p>
                     <div className="flex items-center text-[#7700CE] text-sm group-hover:gap-2 transition-all">
-                      <span>Leer más</span>
+                      <span>{tTar('ver_mas', 'Leer más')}</span>
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </GlassCard>

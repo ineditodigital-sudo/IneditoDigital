@@ -42,6 +42,7 @@ const CustomNextArrow = (props: any) => {
 export default function PortfolioPage() {
   const t = contenido('portafolio', 'encabezado');
   const tFil = contenido('portafolio', 'filtros');
+  const tCie = contenido('portafolio', 'cierre');
   const { portfolioItems, openAssistant } = useApp();
   const [filter, setFilter] = useState('all');
 
@@ -87,7 +88,7 @@ export default function PortfolioPage() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7700CE]/20 border border-[#7700CE]/30 mb-6"
             >
               <Award className="text-[#7700CE]" size={20} />
-              <span className="text-sm text-white/90">PROYECTOS DESTACADOS</span>
+              <span className="text-sm text-white/90">{tCie('etiqueta', 'PROYECTOS DESTACADOS')}</span>
             </motion.div>
 
             <h1 className="heading text-4xl md:text-6xl lg:text-7xl mb-6">
@@ -254,7 +255,7 @@ export default function PortfolioPage() {
               <Award className="text-[#7700CE] mx-auto mb-6" size={48} />
               
               <h2 className="heading text-3xl md:text-4xl mb-4">
-                ¿LISTO PARA TU <span className="text-[#7700CE]">CASO DE ÉXITO?</span>
+                {tCie('titulo_1', '¿LISTO PARA TU')} <span className="text-[#7700CE]">{tCie('titulo_2', 'CASO DE ÉXITO?')}</span>
               </h2>
               
               <p className="text-white/70 text-base md:text-lg mb-8">
@@ -265,7 +266,7 @@ export default function PortfolioPage() {
                 onClick={() => openAssistant(undefined, 'agendar consultoría para crear mi caso de éxito')}
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(119,0,206,0.6)] group cursor-pointer"
               >
-                <span className="heading text-sm tracking-[0.08em]">AGENDAR CONSULTA GRATIS</span>
+                <span className="heading text-sm tracking-[0.08em]">{tCie('boton', 'AGENDAR CONSULTA GRATIS')}</span>
                 <ExternalLink className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" size={16} />
               </button>
             </GlassCard>

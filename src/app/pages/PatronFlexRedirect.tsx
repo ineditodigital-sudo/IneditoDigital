@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { contenido } from '../cms';
 
 export default function PatronFlexRedirect() {
   useEffect(() => {
@@ -11,7 +12,7 @@ export default function PatronFlexRedirect() {
     <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="text-center">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#7700CE] mb-4"></div>
-        <p className="text-white/80">Redirigiendo al documento...</p>
+        <p className="text-white/80">{contenido('sistema', 'avisos')('redir_doc', 'Redirigiendo al documento...')}</p>
       </div>
     </div>
   );

@@ -4,10 +4,6 @@ import { Link } from 'react-router';
 import { lazy, Suspense } from 'react';
 import { GlassCard } from '../components/GlassCard';
 import HeroBento from '../components/HeroBento';
-import ServicesSection from '../components/ServicesSection';
-import StatsSection from '../components/StatsSection';
-import ProcessSection from '../components/ProcessSection';
-import TestimonialsSection from '../components/TestimonialsSection';
 import SectionDivider from '../components/SectionDivider';
 import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
@@ -30,6 +26,7 @@ export default function HomePage() {
   const tCierre = contenido('home', 'cierre');
   const tTar    = contenido('home', 'tarjetas');
   const tTarIA  = contenido('home', 'tarjetas_ia');
+  const tVal    = contenido('home', 'valores');
 
   const features = [
     { icon: Sparkles,   title: tTar('t1_titulo', 'IA'),          description: tTar('t1_texto', 'Automatización y chatbots 24/7'),  image: tTar('t1_imagen', 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
@@ -190,7 +187,7 @@ export default function HomePage() {
                 <div className="relative z-10">
                   <Target className="text-[#7700CE] mb-3" size={28} />
                   <h3 className="heading text-base md:text-lg mb-2 text-black">{tTar('t4_titulo', 'Resultados')}</h3>
-                  <p className="text-gray-600 text-xs md:text-sm">ROI comprobado y crecimiento sostenible</p>
+                  <p className="text-gray-600 text-xs md:text-sm">{tTar('t4_texto', 'ROI comprobado y crecimiento sostenible')}</p>
                 </div>
               </GlassCard>
             </div>
@@ -239,7 +236,7 @@ export default function HomePage() {
                       {service.shortDescription}
                     </p>
                     <div className="flex items-center text-[#7700CE] text-xs md:text-sm group-hover:gap-2 transition-all font-semibold">
-                      <span>Ver más</span>
+                      <span>{tServ('ver_mas', 'Ver más')}</span>
                       <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </GlassCard>
@@ -606,7 +603,7 @@ export default function HomePage() {
                 <div className="absolute top-4 left-4">
                   <div className="px-4 py-2 rounded-full bg-white/95 backdrop-blur-sm shadow-lg flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-sm font-bold text-black">En acción</span>
+                    <span className="text-sm font-bold text-black">{tCasos('etiqueta', 'En acción')}</span>
                   </div>
                 </div>
               </div>
@@ -745,10 +742,10 @@ export default function HomePage() {
         <div className="container mx-auto relative z-10">
           <div className="text-center mb-8 md:mb-10">
             <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              TRABAJAMOS CON <span className="text-[#7700CE]">PASIÓN</span>
+              {tVal('titulo_1', 'TRABAJAMOS CON')} <span className="text-[#7700CE]">{tVal('titulo_2', 'PASIÓN')}</span>
             </h2>
             <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              Un equipo dedicado a transformar tu negocio con tecnología de vanguardia
+              {tVal('bajada', 'Un equipo dedicado a transformar tu negocio con tecnología de vanguardia')}
             </p>
           </div>
 
@@ -761,9 +758,9 @@ export default function HomePage() {
             >
               <GlassCard className="text-center p-4 md:p-5 bg-white/80 backdrop-blur-sm border-gray-200">
                 <Sparkles className="text-[#7700CE] mx-auto mb-3" size={32} />
-                <h3 className="heading text-lg md:text-xl mb-2 text-black">INNOVACIÓN</h3>
+                <h3 className="heading text-lg md:text-xl mb-2 text-black">{tVal('v1_titulo', 'INNOVACIÓN')}</h3>
                 <p className="text-gray-600 text-xs md:text-sm">
-                  Utilizamos las últimas tecnologías en IA y automatización
+                  {tVal('v1_texto', 'Utilizamos las últimas tecnologías en IA y automatización')}
                 </p>
               </GlassCard>
             </motion.div>
@@ -776,9 +773,9 @@ export default function HomePage() {
             >
               <GlassCard className="text-center p-4 md:p-5 bg-white/80 backdrop-blur-sm border-gray-200">
                 <Target className="text-[#7700CE] mx-auto mb-3" size={32} />
-                <h3 className="heading text-lg md:text-xl mb-2 text-black">RESULTADOS</h3>
+                <h3 className="heading text-lg md:text-xl mb-2 text-black">{tVal('v2_titulo', 'RESULTADOS')}</h3>
                 <p className="text-gray-600 text-xs md:text-sm">
-                  Nos enfocamos en métricas que realmente importan
+                  {tVal('v2_texto', 'Nos enfocamos en métricas que realmente importan')}
                 </p>
               </GlassCard>
             </motion.div>
@@ -791,9 +788,9 @@ export default function HomePage() {
             >
               <GlassCard className="text-center p-4 md:p-5 bg-white/80 backdrop-blur-sm border-gray-200">
                 <TrendingUp className="text-[#7700CE] mx-auto mb-3" size={32} />
-                <h3 className="heading text-lg md:text-xl mb-2 text-black">CRECIMIENTO</h3>
+                <h3 className="heading text-lg md:text-xl mb-2 text-black">{tVal('v3_titulo', 'CRECIMIENTO')}</h3>
                 <p className="text-gray-600 text-xs md:text-sm">
-                  Tu éxito es nuestra máxima prioridad
+                  {tVal('v3_texto', 'Tu éxito es nuestra máxima prioridad')}
                 </p>
               </GlassCard>
             </motion.div>

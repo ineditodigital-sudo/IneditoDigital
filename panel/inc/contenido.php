@@ -215,6 +215,22 @@ function registro_paginas(): array {
                         'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'AGENDAR CONSULTA GRATIS'],
                     ],
                 ],
+
+                'valores' => [
+                    'nombre' => 'Trabajamos con pasión',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'TRABAJAMOS CON'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PASIÓN'],
+                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Un equipo dedicado a transformar tu negocio con tecnología de vanguardia'],
+                        'v1_titulo' => ['label' => 'Valor 1 · título', 'tipo' => 'texto', 'def' => 'INNOVACIÓN'],
+                        'v1_texto'  => ['label' => 'Valor 1 · descripción', 'tipo' => 'texto', 'def' => 'Utilizamos las últimas tecnologías en IA y automatización'],
+                        'v2_titulo' => ['label' => 'Valor 2 · título', 'tipo' => 'texto', 'def' => 'RESULTADOS'],
+                        'v2_texto'  => ['label' => 'Valor 2 · descripción', 'tipo' => 'texto', 'def' => 'Nos enfocamos en métricas que realmente importan'],
+                        'v3_titulo' => ['label' => 'Valor 3 · título', 'tipo' => 'texto', 'def' => 'CRECIMIENTO'],
+                        'v3_texto'  => ['label' => 'Valor 3 · descripción', 'tipo' => 'texto', 'def' => 'Tu éxito es nuestra máxima prioridad'],
+                    ],
+                ],
             ],
         ],
 
@@ -264,6 +280,18 @@ function registro_paginas(): array {
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
                         'titulo'  => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿POR QUÉ ELEGIRNOS?'],
+                    ],
+                ],
+
+                'cifras' => [
+                    'nombre' => 'Las tres cifras',
+                    'campos' => [
+                        'c1_valor' => ['label' => 'Cifra 1 · número', 'tipo' => 'texto', 'def' => '100+'],
+                        'c1_texto' => ['label' => 'Cifra 1 · texto', 'tipo' => 'texto', 'def' => 'Proyectos exitosos'],
+                        'c2_valor' => ['label' => 'Cifra 2 · número', 'tipo' => 'texto', 'def' => '5X'],
+                        'c2_texto' => ['label' => 'Cifra 2 · texto', 'tipo' => 'texto', 'def' => 'ROI promedio'],
+                        'c3_valor' => ['label' => 'Cifra 3 · número', 'tipo' => 'texto', 'def' => '98%'],
+                        'c3_texto' => ['label' => 'Cifra 3 · texto', 'tipo' => 'texto', 'def' => 'Satisfacción del cliente'],
                     ],
                 ],
             ],
@@ -364,6 +392,7 @@ function registro_paginas(): array {
                     'ayuda'  => 'Las dos columnas que se comparan.',
                     'campos' => [
                         'visible'   => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'etiqueta'  => ['label' => 'Etiqueta de arriba', 'tipo' => 'texto', 'def' => 'Beneficios'],
                         'titulo_1'  => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'Lo mismo que hacías,'],
                         'titulo_2'  => ['label' => 'Título, segunda parte (en color)', 'tipo' => 'texto', 'def' => 'sin la parte molesta'],
                         'col_1'     => ['label' => 'Nombre de la columna izquierda', 'tipo' => 'texto', 'def' => 'Tarjeta impresa'],
@@ -459,6 +488,19 @@ function registro_paginas(): array {
                         'boton'   => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR PARA MI EQUIPO'],
                     ],
                 ],
+
+                'armado' => [
+                    'nombre' => 'La animación que arma la tarjeta',
+                    'ayuda'  => 'Los textos pequeños alrededor de la tarjeta que se construye sola.',
+                    'campos' => [
+                        'etiqueta'   => ['label' => 'Etiqueta de la sección', 'tipo' => 'texto', 'def' => 'Así se arma tu tarjeta'],
+                        'desliza'        => ['label' => 'Aviso para deslizar la tarjeta', 'tipo' => 'texto', 'def' => 'Desliza para verla armarse desde cero'],
+                        'cotiza'         => ['label' => 'Etiqueta de cómo se cotiza', 'tipo' => 'texto', 'def' => 'Cómo se cotiza'],
+                        'scroll'     => ['label' => 'Aviso para seguir bajando', 'tipo' => 'texto', 'def' => 'Sigue bajando para armarla'],
+                        'tu_pagina'  => ['label' => 'Etiqueta sobre el celular', 'tipo' => 'texto', 'def' => 'Tu página'],
+                        'editando'   => ['label' => 'Etiqueta de edición en vivo', 'tipo' => 'texto', 'def' => 'Editando'],
+                    ],
+                ],
             ],
         ],
 
@@ -475,6 +517,13 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'SERVICIOS'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
                                        'def' => 'Soluciones digitales integrales que impulsan tu crecimiento con estrategias basadas en resultados'],
+                    ],
+                ],
+
+                'tarjeta' => [
+                    'nombre' => 'Enlace de cada tarjeta',
+                    'campos' => [
+                        'ver_mas' => ['label' => 'Texto del enlace', 'tipo' => 'texto', 'def' => 'Ver detalles'],
                     ],
                 ],
             ],
@@ -503,6 +552,28 @@ function registro_paginas(): array {
                         'volver' => ['label' => 'Enlace de regreso en cada proyecto', 'tipo' => 'texto', 'def' => 'Volver al portafolio'],
                     ],
                 ],
+
+                'proyecto' => [
+                    'nombre' => 'Dentro de cada proyecto',
+                    'ayuda'  => 'Los títulos que se repiten en todos los casos de éxito.',
+                    'campos' => [
+                        'desafio'       => ['label' => 'Título del desafío', 'tipo' => 'texto', 'def' => 'EL DESAFÍO'],
+                        'solucion'      => ['label' => 'Título de la solución', 'tipo' => 'texto', 'def' => 'LA SOLUCIÓN'],
+                        'resultados'    => ['label' => 'Título de resultados', 'tipo' => 'texto', 'def' => 'RESULTADOS'],
+                        'servicios'     => ['label' => 'Título de servicios usados', 'tipo' => 'texto', 'def' => 'SERVICIOS UTILIZADOS'],
+                        'no_encontrado' => ['label' => 'Aviso si el proyecto no existe', 'tipo' => 'texto', 'def' => 'Proyecto no encontrado'],
+                    ],
+                ],
+
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'etiqueta' => ['label' => 'Etiqueta de arriba', 'tipo' => 'texto', 'def' => 'PROYECTOS DESTACADOS'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => '¿LISTO PARA TU'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'CASO DE ÉXITO?'],
+                        'boton'    => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'AGENDAR CONSULTA GRATIS'],
+                    ],
+                ],
             ],
         ],
 
@@ -526,6 +597,14 @@ function registro_paginas(): array {
                     'nombre' => 'Navegación',
                     'campos' => [
                         'volver' => ['label' => 'Enlace de regreso en cada artículo', 'tipo' => 'texto', 'def' => 'Volver al blog'],
+                        'no_encontrado' => ['label' => 'Aviso si el artículo no existe', 'tipo' => 'texto', 'def' => 'Post no encontrado'],
+                    ],
+                ],
+
+                'tarjeta' => [
+                    'nombre' => 'Enlace de cada tarjeta',
+                    'campos' => [
+                        'ver_mas' => ['label' => 'Texto del enlace', 'tipo' => 'texto', 'def' => 'Leer más'],
                     ],
                 ],
             ],
@@ -543,6 +622,7 @@ function registro_paginas(): array {
                     'nombre' => 'Títulos de las secciones',
                     'campos' => [
                         'volver'        => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a servicios'],
+                        'no_encontrado' => ['label' => 'Aviso si el servicio no existe', 'tipo' => 'texto', 'def' => 'Servicio no encontrado'],
                         'inc_1'         => ['label' => 'Qué incluye · primera palabra', 'tipo' => 'texto', 'def' => 'QUÉ'],
                         'inc_2'         => ['label' => 'Qué incluye · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
                         'ideal_1'       => ['label' => 'Ideal para · primera palabra', 'tipo' => 'texto', 'def' => 'IDEAL'],
@@ -649,6 +729,8 @@ function registro_paginas(): array {
                     'ayuda'  => 'Cada tarjeta del listado de soluciones de IA.',
                     'campos' => [
                         'ver_mas' => ['label' => 'Texto del enlace de cada tarjeta', 'tipo' => 'texto', 'def' => 'Ver más detalles'],
+                        'boton_portada' => ['label' => 'Botón de la portada', 'tipo' => 'texto', 'def' => 'CONSULTORÍA GRATUITA'],
+                        'boton_cierre'  => ['label' => 'Botón del final', 'tipo' => 'texto', 'def' => 'AGENDAR CONSULTORÍA'],
                         'w_titulo' => ['label' => 'Tarjeta 1 · nombre', 'tipo' => 'texto', 'def' => 'IA para WhatsApp'],
                         'w_sub'    => ['label' => 'Tarjeta 1 · subtítulo', 'tipo' => 'texto', 'def' => 'Ventas y Soporte 24/7'],
                         'w_texto'  => ['label' => 'Tarjeta 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Tu mejor vendedor, disponible siempre. Agente inteligente que atiende, califica y da seguimiento automático.'],
@@ -804,6 +886,14 @@ function registro_paginas(): array {
                         'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
                     ],
                 ],
+
+                'navegacion' => [
+                    'nombre' => 'Navegación y sellos',
+                    'campos' => [
+                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
+                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Implementación rápida'],
+                    ],
+                ],
             ],
         ],
 
@@ -903,6 +993,14 @@ function registro_paginas(): array {
                         'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿LISTO PARA AUTOMATIZAR?'],
                         'bajada' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cotiza este servicio y descubre cómo puede transformar tu negocio'],
                         'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+
+                'navegacion' => [
+                    'nombre' => 'Navegación y sellos',
+                    'campos' => [
+                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
+                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Sistema probado'],
                     ],
                 ],
             ],
@@ -1006,6 +1104,14 @@ function registro_paginas(): array {
                         'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
                     ],
                 ],
+
+                'navegacion' => [
+                    'nombre' => 'Navegación y sellos',
+                    'campos' => [
+                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
+                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Integración completa'],
+                    ],
+                ],
             ],
         ],
 
@@ -1105,6 +1211,14 @@ function registro_paginas(): array {
                         'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿LISTO PARA AUTOMATIZAR?'],
                         'bajada' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cotiza este servicio y descubre cómo puede transformar tu negocio'],
                         'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+
+                'navegacion' => [
+                    'nombre' => 'Navegación y sellos',
+                    'campos' => [
+                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
+                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Instalación rápida'],
                     ],
                 ],
             ],
@@ -1299,6 +1413,24 @@ function registro_paginas(): array {
                                      'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp'],
                         'titulo' => ['label' => 'Título en el buscador', 'tipo' => 'texto', 'def' => 'Página no encontrada - 404 | INÉDITO DIGITAL'],
                         'texto'  => ['label' => 'Descripción en el buscador', 'tipo' => 'parrafo', 'def' => 'La página que buscas no existe o ha sido movida.'],
+                    ],
+                ],
+            ],
+        ],
+
+
+        'sistema' => [
+            'nombre'    => 'Avisos del sistema',
+            'ruta'      => 'Mensajes que solo se ven un instante',
+            'ayuda'     => 'Lo que aparece mientras el sitio carga o si algo falla.',
+            'secciones' => [
+                'avisos' => [
+                    'nombre' => 'Mensajes',
+                    'campos' => [
+                        'cargando'      => ['label' => 'Mientras carga la página', 'tipo' => 'texto', 'def' => 'Cargando...'],
+                        'error_titulo'  => ['label' => 'Si algo falla · título', 'tipo' => 'texto', 'def' => 'ERROR'],
+                        'redir_menu'    => ['label' => 'Redirección al menú', 'tipo' => 'texto', 'def' => 'Redirigiendo al menú...'],
+                        'redir_doc'     => ['label' => 'Redirección a un documento', 'tipo' => 'texto', 'def' => 'Redirigiendo al documento...'],
                     ],
                 ],
             ],

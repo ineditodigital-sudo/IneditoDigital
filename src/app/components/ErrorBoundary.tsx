@@ -1,4 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { contenido } from '../cms';
 
 interface Props {
   children: ReactNode;
@@ -27,7 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-black p-4">
           <div className="max-w-md text-center">
-            <h1 className="heading text-4xl text-[#7700CE] mb-4">ERROR</h1>
+            <h1 className="heading text-4xl text-[#7700CE] mb-4">{contenido('sistema', 'avisos')('error_titulo', 'ERROR')}</h1>
             <p className="text-white/70 mb-4">
               Algo salió mal. Por favor recarga la página.
             </p>
