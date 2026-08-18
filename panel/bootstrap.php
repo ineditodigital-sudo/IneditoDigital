@@ -2,6 +2,11 @@
 declare(strict_types=1);
 session_start();
 ob_start();
+// Cabeceras de seguridad: LiteSpeed no aplica las de .htaccess al PHP.
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Strict-Transport-Security: max-age=31536000');
 $GLOBALS['cfg'] = require __DIR__ . '/../api/config.php';
 
 function db(): PDO {

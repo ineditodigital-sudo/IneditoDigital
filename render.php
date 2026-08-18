@@ -187,6 +187,13 @@ $gaId = $seo['googleAnalytics'] ?? ''; $pixel = $seo['facebookPixel'] ?? ''; $gs
 
 $seo_global = ['siteName'=>$seo['siteName']??'','author'=>$seo['author']??'','defaultImage'=>$seo['defaultImage']??'','twitterHandle'=>$seo['twitterHandle']??'','googleAnalytics'=>$seo['googleAnalytics']??'','facebookPixel'=>$seo['facebookPixel']??'','googleSiteVerification'=>$seo['googleSiteVerification']??'','bingVerification'=>$seo['bingVerification']??''];
 $seo_schema = ['organizationName'=>$seo['orgName']??'','organizationType'=>$seo['orgType']??'ProfessionalService','phone'=>$seo['phone']??'','email'=>$seo['email']??'','priceRange'=>$seo['priceRange']??'$$','address'=>$seo['address']??'','city'=>$seo['city']??'','state'=>$seo['state']??'','zip'=>$seo['zip']??'','latitude'=>$seo['latitude']??'','longitude'=>$seo['longitude']??'','socialMedia'=>['facebook'=>$seo['facebook']??'','instagram'=>$seo['instagram']??'','linkedin'=>$seo['linkedin']??'']];
+// Cabeceras de seguridad. Van aqui y NO solo en .htaccess: LiteSpeed no
+// aplica las directivas Header de .htaccess a las respuestas de PHP.
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+header('Strict-Transport-Security: max-age=31536000');
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-cache');
 ?><!DOCTYPE html>
