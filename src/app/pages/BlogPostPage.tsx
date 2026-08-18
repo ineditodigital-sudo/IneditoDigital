@@ -11,7 +11,7 @@ export default function BlogPostPage() {
   const { blogPosts } = useApp();
   const post = blogPosts.find(p => p.slug === slug);
 
-  if (!post) return <div className="min-h-screen flex items-center justify-center"><p className="text-white">Post no encontrado</p></div>;
+  if (!post) return <div className="min-h-screen flex items-center justify-center"><p className="text-white">{contenido('blog', 'navegacion')('no_encontrado', 'Post no encontrado')}</p></div>;
 
   const formattedDate = new Date(post.date).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
 

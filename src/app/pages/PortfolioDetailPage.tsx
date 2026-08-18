@@ -7,11 +7,12 @@ import { contenido } from '../cms';
 
 export default function PortfolioDetailPage() {
   const tFil = contenido('portafolio', 'filtros');
+  const tPro = contenido('portafolio', 'proyecto');
   const { slug } = useParams();
   const { portfolioItems } = useApp();
   const item = portfolioItems.find(p => p.slug === slug);
 
-  if (!item) return <div className="min-h-screen flex items-center justify-center"><p className="text-white">Proyecto no encontrado</p></div>;
+  if (!item) return <div className="min-h-screen flex items-center justify-center"><p className="text-white">{tPro('no_encontrado', 'Proyecto no encontrado')}</p></div>;
 
   return (
     <>
@@ -44,17 +45,17 @@ export default function PortfolioDetailPage() {
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <GlassCard>
-              <h2 className="heading text-2xl mb-4">EL DESAFÍO</h2>
+              <h2 className="heading text-2xl mb-4">{tPro('desafio', 'EL DESAFÍO')}</h2>
               <p className="text-white/80">{item.challenge}</p>
             </GlassCard>
             <GlassCard>
-              <h2 className="heading text-2xl mb-4">LA SOLUCIÓN</h2>
+              <h2 className="heading text-2xl mb-4">{tPro('solucion', 'LA SOLUCIÓN')}</h2>
               <p className="text-white/80">{item.solution}</p>
             </GlassCard>
           </div>
 
           <div className="mb-12">
-            <h2 className="heading text-3xl mb-6 text-center">RESULTADOS</h2>
+            <h2 className="heading text-3xl mb-6 text-center">{tPro('resultados', 'RESULTADOS')}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {item.results.map((result, i) => (
                 <GlassCard key={i} className="text-center">
@@ -66,7 +67,7 @@ export default function PortfolioDetailPage() {
           </div>
 
           <GlassCard>
-            <h2 className="heading text-2xl mb-4">SERVICIOS UTILIZADOS</h2>
+            <h2 className="heading text-2xl mb-4">{tPro('servicios', 'SERVICIOS UTILIZADOS')}</h2>
             <div className="flex flex-wrap gap-2">
               {item.services.map((service, i) => (
                 <span key={i} className="px-4 py-2 rounded-full bg-[#7700CE]/20 text-[#7700CE] text-sm">{service}</span>

@@ -9,6 +9,7 @@ export default function AboutPage() {
   const tMis = contenido('nosotros', 'mision');
   const tVal = contenido('nosotros', 'valores');
   const tEle = contenido('nosotros', 'elegirnos');
+  const tCif = contenido('nosotros', 'cifras');
   return (
     <>
       <SEO
@@ -75,16 +76,16 @@ export default function AboutPage() {
             </p>
             <div className="grid md:grid-cols-3 gap-6 text-left">
               <div>
-                <div className="heading text-2xl text-[#7700CE] mb-2">100+</div>
-                <div className="text-white/60">Proyectos exitosos</div>
+                <div className="heading text-2xl text-[#7700CE] mb-2">{tCif('c1_valor', '100+')}</div>
+                <div className="text-white/60">{tCif('c1_texto', 'Proyectos exitosos')}</div>
               </div>
               <div>
-                <div className="heading text-2xl text-[#7700CE] mb-2">5X</div>
-                <div className="text-white/60">ROI promedio</div>
+                <div className="heading text-2xl text-[#7700CE] mb-2">{tCif('c2_valor', '5X')}</div>
+                <div className="text-white/60">{tCif('c2_texto', 'ROI promedio')}</div>
               </div>
               <div>
-                <div className="heading text-2xl text-[#7700CE] mb-2">98%</div>
-                <div className="text-white/60">Satisfacción del cliente</div>
+                <div className="heading text-2xl text-[#7700CE] mb-2">{tCif('c3_valor', '98%')}</div>
+                <div className="text-white/60">{tCif('c3_texto', 'Satisfacción del cliente')}</div>
               </div>
             </div>
           </GlassCard>

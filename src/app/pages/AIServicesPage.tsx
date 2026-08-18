@@ -139,7 +139,7 @@ export default function AIServicesPage() {
               className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 shadow-[0_0_30px_rgba(119,0,206,0.5)] hover:shadow-[0_0_50px_rgba(119,0,206,0.8)] hover:scale-105 group cursor-pointer"
             >
               <Sparkles className="mr-2" size={20} />
-              <span className="font-bold tracking-wider">CONSULTORÍA GRATUITA</span>
+              <span className="font-bold tracking-wider">{tTar('boton_portada', 'CONSULTORÍA GRATUITA')}</span>
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
             </button>
           </motion.div>
@@ -322,7 +322,7 @@ export default function AIServicesPage() {
               className="inline-flex items-center justify-center px-10 py-5 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 shadow-[0_0_40px_rgba(119,0,206,0.6)] hover:shadow-[0_0_60px_rgba(119,0,206,0.9)] hover:scale-105 group cursor-pointer"
             >
               <Bot className="mr-3" size={24} />
-              <span className="font-bold tracking-wider text-lg">AGENDAR CONSULTORÍA</span>
+              <span className="font-bold tracking-wider text-lg">{tTar('boton_cierre', 'AGENDAR CONSULTORÍA')}</span>
               <ArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" size={24} />
             </button>
           </motion.div>

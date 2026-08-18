@@ -8,6 +8,7 @@ import { contenido } from '../cms';
 
 export default function ServicesPage() {
   const t = contenido('servicios', 'encabezado');
+  const tTar = contenido('servicios', 'tarjeta');
   const { services } = useApp();
 
   return (
@@ -65,7 +66,7 @@ export default function ServicesPage() {
                     </div>
 
                     <div className="flex items-center text-[#7700CE] text-sm group-hover:gap-2 transition-all">
-                      <span>Ver detalles</span>
+                      <span>{tTar('ver_mas', 'Ver detalles')}</span>
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </GlassCard>

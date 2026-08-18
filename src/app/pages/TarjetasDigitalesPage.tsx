@@ -115,17 +115,18 @@ const preguntasDe = (t: (k: string, r: string) => string) => [
 ];
 
 /* Botones de la pagina de contacto que abre la tarjeta */
-const accionesPagina = [
-  { icon: Phone, label: 'Guardar contacto', principal: true },
-  { icon: MessageCircle, label: 'WhatsApp' },
-  { icon: Globe, label: 'tuempresa.com' },
-  { icon: Instagram, label: '@tumarca' },
+const accionesDe = (t: (k: string, r: string) => string) => [
+  { icon: Phone, label: t('a1', 'Guardar contacto'), principal: true },
+  { icon: MessageCircle, label: t('a2', 'WhatsApp') },
+  { icon: Globe, label: t('a3', 'tuempresa.com') },
+  { icon: Instagram, label: t('a4', '@tumarca') },
 ];
 
 /* ------------------------------------------------------------------ */
 /* Tarjeta que se ARMA por pasos. step -1 = lienzo en blanco.          */
 /* ------------------------------------------------------------------ */
 function BuildingCard({ step, compact = false }: { step: number; compact?: boolean }) {
+  const tTel = contenido('tarjetas-de-presentacion-digital', 'telefono');
   const size = compact ? 'w-52 h-32 p-4' : 'w-[19rem] h-[11.5rem] sm:w-[21rem] sm:h-[12.5rem] p-6';
 
   return (
@@ -180,8 +181,8 @@ function BuildingCard({ step, compact = false }: { step: number; compact?: boole
           className="transition-[opacity,transform] duration-500 ease-out"
           style={{ opacity: step >= 0 ? 1 : 0, transform: step >= 0 ? 'translateY(0)' : 'translateY(10px)' }}
         >
-          <div className={`heading text-white tracking-wide ${compact ? 'text-sm' : 'text-xl mb-1'}`}>TU NOMBRE</div>
-          <div className={`text-white/65 uppercase tracking-[0.22em] ${compact ? 'text-[8px]' : 'text-[10px]'}`}>Tu puesto · Tu empresa</div>
+          <div className={`heading text-white tracking-wide ${compact ? 'text-sm' : 'text-xl mb-1'}`}>{tTel('nombre', 'TU NOMBRE')}</div>
+          <div className={`text-white/65 uppercase tracking-[0.22em] ${compact ? 'text-[8px]' : 'text-[10px]'}`}>{tTel('puesto', 'Tu puesto · Tu empresa')}</div>
         </div>
       </div>
     </div>
@@ -202,6 +203,7 @@ function PhoneScreen({
   customizing?: boolean;
   accent?: string;
 }) {
+  const tTel = contenido('tarjetas-de-presentacion-digital', 'telefono');
   return (
     <div className="relative w-full h-full">
       <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-1 rounded-full bg-white/15" />
@@ -227,12 +229,12 @@ function PhoneScreen({
               />
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="text-center mb-3">
-              <div className="heading text-white text-[11px]">TU NOMBRE</div>
-              <div className="text-white/40 text-[8px] uppercase tracking-[0.18em]">Tu puesto · Tu empresa</div>
+              <div className="heading text-white text-[11px]">{tTel('nombre', 'TU NOMBRE')}</div>
+              <div className="text-white/40 text-[8px] uppercase tracking-[0.18em]">{tTel('puesto', 'Tu puesto · Tu empresa')}</div>
             </motion.div>
 
             <div className="space-y-1.5">
-              {accionesPagina.map((a, i) => (
+              {accionesDe(tTel).map((a, i) => (
                 <motion.div
                   key={a.label}
                   initial={{ opacity: 0, x: -10 }}
@@ -370,6 +372,7 @@ function TapStage() {
 /* ZONA 2 — Recorrido: la tarjeta se arma con el scroll                */
 /* ------------------------------------------------------------------ */
 function StickyJourney() {
+  const tArm = contenido('tarjetas-de-presentacion-digital', 'armado');
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [started, setStarted] = useState(false);
@@ -419,7 +422,7 @@ function StickyJourney() {
           <div className="container mx-auto max-w-7xl px-4 w-full">
             {/* Encabezado fijo: explica que esto es un proceso */}
             <div className="text-center mb-10">
-              <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-2">Así se arma tu tarjeta</div>
+              <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-2">{tArm('etiqueta', 'Así se arma tu tarjeta')}</div>
               <div className="text-white/30 text-xs">Paso {active + 1} de {steps.length}</div>
             </div>
 
@@ -488,7 +491,7 @@ function StickyJourney() {
                   <motion.span animate={{ y: [0, 5, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
                     <ArrowDown size={16} />
                   </motion.span>
-                  <span className="text-[11px] tracking-[0.25em] uppercase">Sigue bajando para armarla</span>
+                  <span className="text-[11px] tracking-[0.25em] uppercase">{tArm('scroll', 'Sigue bajando para armarla')}</span>
                 </motion.div>
               </div>
 
@@ -520,7 +523,7 @@ function StickyJourney() {
                           <div key={i} className="h-3 rounded-md bg-white/[0.06] mb-1" />
                         ))}
                       </div>
-                      <span className="text-white/35 text-[9px] tracking-[0.15em] uppercase">Tu página</span>
+                      <span className="text-white/35 text-[9px] tracking-[0.15em] uppercase">{tArm('tu_pagina', 'Tu página')}</span>
                     </motion.div>
 
                     {/* Cable animado tarjeta -> pagina */}
@@ -575,7 +578,7 @@ function StickyJourney() {
                     transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
                   >
                     <MousePointer2 size={16} style={{ color: accent }} />
-                    <span className="text-[9px] text-white/60">Editando</span>
+                    <span className="text-[9px] text-white/60">{tArm('editando', 'Editando')}</span>
                   </motion.div>
                 )}
 
@@ -599,7 +602,7 @@ function StickyJourney() {
       {/* Movil: los mismos pasos, apilados */}
       <div className="lg:hidden px-4 py-16">
         <div className="text-center mb-8">
-          <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-2">Así se arma tu tarjeta</div>
+          <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-2">{tArm('etiqueta', 'Así se arma tu tarjeta')}</div>
         </div>
         <div className="space-y-5">
           {steps.map((s, i) => (
@@ -638,7 +641,7 @@ function Comparison({ t }: { t: (k: string, r: string) => string }) {
     <section className="px-4 py-16 md:py-24 bg-white">
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-12">
-          <div className="text-[#7700CE] text-[11px] tracking-[0.3em] uppercase mb-4">Beneficios</div>
+          <div className="text-[#7700CE] text-[11px] tracking-[0.3em] uppercase mb-4">{t('etiqueta', 'Beneficios')}</div>
           <h2 className="heading text-2xl md:text-4xl text-black leading-tight">
             {t('titulo_1', 'Lo mismo que hacías,')} <span className="text-[#7700CE]">{t('titulo_2', 'sin la parte molesta')}</span>
           </h2>
@@ -749,6 +752,7 @@ export default function TarjetasDigitalesPage() {
   const tPub  = contenido('tarjetas-de-presentacion-digital', 'publico');
   const tPre  = contenido('tarjetas-de-presentacion-digital', 'preguntas');
   const tCie  = contenido('tarjetas-de-presentacion-digital', 'cierre');
+  const tArm  = contenido('tarjetas-de-presentacion-digital', 'armado');
   const cta = () => openAssistant(SERVICE_NAME, 'cotizar tarjetas de presentación digital NFC');
   const specs = fichaDe(tFic);
   const idealFor = publicoDe(tPub);
@@ -821,7 +825,7 @@ export default function TarjetasDigitalesPage() {
                 transition={{ delay: 1.6, duration: 0.6 }}
                 className="flex flex-col items-center gap-3 mt-14"
               >
-                <span className="text-white/30 text-[11px] tracking-[0.3em] uppercase">Desliza para verla armarse desde cero</span>
+                <span className="text-white/30 text-[11px] tracking-[0.3em] uppercase">{tArm('desliza', 'Desliza para verla armarse desde cero')}</span>
                 <motion.div
                   animate={{ y: [0, 9, 0] }}
                   transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
@@ -878,7 +882,7 @@ export default function TarjetasDigitalesPage() {
       <section className="px-4 pb-16 md:pb-24 bg-[#07060B]">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-10">
-            <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-3">Cómo se cotiza</div>
+            <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-3">{tArm('cotiza', 'Cómo se cotiza')}</div>
             <h2 className="heading text-2xl md:text-4xl text-white leading-tight">
               {tEq('titulo_1', 'Para una persona o para')}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">{tEq('titulo_2', 'todo tu equipo')}</span>

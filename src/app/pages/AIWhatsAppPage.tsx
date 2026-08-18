@@ -18,6 +18,7 @@ export default function AIWhatsAppPage() {
   const tHow = contenido('servicios-ia-whatsapp', 'como_funciona');
   const tIde = contenido('servicios-ia-whatsapp', 'ideal_para');
   const tImg = contenido('servicios-ia-whatsapp', 'imagenes');
+  const tNav = contenido('servicios-ia-whatsapp', 'navegacion');
 
   // Imágenes para las diferentes secciones
   const sectionImages = {
@@ -110,7 +111,7 @@ export default function AIWhatsAppPage() {
               className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors group"
             >
               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-              <span>Volver a Servicios IA</span>
+              <span>{tNav('volver', 'Volver a Servicios IA')}</span>
             </Link>
           </motion.div>
         </div>
@@ -260,7 +261,7 @@ export default function AIWhatsAppPage() {
                   {/* Badge flotante */}
                   <div className="absolute top-3 right-3">
                     <div className="px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-lg">
-                      <span className="text-xs font-bold text-[#7700CE]">Implementación rápida</span>
+                      <span className="text-xs font-bold text-[#7700CE]">{tNav('sello', 'Implementación rápida')}</span>
                     </div>
                   </div>
                 </div>
