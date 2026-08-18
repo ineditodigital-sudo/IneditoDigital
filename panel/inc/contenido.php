@@ -263,6 +263,218 @@ function registro_paginas(): array {
                 ],
             ],
         ],
+
+        /* ---------------------------------------------------------- */
+        'servicios' => [
+            'nombre' => 'Servicios (listado)',
+            'ruta'   => '/servicios',
+            'ayuda'  => 'Solo el encabezado. Los servicios en sí se administran en la sección «Servicios» del menú.',
+            'secciones' => [
+                'encabezado' => [
+                    'nombre' => 'Encabezado',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'NUESTROS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'SERVICIOS'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
+                                       'def' => 'Soluciones digitales integrales que impulsan tu crecimiento con estrategias basadas en resultados'],
+                    ],
+                ],
+            ],
+        ],
+
+        /* ---------------------------------------------------------- */
+        'portafolio' => [
+            'nombre' => 'Portafolio (listado)',
+            'ruta'   => '/portafolio',
+            'ayuda'  => 'Solo el encabezado. Los proyectos se administran en la sección «Portafolio» del menú.',
+            'secciones' => [
+                'encabezado' => [
+                    'nombre' => 'Encabezado',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CASOS DE'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'ÉXITO'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
+                                       'def' => 'Descubre cómo hemos transformado negocios en Aguascalientes y México con diseño web excepcional, SEO estratégico y resultados medibles.'],
+                    ],
+                ],
+            ],
+        ],
+
+        /* ---------------------------------------------------------- */
+        'blog' => [
+            'nombre' => 'Blog (listado)',
+            'ruta'   => '/blog',
+            'ayuda'  => 'Solo el encabezado. Los artículos se administran en la sección «Blog» del menú.',
+            'secciones' => [
+                'encabezado' => [
+                    'nombre' => 'Encabezado',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'NUESTRO'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'BLOG'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
+                                       'def' => 'Estrategias, tips y tendencias de marketing digital que funcionan'],
+                    ],
+                ],
+            ],
+        ],
+
+        /* ---------------------------------------------------------- */
+        'servicios-ia' => [
+            'nombre' => 'Servicios de IA',
+            'ruta'   => '/servicios-ia',
+            'ayuda'  => 'La página que presenta todas las soluciones de inteligencia artificial.',
+            'secciones' => [
+                'portada' => [
+                    'nombre' => 'Portada',
+                    'campos' => [
+                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'SERVICIOS DE INTELIGENCIA ARTIFICIAL'],
+                        'titulo_1' => ['label' => 'Título, primera línea', 'tipo' => 'texto', 'def' => 'INTELIGENCIA ARTIFICIAL'],
+                        'titulo_2' => ['label' => 'Título, segunda línea (en degradado)', 'tipo' => 'texto', 'def' => 'QUE HACE CRECER TU NEGOCIO'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
+                                       'def' => 'Automatiza ventas, marketing y atención al cliente con agentes inteligentes que trabajan 24/7.'],
+                    ],
+                ],
+                'soluciones' => [
+                    'nombre' => 'Soluciones para cada área',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'SOLUCIONES IA'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en degradado)', 'tipo' => 'texto', 'def' => 'PARA CADA ÁREA'],
+                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo',
+                                       'def' => 'Selecciona el servicio ideal para tu negocio y empieza a automatizar hoy mismo'],
+                    ],
+                ],
+            ],
+        ],
+
+        'servicios-ia-whatsapp' => [
+            'nombre' => 'IA para WhatsApp',
+            'ruta'   => '/servicios-ia/whatsapp',
+            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'secciones' => [
+                'portada' => [
+                    'nombre' => 'Portada',
+                    'campos' => [
+                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA PARA WHATSAPP'],
+                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'AGENTE INTELIGENTE QUE VENDE 24/7'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Tu mejor vendedor, siempre disponible. Atiende, califica y da seguimiento automático por WhatsApp.'],
+                    ],
+                ],
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿LISTO PARA AUTOMATIZAR?'],
+                        'bajada' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cotiza este servicio y descubre cómo puede transformar tu negocio'],
+                        'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+            ],
+        ],
+
+        'servicios-ia-ventas' => [
+            'nombre' => 'IA de Ventas',
+            'ruta'   => '/servicios-ia/ventas',
+            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'secciones' => [
+                'portada' => [
+                    'nombre' => 'Portada',
+                    'campos' => [
+                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA DE VENTAS'],
+                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'VENDE MÁS CON MENOS ESFUERZO'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Sistema de IA que automatiza prospección, califica leads y optimiza cada etapa de tu proceso comercial.'],
+                    ],
+                ],
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿LISTO PARA AUTOMATIZAR?'],
+                        'bajada' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cotiza este servicio y descubre cómo puede transformar tu negocio'],
+                        'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+            ],
+        ],
+
+        'servicios-ia-marketing' => [
+            'nombre' => 'IA para Marketing',
+            'ruta'   => '/servicios-ia/marketing',
+            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'secciones' => [
+                'portada' => [
+                    'nombre' => 'Portada',
+                    'campos' => [
+                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA PARA MARKETING DIGITAL'],
+                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'MARKETING QUE PIENSA POR TI'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Automatiza contenido, optimiza campañas y multiplica resultados con inteligencia artificial.'],
+                    ],
+                ],
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿LISTO PARA AUTOMATIZAR?'],
+                        'bajada' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cotiza este servicio y descubre cómo puede transformar tu negocio'],
+                        'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+            ],
+        ],
+
+        'servicios-ia-ecommerce' => [
+            'nombre' => 'IA para E-commerce',
+            'ruta'   => '/servicios-ia/ecommerce',
+            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'secciones' => [
+                'portada' => [
+                    'nombre' => 'Portada',
+                    'campos' => [
+                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA PARA E-COMMERCE'],
+                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'CONVIERTE MÁS VISITAS EN VENTAS'],
+                        'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Asistente inteligente dentro de tu tienda que recupera carritos, recomienda productos y atiende 24/7.'],
+                    ],
+                ],
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿LISTO PARA AUTOMATIZAR?'],
+                        'bajada' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cotiza este servicio y descubre cómo puede transformar tu negocio'],
+                        'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+            ],
+        ],
+
+        /* ---------------------------------------------------------- */
+        'privacidad' => [
+            'nombre' => 'Aviso de Privacidad',
+            'ruta'   => '/privacidad',
+            'ayuda'  => 'El encabezado y la fecha. El texto legal se cambia con nosotros.',
+            'secciones' => [
+                'encabezado' => [
+                    'nombre' => 'Encabezado',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'POLÍTICA DE'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRIVACIDAD'],
+                        'fecha'  => ['label' => 'Fecha de última actualización', 'tipo' => 'texto', 'def' => 'Última actualización: Diciembre 16, 2024'],
+                    ],
+                ],
+            ],
+        ],
+
+        /* ---------------------------------------------------------- */
+        'terminos' => [
+            'nombre' => 'Términos y Condiciones',
+            'ruta'   => '/terminos',
+            'ayuda'  => 'El encabezado y la fecha. El texto legal se cambia con nosotros.',
+            'secciones' => [
+                'encabezado' => [
+                    'nombre' => 'Encabezado',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'TÉRMINOS Y'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'CONDICIONES'],
+                        'fecha'  => ['label' => 'Fecha de última actualización', 'tipo' => 'texto', 'def' => 'Última actualización: Diciembre 16, 2024'],
+                    ],
+                ],
+            ],
+        ],
     ];
 }
 

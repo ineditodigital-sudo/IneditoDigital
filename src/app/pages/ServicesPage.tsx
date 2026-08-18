@@ -4,8 +4,10 @@ import { ArrowRight } from 'lucide-react';
 import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
+import { contenido } from '../cms';
 
 export default function ServicesPage() {
+  const t = contenido('servicios', 'encabezado');
   const { services } = useApp();
 
   return (
@@ -24,10 +26,10 @@ export default function ServicesPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <h1 className="heading text-4xl md:text-6xl mb-6">
-                NUESTROS <span className="text-[#7700CE]">SERVICIOS</span>
+                {t('titulo_1', 'NUESTROS')} <span className="text-[#7700CE]">{t('titulo_2', 'SERVICIOS')}</span>
               </h1>
               <p className="text-xl text-white/70">
-                Soluciones digitales integrales que impulsan tu crecimiento con estrategias basadas en resultados
+                {t('bajada', 'Soluciones digitales integrales que impulsan tu crecimiento con estrategias basadas en resultados')}
               </p>
             </motion.div>
           </div>

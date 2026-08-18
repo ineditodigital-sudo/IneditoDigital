@@ -7,9 +7,12 @@ import Floating3DElements from '../components/Floating3DElements';
 import SectionDivider from '../components/SectionDivider';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
+import { contenido } from '../cms';
 
 export default function AIWhatsAppPage() {
   const { openAssistant } = useApp();
+  const t = contenido('servicios-ia-whatsapp', 'portada');
+  const tC = contenido('servicios-ia-whatsapp', 'cierre');
 
   // Imágenes para las diferentes secciones
   const sectionImages = {
@@ -114,15 +117,15 @@ export default function AIWhatsAppPage() {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-3 py-1.5 text-xs md:text-sm rounded-full bg-[#7700CE]/30 border border-[#7700CE]/50 backdrop-blur-xl text-[#CC66FF] font-bold mb-4">
-              IA PARA WHATSAPP
+              {t('etiqueta', 'IA PARA WHATSAPP')}
             </span>
             
             <h1 className="heading mb-3 md:mb-4 text-white drop-shadow-[0_0_40px_rgba(119,0,206,0.6)]">
-              AGENTE INTELIGENTE QUE VENDE 24/7
+              {t('titulo', 'AGENTE INTELIGENTE QUE VENDE 24/7')}
             </h1>
             
             <p className="text-sm md:text-base text-white/90 max-w-3xl mx-auto mb-6 leading-relaxed">
-              Tu mejor vendedor, siempre disponible. Atiende, califica y da seguimiento automático por WhatsApp.
+              {t('bajada', 'Tu mejor vendedor, siempre disponible. Atiende, califica y da seguimiento automático por WhatsApp.')}
             </p>
 
             <Link 
@@ -359,16 +362,16 @@ export default function AIWhatsAppPage() {
               {/* Contenido */}
               <div className="relative z-10 text-center p-6 md:p-10">
                 <h2 className="heading text-2xl md:text-3xl lg:text-4xl mb-3 text-white">
-                  ¿LISTO PARA <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">AUTOMATIZAR?</span>
+                  {tC('titulo', '¿LISTO PARA AUTOMATIZAR?')}
                 </h2>
                 <p className="text-white/90 text-sm md:text-base mb-6 max-w-2xl mx-auto">
-                  Cotiza este servicio y descubre cómo puede transformar tu negocio
+                  {tC('bajada', 'Cotiza este servicio y descubre cómo puede transformar tu negocio')}
                 </p>
                 <button
                   onClick={() => openAssistant('IA para WhatsApp')}
                   className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-white text-[#7700CE] hover:bg-white/90 transition-all hover:scale-105 shadow-[0_10px_40px_rgba(0,0,0,0.3)] cursor-pointer"
                 >
-                  <span className="heading text-sm md:text-base tracking-[0.08em]">COTIZAR AHORA</span>
+                  <span className="heading text-sm md:text-base tracking-[0.08em]">{tC('boton', 'COTIZAR AHORA')}</span>
                 </button>
               </div>
             </motion.div>

@@ -4,8 +4,10 @@ import { Clock, ArrowRight } from 'lucide-react';
 import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
+import { contenido } from '../cms';
 
 export default function BlogPage() {
+  const t = contenido('blog', 'encabezado');
   const { blogPosts } = useApp();
 
   return (
@@ -19,10 +21,10 @@ export default function BlogPage() {
         <div className="container mx-auto">
           <div className="text-center mb-12 max-w-3xl mx-auto">
             <h1 className="heading text-4xl md:text-6xl mb-6">
-              NUESTRO <span className="text-[#7700CE]">BLOG</span>
+              {t('titulo_1', 'NUESTRO')} <span className="text-[#7700CE]">{t('titulo_2', 'BLOG')}</span>
             </h1>
             <p className="text-xl text-white/70">
-              Estrategias, tips y tendencias de marketing digital que funcionan
+              {t('bajada', 'Estrategias, tips y tendencias de marketing digital que funcionan')}
             </p>
           </div>
 

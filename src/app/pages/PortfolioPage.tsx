@@ -4,6 +4,7 @@ import { ExternalLink, Award, TrendingUp, Eye, ChevronLeft, ChevronRight } from 
 import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
+import { contenido } from '../cms';
 import TopographyCanvas from '../components/TopographyCanvas';
 import SectionDivider from '../components/SectionDivider';
 import Slider from 'react-slick';
@@ -39,6 +40,7 @@ const CustomNextArrow = (props: any) => {
 };
 
 export default function PortfolioPage() {
+  const t = contenido('portafolio', 'encabezado');
   const { portfolioItems, openAssistant } = useApp();
   const [filter, setFilter] = useState('all');
 
@@ -88,11 +90,11 @@ export default function PortfolioPage() {
             </motion.div>
 
             <h1 className="heading text-4xl md:text-6xl lg:text-7xl mb-6">
-              CASOS DE <span className="text-[#7700CE] drop-shadow-[0_0_30px_rgba(119,0,206,0.6)]">ÉXITO</span>
+              {t('titulo_1', 'CASOS DE')} <span className="text-[#7700CE] drop-shadow-[0_0_30px_rgba(119,0,206,0.6)]">{t('titulo_2', 'ÉXITO')}</span>
             </h1>
             
             <p className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto">
-              Descubre cómo hemos transformado negocios en Aguascalientes y México con diseño web excepcional, SEO estratégico y resultados medibles.
+              {t('bajada', 'Descubre cómo hemos transformado negocios en Aguascalientes y México con diseño web excepcional, SEO estratégico y resultados medibles.')}
             </p>
           </motion.div>
         </div>

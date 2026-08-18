@@ -1,7 +1,9 @@
 import SEO from '../components/SEO';
+import { contenido } from '../cms';
 import { GlassCard } from '../components/GlassCard';
 
 export default function PrivacyPage() {
+  const t = contenido('privacidad', 'encabezado');
   return (
     <>
       <SEO
@@ -12,11 +14,11 @@ export default function PrivacyPage() {
       <div className="py-16 md:py-24 px-4">
         <div className="container mx-auto max-w-4xl">
           <h1 className="heading text-4xl md:text-6xl mb-8 text-center">
-            POLÍTICA DE <span className="text-[#7700CE]">PRIVACIDAD</span>
+            {t('titulo_1', 'POLÍTICA DE')} <span className="text-[#7700CE]">{t('titulo_2', 'PRIVACIDAD')}</span>
           </h1>
 
           <GlassCard className="prose prose-invert max-w-none">
-            <p className="text-white/70">Última actualización: Diciembre 16, 2024</p>
+            <p className="text-white/70">{t('fecha', 'Última actualización: Diciembre 16, 2024')}</p>
 
             <h2 className="heading text-2xl mt-8 mb-4">1. Información que Recopilamos</h2>
             <p className="text-white/70">
