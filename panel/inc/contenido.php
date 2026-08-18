@@ -304,6 +304,96 @@ function registro_paginas(): array {
                         'paso_4_beneficio' => ['label' => 'Paso 4 · beneficio', 'tipo' => 'texto', 'def' => 'Editas todo sin reimprimir nada'],
                     ],
                 ],
+
+                'comparacion' => [
+                    'nombre' => 'Beneficios: impresa contra NFC',
+                    'ayuda'  => 'Las dos columnas que se comparan.',
+                    'campos' => [
+                        'visible'   => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1'  => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'Lo mismo que hacías,'],
+                        'titulo_2'  => ['label' => 'Título, segunda parte (en color)', 'tipo' => 'texto', 'def' => 'sin la parte molesta'],
+                        'col_1'     => ['label' => 'Nombre de la columna izquierda', 'tipo' => 'texto', 'def' => 'Tarjeta impresa'],
+                        'col_1_sub' => ['label' => 'Subtítulo de la izquierda', 'tipo' => 'texto', 'def' => 'Como siempre'],
+                        'col_2'     => ['label' => 'Nombre de la columna derecha', 'tipo' => 'texto', 'def' => 'Tarjeta NFC'],
+                        'col_2_sub' => ['label' => 'Subtítulo de la derecha', 'tipo' => 'texto', 'def' => 'Con Inédito'],
+                        'f1_impresa' => ['label' => 'Fila 1 · tarjeta impresa', 'tipo' => 'texto', 'def' => 'Dictas o tecleas tus datos'],
+                        'f1_nfc'     => ['label' => 'Fila 1 · tarjeta NFC', 'tipo' => 'texto', 'def' => 'Un toque y queda guardado'],
+                        'f2_impresa' => ['label' => 'Fila 2 · tarjeta impresa', 'tipo' => 'texto', 'def' => 'Los datos quedan congelados'],
+                        'f2_nfc'     => ['label' => 'Fila 2 · tarjeta NFC', 'tipo' => 'texto', 'def' => 'La editas cuando quieras'],
+                        'f3_impresa' => ['label' => 'Fila 3 · tarjeta impresa', 'tipo' => 'texto', 'def' => 'Reimprimes con cada cambio'],
+                        'f3_nfc'     => ['label' => 'Fila 3 · tarjeta NFC', 'tipo' => 'texto', 'def' => 'Cero reimpresiones'],
+                        'f4_impresa' => ['label' => 'Fila 4 · tarjeta impresa', 'tipo' => 'texto', 'def' => 'Termina en un cajón'],
+                        'f4_nfc'     => ['label' => 'Fila 4 · tarjeta NFC', 'tipo' => 'texto', 'def' => 'Una impresión que se recuerda'],
+                    ],
+                ],
+
+                'ficha' => [
+                    'nombre' => 'Ficha rápida',
+                    'campos' => [
+                        'e1_label' => ['label' => 'Dato 1 · nombre', 'tipo' => 'texto', 'def' => 'Compartir'],
+                        'e1_valor' => ['label' => 'Dato 1 · valor', 'tipo' => 'texto', 'def' => 'Un toque'],
+                        'e2_label' => ['label' => 'Dato 2 · nombre', 'tipo' => 'texto', 'def' => 'Apps'],
+                        'e2_valor' => ['label' => 'Dato 2 · valor', 'tipo' => 'texto', 'def' => 'Ninguna'],
+                        'e3_label' => ['label' => 'Dato 3 · nombre', 'tipo' => 'texto', 'def' => 'Ediciones'],
+                        'e3_valor' => ['label' => 'Dato 3 · valor', 'tipo' => 'texto', 'def' => 'Ilimitadas'],
+                        'e4_label' => ['label' => 'Dato 4 · nombre', 'tipo' => 'texto', 'def' => 'Entrega'],
+                        'e4_valor' => ['label' => 'Dato 4 · valor', 'tipo' => 'texto', 'def' => '3–5 días'],
+                        'texto_tarjeta' => ['label' => 'Texto junto a la tarjeta', 'tipo' => 'parrafo',
+                                            'def' => 'Acabado premium con chip NFC dentro. El diseño es tuyo; el contenido lo cambias cuando quieras.'],
+                    ],
+                ],
+
+                'publico' => [
+                    'nombre' => 'Ideal para',
+                    'campos' => [
+                        'titulo' => ['label' => 'Título de la sección', 'tipo' => 'texto', 'def' => 'Ideal para'],
+                        'p1' => ['label' => 'Público 1', 'tipo' => 'texto', 'def' => 'Emprendedores y freelancers que hacen networking'],
+                        'p2' => ['label' => 'Público 2', 'tipo' => 'texto', 'def' => 'Equipos comerciales que comparten contacto al vuelo'],
+                        'p3' => ['label' => 'Público 3', 'tipo' => 'texto', 'def' => 'Consultores que actualizan su información seguido'],
+                        'p4' => ['label' => 'Público 4', 'tipo' => 'texto', 'def' => 'Empresas que cuidan su imagen en cada interacción'],
+                        'p5' => ['label' => 'Público 5', 'tipo' => 'texto', 'def' => 'Agentes inmobiliarios y asesores en ferias y eventos'],
+                    ],
+                ],
+
+                'preguntas' => [
+                    'nombre' => 'Preguntas frecuentes',
+                    'campos' => [
+                        'titulo' => ['label' => 'Título de la sección', 'tipo' => 'texto', 'def' => 'Preguntas frecuentes'],
+                        'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿Necesito instalar una aplicación para usarla?'],
+                        'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'No. Funciona con la tecnología NFC que ya traen los smartphones modernos, tanto Android como iPhone desde el modelo 7. Solo acercas la tarjeta.'],
+                        'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Qué pasa si cambio de número o de trabajo?'],
+                        'r2' => ['label' => 'Respuesta 2', 'tipo' => 'parrafo', 'def' => 'Actualizas tu perfil digital en línea y el cambio se refleja al instante en tu tarjeta, sin reimprimir nada.'],
+                        'q3' => ['label' => 'Pregunta 3', 'tipo' => 'texto', 'def' => '¿Qué información puedo compartir?'],
+                        'r3' => ['label' => 'Respuesta 3', 'tipo' => 'parrafo', 'def' => 'Contacto, redes sociales, sitio web, portafolio, ubicación y hasta un video de presentación, todo desde un solo toque.'],
+                        'q4' => ['label' => 'Pregunta 4', 'tipo' => 'texto', 'def' => '¿Cuánto tarda la entrega?'],
+                        'r4' => ['label' => 'Respuesta 4', 'tipo' => 'parrafo', 'def' => 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.'],
+                        'q5' => ['label' => 'Pregunta 5', 'tipo' => 'texto', 'def' => '¿Puedo pedir tarjetas para todo mi equipo?'],
+                        'r5' => ['label' => 'Respuesta 5', 'tipo' => 'parrafo', 'def' => 'Sí. Cotizamos desde una sola persona hasta equipos completos, con diseño unificado para toda la empresa y una página de contacto propia para cada integrante. Nos adaptamos al tamaño de tu equipo.'],
+                    ],
+                ],
+
+                'telefono' => [
+                    'nombre' => 'La página de contacto que se muestra',
+                    'ayuda'  => 'Lo que aparece dentro del celular en las animaciones.',
+                    'campos' => [
+                        'nombre'  => ['label' => 'Nombre de ejemplo', 'tipo' => 'texto', 'def' => 'TU NOMBRE'],
+                        'puesto'  => ['label' => 'Puesto de ejemplo', 'tipo' => 'texto', 'def' => 'Tu puesto · Tu empresa'],
+                        'a1' => ['label' => 'Botón 1 de la página', 'tipo' => 'texto', 'def' => 'Guardar contacto'],
+                        'a2' => ['label' => 'Botón 2 de la página', 'tipo' => 'texto', 'def' => 'WhatsApp'],
+                        'a3' => ['label' => 'Botón 3 de la página', 'tipo' => 'texto', 'def' => 'tuempresa.com'],
+                        'a4' => ['label' => 'Botón 4 de la página', 'tipo' => 'texto', 'def' => '@tumarca'],
+                    ],
+                ],
+
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿Listo para modernizar tu tarjeta?'],
+                        'texto'  => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cotiza tu tarjeta NFC y empieza a compartir tu contacto con un solo toque.'],
+                        'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+
                 'equipos' => [
                     'nombre' => 'Una persona o equipos',
                     'campos' => [

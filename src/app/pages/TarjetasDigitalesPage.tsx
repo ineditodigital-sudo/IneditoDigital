@@ -84,34 +84,34 @@ const steps = [
 /* Acentos que va probando la animacion de personalizacion del paso 04 */
 const acentos = ['#CC66FF', '#22D3EE', '#F59E0B'];
 
-const comparison = [
-  { impresa: 'Dictas o tecleas tus datos', nfc: 'Un toque y queda guardado' },
-  { impresa: 'Los datos quedan congelados', nfc: 'La editas cuando quieras' },
-  { impresa: 'Reimprimes con cada cambio', nfc: 'Cero reimpresiones' },
-  { impresa: 'Termina en un cajón', nfc: 'Una impresión que se recuerda' },
+const comparacionDe = (t: (k: string, r: string) => string) => [
+  { impresa: t('f1_impresa', 'Dictas o tecleas tus datos'), nfc: t('f1_nfc', 'Un toque y queda guardado') },
+  { impresa: t('f2_impresa', 'Los datos quedan congelados'), nfc: t('f2_nfc', 'La editas cuando quieras') },
+  { impresa: t('f3_impresa', 'Reimprimes con cada cambio'), nfc: t('f3_nfc', 'Cero reimpresiones') },
+  { impresa: t('f4_impresa', 'Termina en un cajón'), nfc: t('f4_nfc', 'Una impresión que se recuerda') },
 ];
 
-const specs = [
-  { label: 'Compartir', value: 'Un toque' },
-  { label: 'Apps', value: 'Ninguna' },
-  { label: 'Ediciones', value: 'Ilimitadas' },
-  { label: 'Entrega', value: '3–5 días' },
+const fichaDe = (t: (k: string, r: string) => string) => [
+  { label: t('e1_label', 'Compartir'), value: t('e1_valor', 'Un toque') },
+  { label: t('e2_label', 'Apps'), value: t('e2_valor', 'Ninguna') },
+  { label: t('e3_label', 'Ediciones'), value: t('e3_valor', 'Ilimitadas') },
+  { label: t('e4_label', 'Entrega'), value: t('e4_valor', '3–5 días') },
 ];
 
-const idealFor = [
-  'Emprendedores y freelancers que hacen networking',
-  'Equipos comerciales que comparten contacto al vuelo',
-  'Consultores que actualizan su información seguido',
-  'Empresas que cuidan su imagen en cada interacción',
-  'Agentes inmobiliarios y asesores en ferias y eventos',
+const publicoDe = (t: (k: string, r: string) => string) => [
+  t('p1', 'Emprendedores y freelancers que hacen networking'),
+  t('p2', 'Equipos comerciales que comparten contacto al vuelo'),
+  t('p3', 'Consultores que actualizan su información seguido'),
+  t('p4', 'Empresas que cuidan su imagen en cada interacción'),
+  t('p5', 'Agentes inmobiliarios y asesores en ferias y eventos'),
 ];
 
-const faqItems = [
-  { q: '¿Necesito instalar una aplicación para usarla?', a: 'No. Funciona con la tecnología NFC que ya traen los smartphones modernos, tanto Android como iPhone desde el modelo 7. Solo acercas la tarjeta.' },
-  { q: '¿Qué pasa si cambio de número o de trabajo?', a: 'Actualizas tu perfil digital en línea y el cambio se refleja al instante en tu tarjeta, sin reimprimir nada.' },
-  { q: '¿Qué información puedo compartir?', a: 'Contacto, redes sociales, sitio web, portafolio, ubicación y hasta un video de presentación, todo desde un solo toque.' },
-  { q: '¿Cuánto tarda la entrega?', a: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' },
-  { q: '¿Puedo pedir tarjetas para todo mi equipo?', a: 'Sí. Cotizamos desde una sola persona hasta equipos completos, con diseño unificado para toda la empresa y una página de contacto propia para cada integrante. Nos adaptamos al tamaño de tu equipo.' },
+const preguntasDe = (t: (k: string, r: string) => string) => [
+  { q: t('q1', '¿Necesito instalar una aplicación para usarla?'), a: t('r1', 'No. Funciona con la tecnología NFC que ya traen los smartphones modernos, tanto Android como iPhone desde el modelo 7. Solo acercas la tarjeta.') },
+  { q: t('q2', '¿Qué pasa si cambio de número o de trabajo?'), a: t('r2', 'Actualizas tu perfil digital en línea y el cambio se refleja al instante en tu tarjeta, sin reimprimir nada.') },
+  { q: t('q3', '¿Qué información puedo compartir?'), a: t('r3', 'Contacto, redes sociales, sitio web, portafolio, ubicación y hasta un video de presentación, todo desde un solo toque.') },
+  { q: t('q4', '¿Cuánto tarda la entrega?'), a: t('r4', 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.') },
+  { q: t('q5', '¿Puedo pedir tarjetas para todo mi equipo?'), a: t('r5', 'Sí. Cotizamos desde una sola persona hasta equipos completos, con diseño unificado para toda la empresa y una página de contacto propia para cada integrante. Nos adaptamos al tamaño de tu equipo.') },
 ];
 
 /* Botones de la pagina de contacto que abre la tarjeta */
@@ -632,14 +632,15 @@ function StickyJourney() {
 /* ------------------------------------------------------------------ */
 /* ZONA 3 — Beneficios sobre BLANCO                                    */
 /* ------------------------------------------------------------------ */
-function Comparison() {
+function Comparison({ t }: { t: (k: string, r: string) => string }) {
+  const comparison = comparacionDe(t);
   return (
     <section className="px-4 py-16 md:py-24 bg-white">
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-12">
           <div className="text-[#7700CE] text-[11px] tracking-[0.3em] uppercase mb-4">Beneficios</div>
           <h2 className="heading text-2xl md:text-4xl text-black leading-tight">
-            Lo mismo que hacías, <span className="text-[#7700CE]">sin la parte molesta</span>
+            {t('titulo_1', 'Lo mismo que hacías,')} <span className="text-[#7700CE]">{t('titulo_2', 'sin la parte molesta')}</span>
           </h2>
         </div>
 
@@ -657,8 +658,8 @@ function Comparison() {
                 <CreditCard className="text-gray-400" size={20} />
               </div>
               <div>
-                <div className="heading text-base text-gray-500">Tarjeta impresa</div>
-                <div className="text-gray-400 text-xs">Como siempre</div>
+                <div className="heading text-base text-gray-500">{t('col_1', 'Tarjeta impresa')}</div>
+                <div className="text-gray-400 text-xs">{t('col_1_sub', 'Como siempre')}</div>
               </div>
             </div>
             <div className="space-y-4">
@@ -691,8 +692,8 @@ function Comparison() {
                 <Nfc className="text-white" size={20} />
               </div>
               <div>
-                <div className="heading text-base text-white">Tarjeta NFC</div>
-                <div className="text-white/70 text-xs">Con Inédito</div>
+                <div className="heading text-base text-white">{t('col_2', 'Tarjeta NFC')}</div>
+                <div className="text-white/70 text-xs">{t('col_2_sub', 'Con Inédito')}</div>
               </div>
             </div>
             <div className="relative space-y-4">
@@ -743,7 +744,15 @@ export default function TarjetasDigitalesPage() {
   const { openAssistant } = useApp();
   const tPort = contenido('tarjetas-de-presentacion-digital', 'portada');
   const tEq   = contenido('tarjetas-de-presentacion-digital', 'equipos');
+  const tCmp  = contenido('tarjetas-de-presentacion-digital', 'comparacion');
+  const tFic  = contenido('tarjetas-de-presentacion-digital', 'ficha');
+  const tPub  = contenido('tarjetas-de-presentacion-digital', 'publico');
+  const tPre  = contenido('tarjetas-de-presentacion-digital', 'preguntas');
+  const tCie  = contenido('tarjetas-de-presentacion-digital', 'cierre');
   const cta = () => openAssistant(SERVICE_NAME, 'cotizar tarjetas de presentación digital NFC');
+  const specs = fichaDe(tFic);
+  const idealFor = publicoDe(tPub);
+  const faqItems = preguntasDe(tPre);
 
   return (
     <>
@@ -830,7 +839,7 @@ export default function TarjetasDigitalesPage() {
       </div>
 
       {/* ---------- ZONA 3 — BLANCO ---------- */}
-      <Comparison />
+      {tCmp.visible() && <Comparison t={tCmp} />}
 
       {/* ---------- ZONA 4 — Bento oscuro ---------- */}
       <section className="px-4 py-16 md:py-24 bg-[#07060B]">
@@ -839,7 +848,7 @@ export default function TarjetasDigitalesPage() {
             <Tile className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-5 p-8">
               <BuildingCard step={3} />
               <p className="text-white/45 text-sm max-w-xs leading-relaxed text-center">
-                Acabado premium con chip NFC dentro. El diseño es tuyo; el contenido lo cambias cuando quieras.
+                {tFic('texto_tarjeta', 'Acabado premium con chip NFC dentro. El diseño es tuyo; el contenido lo cambias cuando quieras.')}
               </p>
             </Tile>
 
@@ -851,7 +860,7 @@ export default function TarjetasDigitalesPage() {
             ))}
 
             <Tile className="col-span-2 lg:col-span-4 p-7" delay={0.1}>
-              <div className="text-white/30 text-[10px] tracking-[0.25em] uppercase mb-4">Ideal para</div>
+              <div className="text-white/30 text-[10px] tracking-[0.25em] uppercase mb-4">{tPub('titulo', 'Ideal para')}</div>
               <div className="flex flex-wrap gap-2">
                 {idealFor.map((item) => (
                   <span key={item} className="px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] text-white/55 text-xs">
@@ -955,7 +964,7 @@ export default function TarjetasDigitalesPage() {
         <div className="container mx-auto max-w-7xl">
           <div className="grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14 items-start">
             <div>
-              <div className="text-[#7700CE] text-[11px] tracking-[0.25em] uppercase mb-5">Preguntas frecuentes</div>
+              <div className="text-[#7700CE] text-[11px] tracking-[0.25em] uppercase mb-5">{tPre('titulo', 'Preguntas frecuentes')}</div>
               <FAQAccordion items={faqItems} />
             </div>
 
@@ -970,15 +979,15 @@ export default function TarjetasDigitalesPage() {
                     <Nfc className="text-white" size={28} />
                   </div>
                 </motion.div>
-                <h2 className="heading text-xl md:text-2xl mb-3 text-white leading-tight">¿Listo para modernizar tu tarjeta?</h2>
+                <h2 className="heading text-xl md:text-2xl mb-3 text-white leading-tight">{tCie('titulo', '¿Listo para modernizar tu tarjeta?')}</h2>
                 <p className="text-white/80 text-sm mb-6 leading-relaxed">
-                  Cotiza tu tarjeta NFC y empieza a compartir tu contacto con un solo toque.
+                  {tCie('texto', 'Cotiza tu tarjeta NFC y empieza a compartir tu contacto con un solo toque.')}
                 </p>
                 <button
                   onClick={cta}
                   className="group w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full bg-white text-[#7700CE] hover:bg-white/90 transition-all hover:scale-[1.02] cursor-pointer"
                 >
-                  <span className="heading text-sm tracking-[0.08em]">COTIZAR AHORA</span>
+                  <span className="heading text-sm tracking-[0.08em]">{tCie('boton', 'COTIZAR AHORA')}</span>
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
