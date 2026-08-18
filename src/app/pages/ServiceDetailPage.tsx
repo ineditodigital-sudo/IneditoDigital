@@ -4,12 +4,17 @@ import { ArrowLeft, CheckCircle2, ExternalLink, Gamepad2, Camera, Grid3x3 } from
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
+import { contenido } from '../cms';
 
 export default function ServiceDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { services, settings, openAssistant } = useApp();
   
   const service = services.find(s => s.slug === slug);
+  const tEnc = contenido('servicio-detalle', 'encabezados');
+  const tDem = contenido('servicio-detalle', 'demos');
+  const tImg = contenido('servicio-detalle', 'imagenes');
+  const tCie = contenido('servicio-detalle', 'cierre');
 
   if (!service) {
     return <div className="min-h-screen flex items-center justify-center">
@@ -21,10 +26,10 @@ export default function ServiceDetailPage() {
  
   // Imágenes para las diferentes secciones
   const sectionImages = {
-    features: 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201009_b8eb3ed100b2.webp',
-    ideal: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwc3RyYXRlZ3l8ZW58MXx8fHwxNzY1OTMwMzkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    process: 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3NjU5Nzc4MzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    results: 'https://images.unsplash.com/photo-1730382624709-81e52dd294d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY1ODkwNDMyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    features: tImg('features', 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201009_b8eb3ed100b2.webp'),
+    ideal: tImg('ideal', 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwc3RyYXRlZ3l8ZW58MXx8fHwxNzY1OTMwMzkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    process: tImg('process', 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3NjU5Nzc4MzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
+    results: tImg('results', 'https://images.unsplash.com/photo-1730382624709-81e52dd294d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY1ODkwNDMyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')
   };
 
   return (
@@ -46,7 +51,7 @@ export default function ServiceDetailPage() {
             loading="eager"
             onError={(e) => {
               // Fallback image si la imagen principal no carga
-              e.currentTarget.src = 'https://images.unsplash.com/photo-1557804506-669a67965ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080';
+              e.currentTarget.src = tImg('respaldo', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080');
             }}
           />
           {/* Overlay oscuro con gradiente */}
@@ -79,7 +84,7 @@ export default function ServiceDetailPage() {
               className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors group"
             >
               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-              <span>Volver a servicios</span>
+              <span>{tEnc('volver', 'Volver a servicios')}</span>
             </Link>
           </motion.div>
         </div>
@@ -102,7 +107,7 @@ export default function ServiceDetailPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
-                  QUÉ <span className="text-[#7700CE]">INCLUYE</span>
+                  {tEnc('inc_1', 'QUÉ')} <span className="text-[#7700CE]">{tEnc('inc_2', 'INCLUYE')}</span>
                 </h2>
                 <div className="space-y-2.5 md:space-y-3">
                   {service.features.map((feature, i) => (
@@ -142,7 +147,7 @@ export default function ServiceDetailPage() {
         </section>
 
         {/* DEMOS - Solo para Activaciones para Expo */}
-        {slug === 'activaciones-para-expo' && (
+        {slug === 'activaciones-para-expo' && tDem.visible() && (
           <section className="py-8 md:py-12 px-4 bg-gradient-to-b from-black via-[#0D0010] to-black relative overflow-hidden">
             {/* Orbs de fondo */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -160,10 +165,10 @@ export default function ServiceDetailPage() {
                   transition={{ duration: 0.6 }}
                 >
                   <h2 className="heading text-2xl md:text-3xl lg:text-4xl mb-3">
-                    PRUEBA NUESTROS <span className="text-[#7700CE]">DEMOS</span>
+                    {tDem('titulo_1', 'PRUEBA NUESTROS')} <span className="text-[#7700CE]">{tDem('titulo_2', 'DEMOS')}</span>
                   </h2>
                   <p className="text-white/70 text-sm md:text-base max-w-2xl mx-auto">
-                    Explora en vivo las activaciones interactivas que podemos implementar en tu stand
+                    {tDem('bajada', 'Explora en vivo las activaciones interactivas que podemos implementar en tu stand')}
                   </p>
                 </motion.div>
               </div>
@@ -189,29 +194,29 @@ export default function ServiceDetailPage() {
 
                       {/* Título */}
                       <h3 className="heading text-lg md:text-xl mb-2 text-white group-hover:text-[#CC66FF] transition-colors">
-                        RULETA DE PREMIOS
+                        {tDem('d1_titulo', 'RULETA DE PREMIOS')}
                       </h3>
 
                       {/* Descripción */}
                       <p className="text-white/60 text-sm mb-4 flex-grow">
-                        Ruleta interactiva totalmente personalizable. Perfecta para sorteos, rifas y dinámicas de gamificación en tu stand.
+                        {tDem('d1_texto', 'Ruleta interactiva totalmente personalizable. Perfecta para sorteos, rifas y dinámicas de gamificación en tu stand.')}
                       </p>
 
                       {/* Badge de estado */}
                       <div className="mb-4">
                         <span className="inline-block px-2.5 py-1 text-xs rounded-full bg-green-500/20 border border-green-500/40 text-green-400 font-bold">
-                          ✓ DISPONIBLE
+                          {tDem('etiqueta', '✓ DISPONIBLE')}
                         </span>
                       </div>
 
                       {/* Botón */}
                       <a
-                        href="https://ruleta-expo.inedito.digital/demo"
+                        href={tDem('d1_url', 'https://ruleta-expo.inedito.digital/demo')}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7700CE]/20 border border-[#7700CE]/40 hover:bg-[#7700CE]/30 hover:border-[#7700CE]/60 transition-all text-white text-sm font-bold group/btn"
                       >
-                        <span>VER DEMO</span>
+                        <span>{tDem('boton', 'VER DEMO')}</span>
                         <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform" />
                       </a>
                     </div>
@@ -237,29 +242,29 @@ export default function ServiceDetailPage() {
 
                       {/* Título */}
                       <h3 className="heading text-lg md:text-xl mb-2 text-white group-hover:text-[#CC66FF] transition-colors">
-                        PHOTO OPPORTUNITY
+                        {tDem('d2_titulo', 'PHOTO OPPORTUNITY')}
                       </h3>
 
                       {/* Descripción */}
                       <p className="text-white/60 text-sm mb-4 flex-grow">
-                        Photobooth con marcos personalizados de tu marca. Captura fotos, compártelas y genera engagement viral en redes sociales.
+                        {tDem('d2_texto', 'Photobooth con marcos personalizados de tu marca. Captura fotos, compártelas y genera engagement viral en redes sociales.')}
                       </p>
 
                       {/* Badge de estado */}
                       <div className="mb-4">
                         <span className="inline-block px-2.5 py-1 text-xs rounded-full bg-green-500/20 border border-green-500/40 text-green-400 font-bold">
-                          ✓ DISPONIBLE
+                          {tDem('etiqueta', '✓ DISPONIBLE')}
                         </span>
                       </div>
 
                       {/* Botón */}
                       <a
-                        href="https://photo-oportunity.inedito.digital/demo"
+                        href={tDem('d2_url', 'https://photo-oportunity.inedito.digital/demo')}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7700CE]/20 border border-[#7700CE]/40 hover:bg-[#7700CE]/30 hover:border-[#7700CE]/60 transition-all text-white text-sm font-bold group/btn"
                       >
-                        <span>VER DEMO</span>
+                        <span>{tDem('boton', 'VER DEMO')}</span>
                         <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform" />
                       </a>
                     </div>
@@ -285,29 +290,29 @@ export default function ServiceDetailPage() {
 
                       {/* Título */}
                       <h3 className="heading text-lg md:text-xl mb-2 text-white group-hover:text-[#CC66FF] transition-colors">
-                        TIC TAC TOE
+                        {tDem('d3_titulo', 'TIC TAC TOE')}
                       </h3>
 
                       {/* Descripción */}
                       <p className="text-white/60 text-sm mb-4 flex-grow">
-                        Gato interactivo con premios. Juega contra la IA y gana. Diversión garantizada para atraer visitantes a tu stand.
+                        {tDem('d3_texto', 'Gato interactivo con premios. Juega contra la IA y gana. Diversión garantizada para atraer visitantes a tu stand.')}
                       </p>
 
                       {/* Badge de estado */}
                       <div className="mb-4">
                         <span className="inline-block px-2.5 py-1 text-xs rounded-full bg-green-500/20 border border-green-500/40 text-green-400 font-bold">
-                          ✓ DISPONIBLE
+                          {tDem('etiqueta', '✓ DISPONIBLE')}
                         </span>
                       </div>
 
                       {/* Botón */}
                       <a
-                        href="https://tic-tac-toe.inedito.digital/demo"
+                        href={tDem('d3_url', 'https://tic-tac-toe.inedito.digital/demo')}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7700CE]/20 border border-[#7700CE]/40 hover:bg-[#7700CE]/30 hover:border-[#7700CE]/60 transition-all text-white text-sm font-bold group/btn"
                       >
-                        <span>VER DEMO</span>
+                        <span>{tDem('boton', 'VER DEMO')}</span>
                         <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform" />
                       </a>
                     </div>
@@ -324,13 +329,13 @@ export default function ServiceDetailPage() {
                 className="text-center mt-8 md:mt-10"
               >
                 <p className="text-white/60 text-sm md:text-base mb-4">
-                  ¿Necesitas una activación personalizada para tu evento?
+                  {tDem('cta_texto', '¿Necesitas una activación personalizada para tu evento?')}
                 </p>
                 <button
                   onClick={() => openAssistant('Activaciones para Expo', 'cotizar activación personalizada')}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] text-white hover:shadow-[0_0_30px_rgba(119,0,206,0.5)] transition-all hover:scale-105"
                 >
-                  <span className="heading text-sm tracking-[0.08em]">COTIZAR ACTIVACIÓN PERSONALIZADA</span>
+                  <span className="heading text-sm tracking-[0.08em]">{tDem('cta_boton', 'COTIZAR ACTIVACIÓN PERSONALIZADA')}</span>
                 </button>
               </motion.div>
             </div>
@@ -351,7 +356,7 @@ export default function ServiceDetailPage() {
               >
                 <div className="aspect-[5/3] relative">
                   <img 
-                    src="https://imagenes.inedito.digital/INEDITO-WEB/20260112_201215_98546a2d1026.webp"
+                    src={tImg('ideal_2', 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201215_98546a2d1026.webp')}
                     alt="Ideal para tu negocio"
                     className="w-full h-full object-cover"
                   />
@@ -366,7 +371,7 @@ export default function ServiceDetailPage() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
-                  IDEAL <span className="text-[#7700CE]">PARA</span>
+                  {tEnc('ideal_1', 'IDEAL')} <span className="text-[#7700CE]">{tEnc('ideal_2', 'PARA')}</span>
                 </h2>
                 <div className="space-y-2.5 md:space-y-3">
                   {service.ideal.map((item, i) => (
@@ -395,7 +400,7 @@ export default function ServiceDetailPage() {
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
-                NUESTRO <span className="text-[#7700CE]">PROCESO</span>
+                {tEnc('proceso_1', 'NUESTRO')} <span className="text-[#7700CE]">{tEnc('proceso_2', 'PROCESO')}</span>
               </h2>
               <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                 Metodología probada que garantiza resultados excepcionales
@@ -413,7 +418,7 @@ export default function ServiceDetailPage() {
               >
                 <div className="aspect-[5/3] relative">
                   <img 
-                    src="https://imagenes.inedito.digital/INEDITO-WEB/20260112_204956_2712116f44fd.webp"
+                    src={tImg('proceso_2', 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_204956_2712116f44fd.webp')}
                     alt="Nuestro proceso de trabajo"
                     className="w-full h-full object-cover"
                   />
@@ -421,7 +426,7 @@ export default function ServiceDetailPage() {
                   {/* Badge flotante */}
                   <div className="absolute top-3 right-3">
                     <div className="px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-lg">
-                      <span className="text-xs font-bold text-[#7700CE]">Proceso comprobado</span>
+                      <span className="text-xs font-bold text-[#7700CE]">{tEnc('proceso_sello', 'Proceso comprobado')}</span>
                     </div>
                   </div>
                 </div>
@@ -454,7 +459,7 @@ export default function ServiceDetailPage() {
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2">
-                PREGUNTAS <span className="text-[#7700CE]">FRECUENTES</span>
+                {tEnc('faq_1', 'PREGUNTAS')} <span className="text-[#7700CE]">{tEnc('faq_2', 'FRECUENTES')}</span>
               </h2>
             </div>
             
@@ -498,7 +503,7 @@ export default function ServiceDetailPage() {
               {/* Contenido */}
               <div className="relative z-10 text-center p-6 md:p-10">
                 <h2 className="heading text-2xl md:text-3xl lg:text-4xl mb-3 text-white">
-                  ¿LISTO PARA <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">COMENZAR?</span>
+                  {tCie('titulo_1', '¿LISTO PARA')} <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">{tCie('titulo_2', 'COMENZAR?')}</span>
                 </h2>
                 <p className="text-white/90 text-sm md:text-base mb-6 max-w-2xl mx-auto">
                   Cotiza este servicio gratis y descubre cómo podemos ayudarte a alcanzar tus objetivos
@@ -507,7 +512,7 @@ export default function ServiceDetailPage() {
                   onClick={() => openAssistant(service.title, `cotizar ${service.title}`)}
                   className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-white text-[#7700CE] hover:bg-white/90 transition-all hover:scale-105 shadow-[0_10px_40px_rgba(0,0,0,0.3)] cursor-pointer"
                 >
-                  <span className="heading text-sm md:text-base tracking-[0.08em]">COTIZAR AHORA</span>
+                  <span className="heading text-sm md:text-base tracking-[0.08em]">{tCie('boton', 'COTIZAR AHORA')}</span>
                 </button>
               </div>
             </motion.div>

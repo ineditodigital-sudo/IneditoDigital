@@ -53,6 +53,24 @@ function registro_paginas(): array {
                     ],
                 ],
 
+
+                'bento' => [
+                    'nombre' => 'Portada · fotos y etiquetas',
+                    'ayuda'  => 'El mosaico de fotos de la portada y las dos etiquetas que flotan encima.',
+                    'campos' => [
+                        'img_1'     => ['label' => 'Foto 1', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/feature-1-1.webp'],
+                        'img_1_alt' => ['label' => 'Foto 1 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Marketing Digital Profesional'],
+                        'img_2'     => ['label' => 'Foto 2', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/helping-left-bg.webp'],
+                        'img_2_alt' => ['label' => 'Foto 2 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Experto en Marketing'],
+                        'img_3'     => ['label' => 'Foto 3', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/pexels-mikhail-nilov-7681676-scaled.webp'],
+                        'img_3_alt' => ['label' => 'Foto 3 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Tecnología y IA'],
+                        'img_4'     => ['label' => 'Foto 4', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/imagen_2024-11-20_172844415.webp'],
+                        'img_4_alt' => ['label' => 'Foto 4 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Equipo Colaborativo'],
+                        'etiqueta_1' => ['label' => 'Etiqueta sobre la primera foto', 'tipo' => 'texto', 'def' => 'Estrategia Digital'],
+                        'etiqueta_2' => ['label' => 'Etiqueta sobre la última foto', 'tipo' => 'texto', 'def' => 'Equipo Experto'],
+                    ],
+                ],
+
                 'cifras' => [
                     'nombre' => 'Cifras destacadas',
                     'ayuda'  => 'Los tres números que aparecen en la portada.',
@@ -463,6 +481,78 @@ function registro_paginas(): array {
         ],
 
         /* ---------------------------------------------------------- */
+
+        'servicio-detalle' => [
+            'nombre'    => 'Plantilla de página de servicio',
+            'ruta'      => '/servicios/…',
+            'ayuda'     => 'Lo que se repite en TODAS las páginas de servicio. El nombre, la descripción y los puntos de cada servicio se editan en la sección “Servicios”.',
+            'secciones' => [
+
+                'encabezados' => [
+                    'nombre' => 'Títulos de las secciones',
+                    'campos' => [
+                        'volver'        => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a servicios'],
+                        'inc_1'         => ['label' => 'Qué incluye · primera palabra', 'tipo' => 'texto', 'def' => 'QUÉ'],
+                        'inc_2'         => ['label' => 'Qué incluye · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
+                        'ideal_1'       => ['label' => 'Ideal para · primera palabra', 'tipo' => 'texto', 'def' => 'IDEAL'],
+                        'ideal_2'       => ['label' => 'Ideal para · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
+                        'proceso_1'     => ['label' => 'Proceso · primera palabra', 'tipo' => 'texto', 'def' => 'NUESTRO'],
+                        'proceso_2'     => ['label' => 'Proceso · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'PROCESO'],
+                        'proceso_sello' => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Proceso comprobado'],
+                        'faq_1'         => ['label' => 'Preguntas · primera palabra', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
+                        'faq_2'         => ['label' => 'Preguntas · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
+                    ],
+                ],
+
+                'demos' => [
+                    'nombre' => 'Demos interactivas',
+                    'ayuda'  => 'Solo aparecen en el servicio de Activaciones para Expo.',
+                    'campos' => [
+                        'visible'   => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1'  => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PRUEBA NUESTROS'],
+                        'titulo_2'  => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'DEMOS'],
+                        'bajada'    => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Explora en vivo las activaciones interactivas que podemos implementar en tu stand'],
+                        'etiqueta'  => ['label' => 'Etiqueta verde de cada demo', 'tipo' => 'texto', 'def' => '✓ DISPONIBLE'],
+                        'boton'     => ['label' => 'Texto del botón de cada demo', 'tipo' => 'texto', 'def' => 'VER DEMO'],
+                    'd1_titulo' => ['label' => 'Demo 1 · nombre', 'tipo' => 'texto', 'def' => 'RULETA DE PREMIOS'],
+                    'd1_texto'  => ['label' => 'Demo 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Ruleta interactiva totalmente personalizable. Perfecta para sorteos, rifas y dinámicas de gamificación en tu stand.'],
+                    'd1_url'    => ['label' => 'Demo 1 · enlace de la demo', 'tipo' => 'enlace', 'def' => 'https://ruleta-expo.inedito.digital/demo'],
+                    'd2_titulo' => ['label' => 'Demo 2 · nombre', 'tipo' => 'texto', 'def' => 'PHOTO OPPORTUNITY'],
+                    'd2_texto'  => ['label' => 'Demo 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Photobooth con marcos personalizados de tu marca. Captura fotos, compártelas y genera engagement viral en redes sociales.'],
+                    'd2_url'    => ['label' => 'Demo 2 · enlace de la demo', 'tipo' => 'enlace', 'def' => 'https://photo-oportunity.inedito.digital/demo'],
+                    'd3_titulo' => ['label' => 'Demo 3 · nombre', 'tipo' => 'texto', 'def' => 'TIC TAC TOE'],
+                    'd3_texto'  => ['label' => 'Demo 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Gato interactivo con premios. Juega contra la IA y gana. Diversión garantizada para atraer visitantes a tu stand.'],
+                    'd3_url'    => ['label' => 'Demo 3 · enlace de la demo', 'tipo' => 'enlace', 'def' => 'https://tic-tac-toe.inedito.digital/demo'],
+                        'cta_texto' => ['label' => 'Pregunta del final', 'tipo' => 'texto', 'def' => '¿Necesitas una activación personalizada para tu evento?'],
+                        'cta_boton' => ['label' => 'Botón del final', 'tipo' => 'texto', 'def' => 'COTIZAR ACTIVACIÓN PERSONALIZADA'],
+                    ],
+                ],
+
+                'imagenes' => [
+                    'nombre' => 'Fotos de la plantilla',
+                    'ayuda'  => 'Las fotos que acompañan cada sección en todas las páginas de servicio.',
+                    'campos' => [
+                        'features' => ['label' => 'Foto de “Qué incluye”', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201009_b8eb3ed100b2.webp'],
+                        'ideal'    => ['label' => 'Foto de “Ideal para”', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwc3RyYXRlZ3l8ZW58MXx8fHwxNzY1OTMwMzkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'process'  => ['label' => 'Foto de “Nuestro proceso”', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3NjU5Nzc4MzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'results'  => ['label' => 'Foto de resultados', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1730382624709-81e52dd294d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY1ODkwNDMyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                        'ideal_2'  => ['label' => 'Foto secundaria de “Ideal para”', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201215_98546a2d1026.webp'],
+                        'proceso_2'=> ['label' => 'Foto secundaria del proceso', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_204956_2712116f44fd.webp'],
+                        'respaldo' => ['label' => 'Foto de respaldo si una falla', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'],
+                    ],
+                ],
+
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => '¿LISTO PARA'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'COMENZAR?'],
+                        'boton'    => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                    ],
+                ],
+            ],
+        ],
+
         'servicios-ia' => [
             'nombre' => 'Servicios de IA',
             'ruta'   => '/servicios-ia',
@@ -485,6 +575,81 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en degradado)', 'tipo' => 'texto', 'def' => 'PARA CADA ÁREA'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo',
                                        'def' => 'Selecciona el servicio ideal para tu negocio y empieza a automatizar hoy mismo'],
+                    ],
+                ],
+
+                'cifras' => [
+                    'nombre' => 'Cifras de la portada',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'c1_valor' => ['label' => 'Cifra 1 · número', 'tipo' => 'texto', 'def' => '24/7'],
+                        'c1_texto' => ['label' => 'Cifra 1 · texto', 'tipo' => 'texto', 'def' => 'Disponibilidad'],
+                        'c2_valor' => ['label' => 'Cifra 2 · número', 'tipo' => 'texto', 'def' => '10x'],
+                        'c2_texto' => ['label' => 'Cifra 2 · texto', 'tipo' => 'texto', 'def' => 'Más Eficiencia'],
+                        'c3_valor' => ['label' => 'Cifra 3 · número', 'tipo' => 'texto', 'def' => '80%'],
+                        'c3_texto' => ['label' => 'Cifra 3 · texto', 'tipo' => 'texto', 'def' => 'Ahorro en Costos'],
+                        'c4_valor' => ['label' => 'Cifra 4 · número', 'tipo' => 'texto', 'def' => '100%'],
+                        'c4_texto' => ['label' => 'Cifra 4 · texto', 'tipo' => 'texto', 'def' => 'Automatizado'],
+                    ],
+                ],
+
+                'tarjetas' => [
+                    'nombre' => 'Las cuatro soluciones',
+                    'ayuda'  => 'Cada tarjeta del listado de soluciones de IA.',
+                    'campos' => [
+                        'ver_mas' => ['label' => 'Texto del enlace de cada tarjeta', 'tipo' => 'texto', 'def' => 'Ver más detalles'],
+                        'w_titulo' => ['label' => 'Tarjeta 1 · nombre', 'tipo' => 'texto', 'def' => 'IA para WhatsApp'],
+                        'w_sub'    => ['label' => 'Tarjeta 1 · subtítulo', 'tipo' => 'texto', 'def' => 'Ventas y Soporte 24/7'],
+                        'w_texto'  => ['label' => 'Tarjeta 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Tu mejor vendedor, disponible siempre. Agente inteligente que atiende, califica y da seguimiento automático.'],
+                        'w_url'    => ['label' => 'Tarjeta 1 · destino', 'tipo' => 'enlace', 'def' => '/servicios-ia/whatsapp'],
+                        'w_e1'     => ['label' => 'Tarjeta 1 · etiqueta 1', 'tipo' => 'texto', 'def' => 'Atiende 24/7'],
+                        'w_e2'     => ['label' => 'Tarjeta 1 · etiqueta 2', 'tipo' => 'texto', 'def' => 'Califica leads'],
+                        'w_e3'     => ['label' => 'Tarjeta 1 · etiqueta 3', 'tipo' => 'texto', 'def' => 'Seguimiento auto'],
+                        'v_titulo' => ['label' => 'Tarjeta 2 · nombre', 'tipo' => 'texto', 'def' => 'IA de Ventas'],
+                        'v_sub'    => ['label' => 'Tarjeta 2 · subtítulo', 'tipo' => 'texto', 'def' => 'Prospección Inteligente'],
+                        'v_texto'  => ['label' => 'Tarjeta 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Automatiza prospección, califica leads y optimiza tu proceso comercial con inteligencia artificial.'],
+                        'v_url'    => ['label' => 'Tarjeta 2 · destino', 'tipo' => 'enlace', 'def' => '/servicios-ia/ventas'],
+                        'v_e1'     => ['label' => 'Tarjeta 2 · etiqueta 1', 'tipo' => 'texto', 'def' => 'Prospección auto'],
+                        'v_e2'     => ['label' => 'Tarjeta 2 · etiqueta 2', 'tipo' => 'texto', 'def' => 'Lead scoring'],
+                        'v_e3'     => ['label' => 'Tarjeta 2 · etiqueta 3', 'tipo' => 'texto', 'def' => 'Optimización'],
+                        'm_titulo' => ['label' => 'Tarjeta 3 · nombre', 'tipo' => 'texto', 'def' => 'IA para Marketing'],
+                        'm_sub'    => ['label' => 'Tarjeta 3 · subtítulo', 'tipo' => 'texto', 'def' => 'Optimización Automática'],
+                        'm_texto'  => ['label' => 'Tarjeta 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Marketing que piensa por ti. Analiza campañas, genera contenido y optimiza resultados automáticamente.'],
+                        'm_url'    => ['label' => 'Tarjeta 3 · destino', 'tipo' => 'enlace', 'def' => '/servicios-ia/marketing'],
+                        'm_e1'     => ['label' => 'Tarjeta 3 · etiqueta 1', 'tipo' => 'texto', 'def' => 'Análisis auto'],
+                        'm_e2'     => ['label' => 'Tarjeta 3 · etiqueta 2', 'tipo' => 'texto', 'def' => 'Contenido IA'],
+                        'm_e3'     => ['label' => 'Tarjeta 3 · etiqueta 3', 'tipo' => 'texto', 'def' => 'ROI optimizado'],
+                        'e_titulo' => ['label' => 'Tarjeta 4 · nombre', 'tipo' => 'texto', 'def' => 'IA para E-commerce'],
+                        'e_sub'    => ['label' => 'Tarjeta 4 · subtítulo', 'tipo' => 'texto', 'def' => 'Convierte Más Visitas'],
+                        'e_texto'  => ['label' => 'Tarjeta 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Asistente inteligente en tu tienda online que recupera carritos, recomienda productos y atiende 24/7.'],
+                        'e_url'    => ['label' => 'Tarjeta 4 · destino', 'tipo' => 'enlace', 'def' => '/servicios-ia/ecommerce'],
+                        'e_e1'     => ['label' => 'Tarjeta 4 · etiqueta 1', 'tipo' => 'texto', 'def' => 'Recupera carritos'],
+                        'e_e2'     => ['label' => 'Tarjeta 4 · etiqueta 2', 'tipo' => 'texto', 'def' => 'Recomendaciones'],
+                        'e_e3'     => ['label' => 'Tarjeta 4 · etiqueta 3', 'tipo' => 'texto', 'def' => 'Soporte 24/7'],
+                    ],
+                ],
+
+                'por_que' => [
+                    'nombre' => '¿Por qué inteligencia artificial?',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título, primera línea', 'tipo' => 'texto', 'def' => '¿POR QUÉ'],
+                        'titulo_2' => ['label' => 'Título, segunda línea (en degradado)', 'tipo' => 'texto', 'def' => 'INTELIGENCIA ARTIFICIAL?'],
+                        'r1_titulo' => ['label' => 'Razón 1 · título', 'tipo' => 'texto', 'def' => 'Velocidad'],
+                        'r1_texto'  => ['label' => 'Razón 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Respuestas instantáneas, 24/7. Sin esperas, sin horarios, sin días festivos.'],
+                        'r2_titulo' => ['label' => 'Razón 2 · título', 'tipo' => 'texto', 'def' => 'Escalabilidad'],
+                        'r2_texto'  => ['label' => 'Razón 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Atiende a 1 o 10,000 clientes simultáneamente sin aumentar tu equipo.'],
+                        'r3_titulo' => ['label' => 'Razón 3 · título', 'tipo' => 'texto', 'def' => 'Precisión'],
+                        'r3_texto'  => ['label' => 'Razón 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Análisis de datos en tiempo real y toma de decisiones basadas en métricas.'],
+                    ],
+                ],
+
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera línea', 'tipo' => 'texto', 'def' => 'EMPIEZA A AUTOMATIZAR'],
+                        'titulo_2' => ['label' => 'Título, segunda línea (en degradado)', 'tipo' => 'texto', 'def' => 'TU NEGOCIO HOY'],
+                        'texto'    => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Agenda una consultoría gratuita y descubre cómo la IA puede transformar tu forma de vender, hacer marketing y atender clientes.'],
                     ],
                 ],
             ],
@@ -998,6 +1163,61 @@ function registro_paginas(): array {
                         'titulo_cont'  => ['label' => 'Título de la columna de contacto', 'tipo' => 'texto', 'def' => 'CONTACTO'],
                         'derechos'     => ['label' => 'Aviso de derechos', 'tipo' => 'texto',
                                            'def' => '© 2026 INÉDITO DIGITAL. Todos los derechos reservados.'],
+                    ],
+                ],
+
+
+                'pie_servicios' => [
+                    'nombre' => 'Pie · columna Servicios',
+                    'ayuda'  => 'Los enlaces de la primera columna. Apaga el interruptor para quitar uno.',
+                    'campos' => [
+                        's1_ver'    => ['label' => 'Enlace 1 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        's1_nombre' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Diseño y Desarrollo Web'],
+                        's1_url'    => ['label' => 'Enlace 1 · destino', 'tipo' => 'enlace', 'def' => '/servicios/diseno-y-desarrollo-web'],
+                        's2_ver'    => ['label' => 'Enlace 2 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        's2_nombre' => ['label' => 'Enlace 2 · texto', 'tipo' => 'texto', 'def' => 'Chatbots y Agentes IA'],
+                        's2_url'    => ['label' => 'Enlace 2 · destino', 'tipo' => 'enlace', 'def' => '/servicios/chatbots-y-agentes'],
+                        's3_ver'    => ['label' => 'Enlace 3 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        's3_nombre' => ['label' => 'Enlace 3 · texto', 'tipo' => 'texto', 'def' => 'Funnels de Venta'],
+                        's3_url'    => ['label' => 'Enlace 3 · destino', 'tipo' => 'enlace', 'def' => '/servicios/funnels-de-venta'],
+                        's4_ver'    => ['label' => 'Enlace 4 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        's4_nombre' => ['label' => 'Enlace 4 · texto', 'tipo' => 'texto', 'def' => 'Posicionamiento Orgánico'],
+                        's4_url'    => ['label' => 'Enlace 4 · destino', 'tipo' => 'enlace', 'def' => '/servicios/posicionamiento-organico'],
+                        's5_ver'    => ['label' => 'Enlace 5 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        's5_nombre' => ['label' => 'Enlace 5 · texto', 'tipo' => 'texto', 'def' => 'Google ADS'],
+                        's5_url'    => ['label' => 'Enlace 5 · destino', 'tipo' => 'enlace', 'def' => '/servicios/google-ads'],
+                    ],
+                ],
+
+                'pie_empresa' => [
+                    'nombre' => 'Pie · columna Empresa',
+                    'ayuda'  => 'Los enlaces de la segunda columna.',
+                    'campos' => [
+                        'e1_ver'    => ['label' => 'Enlace 1 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'e1_nombre' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Nosotros'],
+                        'e1_url'    => ['label' => 'Enlace 1 · destino', 'tipo' => 'enlace', 'def' => '/nosotros'],
+                        'e2_ver'    => ['label' => 'Enlace 2 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'e2_nombre' => ['label' => 'Enlace 2 · texto', 'tipo' => 'texto', 'def' => 'Portafolio'],
+                        'e2_url'    => ['label' => 'Enlace 2 · destino', 'tipo' => 'enlace', 'def' => '/portafolio'],
+                        'e3_ver'    => ['label' => 'Enlace 3 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'e3_nombre' => ['label' => 'Enlace 3 · texto', 'tipo' => 'texto', 'def' => 'Blog'],
+                        'e3_url'    => ['label' => 'Enlace 3 · destino', 'tipo' => 'enlace', 'def' => '/blog'],
+                        'e4_ver'    => ['label' => 'Enlace 4 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'e4_nombre' => ['label' => 'Enlace 4 · texto', 'tipo' => 'texto', 'def' => 'Contacto'],
+                        'e4_url'    => ['label' => 'Enlace 4 · destino', 'tipo' => 'enlace', 'def' => '/contacto'],
+                    ],
+                ],
+
+                'pie_legal' => [
+                    'nombre' => 'Pie · enlaces legales',
+                    'ayuda'  => 'Los enlaces pequeños de hasta abajo.',
+                    'campos' => [
+                        'l1_ver'    => ['label' => 'Enlace 1 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'l1_nombre' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Política de Privacidad'],
+                        'l1_url'    => ['label' => 'Enlace 1 · destino', 'tipo' => 'enlace', 'def' => '/privacidad'],
+                        'l2_ver'    => ['label' => 'Enlace 2 · mostrar', 'tipo' => 'switch', 'def' => '1'],
+                        'l2_nombre' => ['label' => 'Enlace 2 · texto', 'tipo' => 'texto', 'def' => 'Términos y Condiciones'],
+                        'l2_url'    => ['label' => 'Enlace 2 · destino', 'tipo' => 'enlace', 'def' => '/terminos'],
                     ],
                 ],
 
