@@ -2,13 +2,16 @@ import { Link } from 'react-router';
 import { Home, ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
 import DynamicSEO from '../components/DynamicSEO';
+import { contenido } from '../cms';
 
 export default function NotFoundPage() {
+  const t = contenido('error-404', 'contenido');
+
   return (
     <>
       <DynamicSEO
-        title="Página no encontrada - 404 | INÉDITO DIGITAL"
-        description="La página que buscas no existe o ha sido movida."
+        title={t('titulo', 'Página no encontrada - 404 | INÉDITO DIGITAL')}
+        description={t('texto', 'La página que buscas no existe o ha sido movida.')}
         noindex={true}
       />
       
@@ -21,10 +24,10 @@ export default function NotFoundPage() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-contain md:object-cover"
-          poster="https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp"
+          poster={t('poster', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp')}
         >
           <source 
-            src="https://imagenes.inedito.digital/INEDITO%20DIGITAL/Video-Pagina-404-Inedito-Web.mp4" 
+            src={t('video', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/Video-Pagina-404-Inedito-Web.mp4')}
             type="video/mp4" 
           />
           Tu navegador no soporta videos HTML5.

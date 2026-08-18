@@ -263,6 +263,7 @@ header('Cache-Control: no-cache');
 <meta name="author" content="<?= e($siteName) ?>" />
 <meta name="robots" content="<?= $is404 ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' ?>" />
 <meta name="theme-color" content="#7700CE" />
+<link rel="icon" href="<?= e($paginas['marca']['contenido']['logo']['favicon'] ?? 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp') ?>" />
 <?php if (!$is404): ?><link rel="canonical" href="<?= e($canonical) ?>" /><?php endif; ?>
 <?php if($gsv): ?><meta name="google-site-verification" content="<?= e($gsv) ?>" /><?php endif; ?>
 <meta property="og:type" content="<?= e($ogType) ?>" />

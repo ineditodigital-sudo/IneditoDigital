@@ -32,7 +32,9 @@ Ve a **inedito.digital/admin** y escribe tu usuario y contraseña.
 ## Tres cosas que te dan tranquilidad
 
 **No puedes romper el sitio.** Si borras un texto y lo dejas vacío, la página
-vuelve sola al texto que tenía. Nunca se queda un hueco en blanco.
+vuelve sola al texto que tenía. Nunca se queda un hueco en blanco. Por eso,
+para quitar algo de verdad, se usa su interruptor **Mostrar**, no se borra
+el texto.
 
 **Puedes probar sin miedo.** Usa *Guardar sin publicar* todas las veces que
 quieras. El sitio sigue mostrando lo de antes hasta que le des a *Publicar*.
@@ -102,7 +104,7 @@ Si lo dejas vacío usamos uno automático, así que no es obligatorio.
 
 | Sección | Para qué |
 |---|---|
-| **Páginas** | Los textos de Inicio, Nosotros, Contacto y Tarjetas NFC |
+| **Páginas** | Todo el texto y las fotos del sitio: Inicio, Nosotros, Contacto, Servicios de IA y sus cuatro páginas, Tarjetas NFC, Portafolio, Blog, Privacidad, Términos, la página de error, el asistente virtual y la marca (logo, ícono, colores, menús y pie) |
 | **Servicios** | Tu lista de servicios: agregar, editar, quitar |
 | **Blog** | Tus artículos |
 | **Portafolio** | Tus proyectos y casos de éxito |
@@ -119,9 +121,19 @@ Si lo dejas vacío usamos uno automático, así que no es obligatorio.
 Seguramente lo guardaste sin publicar. Vuelve a la página y dale a
 *Publicar cambios*. Si ya publicaste, recarga con Ctrl+F5.
 
-**¿Puedo cambiar los colores o el diseño?**
-Los colores de marca y el diseño están fijos a propósito, para que el sitio
-siempre se vea bien. Si quieres cambiarlos, escríbenos.
+**¿Puedo cambiar los colores?**
+Sí. En **Páginas › Marca y menús › Colores** eliges los tres tonos de la
+marca y se aplican en todo el sitio. El acomodo de las secciones sí está
+fijo, para que nunca se descuadre.
+
+**¿Puedo quitar un enlace del pie o un apartado del aviso legal?**
+Sí, pero no borrando su texto: un campo vacío siempre vuelve al original.
+Cada enlace del pie y cada apartado legal tiene su propio interruptor
+**Mostrar**. Lo apagas, publicas, y desaparece.
+
+**Quiero agregar un apartado nuevo al aviso de privacidad.**
+Al final de esa página hay tres apartados libres, sin texto. Escribes el
+título y el contenido en el primero que esté vacío y aparece en el sitio.
 
 **Borré algo sin querer.**
 Busca *Versiones anteriores* al final de la página y recupera la de antes.

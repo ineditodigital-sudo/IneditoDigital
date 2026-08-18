@@ -12,6 +12,8 @@ import { Textarea } from '../components/ui/textarea';
 export default function ContactPage() {
   const tEnc = contenido('contacto', 'encabezado');
   const tForm = contenido('contacto', 'formulario');
+  const tTar = contenido('contacto', 'tarjetas');
+  const tCam = contenido('contacto', 'campos_formulario');
   const { settings, addLead, openAssistant } = useApp();
   const [formData, setFormData] = useState({
     name: '',
@@ -47,10 +49,10 @@ export default function ContactPage() {
         toast.success(tForm('gracias', '¡Mensaje enviado! Te contactaremos muy pronto.'));
         setFormData({ name: '', email: '', phone: '', company: '', message: '' });
       } else {
-        toast.error(data.error || 'No se pudo enviar. Escríbenos por WhatsApp, por favor.');
+        toast.error(data.error || tCam('error', 'No se pudo enviar. Escríbenos por WhatsApp, por favor.'));
       }
     } catch {
-      toast.error('Error de conexión. Intenta de nuevo o escríbenos por WhatsApp.');
+      toast.error(tCam('sin_red', 'Error de conexión. Intenta de nuevo o escríbenos por WhatsApp.'));
     } finally {
       setSubmitting(false);
     }
@@ -94,7 +96,7 @@ export default function ContactPage() {
                 <div>
                   <Input
                     type="text"
-                    placeholder="Nombre completo *"
+                    placeholder={tCam('ph_nombre', 'Nombre completo *')}
                     aria-label="Nombre completo"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
@@ -105,7 +107,7 @@ export default function ContactPage() {
                 <div>
                   <Input
                     type="email"
-                    placeholder="Email *"
+                    placeholder={tCam('ph_email', 'Email *')}
                     value={formData.email}
                     onChange={e => setFormData({...formData, email: e.target.value})}
                     required
@@ -115,7 +117,7 @@ export default function ContactPage() {
                 <div>
                   <Input
                     type="tel"
-                    placeholder="Teléfono *"
+                    placeholder={tCam('ph_tel', 'Teléfono *')}
                     value={formData.phone}
                     onChange={e => setFormData({...formData, phone: e.target.value})}
                     required
@@ -125,7 +127,7 @@ export default function ContactPage() {
                 <div>
                   <Input
                     type="text"
-                    placeholder="Empresa"
+                    placeholder={tCam('ph_empresa', 'Empresa')}
                     value={formData.company}
                     onChange={e => setFormData({...formData, company: e.target.value})}
                     className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
@@ -133,7 +135,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <Textarea
-                    placeholder="¿En qué podemos ayudarte? *"
+                    placeholder={tCam('ph_mensaje', '¿En qué podemos ayudarte? *')}
                     value={formData.message}
                     onChange={e => setFormData({...formData, message: e.target.value})}
                     required
@@ -146,7 +148,7 @@ export default function ContactPage() {
                   disabled={submitting}
                   className="w-full bg-[#7700CE] hover:bg-[#9933FF] text-white rounded-full py-6 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <span className="heading tracking-[0.08em]">{submitting ? 'ENVIANDO…' : tForm('boton', 'ENVIAR MENSAJE')}</span>
+                  <span className="heading tracking-[0.08em]">{submitting ? tCam('enviando', 'ENVIANDO…') : tForm('boton', 'ENVIAR MENSAJE')}</span>
                 </Button>
               </form>
             </GlassCard>
@@ -158,7 +160,7 @@ export default function ContactPage() {
                   <div className="flex items-start gap-4">
                     <MapPin className="text-[#7700CE] flex-shrink-0 mt-1" size={24} />
                     <div>
-                      <div className="font-medium text-white mb-1">Dirección</div>
+                      <div className="font-medium text-white mb-1">{tTar('dir_titulo', 'Dirección')}</div>
                       <div className="text-white/60">
                         {settings.businessAddress}<br />
                         {settings.businessCity}, {settings.businessState} {settings.businessZip}
@@ -168,7 +170,7 @@ export default function ContactPage() {
                   <div className="flex items-start gap-4">
                     <Phone className="text-[#7700CE] flex-shrink-0 mt-1" size={24} />
                     <div>
-                      <div className="font-medium text-white mb-1">Teléfono</div>
+                      <div className="font-medium text-white mb-1">{tTar('tel_titulo', 'Teléfono')}</div>
                       <a href={`tel:${settings.businessPhone}`} className="text-white/60 hover:text-white transition-colors">
                         {settings.businessPhone}
                       </a>
@@ -177,7 +179,7 @@ export default function ContactPage() {
                   <div className="flex items-start gap-4">
                     <Mail className="text-[#7700CE] flex-shrink-0 mt-1" size={24} />
                     <div>
-                      <div className="font-medium text-white mb-1">Email</div>
+                      <div className="font-medium text-white mb-1">{tTar('mail_titulo', 'Email')}</div>
                       <a href={`mailto:${settings.businessEmail}`} className="text-white/60 hover:text-white transition-colors">
                         {settings.businessEmail}
                       </a>
@@ -188,20 +190,20 @@ export default function ContactPage() {
 
               <GlassCard glow className="text-center p-6">
                 <MessageCircle className="text-[#25D366] mx-auto mb-4" size={48} />
-                <h3 className="heading text-xl mb-2">¿PREFIERES WHATSAPP?</h3>
+                <h3 className="heading text-xl mb-2">{tTar('wa_titulo', '¿PREFIERES WHATSAPP?')}</h3>
                 <p className="text-white/60 mb-4 text-sm">
-                  Respuesta inmediata por WhatsApp
+                  {tTar('wa_texto', 'Respuesta inmediata por WhatsApp')}
                 </p>
                 <button
                   onClick={() => openAssistant(undefined, 'contactar por WhatsApp')}
                   className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-white transition-all cursor-pointer"
                 >
-                  <span className="heading text-sm tracking-[0.08em]">CHATEAR AHORA</span>
+                  <span className="heading text-sm tracking-[0.08em]">{tTar('wa_boton', 'CHATEAR AHORA')}</span>
                 </button>
               </GlassCard>
 
               <GlassCard>
-                <h3 className="heading text-lg mb-2">HORARIO</h3>
+                <h3 className="heading text-lg mb-2">{tTar('hor_titulo', 'HORARIO')}</h3>
                 <p className="text-white/60">{settings.businessHours}</p>
               </GlassCard>
             </div>

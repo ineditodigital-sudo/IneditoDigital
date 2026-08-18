@@ -1,14 +1,17 @@
 import { useState } from 'react';
+import { marca } from '../cms';
 
 interface LogoProps {
   className?: string;
   alt?: string;
 }
 
-export default function Logo({ className = '', alt = 'INÉDITO DIGITAL' }: LogoProps) {
+export default function Logo({ className = '', alt }: LogoProps) {
   const [hasError, setHasError] = useState(false);
-  
-  const logoUrl = 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp';
+  const m = marca.logo();
+
+  const logoUrl = m('imagen', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp');
+  const textoAlt = alt ?? m('alt', 'INÉDITO DIGITAL');
 
   // Fallback SVG logo
   const fallbackLogo = (
@@ -57,7 +60,7 @@ export default function Logo({ className = '', alt = 'INÉDITO DIGITAL' }: LogoP
   return (
     <img
       src={logoUrl}
-      alt={alt}
+      alt={textoAlt}
       className={className}
       onError={() => setHasError(true)}
       loading="eager"

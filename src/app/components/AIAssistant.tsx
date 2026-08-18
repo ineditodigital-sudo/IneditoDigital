@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
+import { contenido } from '../cms';
 
 interface Message {
   id: string;
@@ -16,6 +17,9 @@ interface Message {
 type Step = 'welcome' | 'service' | 'name' | 'email' | 'phone' | 'company' | 'objective' | 'budget' | 'urgency' | 'final';
 
 export default function AIAssistant() {
+  const tVen = contenido('asistente', 'ventana');
+  const tCon = contenido('asistente', 'conversacion');
+  const tOpc = contenido('asistente', 'opciones');
   const { addLead, services, settings, isAssistantOpen, preselectedService, initialContext, closeAssistant } = useApp();
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentStep, setCurrentStep] = useState<Step>('welcome');
@@ -48,7 +52,7 @@ export default function AIAssistant() {
       setMessages([]);
       
       setTimeout(() => {
-        addMessage('¡Hola! 👋 Soy el asistente virtual de INÉDITO DIGITAL. Estoy aquí para ayudarte a encontrar la solución perfecta para hacer crecer tu negocio.', 'bot');
+        addMessage(tCon('saludo', '¡Hola! 👋 Soy el asistente virtual de INÉDITO DIGITAL. Estoy aquí para ayudarte a encontrar la solución perfecta para hacer crecer tu negocio.'), 'bot');
         
         // Si hay contexto inicial (ej: "cotizar", "agendar consulta")
         if (initialContext) {
@@ -62,7 +66,7 @@ export default function AIAssistant() {
             setTimeout(() => {
               if (!preselectedService) {
                 // Si hay contexto pero no servicio, preguntar servicio
-                addMessage('¿Qué servicio te interesa más?', 'bot');
+                addMessage(tCon('que_servicio', '¿Qué servicio te interesa más?'), 'bot');
                 setTimeout(() => {
                   const serviceOptions = services.slice(0, 6).map((s, i) => `${i + 1}️⃣ ${s.title}`).join('\n');
                   addMessage(`Tenemos:\n${serviceOptions}\n\nEscribe el número del servicio que te interesa.\n\n💡 Si no encuentras lo que buscas, no estás seguro o tienes una necesidad muy específica, escríbeme brevemente qué necesitas y lo analizaremos juntos.`, 'bot');
@@ -70,9 +74,9 @@ export default function AIAssistant() {
                 }, 800);
               } else {
                 // Si hay servicio, ir directo a captura de datos
-                addMessage('Déjame capturar tus datos para prepararte una cotización personalizada.', 'bot');
+                addMessage(tCon('pedir_datos', 'Déjame capturar tus datos para prepararte una cotización personalizada.'), 'bot');
                 setTimeout(() => {
-                  addMessage('¿Cuál es tu nombre?', 'bot');
+                  addMessage(tCon('p_nombre', '¿Cuál es tu nombre?'), 'bot');
                   setCurrentStep('name');
                 }, 800);
               }
@@ -84,9 +88,9 @@ export default function AIAssistant() {
           setTimeout(() => {
             addMessage(`Perfecto, veo que te interesa ${preselectedService}. 🎯`, 'bot');
             setTimeout(() => {
-              addMessage('Déjame capturar tus datos para prepararte una cotización personalizada.', 'bot');
+              addMessage(tCon('pedir_datos', 'Déjame capturar tus datos para prepararte una cotización personalizada.'), 'bot');
               setTimeout(() => {
-                addMessage('¿Cuál es tu nombre?', 'bot');
+                addMessage(tCon('p_nombre', '¿Cuál es tu nombre?'), 'bot');
                 setCurrentStep('name');
               }, 800);
             }, 800);
@@ -94,7 +98,7 @@ export default function AIAssistant() {
         } else {
           // Flujo normal sin preselección
           setTimeout(() => {
-            addMessage('¿Qu�� servicio te interesa más?', 'bot');
+            addMessage(tCon('que_servicio', '¿Qué servicio te interesa más?'), 'bot');
             setTimeout(() => {
               const serviceOptions = services.slice(0, 6).map((s, i) => `${i + 1}️⃣ ${s.title}`).join('\n');
               addMessage(`Tenemos:\n${serviceOptions}\n\nEscribe el número del servicio que te interesa.\n\n💡 Si no encuentras lo que buscas, no estás seguro o tienes una necesidad muy específica, escríbeme brevemente qué necesitas y lo analizaremos juntos.`, 'bot');
@@ -172,13 +176,13 @@ export default function AIAssistant() {
             addMessage(`Perfecto, ${selectedService} es una excelente elección. 🎯`, 'bot');
           } else {
             // Respuesta más natural para texto libre (sin repetir el mensaje del usuario)
-            addMessage('¡Entiendo perfectamente! Esto es justo lo que hacemos. 🎯', 'bot');
+            addMessage(tCon('entiendo', '¡Entiendo perfectamente! Esto es justo lo que hacemos. 🎯'), 'bot');
             setTimeout(() => {
-              addMessage('Déjame capturar tus datos para que un especialista revise tu proyecto a detalle y te prepare una propuesta personalizada.', 'bot');
+              addMessage(tCon('pedir_datos_2', 'Déjame capturar tus datos para que un especialista revise tu proyecto a detalle y te prepare una propuesta personalizada.'), 'bot');
             }, 800);
           }
           setTimeout(() => {
-            addMessage('¿Cuál es tu nombre?', 'bot');
+            addMessage(tCon('p_nombre', '¿Cuál es tu nombre?'), 'bot');
             setCurrentStep('name');
           }, isNumericChoice ? 800 : 1600);
         }, 500);
@@ -195,13 +199,13 @@ export default function AIAssistant() {
       case 'email':
         if (!/\S+@\S+\.\S+/.test(input)) {
           setTimeout(() => {
-            addMessage('Por favor ingresa un correo electrónico válido.', 'bot');
+            addMessage(tCon('p_email_mal', 'Por favor ingresa un correo electrónico válido.'), 'bot');
           }, 500);
           return;
         }
         setLeadData(prev => ({ ...prev, email: input }));
         setTimeout(() => {
-          addMessage('Excelente. ¿Cuál es tu número de WhatsApp?', 'bot');
+          addMessage(tCon('p_whatsapp', 'Excelente. ¿Cuál es tu número de WhatsApp?'), 'bot');
         }, 500);
         setCurrentStep('phone');
         break;
@@ -209,7 +213,7 @@ export default function AIAssistant() {
       case 'phone':
         setLeadData(prev => ({ ...prev, phone: input }));
         setTimeout(() => {
-          addMessage('¿De qué empresa nos contactas?', 'bot');
+          addMessage(tCon('p_empresa', '¿De qué empresa nos contactas?'), 'bot');
           setTimeout(() => {
             addMessage('💡 Si eres freelancer o emprendedor independiente, escribe el nombre de tu proyecto o "Independiente".', 'bot');
           }, 600);
@@ -220,9 +224,9 @@ export default function AIAssistant() {
       case 'company':
         setLeadData(prev => ({ ...prev, company: input }));
         setTimeout(() => {
-          addMessage('Perfecto. Ahora, ¿cuál es tu objetivo principal?', 'bot');
+          addMessage(tCon('p_objetivo', 'Perfecto. Ahora, ¿cuál es tu objetivo principal?'), 'bot');
           setTimeout(() => {
-            addMessage('Elige una opción:\n1️⃣ Vender más\n2️⃣ Generar leads\n3️⃣ Posicionamiento de marca\n4️⃣ Mejorar presencia digital', 'bot');
+            addMessage(`Elige una opción:\n1️⃣ ${tOpc('obj_1', 'Vender más')}\n2️⃣ ${tOpc('obj_2', 'Generar leads')}\n3️⃣ ${tOpc('obj_3', 'Posicionamiento de marca')}\n4️⃣ ${tOpc('obj_4', 'Mejorar presencia digital')}`, 'bot');
           }, 600);
         }, 500);
         setCurrentStep('objective');
@@ -230,17 +234,17 @@ export default function AIAssistant() {
 
       case 'objective':
         const objectives: Record<string, string> = {
-          '1': 'Vender más',
-          '2': 'Generar leads',
-          '3': 'Posicionamiento de marca',
-          '4': 'Mejorar presencia digital'
+          '1': tOpc('obj_1', 'Vender más'),
+          '2': tOpc('obj_2', 'Generar leads'),
+          '3': tOpc('obj_3', 'Posicionamiento de marca'),
+          '4': tOpc('obj_4', 'Mejorar presencia digital')
         };
         const objective = objectives[input] || input;
         setLeadData(prev => ({ ...prev, objective }));
         setTimeout(() => {
-          addMessage('¿Cuál es tu presupuesto mensual aproximado?', 'bot');
+          addMessage(tCon('p_presupuesto', '¿Cuál es tu presupuesto mensual aproximado?'), 'bot');
           setTimeout(() => {
-            addMessage('Elige:\n1️⃣ $5,000 - $15,000\n2️⃣ $15,000 - $30,000\n3️⃣ $30,000 - $50,000\n4️⃣ Más de $50,000', 'bot');
+            addMessage(`Elige:\n1️⃣ ${tOpc('pre_1', '$5,000 - $15,000')}\n2️⃣ ${tOpc('pre_2', '$15,000 - $30,000')}\n3️⃣ ${tOpc('pre_3', '$30,000 - $50,000')}\n4️⃣ ${tOpc('pre_4', 'Más de $50,000')}`, 'bot');
           }, 600);
         }, 500);
         setCurrentStep('budget');
@@ -248,15 +252,15 @@ export default function AIAssistant() {
 
       case 'budget':
         const budgets: Record<string, string> = {
-          '1': '$5,000 - $15,000',
-          '2': '$15,000 - $30,000',
-          '3': '$30,000 - $50,000',
-          '4': 'Más de $50,000'
+          '1': tOpc('pre_1', '$5,000 - $15,000'),
+          '2': tOpc('pre_2', '$15,000 - $30,000'),
+          '3': tOpc('pre_3', '$30,000 - $50,000'),
+          '4': tOpc('pre_4', 'Más de $50,000')
         };
         const budget = budgets[input] || input;
         setLeadData(prev => ({ ...prev, budget }));
         setTimeout(() => {
-          addMessage('¿Cuándo te gustaría comenzar?', 'bot');
+          addMessage(tCon('p_cuando', '¿Cuándo te gustaría comenzar?'), 'bot');
           setTimeout(() => {
             addMessage('1️⃣ Esta semana\n2️⃣ Este mes\n3️⃣ En 1-3 meses\n4️⃣ Solo estoy investigando', 'bot');
           }, 600);
@@ -360,10 +364,10 @@ _El prospecto está esperando respuesta..._`;
                     />
                   </div>
                   <div>
-                    <div className="heading text-sm md:text-base text-white">ASISTENTE IA</div>
+                    <div className="heading text-sm md:text-base text-white">{tVen('titulo', 'ASISTENTE IA')}</div>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-[10px] md:text-xs text-white/80">En línea</span>
+                      <span className="text-[10px] md:text-xs text-white/80">{tVen('estado', 'En línea')}</span>
                     </div>
                   </div>
                 </div>
@@ -415,7 +419,7 @@ _El prospecto está esperando respuesta..._`;
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                      placeholder="Escribe tu respuesta..."
+                      placeholder={tVen('placeholder', 'Escribe tu respuesta...')}
                       className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[#7700CE] text-sm md:text-base h-11 md:h-12 rounded-xl"
                     />
                     <Button
