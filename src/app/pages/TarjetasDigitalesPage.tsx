@@ -12,6 +12,8 @@ import {
   Link2,
   SlidersHorizontal,
   MousePointer2,
+  User,
+  Users,
   Globe,
   Instagram,
   Phone,
@@ -108,6 +110,7 @@ const faqItems = [
   { q: '¿Qué pasa si cambio de número o de trabajo?', a: 'Actualizas tu perfil digital en línea y el cambio se refleja al instante en tu tarjeta, sin reimprimir nada.' },
   { q: '¿Qué información puedo compartir?', a: 'Contacto, redes sociales, sitio web, portafolio, ubicación y hasta un video de presentación, todo desde un solo toque.' },
   { q: '¿Cuánto tarda la entrega?', a: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' },
+  { q: '¿Puedo pedir tarjetas para todo mi equipo?', a: 'Sí. Cotizamos desde una sola persona hasta equipos completos, con diseño unificado para toda la empresa y una página de contacto propia para cada integrante. Nos adaptamos al tamaño de tu equipo.' },
 ];
 
 /* Botones de la pagina de contacto que abre la tarjeta */
@@ -855,6 +858,91 @@ export default function TarjetasDigitalesPage() {
               </div>
             </Tile>
           </div>
+        </div>
+      </section>
+
+      {/* ---------- ZONA 4b — Una persona o equipo completo ---------- */}
+      <section className="px-4 pb-16 md:pb-24 bg-[#07060B]">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-10">
+            <div className="text-[#CC66FF] text-[11px] tracking-[0.3em] uppercase mb-3">Cómo se cotiza</div>
+            <h2 className="heading text-2xl md:text-4xl text-white leading-tight">
+              Para una persona o para{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9933FF] to-[#CC66FF]">todo tu equipo</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4 md:gap-5">
+            {[
+              {
+                icon: User,
+                titulo: 'Una persona',
+                sub: 'Tu tarjeta, tu página',
+                puntos: [
+                  'Tu tarjeta con tu identidad de marca',
+                  'Tu propia página de contacto editable',
+                  'Ideal para freelancers, consultores y vendedores',
+                ],
+              },
+              {
+                icon: Users,
+                titulo: 'Equipos completos',
+                sub: 'Una por cada integrante',
+                puntos: [
+                  'Una tarjeta y una página por persona',
+                  'Diseño unificado para toda la empresa',
+                  'Das de alta o cambias integrantes cuando quieras',
+                ],
+              },
+            ].map((op, i) => (
+              <motion.div
+                key={op.titulo}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ delay: i * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                className="rounded-2xl border border-white/10 bg-white/[0.02] hover:border-[#9933FF]/40 transition-colors p-7"
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center shadow-[0_0_25px_rgba(119,0,206,0.35)]">
+                    <op.icon className="text-white" size={20} />
+                  </div>
+                  <div>
+                    <div className="heading text-lg text-white">{op.titulo}</div>
+                    <div className="text-white/35 text-xs">{op.sub}</div>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {op.puntos.map((p) => (
+                    <div key={p} className="flex items-start gap-2.5">
+                      <Check className="text-[#CC66FF] flex-shrink-0 mt-0.5" size={16} strokeWidth={3} />
+                      <span className="text-white/55 text-sm leading-relaxed">{p}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="mt-6 rounded-2xl border border-[#9933FF]/30 bg-[#9933FF]/[0.07] p-6 md:p-7 text-center"
+          >
+            <p className="text-white/70 text-sm md:text-base mb-5 max-w-2xl mx-auto leading-relaxed">
+              ¿Son 3 personas? ¿Son 80? <span className="text-white">Nos adaptamos.</span> Dinos cuántas son y armamos la
+              cotización a la medida de tu equipo.
+            </p>
+            <button
+              onClick={cta}
+              className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(119,0,206,0.45)] cursor-pointer"
+            >
+              <span className="heading text-sm tracking-[0.08em]">COTIZAR PARA MI EQUIPO</span>
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </motion.div>
         </div>
       </section>
 
