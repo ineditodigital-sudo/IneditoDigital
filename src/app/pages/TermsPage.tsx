@@ -1,7 +1,9 @@
 import SEO from '../components/SEO';
+import { contenido } from '../cms';
 import { GlassCard } from '../components/GlassCard';
 
 export default function TermsPage() {
+  const t = contenido('terminos', 'encabezado');
   return (
     <>
       <SEO
@@ -12,11 +14,11 @@ export default function TermsPage() {
       <div className="py-16 md:py-24 px-4">
         <div className="container mx-auto max-w-4xl">
           <h1 className="heading text-4xl md:text-6xl mb-8 text-center">
-            TÉRMINOS Y <span className="text-[#7700CE]">CONDICIONES</span>
+            {t('titulo_1', 'TÉRMINOS Y')} <span className="text-[#7700CE]">{t('titulo_2', 'CONDICIONES')}</span>
           </h1>
 
           <GlassCard className="prose prose-invert max-w-none">
-            <p className="text-white/70">Última actualización: Diciembre 16, 2024</p>
+            <p className="text-white/70">{t('fecha', 'Última actualización: Diciembre 16, 2024')}</p>
 
             <h2 className="heading text-2xl mt-8 mb-4">1. Aceptación de Términos</h2>
             <p className="text-white/70">

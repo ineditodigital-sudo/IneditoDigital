@@ -7,6 +7,7 @@ import Floating3DElements from '../components/Floating3DElements';
 import SectionDivider from '../components/SectionDivider';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
+import { contenido } from '../cms';
 
 const aiServicesData = [
   {
@@ -48,6 +49,8 @@ const aiServicesData = [
 ];
 
 export default function AIServicesPage() {
+  const t = contenido('servicios-ia', 'portada');
+  const tSol = contenido('servicios-ia', 'soluciones');
   const { openAssistant } = useApp();
 
   return (
@@ -74,7 +77,7 @@ export default function AIServicesPage() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7700CE]/20 border border-[#7700CE]/40 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(119,0,206,0.3)]"
           >
             <Bot className="text-[#7700CE]" size={16} />
-            <span className="text-xs text-white font-semibold tracking-wide">SERVICIOS DE INTELIGENCIA ARTIFICIAL</span>
+            <span className="text-xs text-white font-semibold tracking-wide">{t('etiqueta', 'SERVICIOS DE INTELIGENCIA ARTIFICIAL')}</span>
           </motion.div>
 
           {/* Headline */}
@@ -84,9 +87,9 @@ export default function AIServicesPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="heading text-4xl md:text-5xl lg:text-6xl mb-6"
           >
-            <span className="block text-white mb-2">INTELIGENCIA ARTIFICIAL</span>
+            <span className="block text-white mb-2">{t('titulo_1', 'INTELIGENCIA ARTIFICIAL')}</span>
             <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
-              QUE HACE CRECER TU NEGOCIO
+              {t('titulo_2', 'QUE HACE CRECER TU NEGOCIO')}
             </span>
           </motion.h1>
 
@@ -154,14 +157,14 @@ export default function AIServicesPage() {
             className="text-center mb-16"
           >
             <h2 className="heading text-3xl md:text-4xl lg:text-5xl mb-4">
-              <span className="text-white">SOLUCIONES IA</span>
+              <span className="text-white">{tSol('titulo_1', 'SOLUCIONES IA')}</span>
               <br />
               <span className="bg-gradient-to-r from-[#7700CE] to-[#9933FF] bg-clip-text text-transparent">
-                PARA CADA ÁREA
+                {tSol('titulo_2', 'PARA CADA ÁREA')}
               </span>
             </h2>
             <p className="text-white/70 text-base md:text-lg max-w-2xl mx-auto mt-4">
-              Selecciona el servicio ideal para tu negocio y empieza a automatizar hoy mismo
+              {tSol('bajada', 'Selecciona el servicio ideal para tu negocio y empieza a automatizar hoy mismo')}
             </p>
           </motion.div>
 
