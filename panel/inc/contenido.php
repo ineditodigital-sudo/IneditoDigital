@@ -1463,7 +1463,8 @@ function registro_paginas(): array {
                         'alt'    => ['label' => 'Descripción del logotipo', 'tipo' => 'texto',
                                      'def' => 'INÉDITO DIGITAL - Agencia de Marketing Digital en Aguascalientes'],
                             'favicon' => ['label' => 'Ícono de la pestaña del navegador', 'tipo' => 'imagen',
-                                      'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp'],
+                                      'ayuda' => 'Tiene que ser CUADRADO (256x256 o más). El logo horizontal no sirve: en la pestaña se ve de 16 píxeles y queda ilegible. Si lo dejas vacío usamos el isotipo de Inédito.',
+                                      'def' => '/favicon.ico'],
                 ],
                 ],
 

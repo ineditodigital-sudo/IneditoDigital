@@ -50,11 +50,18 @@ done
 echo "  $n subidos, $err fallos"
 [ "$err" -gt 0 ] && { bad "abortando: hay assets sin subir"; exit 1; }
 
-# ---------- 3. index.html ----------
-# render.php lee de aqui los hashes, asi que va ANTES que render.php.
-step "3/6  Subiendo index.html y robots.txt"
-fput dist/index.html  public_html/index.html  >/dev/null 2>&1 && ok "index.html"
-fput dist/robots.txt  public_html/robots.txt  >/dev/null 2>&1 && ok "robots.txt"
+# ---------- 3. raiz de dist ----------
+# render.php lee de aqui los hashes, asi que index.html va ANTES que render.php.
+# Se sube TODO lo que quede en la raiz de dist/ (index.html, robots.txt y lo que
+# Vite copia desde public/: favicons, manifiestos, verificaciones de dominio).
+step "3/6  Subiendo index.html y los archivos sueltos"
+fput dist/index.html public_html/index.html >/dev/null 2>&1 && ok "index.html"
+for f in dist/*; do
+  [ -f "$f" ] || continue
+  b="$(basename "$f")"
+  [ "$b" = "index.html" ] && continue
+  fput "$f" "public_html/$b" >/dev/null 2>&1 && ok "$b" || bad "$b"
+done
 
 # ---------- 4. PHP ----------
 # render.php va junto con el bundle: si se desfasan, se duplican o se pierden
