@@ -15,6 +15,7 @@ $flash = get_flash();
 ?><!DOCTYPE html><html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow"><title>Panel · Inédito Digital</title>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
 :root{--bg:#08080c;--card:#0e0e15;--card2:#14141f;--line:#21212e;--pur:#7700CE;--pur2:#9933FF;--txt:#ececf4;--mut:#8a8aa0;--mut2:#61617a;}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Arial,Helvetica,sans-serif;display:flex;min-height:100vh}
