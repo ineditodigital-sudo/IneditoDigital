@@ -37,6 +37,7 @@ function leerTodo(): Record<string, Pagina> {
 /** Se llama cuando el panel publica cambios, para no exigir recarga dura. */
 export function refrescarContenido() {
   cache = null;
+  cachePaginas = null;
 }
 
 export interface LectorSeccion {
@@ -64,4 +65,52 @@ export function contenido(pagina: string, seccion: string): LectorSeccion {
   };
 
   return lector;
+}
+
+/* ------------------------------------------------------------------ */
+/* Páginas creadas desde el panel (bloques)                            */
+/* ------------------------------------------------------------------ */
+
+export interface Bloque {
+  tipo: string;
+  visible?: string;
+  datos: Record<string, string>;
+}
+
+export interface PaginaBloques {
+  nombre: string;
+  ruta: string;
+  bloques: Bloque[];
+  seoTitle?: string;
+  seoDesc?: string;
+}
+
+let cachePaginas: Record<string, PaginaBloques> | null = null;
+
+function leerPaginasBloques(): Record<string, PaginaBloques> {
+  if (cachePaginas) return cachePaginas;
+  try {
+    const crudo = localStorage.getItem('inedito_paginas_nuevas');
+    const parsed = crudo ? JSON.parse(crudo) : {};
+    cachePaginas = parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    cachePaginas = {};
+  }
+  return cachePaginas!;
+}
+
+/** Devuelve la página creada con ese slug, o null si no existe. */
+export function paginaDeBloques(slug: string): PaginaBloques | null {
+  if (!slug) return null;
+  const p = leerPaginasBloques()[slug];
+  if (!p || !Array.isArray(p.bloques)) return null;
+  return p;
+}
+
+/** Las páginas que el cliente marcó para que salgan en el menú. */
+export function paginasDelMenu(): { nombre: string; ruta: string }[] {
+  const todas = leerPaginasBloques();
+  return Object.values(todas)
+    .filter((p) => (p as PaginaBloques & { enMenu?: boolean }).enMenu)
+    .map((p) => ({ nombre: p.nombre, ruta: p.ruta }));
 }

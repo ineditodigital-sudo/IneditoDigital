@@ -58,11 +58,17 @@ try {
 
     /* Contenido editable de las páginas. Solo lo PUBLICADO: el borrador
        nunca sale al sitio. */
-    $paginas = [];
+    $paginas = []; $paginas_nuevas = [];
     try {
-        foreach ($pdo->query("SELECT slug, contenido FROM pages WHERE status='published'") as $r) {
+        foreach ($pdo->query("SELECT slug, nombre, tipo, contenido, ruta, seo_title, seo_desc, en_menu FROM pages WHERE status='published'") as $r) {
             $c = json_decode((string)$r['contenido'], true);
-            if (is_array($c)) $paginas[$r['slug']] = $c;
+            if (!is_array($c)) continue;
+            if ($r['tipo'] === 'bloques') {
+                $paginas_nuevas[$r['slug']] = ['nombre' => $r['nombre'], 'ruta' => $r['ruta'], 'bloques' => $c,
+                                               'seoTitle' => $r['seo_title'], 'seoDesc' => $r['seo_desc'], 'enMenu' => (bool)$r['en_menu']];
+            } else {
+                $paginas[$r['slug']] = $c;
+            }
         }
     } catch (Throwable $e) { /* si aún no existe la tabla, el sitio sigue igual */ }
 
@@ -81,6 +87,6 @@ $settings = [
 $seo_global = ['siteName'=>$seo['siteName']??'','author'=>$seo['author']??'','defaultImage'=>$seo['defaultImage']??'','twitterHandle'=>$seo['twitterHandle']??'','googleAnalytics'=>$seo['googleAnalytics']??'','facebookPixel'=>$seo['facebookPixel']??'','googleSiteVerification'=>$seo['googleSiteVerification']??'','bingVerification'=>$seo['bingVerification']??''];
 $seo_schema = ['organizationName'=>$seo['orgName']??'','organizationType'=>$seo['orgType']??'ProfessionalService','phone'=>$seo['phone']??'','email'=>$seo['email']??'','priceRange'=>$seo['priceRange']??'$$','address'=>$seo['address']??'','city'=>$seo['city']??'','state'=>$seo['state']??'','zip'=>$seo['zip']??'','latitude'=>$seo['latitude']??'','longitude'=>$seo['longitude']??'','socialMedia'=>['facebook'=>$seo['facebook']??'','instagram'=>$seo['instagram']??'','linkedin'=>$seo['linkedin']??'']];
 
-$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema','paginas');
+$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema','paginas','paginas_nuevas');
 $sig = md5(json_encode($payload));
 echo json_encode(['ok'=>true,'sig'=>$sig] + $payload);
