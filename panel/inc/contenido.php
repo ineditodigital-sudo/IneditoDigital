@@ -150,7 +150,7 @@ function registro_paginas(): array {
         'nosotros' => [
             'nombre' => 'Nosotros',
             'ruta'   => '/nosotros',
-            'ayuda'  => 'La página que cuenta quiénes son.',
+            'ayuda'  => 'La página que cuenta quiénes son, su misión, visión y valores.',
             'secciones' => [
                 'encabezado' => [
                     'nombre' => 'Encabezado',
@@ -158,16 +158,32 @@ function registro_paginas(): array {
                         'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'SOBRE'],
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'NOSOTROS'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
-                                       'def' => 'Somos una agencia de marketing digital comprometida con el crecimiento de tu negocio'],
+                                       'def' => 'Somos una agencia de marketing digital en Aguascalientes que combina creatividad, tecnología y estrategia para impulsar el crecimiento de negocios.'],
                     ],
                 ],
-                'historia' => [
-                    'nombre' => 'Nuestra historia',
+                'mision' => [
+                    'nombre' => 'Misión y visión',
                     'campos' => [
-                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo'  => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'NUESTRA HISTORIA'],
-                        'texto'   => ['label' => 'Texto', 'tipo' => 'parrafo',
-                                      'def' => 'INÉDITO DIGITAL nace con la misión de transformar la manera en que las empresas se conectan con sus clientes en el mundo digital.'],
+                        'mision_titulo' => ['label' => 'Título de la misión', 'tipo' => 'texto', 'def' => 'NUESTRA MISIÓN'],
+                        'mision_texto'  => ['label' => 'Texto de la misión', 'tipo' => 'parrafo',
+                                            'def' => 'Democratizar el acceso a marketing digital de clase mundial para empresas de todos los tamaños en Aguascalientes y México, utilizando IA y automatización para generar resultados medibles y escalables.'],
+                        'vision_titulo' => ['label' => 'Título de la visión', 'tipo' => 'texto', 'def' => 'NUESTRA VISIÓN'],
+                        'vision_texto'  => ['label' => 'Texto de la visión', 'tipo' => 'parrafo',
+                                            'def' => 'Ser la agencia líder en transformación digital en el Bajío, reconocida por nuestra innovación en IA, automatización y resultados consistentes que superan las expectativas de nuestros clientes.'],
+                    ],
+                ],
+                'valores' => [
+                    'nombre' => 'Nuestros valores',
+                    'ayuda'  => 'Los tres valores con icono.',
+                    'campos' => [
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo'   => ['label' => 'Título de la sección', 'tipo' => 'texto', 'def' => 'NUESTROS VALORES'],
+                        'v1_titulo'=> ['label' => 'Valor 1 · nombre', 'tipo' => 'texto', 'def' => 'TRANSPARENCIA'],
+                        'v1_texto' => ['label' => 'Valor 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Reportes claros, sin letra pequeña. Sabes exactamente dónde va tu inversión.'],
+                        'v2_titulo'=> ['label' => 'Valor 2 · nombre', 'tipo' => 'texto', 'def' => 'RESULTADOS'],
+                        'v2_texto' => ['label' => 'Valor 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Nos medimos por ROI real, no por vanity metrics.'],
+                        'v3_titulo'=> ['label' => 'Valor 3 · nombre', 'tipo' => 'texto', 'def' => 'PARTNERSHIP'],
+                        'v3_texto' => ['label' => 'Valor 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Tu éxito es nuestro éxito. Somos tu equipo de crecimiento.'],
                     ],
                 ],
             ],
@@ -183,8 +199,9 @@ function registro_paginas(): array {
                     'nombre' => 'Encabezado',
                     'campos' => [
                         'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'CONTACTO'],
+                        'info_titulo' => ['label' => 'Título del bloque de datos', 'tipo' => 'texto', 'def' => 'INFORMACIÓN DE CONTACTO'],
                         'bajada' => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
-                                     'def' => 'Cuéntanos sobre tu proyecto y te responderemos a la brevedad'],
+                                     'def' => 'Agenda una consulta gratuita y descubre cómo podemos ayudarte'],
                     ],
                 ],
                 'formulario' => [

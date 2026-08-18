@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import SEO from '../components/SEO';
+import { contenido } from '../cms';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import { Button } from '../components/ui/button';
@@ -9,6 +10,8 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 
 export default function ContactPage() {
+  const tEnc = contenido('contacto', 'encabezado');
+  const tForm = contenido('contacto', 'formulario');
   const { settings, addLead, openAssistant } = useApp();
   const [formData, setFormData] = useState({
     name: '',
@@ -41,7 +44,7 @@ export default function ContactPage() {
       const data = await res.json().catch(() => ({ ok: res.ok }));
 
       if (res.ok && data.ok) {
-        toast.success('¡Mensaje enviado! Te contactaremos muy pronto.');
+        toast.success(tForm('gracias', '¡Mensaje enviado! Te contactaremos muy pronto.'));
         setFormData({ name: '', email: '', phone: '', company: '', message: '' });
       } else {
         toast.error(data.error || 'No se pudo enviar. Escríbenos por WhatsApp, por favor.');
@@ -66,16 +69,16 @@ export default function ContactPage() {
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h1 className="heading text-4xl md:text-6xl mb-6">
-              <span className="text-[#7700CE]">CONTACTO</span>
+              <span className="text-[#7700CE]">{tEnc('titulo', 'CONTACTO')}</span>
             </h1>
             <p className="text-xl text-white/70">
-              Agenda una consulta gratuita y descubre cómo podemos ayudarte
+              {tEnc('bajada', 'Agenda una consulta gratuita y descubre cómo podemos ayudarte')}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <GlassCard>
-              <h2 className="heading text-2xl mb-6">ENVÍANOS UN MENSAJE</h2>
+              <h2 className="heading text-2xl mb-6">{tForm('titulo', 'ENVÍANOS UN MENSAJE')}</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Honeypot anti-spam: invisible para humanos, los bots lo rellenan */}
                 <input
@@ -143,14 +146,14 @@ export default function ContactPage() {
                   disabled={submitting}
                   className="w-full bg-[#7700CE] hover:bg-[#9933FF] text-white rounded-full py-6 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <span className="heading tracking-[0.08em]">{submitting ? 'ENVIANDO…' : 'ENVIAR MENSAJE'}</span>
+                  <span className="heading tracking-[0.08em]">{submitting ? 'ENVIANDO…' : tForm('boton', 'ENVIAR MENSAJE')}</span>
                 </Button>
               </form>
             </GlassCard>
 
             <div className="space-y-6">
               <GlassCard>
-                <h2 className="heading text-2xl mb-6">INFORMACIÓN DE CONTACTO</h2>
+                <h2 className="heading text-2xl mb-6">{tEnc('info_titulo', 'INFORMACIÓN DE CONTACTO')}</h2>
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
                     <MapPin className="text-[#7700CE] flex-shrink-0 mt-1" size={24} />

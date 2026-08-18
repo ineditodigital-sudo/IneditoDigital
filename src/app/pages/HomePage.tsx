@@ -11,6 +11,7 @@ import TestimonialsSection from '../components/TestimonialsSection';
 import SectionDivider from '../components/SectionDivider';
 import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
+import { contenido } from '../cms';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -19,6 +20,14 @@ const Floating3DElements = lazy(() => import('../components/Floating3DElements')
 
 export default function HomePage() {
   const { services, portfolioItems, blogPosts, settings, openAssistant } = useApp();
+  /* Textos editables desde el panel. El segundo argumento de cada llamada es
+     lo que hay hoy: si el campo se vacía, se usa eso y la página no se rompe. */
+  const tTrans  = contenido('home', 'transformacion');
+  const tServ   = contenido('home', 'servicios');
+  const tIA     = contenido('home', 'ia');
+  const tProc   = contenido('home', 'proceso');
+  const tCasos  = contenido('home', 'casos');
+  const tCierre = contenido('home', 'cierre');
 
   const features = [
     {
@@ -42,10 +51,10 @@ export default function HomePage() {
   ];
 
   const process = [
-    { step: '01', title: 'DESCUBRIMIENTO', description: 'Analizamos tu negocio y competencia' },
-    { step: '02', title: 'ESTRATEGIA', description: 'Diseñamos el plan de acción ganador' },
-    { step: '03', title: 'EJECUCIÓN', description: 'Implementamos con excelencia' },
-    { step: '04', title: 'OPTIMIZACIÓN', description: 'Mejoramos continuamente resultados' }
+    { step: '01', title: tProc('paso_1_titulo', 'DESCUBRIMIENTO'), description: tProc('paso_1_texto', 'Analizamos tu negocio y competencia') },
+    { step: '02', title: tProc('paso_2_titulo', 'ESTRATEGIA'),     description: tProc('paso_2_texto', 'Diseñamos el plan de acción ganador') },
+    { step: '03', title: tProc('paso_3_titulo', 'EJECUCIÓN'),      description: tProc('paso_3_texto', 'Implementamos con excelencia') },
+    { step: '04', title: tProc('paso_4_titulo', 'OPTIMIZACIÓN'),   description: tProc('paso_4_texto', 'Mejoramos continuamente resultados') }
   ];
 
   const testimonials = [
@@ -128,6 +137,7 @@ export default function HomePage() {
       <SectionDivider variant="gradient" color="purple" />
 
       {/* Bento Grid - Value Proposition */}
+      {tTrans.visible() && (
       <section className="py-8 md:py-12 px-4 md:px-6 lg:px-8 relative overflow-hidden bg-white">
         {/* Elementos 3D Flotantes */}
         <Suspense fallback={<div className="w-full h-full bg-gray-100 animate-pulse" />}>
@@ -137,10 +147,10 @@ export default function HomePage() {
         <div className="container mx-auto relative z-10 max-w-7xl">
           <div className="text-center mb-8 md:mb-10">
             <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              EL PODER DE LA <span className="text-[#7700CE]">TRANSFORMACIÓN DIGITAL</span>
+              {tTrans('titulo_1', 'EL PODER DE LA')} <span className="text-[#7700CE]">{tTrans('titulo_2', 'TRANSFORMACIÓN DIGITAL')}</span>
             </h2>
             <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              Combinamos lo mejor del marketing tradicional con IA y automatización de vanguardia
+              {tTrans('bajada', 'Combinamos lo mejor del marketing tradicional con IA y automatización de vanguardia')}
             </p>
           </div>
 
@@ -199,6 +209,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Services Grid */}
       <section id="servicios" className="py-8 md:py-12 px-4 md:px-6 lg:px-8 bg-white relative overflow-hidden">
@@ -210,10 +221,10 @@ export default function HomePage() {
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="text-center mb-8 md:mb-10">
             <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              NUESTROS <span className="text-[#7700CE]">SERVICIOS</span>
+              {tServ('titulo_1', 'NUESTROS')} <span className="text-[#7700CE]">{tServ('titulo_2', 'SERVICIOS')}</span>
             </h2>
             <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              Soluciones digitales que generan resultados reales y medibles
+              {tServ('bajada', 'Soluciones digitales que generan resultados reales y medibles')}
             </p>
           </div>
 
@@ -254,7 +265,7 @@ export default function HomePage() {
               to="/servicios"
               className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-[#7700CE] hover:bg-[#9933FF] text-white transition-all hover:scale-105 shadow-[0_0_30px_rgba(119,0,206,0.3)]"
             >
-              <span className="heading text-sm md:text-base tracking-[0.08em]">VER TODOS LOS SERVICIOS</span>
+              <span className="heading text-sm md:text-base tracking-[0.08em]">{tServ('boton', 'VER TODOS LOS SERVICIOS')}</span>
             </Link>
           </div>
         </div>
@@ -263,6 +274,7 @@ export default function HomePage() {
       <SectionDivider variant="gradient" color="purple" />
 
       {/* AI Services Section */}
+      {tIA.visible() && (
       <section className="py-8 md:py-12 px-4 md:px-6 lg:px-8 relative overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#0a0014] via-[#1a0033] to-black" />
@@ -286,7 +298,7 @@ export default function HomePage() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7700CE]/20 border border-[#7700CE]/40 backdrop-blur-xl mb-4 md:mb-6"
             >
               <Bot className="text-[#7700CE]" size={20} />
-              <span className="text-sm text-white font-semibold tracking-wide">POTENCIA TU NEGOCIO CON IA</span>
+              <span className="text-sm text-white font-semibold tracking-wide">{tIA('etiqueta', 'POTENCIA TU NEGOCIO CON IA')}</span>
             </motion.div>
             
             <motion.h2
@@ -296,7 +308,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="heading text-2xl md:text-4xl lg:text-5xl mb-4 md:mb-6"
             >
-              SERVICIOS DE <span className="bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">INTELIGENCIA ARTIFICIAL</span>
+              {tIA('titulo_1', 'SERVICIOS DE')} <span className="bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">{tIA('titulo_2', 'INTELIGENCIA ARTIFICIAL')}</span>
             </motion.h2>
             
             <motion.p
@@ -306,7 +318,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-white/70 text-sm md:text-base lg:text-lg max-w-3xl mx-auto"
             >
-              Automatiza, optimiza y escala tu negocio 24/7 con nuestras soluciones de IA personalizadas
+              {tIA('bajada', 'Automatiza, optimiza y escala tu negocio 24/7 con nuestras soluciones de IA personalizadas')}
             </motion.p>
           </div>
 
@@ -567,18 +579,20 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+      )}
 
       <SectionDivider variant="gradient" color="purple" />
 
       {/* Process */}
+      {tProc.visible() && (
       <section className="py-8 md:py-12 px-4 md:px-6 lg:px-8 bg-white">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-10">
             <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              NUESTRO <span className="text-[#7700CE]">PROCESO</span>
+              {tProc('titulo', 'NUESTRO PROCESO')}
             </h2>
             <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              Metodología probada que garantiza resultados excepcionales
+              {tProc('bajada', 'Metodología probada que garantiza resultados excepcionales')}
             </p>
           </div>
 
@@ -631,16 +645,18 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Portfolio Preview */}
+      {tCasos.visible() && (
       <section className="py-8 md:py-12 px-4 bg-black">
         <div className="container mx-auto">
           <div className="text-center mb-8 md:mb-10">
             <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-white">
-              CASOS DE <span className="text-[#7700CE]">ÉXITO</span>
+              {tCasos('titulo', 'CASOS DE ÉXITO')}
             </h2>
             <p className="text-white/60 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              Marcas que confían en INÉDITO DIGITAL
+              {tCasos('bajada', 'Marcas que confían en INÉDITO DIGITAL')}
             </p>
           </div>
 
@@ -722,11 +738,12 @@ export default function HomePage() {
               to="/portafolio"
               className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 text-white transition-all"
             >
-              <span className="heading text-sm md:text-base tracking-[0.08em]">VER MÁS CASOS</span>
+              <span className="heading text-sm md:text-base tracking-[0.08em]">{tCasos('boton', 'VER MÁS CASOS')}</span>
             </Link>
           </div>
         </div>
       </section>
+      )}
 
       <SectionDivider variant="gradient" color="purple" />
 
@@ -803,16 +820,16 @@ export default function HomePage() {
         <div className="container mx-auto">
           <GlassCard glow className="max-w-4xl mx-auto text-center p-6 md:p-10">
             <h2 className="heading text-2xl md:text-4xl lg:text-5xl mb-4 md:mb-6">
-              ¿LISTO PARA <span className="text-[#7700CE]">CRECER?</span>
+              {tCierre('titulo', '¿LISTO PARA CRECER?')}
             </h2>
             <p className="text-base md:text-lg lg:text-xl text-white/80 mb-6 md:mb-8 max-w-2xl mx-auto">
-              Agenda una consulta gratuita y descubre cómo podemos llevar tu negocio al siguiente nivel
+              {tCierre('bajada', 'Agenda una consulta gratuita y descubre cómo podemos llevar tu negocio al siguiente nivel')}
             </p>
             <button
               onClick={() => openAssistant(undefined, 'agendar una consulta gratuita')}
               className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 rounded-full bg-[#7700CE] hover:bg-[#9933FF] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(119,0,206,0.5)] group cursor-pointer"
             >
-              <span className="heading text-sm md:text-base tracking-[0.08em]">AGENDAR CONSULTA GRATIS</span>
+              <span className="heading text-sm md:text-base tracking-[0.08em]">{tCierre('boton', 'AGENDAR CONSULTA GRATIS')}</span>
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
             </button>
           </GlassCard>
