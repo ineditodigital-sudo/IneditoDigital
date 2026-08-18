@@ -11,6 +11,8 @@ try { $pdo=db_connect($cfg);
   foreach($pdo->query("SELECT slug FROM services WHERE status='published'") as $r) $urls[]=['/servicios/'.$r['slug'],'0.8','monthly'];
   foreach($pdo->query("SELECT slug FROM portfolio WHERE status='published'") as $r) $urls[]=['/portafolio/'.$r['slug'],'0.7','monthly'];
   foreach($pdo->query("SELECT slug FROM blog_posts WHERE status='published'") as $r) $urls[]=['/blog/'.$r['slug'],'0.7','monthly'];
+  // Páginas creadas desde el panel
+  foreach($pdo->query("SELECT ruta FROM pages WHERE tipo='bloques' AND status='published'") as $r) $urls[]=[$r['ruta'],'0.6','monthly'];
 } catch (Throwable $e) {}
 echo '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 foreach($urls as $u) echo '<url><loc>'.htmlspecialchars($BASE.$u[0], ENT_QUOTES).'</loc><lastmod>'.$today.'</lastmod><changefreq>'.$u[2].'</changefreq><priority>'.$u[1].'</priority></url>'."\n";

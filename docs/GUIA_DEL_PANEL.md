@@ -43,6 +43,39 @@ Abajo de cada página verás **Versiones anteriores**: eliges una y le das a
 
 ---
 
+## Crear una página nueva
+
+En el menú entra a **Mis páginas** y escribe cómo se va a llamar
+(por ejemplo *Promociones de verano*). La dirección se arma sola.
+
+Después le agregas contenido eligiendo **bloques**:
+
+| Bloque | Para qué sirve |
+|---|---|
+| **Portada** | El encabezado grande con título y botón |
+| **Texto** | Un título con su párrafo |
+| **Texto con imagen** | Texto a un lado, imagen al otro |
+| **Lista de puntos** | Hasta cuatro beneficios o características |
+| **Cifras destacadas** | Tres números grandes |
+| **Pasos numerados** | Para explicar un proceso |
+| **Preguntas frecuentes** | Preguntas que se abren al tocarlas |
+| **Llamado a la acción** | El bloque morado que invita a contactar |
+
+Con las flechas **↑ ↓** los acomodas en el orden que quieras, y con
+**Quitar** los eliminas. Cada bloque tiene su propio interruptor por si
+quieres esconderlo sin borrarlo.
+
+Cuando la página esté lista, dale a **Publicar página**. Hasta entonces
+nadie puede verla.
+
+> Si dejas campos vacíos dentro de un bloque, esa parte simplemente no
+> aparece. No queda ningún hueco raro.
+
+Si marcas **«Mostrarla en el menú del sitio»**, la página aparece en la
+navegación. Si no, existe pero solo la ve quien tenga el enlace.
+
+---
+
 ## Mostrar u ocultar secciones
 
 Algunas secciones tienen un interruptor arriba que dice

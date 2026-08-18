@@ -15,16 +15,22 @@ function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); retu
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
 // ---- cargar datos ----
-$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = [];
+$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = []; $nuevas = [];
 try {
   $pdo = db_connect($cfg);
   foreach ($pdo->query("SELECT k,v FROM site_settings") as $r) $settings[$r['k']] = $r['v'];
   foreach ($pdo->query("SELECT k,v FROM seo_settings") as $r) $seo[$r['k']] = $r['v'];
   foreach ($pdo->query("SELECT * FROM services WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); $o['shortDescription']=$r['short_desc']?:($o['shortDescription']??''); if($r['image'])$o['bannerImage']=$r['image']; $fl=lines($r['features']); if($fl)$o['features']=$fl; $bl=lines($r['benefits']); if($bl)$o['benefits']=$bl; $services[]=$o; }
   foreach ($pdo->query("SELECT * FROM blog_posts WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['excerpt'])$o['excerpt']=$r['excerpt']; if($r['content'])$o['content']=$r['content']; if($r['image'])$o['image']=$r['image']; if($r['author'])$o['author']=$r['author']; if($r['category'])$o['category']=$r['category']; $portfolio_meta=null; $blog[]=$o; }
-  foreach ($pdo->query("SELECT slug, contenido, seo_title, seo_desc, seo_image, ruta FROM pages WHERE status='published'") as $r) {
+  foreach ($pdo->query("SELECT slug, nombre, tipo, contenido, seo_title, seo_desc, seo_image, ruta, en_menu FROM pages WHERE status='published'") as $r) {
     $c = json_decode((string)$r['contenido'], true);
-    $paginas[$r['slug']] = ['contenido' => is_array($c) ? $c : [], 'seo_title' => $r['seo_title'], 'seo_desc' => $r['seo_desc'], 'seo_image' => $r['seo_image'], 'ruta' => $r['ruta']];
+    $reg = ['contenido' => is_array($c) ? $c : [], 'nombre' => $r['nombre'], 'seo_title' => $r['seo_title'], 'seo_desc' => $r['seo_desc'], 'seo_image' => $r['seo_image'], 'ruta' => $r['ruta']];
+    if ($r['tipo'] === 'bloques') {
+      $reg['enMenu'] = (bool)$r['en_menu'];
+      $nuevas[$r['slug']] = $reg;
+    } else {
+      $paginas[$r['slug']] = $reg;
+    }
     $paginasPorRuta[$r['ruta']] = $r['slug'];
   }
   foreach ($pdo->query("SELECT * FROM portfolio WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['short_desc'])$o['description']=$r['short_desc']; if($r['image'])$o['image']=$r['image']; if($r['client'])$o['client']=$r['client']; if($r['category'])$o['category']=$r['category']; $portfolio[]=$o; }
@@ -156,6 +162,43 @@ if (!$is404 && isset($paginasPorRuta[$path])) {
   if (!empty($pg['seo_image'])) $GLOBALS['seoImagenPagina'] = $pg['seo_image'];
 }
 
+/* Páginas creadas desde el panel: dejan de ser 404 y se les arma el HTML
+   que ven los buscadores a partir de sus bloques. */
+$slugNueva = $paginasPorRuta[$path] ?? null;
+if ($slugNueva !== null && isset($nuevas[$slugNueva])) {
+  $pg = $nuevas[$slugNueva];
+  $is404 = false;
+  $title = ($pg['seo_title'] ?: $pg['nombre']) . ' | ' . $siteName;
+  $desc  = $pg['seo_desc'] ?: $defaultDesc;
+  $canonical = $BASE . $path;
+  $crumbs[] = [$pg['nombre'], $path];
+  if (!empty($pg['seo_image'])) $GLOBALS['seoImagenPagina'] = $pg['seo_image'];
+  $bloquesPg = $pg['contenido'];
+  $bodyBuilder = function() use ($bloquesPg, $pg) {
+    $h = '<h1>' . e($pg['nombre']) . '</h1>';
+    foreach ((is_array($bloquesPg) ? $bloquesPg : []) as $b) {
+      if (($b['visible'] ?? '1') === '0') continue;
+      $d = $b['datos'] ?? [];
+      $tit = trim((string)($d['titulo'] ?? ''));
+      if ($tit !== '') $h .= '<h2>' . e($tit) . '</h2>';
+      foreach (['bajada','texto'] as $k) {
+        $v = trim((string)($d[$k] ?? ''));
+        if ($v !== '') $h .= '<p>' . e($v) . '</p>';
+      }
+      // puntos y pasos: se listan para que el buscador los lea
+      $li = '';
+      foreach ([1,2,3,4] as $n) {
+        foreach ([["p{$n}_titulo","p{$n}_texto"], ["paso_{$n}_titulo","paso_{$n}_texto"], ["p{$n}","r{$n}"]] as $par) {
+          $a = trim((string)($d[$par[0]] ?? '')); $bb = trim((string)($d[$par[1]] ?? ''));
+          if ($a !== '' || $bb !== '') $li .= '<li>' . ($a !== '' ? '<strong>' . e($a) . '</strong>' : '') . ($bb !== '' ? ' — ' . e($bb) : '') . '</li>';
+        }
+      }
+      if ($li !== '') $h .= '<ul>' . $li . '</ul>';
+    }
+    return $h;
+  };
+}
+
 // --- 404 real: nada que indexar, y sin canonical propio ---
 if ($is404) {
   http_response_code(404);
@@ -247,7 +290,12 @@ header('Cache-Control: no-cache');
   $FL = JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP;
   $contenidoPaginas = [];
   foreach ($paginas as $sl => $pg) $contenidoPaginas[$sl] = $pg['contenido'];
-  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas];
+  $paginasNuevas = [];
+  foreach ($nuevas as $sl => $pg) {
+    $paginasNuevas[$sl] = ['nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'bloques' => $pg['contenido'],
+                           'seoTitle' => $pg['seo_title'], 'seoDesc' => $pg['seo_desc'], 'enMenu' => !empty($pg['enMenu'])];
+  }
+  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas];
 ?>
 <script>try{
 <?php foreach($LS as $k=>$v): ?>localStorage.setItem(<?= json_encode($k) ?>, <?= json_encode(json_encode($v, JSON_UNESCAPED_UNICODE), $FL) ?>);
