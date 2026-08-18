@@ -28,27 +28,15 @@ export default function HomePage() {
   const tProc   = contenido('home', 'proceso');
   const tCasos  = contenido('home', 'casos');
   const tCierre = contenido('home', 'cierre');
+  const tTar    = contenido('home', 'tarjetas');
+  const tTarIA  = contenido('home', 'tarjetas_ia');
 
   const features = [
-    {
-      icon: Sparkles,
-      title: 'IA',
-      description: 'Automatización y chatbots 24/7',
-      image: 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjU4NjYzNTl8MA&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Estrategia',
-      description: 'Diseños que convierten',
-      image: 'https://images.unsplash.com/photo-1683721003111-070bcc053d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMG1hcmtldGluZ3xlbnwxfHx8fDE3NjU4MTg3MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      icon: Zap,
-      title: 'Analítica',
-      description: 'Decisiones basadas en datos',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwYW5hbHl0aWNzJTIwZGFzaGJvYXJkfGVufDF8fHx8MTc2NTg5NTQ4N3ww&ixlib=rb-4.1.0&q=80&w=1080'
-    }
+    { icon: Sparkles,   title: tTar('t1_titulo', 'IA'),          description: tTar('t1_texto', 'Automatización y chatbots 24/7'),  image: tTar('t1_imagen', 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
+    { icon: TrendingUp, title: tTar('t2_titulo', 'Estrategia'),  description: tTar('t2_texto', 'Diseños que convierten'),          image: tTar('t2_imagen', 'https://images.unsplash.com/photo-1683721003111-070bcc053d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
+    { icon: Zap,        title: tTar('t3_titulo', 'Analítica'),   description: tTar('t3_texto', 'Decisiones basadas en datos'),     image: tTar('t3_imagen', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
   ];
+
 
   const process = [
     { step: '01', title: tProc('paso_1_titulo', 'DESCUBRIMIENTO'), description: tProc('paso_1_texto', 'Analizamos tu negocio y competencia') },
@@ -192,7 +180,7 @@ export default function HomePage() {
                 {/* Imagen de fondo */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
                   <img 
-                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHJlc3VsdHN8ZW58MXx8fHwxNzY1ODk1NDg3fDA&ixlib=rb-4.1.0&q=80&w=1080"
+                    src={tTar('t4_imagen', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080')}
                     alt="Resultados"
                     className="w-full h-full object-cover"
                   />
@@ -201,7 +189,7 @@ export default function HomePage() {
                 {/* Contenido */}
                 <div className="relative z-10">
                   <Target className="text-[#7700CE] mb-3" size={28} />
-                  <h3 className="heading text-base md:text-lg mb-2 text-black">Resultados</h3>
+                  <h3 className="heading text-base md:text-lg mb-2 text-black">{tTar('t4_titulo', 'Resultados')}</h3>
                   <p className="text-gray-600 text-xs md:text-sm">ROI comprobado y crecimiento sostenible</p>
                 </div>
               </GlassCard>
@@ -347,37 +335,37 @@ export default function HomePage() {
                         <MessageCircle className="text-white" size={28} />
                       </div>
                       <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-500/40">
-                        <span className="text-xs text-green-400 font-bold">BESTSELLER</span>
+                        <span className="text-xs text-green-400 font-bold">{tTarIA('etiqueta_top', 'BESTSELLER')}</span>
                       </div>
                     </div>
 
                     <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      IA PARA WHATSAPP
+                      {tTarIA('w_titulo', 'IA PARA WHATSAPP')}
                     </h3>
                     
                     <p className="text-white/70 text-sm md:text-base mb-4">
-                      Agente inteligente que atiende, califica y cierra ventas 24/7. Nunca pierdas otro cliente.
+                      {tTarIA('w_texto', 'Agente inteligente que atiende, califica y cierra ventas 24/7. Nunca pierdas otro cliente.')}
                     </p>
 
                     {/* Features */}
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Respuestas instantáneas 24/7</span>
+                        <span>{tTarIA('w_p1', 'Respuestas instantáneas 24/7')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Calificación automática de leads</span>
+                        <span>{tTarIA('w_p2', 'Calificación automática de leads')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Integración con tu CRM</span>
+                        <span>{tTarIA('w_p3', 'Integración con tu CRM')}</span>
                       </div>
                     </div>
 
                     {/* CTA */}
                     <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>Conocer más</span>
+                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
                       <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
                     </div>
                   </div>
@@ -410,32 +398,32 @@ export default function HomePage() {
                     </div>
 
                     <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      IA DE VENTAS
+                      {tTarIA('v_titulo', 'IA DE VENTAS')}
                     </h3>
                     
                     <p className="text-white/70 text-sm md:text-base mb-4">
-                      Encuentra clientes perfectos y cierra más ventas con prospección inteligente automatizada.
+                      {tTarIA('v_texto', 'Encuentra clientes perfectos y cierra más ventas con prospección inteligente automatizada.')}
                     </p>
 
                     {/* Features */}
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Prospección automática LinkedIn</span>
+                        <span>{tTarIA('v_p1', 'Prospección automática LinkedIn')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Emails personalizados con IA</span>
+                        <span>{tTarIA('v_p2', 'Emails personalizados con IA')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Seguimiento predictivo</span>
+                        <span>{tTarIA('v_p3', 'Seguimiento predictivo')}</span>
                       </div>
                     </div>
 
                     {/* CTA */}
                     <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>Conocer más</span>
+                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
                       <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
                     </div>
                   </div>
@@ -468,32 +456,32 @@ export default function HomePage() {
                     </div>
 
                     <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      IA PARA MARKETING
+                      {tTarIA('m_titulo', 'IA PARA MARKETING')}
                     </h3>
                     
                     <p className="text-white/70 text-sm md:text-base mb-4">
-                      Campañas que se optimizan solas. Contenido generado por IA. Resultados exponenciales.
+                      {tTarIA('m_texto', 'Campañas que se optimizan solas. Contenido generado por IA. Resultados exponenciales.')}
                     </p>
 
                     {/* Features */}
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Optimización automática de ads</span>
+                        <span>{tTarIA('m_p1', 'Optimización automática de ads')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Contenido generado por IA</span>
+                        <span>{tTarIA('m_p2', 'Contenido generado por IA')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Análisis predictivo de tendencias</span>
+                        <span>{tTarIA('m_p3', 'Análisis predictivo de tendencias')}</span>
                       </div>
                     </div>
 
                     {/* CTA */}
                     <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>Conocer más</span>
+                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
                       <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
                     </div>
                   </div>
@@ -526,32 +514,32 @@ export default function HomePage() {
                     </div>
 
                     <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      IA PARA E-COMMERCE
+                      {tTarIA('e_titulo', 'IA PARA E-COMMERCE')}
                     </h3>
                     
                     <p className="text-white/70 text-sm md:text-base mb-4">
-                      Convierte más visitas en ventas. Recomendaciones inteligentes y checkout optimizado.
+                      {tTarIA('e_texto', 'Convierte más visitas en ventas. Recomendaciones inteligentes y checkout optimizado.')}
                     </p>
 
                     {/* Features */}
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Recomendaciones personalizadas</span>
+                        <span>{tTarIA('e_p1', 'Recomendaciones personalizadas')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Recuperación carritos abandonados</span>
+                        <span>{tTarIA('e_p2', 'Recuperación carritos abandonados')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
                         <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>Optimización de precios dinámica</span>
+                        <span>{tTarIA('e_p3', 'Optimización de precios dinámica')}</span>
                       </div>
                     </div>
 
                     {/* CTA */}
                     <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>Conocer más</span>
+                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
                       <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
                     </div>
                   </div>
@@ -573,7 +561,7 @@ export default function HomePage() {
               className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all hover:scale-105 shadow-[0_0_40px_rgba(119,0,206,0.4)] hover:shadow-[0_0_60px_rgba(119,0,206,0.6)] group"
             >
               <Bot className="mr-2" size={20} />
-              <span className="heading text-sm md:text-base tracking-[0.08em]">VER TODOS LOS SERVICIOS IA</span>
+              <span className="heading text-sm md:text-base tracking-[0.08em]">{tTarIA('boton', 'VER TODOS LOS SERVICIOS IA')}</span>
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
             </Link>
           </motion.div>

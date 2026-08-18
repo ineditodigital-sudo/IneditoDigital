@@ -78,6 +78,60 @@ function registro_paginas(): array {
                     ],
                 ],
 
+
+                'tarjetas' => [
+                    'nombre' => 'Las cuatro tarjetas de transformación',
+                    'ayuda'  => 'Las tarjetas con imagen de la franja blanca.',
+                    'campos' => [
+                        't1_titulo' => ['label' => 'Tarjeta 1 · título', 'tipo' => 'texto', 'def' => 'IA'],
+                        't1_texto'  => ['label' => 'Tarjeta 1 · descripción', 'tipo' => 'texto', 'def' => 'Automatización y chatbots 24/7'],
+                        't1_imagen' => ['label' => 'Tarjeta 1 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjU4NjYzNTl8MA&ixlib=rb-4.1.0&q=80&w=1080'],
+                        't2_titulo' => ['label' => 'Tarjeta 2 · título', 'tipo' => 'texto', 'def' => 'Estrategia'],
+                        't2_texto'  => ['label' => 'Tarjeta 2 · descripción', 'tipo' => 'texto', 'def' => 'Diseños que convierten'],
+                        't2_imagen' => ['label' => 'Tarjeta 2 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1683721003111-070bcc053d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMG1hcmtldGluZ3xlbnwxfHx8fDE3NjU4MTg3MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080'],
+                        't3_titulo' => ['label' => 'Tarjeta 3 · título', 'tipo' => 'texto', 'def' => 'Analítica'],
+                        't3_texto'  => ['label' => 'Tarjeta 3 · descripción', 'tipo' => 'texto', 'def' => 'Decisiones basadas en datos'],
+                        't3_imagen' => ['label' => 'Tarjeta 3 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwYW5hbHl0aWNzJTIwZGFzaGJvYXJkfGVufDF8fHx8MTc2NTg5NTQ4N3ww&ixlib=rb-4.1.0&q=80&w=1080'],
+                        't4_titulo' => ['label' => 'Tarjeta 4 · título', 'tipo' => 'texto', 'def' => 'Resultados'],
+                        't4_texto'  => ['label' => 'Tarjeta 4 · descripción', 'tipo' => 'texto', 'def' => 'ROI comprobado y crecimiento sostenible'],
+                        't4_imagen' => ['label' => 'Tarjeta 4 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHJlc3VsdHN8ZW58MXx8fHwxNzY1ODk1NDg3fDA&ixlib=rb-4.1.0&q=80&w=1080'],
+                    ],
+                ],
+
+                'tarjetas_ia' => [
+                    'nombre' => 'Las cuatro tarjetas de IA',
+                    'ayuda'  => 'Cada tarjeta de la sección oscura de inteligencia artificial.',
+                    'campos' => [
+                        'etiqueta_top' => ['label' => 'Etiqueta de la primera tarjeta', 'tipo' => 'texto', 'def' => 'BESTSELLER'],
+                        'ver_mas'      => ['label' => 'Texto del enlace de cada tarjeta', 'tipo' => 'texto', 'def' => 'Conocer más'],
+                        'boton'        => ['label' => 'Texto del botón del final', 'tipo' => 'texto', 'def' => 'VER TODOS LOS SERVICIOS IA'],
+
+                        'w_titulo' => ['label' => 'WhatsApp · título', 'tipo' => 'texto', 'def' => 'IA PARA WHATSAPP'],
+                        'w_texto'  => ['label' => 'WhatsApp · descripción', 'tipo' => 'parrafo', 'def' => 'Agente inteligente que atiende, califica y cierra ventas 24/7. Nunca pierdas otro cliente.'],
+                        'w_p1'     => ['label' => 'WhatsApp · punto 1', 'tipo' => 'texto', 'def' => 'Respuestas instantáneas 24/7'],
+                        'w_p2'     => ['label' => 'WhatsApp · punto 2', 'tipo' => 'texto', 'def' => 'Calificación automática de leads'],
+                        'w_p3'     => ['label' => 'WhatsApp · punto 3', 'tipo' => 'texto', 'def' => 'Integración con tu CRM'],
+
+                        'v_titulo' => ['label' => 'Ventas · título', 'tipo' => 'texto', 'def' => 'IA DE VENTAS'],
+                        'v_texto'  => ['label' => 'Ventas · descripción', 'tipo' => 'parrafo', 'def' => 'Encuentra clientes perfectos y cierra más ventas con prospección inteligente automatizada.'],
+                        'v_p1'     => ['label' => 'Ventas · punto 1', 'tipo' => 'texto', 'def' => 'Prospección automática LinkedIn'],
+                        'v_p2'     => ['label' => 'Ventas · punto 2', 'tipo' => 'texto', 'def' => 'Emails personalizados con IA'],
+                        'v_p3'     => ['label' => 'Ventas · punto 3', 'tipo' => 'texto', 'def' => 'Seguimiento predictivo'],
+
+                        'm_titulo' => ['label' => 'Marketing · título', 'tipo' => 'texto', 'def' => 'IA PARA MARKETING'],
+                        'm_texto'  => ['label' => 'Marketing · descripción', 'tipo' => 'parrafo', 'def' => 'Campañas que se optimizan solas. Contenido generado por IA. Resultados exponenciales.'],
+                        'm_p1'     => ['label' => 'Marketing · punto 1', 'tipo' => 'texto', 'def' => 'Optimización automática de ads'],
+                        'm_p2'     => ['label' => 'Marketing · punto 2', 'tipo' => 'texto', 'def' => 'Contenido generado por IA'],
+                        'm_p3'     => ['label' => 'Marketing · punto 3', 'tipo' => 'texto', 'def' => 'Análisis predictivo de tendencias'],
+
+                        'e_titulo' => ['label' => 'E-commerce · título', 'tipo' => 'texto', 'def' => 'IA PARA E-COMMERCE'],
+                        'e_texto'  => ['label' => 'E-commerce · descripción', 'tipo' => 'parrafo', 'def' => 'Convierte más visitas en ventas. Recomendaciones inteligentes y checkout optimizado.'],
+                        'e_p1'     => ['label' => 'E-commerce · punto 1', 'tipo' => 'texto', 'def' => 'Recomendaciones personalizadas'],
+                        'e_p2'     => ['label' => 'E-commerce · punto 2', 'tipo' => 'texto', 'def' => 'Recuperación carritos abandonados'],
+                        'e_p3'     => ['label' => 'E-commerce · punto 3', 'tipo' => 'texto', 'def' => 'Optimización de precios dinámica'],
+                    ],
+                ],
+
                 'servicios' => [
                     'nombre' => 'Nuestros servicios',
                     'ayuda'  => 'El encabezado de la lista de servicios. Los servicios en sí se administran en la sección "Servicios" del menú.',
