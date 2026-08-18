@@ -445,5 +445,49 @@ export const SERVICES: Service[] = [
     ],
     relatedServices: ['servicios-qr', 'chatbots-y-agentes'],
     order: 10
+  },
+  {
+    id: '11',
+    slug: 'tarjetas-de-presentacion-digital',
+    title: 'Tarjetas de Presentación Digital NFC',
+    shortDescription: 'Comparte tu contacto, redes y portafolio con un solo toque. Sin apps, sin imprimir, siempre actualizada.',
+    icon: 'Nfc',
+    category: 'Innovación',
+    bannerImage: 'https://images.unsplash.com/photo-1622396481328-9a3e572eb64c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    features: [
+      'Un toque con el celular comparte tu contacto, redes y portafolio al instante',
+      'Funciona con cualquier smartphone moderno, sin descargar ninguna app',
+      'Diseño personalizado con tu marca, logo y colores',
+      'Actualiza tu información cuando quieras sin reimprimir nada',
+      'Incluye tu perfil digital propio, siempre disponible en línea',
+      'Compatible con Apple Wallet y Google Wallet para guardar tu contacto'
+    ],
+    benefits: [
+      'Comparte tu contacto en segundos, sin escribir nada a mano',
+      'Tu tarjeta física nunca cambia: actualizas el contenido cuando quieras',
+      'Cero reimpresiones ni cajas de tarjetas viejas en el cajón',
+      'Una primera impresión moderna y memorable en cada reunión'
+    ],
+    ideal: [
+      'Emprendedores y freelancers que hacen networking constantemente',
+      'Equipos comerciales que comparten contacto y portafolio al vuelo',
+      'Consultores y profesionales que actualizan su información con frecuencia',
+      'Empresas que quieren reforzar su imagen de marca en cada interacción',
+      'Agentes inmobiliarios, asesores y vendedores en eventos y ferias'
+    ],
+    process: [
+      { step: 1, title: 'Diseño', description: 'Creamos tu tarjeta digital con tu marca, foto, redes y portafolio' },
+      { step: 2, title: 'Programación', description: 'Configuramos el chip NFC y lo vinculamos a tu perfil digital' },
+      { step: 3, title: 'Un toque', description: 'Acercas tu tarjeta al celular de la otra persona y comparte todo al instante' },
+      { step: 4, title: 'Actualiza cuando quieras', description: 'Cambia tu información desde tu perfil, sin reimprimir la tarjeta' }
+    ],
+    faq: [
+      { question: '¿Necesito instalar una aplicación para usarla?', answer: 'No. Funciona con la tecnología NFC que ya traen los smartphones modernos, tanto Android como iPhone desde el modelo 7. Solo acercas la tarjeta.' },
+      { question: '¿Qué pasa si cambio de número o de trabajo?', answer: 'Actualizas tu perfil digital en línea y el cambio se refleja al instante en tu tarjeta, sin reimprimir nada.' },
+      { question: '¿Qué información puedo compartir?', answer: 'Contacto, redes sociales, sitio web, portafolio, ubicación y hasta un video de presentación, todo desde un solo toque.' },
+      { question: '¿Cuánto tarda la entrega?', answer: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' }
+    ],
+    relatedServices: ['branding', 'servicios-qr'],
+    order: 11
   }
 ];
