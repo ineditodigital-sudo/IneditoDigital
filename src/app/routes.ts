@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 // All other pages are lazy-loaded to reduce initial bundle
 const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const ServiceDetailPage = lazy(() => import('./pages/ServiceDetailPage'));
+const TarjetasDigitalesPage = lazy(() => import('./pages/TarjetasDigitalesPage'));
 const PortfolioPage = lazy(() => import('./pages/PortfolioPage'));
 const PortfolioDetailPage = lazy(() => import('./pages/PortfolioDetailPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
@@ -54,6 +55,9 @@ export const router = createBrowserRouter([
       { path: 'servicios-ia/ecommerce', Component: AIEcommercePage },
       // Regular services routes
       { path: 'servicios', Component: ServicesPage },
+      // Ruta estatica: DEBE ir antes de servicios/:slug. Pagina a medida,
+      // muy visual/animada, en vez del render generico de ServiceDetailPage.
+      { path: 'servicios/tarjetas-de-presentacion-digital', Component: TarjetasDigitalesPage },
       { path: 'servicios/:slug', Component: ServiceDetailPage },
       // Portfolio routes
       { path: 'portafolio', Component: PortfolioPage },
