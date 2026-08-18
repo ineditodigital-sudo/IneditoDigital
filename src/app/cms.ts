@@ -17,8 +17,8 @@
  *   {t.visible('visible') && <section>…</section>}
  */
 
-type Bloque = Record<string, string>;
-type Pagina = Record<string, Bloque>;
+type CamposSeccion = Record<string, string>;
+type Pagina = Record<string, CamposSeccion>;
 
 let cache: Record<string, Pagina> | null = null;
 
@@ -48,17 +48,17 @@ export interface LectorSeccion {
 }
 
 export function contenido(pagina: string, seccion: string): LectorSeccion {
-  const bloque = leerTodo()?.[pagina]?.[seccion] ?? {};
+  const campos: CamposSeccion = leerTodo()?.[pagina]?.[seccion] ?? {};
 
   const lector = ((campo: string, respaldo: string): string => {
-    const v = bloque[campo];
+    const v = campos[campo];
     if (typeof v !== 'string') return respaldo;
     const limpio = v.trim();
     return limpio === '' ? respaldo : limpio;
   }) as LectorSeccion;
 
   lector.visible = (campo = 'visible') => {
-    const v = bloque[campo];
+    const v = campos[campo];
     // Si nunca se tocó el interruptor, la sección se muestra.
     if (typeof v !== 'string' || v === '') return true;
     return v !== '0';
@@ -114,3 +114,46 @@ export function paginasDelMenu(): { nombre: string; ruta: string }[] {
     .filter((p) => (p as PaginaBloques & { enMenu?: boolean }).enMenu)
     .map((p) => ({ nombre: p.nombre, ruta: p.ruta }));
 }
+
+/* ------------------------------------------------------------------ */
+/* Colores de marca                                                    */
+/* ------------------------------------------------------------------ */
+
+const COLORES_BASE = { principal: '#7700CE', claro: '#9933FF', brillo: '#CC66FF' };
+
+/**
+ * Aplica los colores que el cliente eligió en el panel.
+ *
+ * Se escriben como variables CSS sobre :root, así que cambian en todo el
+ * sitio sin tocar una sola clase. Si un color no es un código válido, se
+ * ignora y queda el de la marca: no hay forma de dejar el sitio ilegible.
+ */
+export function aplicarColoresDeMarca() {
+  const c = contenido('marca', 'colores');
+  const raiz = document.documentElement;
+
+  const valido = (v: string) => /^#[0-9a-fA-F]{6}$/.test(v);
+
+  const principal = c('principal', COLORES_BASE.principal);
+  const claro = c('claro', COLORES_BASE.claro);
+  const brillo = c('brillo', COLORES_BASE.brillo);
+
+  if (valido(principal)) {
+    raiz.style.setProperty('--color-purple', principal);
+    raiz.style.setProperty('--primary', principal);
+  }
+  if (valido(claro)) {
+    raiz.style.setProperty('--color-purple-light', claro);
+    raiz.style.setProperty('--accent', claro);
+  }
+  if (valido(brillo)) raiz.style.setProperty('--color-purple-lightest', brillo);
+}
+
+/** Menús y textos del encabezado y el pie, con sus respaldos. */
+export const marca = {
+  menu: () => contenido('marca', 'menu'),
+  menuIA: () => contenido('marca', 'menu_ia'),
+  pie: () => contenido('marca', 'pie'),
+  redes: () => contenido('marca', 'redes'),
+  logo: () => contenido('marca', 'logo'),
+};

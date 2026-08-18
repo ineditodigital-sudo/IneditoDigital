@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { cn } from './ui/utils';
+import { marca } from '../cms';
 
 interface NavItem {
   label: string;
@@ -15,11 +16,14 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { services, openAssistant } = useApp();
+  const m = marca.menu();
+  const mIA = marca.menuIA();
+  const mLogo = marca.logo();
 
   const navigation: NavItem[] = [
-    { label: 'Inicio', path: '/' },
+    { label: m('inicio', 'Inicio'), path: '/' },
     {
-      label: 'Servicios',
+      label: m('servicios', 'Servicios'),
       path: '/servicios',
       submenu: services.map((service) => ({
         label: service.title,
@@ -28,19 +32,19 @@ export default function Header() {
       })),
     },
     {
-      label: 'Servicios IA',
+      label: m('servicios_ia', 'Servicios IA'),
       path: '/servicios-ia',
       submenu: [
-        { label: 'IA para WhatsApp', path: '/servicios-ia/whatsapp', description: 'Ventas y Soporte 24/7' },
-        { label: 'IA de Ventas', path: '/servicios-ia/ventas', description: 'Prospección Inteligente' },
-        { label: 'IA para Marketing', path: '/servicios-ia/marketing', description: 'Optimización Automática' },
-        { label: 'IA para E-commerce', path: '/servicios-ia/ecommerce', description: 'Convierte Más Visitas' },
+        { label: mIA('whatsapp', 'IA para WhatsApp'), path: '/servicios-ia/whatsapp', description: mIA('whatsapp_desc', 'Ventas y Soporte 24/7') },
+        { label: mIA('ventas', 'IA de Ventas'), path: '/servicios-ia/ventas', description: mIA('ventas_desc', 'Prospección Inteligente') },
+        { label: mIA('marketing', 'IA para Marketing'), path: '/servicios-ia/marketing', description: mIA('marketing_desc', 'Optimización Automática') },
+        { label: mIA('ecommerce', 'IA para E-commerce'), path: '/servicios-ia/ecommerce', description: mIA('ecommerce_desc', 'Convierte Más Visitas') },
       ],
     },
-    { label: 'Portafolio', path: '/portafolio' },
-    { label: 'Blog', path: '/blog' },
-    { label: 'Nosotros', path: '/nosotros' },
-    { label: 'Contacto', path: '/contacto' },
+    { label: m('portafolio', 'Portafolio'), path: '/portafolio' },
+    { label: m('blog', 'Blog'), path: '/blog' },
+    { label: m('nosotros', 'Nosotros'), path: '/nosotros' },
+    { label: m('contacto', 'Contacto'), path: '/contacto' },
   ];
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -89,8 +93,8 @@ export default function Header() {
             <motion.img
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
-              src="https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp"
-              alt="INÉDITO DIGITAL - Agencia de Marketing Digital en Aguascalientes"
+              src={mLogo('imagen', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp')}
+              alt={mLogo('alt', 'INÉDITO DIGITAL - Agencia de Marketing Digital en Aguascalientes')}
               className="h-8 md:h-10 w-auto object-contain"
               loading="eager"
             />
@@ -173,7 +177,7 @@ export default function Header() {
                             to="/servicios"
                             className="block px-4 py-2 text-xs text-[#7700CE] hover:text-[#9933FF] font-bold transition-colors"
                           >
-                            Ver todos los servicios →
+                            {mIA('ver_todos', 'Ver todos los servicios →')}
                           </Link>
                         </div>
                       </div>
@@ -214,7 +218,7 @@ export default function Header() {
               onClick={() => openAssistant(undefined, 'cotizar servicios de marketing digital')}
               className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(119,0,206,0.4)] text-xs font-bold tracking-wider cursor-pointer"
             >
-              COTIZAR
+              {m('boton', 'COTIZAR')}
             </button>
           </div>
 
@@ -341,7 +345,7 @@ export default function Header() {
                   }}
                   className="block w-full text-center px-5 py-3 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] text-white text-xs font-bold tracking-wider mt-3 cursor-pointer"
                 >
-                  COTIZAR AHORA
+                  {m('boton', 'COTIZAR')} AHORA
                 </button>
               </motion.div>
             </div>
