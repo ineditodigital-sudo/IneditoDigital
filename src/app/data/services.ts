@@ -455,11 +455,11 @@ export const SERVICES: Service[] = [
     category: 'Innovación',
     bannerImage: 'https://images.unsplash.com/photo-1622396481328-9a3e572eb64c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     features: [
-      'Un toque con el celular comparte tu contacto, redes y portafolio al instante',
+      'Un toque con el celular abre tu página de contacto al instante',
       'Funciona con cualquier smartphone moderno, sin descargar ninguna app',
       'Diseño personalizado con tu marca, logo y colores',
       'Actualiza tu información cuando quieras sin reimprimir nada',
-      'Incluye tu perfil digital propio, siempre disponible en línea'
+      'Incluye tu propia página de contacto, siempre disponible en línea'
     ],
     benefits: [
       'Comparte tu contacto en segundos, sin escribir nada a mano',
@@ -475,10 +475,10 @@ export const SERVICES: Service[] = [
       'Agentes inmobiliarios, asesores y vendedores en eventos y ferias'
     ],
     process: [
-      { step: 1, title: 'Diseño', description: 'Creamos tu tarjeta digital con tu marca, foto, redes y portafolio' },
-      { step: 2, title: 'Programación', description: 'Configuramos el chip NFC y lo vinculamos a tu perfil digital' },
-      { step: 3, title: 'Un toque', description: 'Acercas tu tarjeta al celular de la otra persona y comparte todo al instante' },
-      { step: 4, title: 'Actualiza cuando quieras', description: 'Cambia tu información desde tu perfil, sin reimprimir la tarjeta' }
+      { step: 1, title: 'Diseño personalizado a tu identidad de marca', description: 'Tu logo, tus colores y tu tipografía sobre la tarjeta física. Tú la apruebas antes de producir nada' },
+      { step: 2, title: 'Conexión con tu propia página de contacto', description: 'Creamos tu página de contacto y programamos el chip NFC para que apunte a ella' },
+      { step: 3, title: 'Acércala para compartir', description: 'Acercas la tarjeta a cualquier celular y tu página de contacto se abre al instante' },
+      { step: 4, title: 'Personaliza cualquier elemento de tu página', description: 'Cambias colores, botones, enlaces, redes y secciones cuando quieras, sin reimprimir la tarjeta' }
     ],
     faq: [
       { question: '¿Necesito instalar una aplicación para usarla?', answer: 'No. Funciona con la tecnología NFC que ya traen los smartphones modernos, tanto Android como iPhone desde el modelo 7. Solo acercas la tarjeta.' },
