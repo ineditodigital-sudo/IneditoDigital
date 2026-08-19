@@ -3,6 +3,8 @@
 declare(strict_types=1);
 $cfg = require __DIR__ . '/api/config.php';
 require __DIR__ . '/api/db.php';
+// Solo declara funciones; hace falta para completar los datos del equipo.
+@include_once __DIR__ . '/panel/inc/miembros.php';
 
 $BASE = 'https://www.inedito.digital';
 $path = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/');
@@ -366,9 +368,15 @@ if ($propio): ?>
     $paginasNuevas[$sl] = ['nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'bloques' => $pg['contenido'],
                            'seoTitle' => $pg['seo_title'], 'seoDesc' => $pg['seo_desc'], 'enMenu' => !empty($pg['enMenu'])];
   }
+  /* Se completan con sus valores por defecto antes de mandarlos. Si el panel
+     gana un campo nuevo, las páginas guardadas antes lo reciben igual, en vez
+     de depender de que cada lugar del sitio acuerde su propio respaldo. */
   $miembrosLS = [];
   foreach ($miembros as $sl => $pg) {
-    $miembrosLS[$sl] = ['slug' => $sl, 'nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'datos' => $pg['contenido']];
+    $datos = function_exists('miembro_con_respaldo')
+      ? miembro_con_respaldo(is_array($pg['contenido']) ? $pg['contenido'] : [])
+      : $pg['contenido'];
+    $miembrosLS[$sl] = ['slug' => $sl, 'nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'datos' => $datos];
   }
   $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas,'inedito_miembros'=>$miembrosLS];
 ?>

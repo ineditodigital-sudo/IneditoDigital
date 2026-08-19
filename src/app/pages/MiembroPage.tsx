@@ -8,6 +8,7 @@ import {
   Star, Music2, Copy, HelpCircle,
 } from 'lucide-react';
 import { miembro } from '../cms';
+import TopographyCanvas from '../components/TopographyCanvas';
 import NotFoundPage from './NotFoundPage';
 
 /**
@@ -312,6 +313,18 @@ export default function MiembroPage() {
         className="pointer-events-none absolute bottom-0 -right-32 w-[26rem] h-[26rem] rounded-full blur-[130px] opacity-15 bg-[#CC66FF]"
         aria-hidden
       />
+
+      {/* Las curvas de nivel, encima de los halos y debajo del contenido.
+          Se dibujan una vez y la textura se va desplazando, así que el
+          movimiento no le pesa al celular. */}
+      {d.topo_ver !== '0' && (
+        <TopographyCanvas
+          colorA={d.topo_a || '#9933FF'}
+          colorB={d.topo_b || '#7700CE'}
+          intensidad={Number(d.topo_fuerza) || 1}
+          curvas={Number(d.topo_densidad) || 8}
+        />
+      )}
 
       <div className="relative mx-auto w-full max-w-[440px] px-5 pt-6 pb-14">
 
