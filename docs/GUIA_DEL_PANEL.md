@@ -133,6 +133,14 @@ En **Equipo**, escribe su nombre y listo: la dirección se arma sola
 se graba en su tarjeta NFC, así que **no cambia después**. Llena sus datos
 y dale a *Publicar*.
 
+La página es una lista de enlaces, de arriba abajo. Los primeros renglones
+se arman solos con los datos de contacto que llenes (guardar contacto,
+WhatsApp, llamar, correo, ubicación). Debajo puedes agregar hasta ocho
+enlaces tuyos —agendar una cita, un catálogo, lo que sea— cada uno con su
+título, su renglón de abajo y su ícono. Enciende el interruptor del que
+quieras usar, y marca *resaltar en morado* el que más te interese que
+toquen.
+
 Lo que dejes vacío no aparece: si alguien no tiene TikTok, ese botón
 simplemente no se dibuja. Si no le pones foto, se muestra la inicial de su
 nombre.

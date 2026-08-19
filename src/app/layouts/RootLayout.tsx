@@ -23,7 +23,7 @@ export default function RootLayout() {
 
   if (soloTarjeta) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-[#B18AFF]" />}>
+      <Suspense fallback={<div className="min-h-screen bg-[#0D0010]" />}>
         <Outlet />
       </Suspense>
     );

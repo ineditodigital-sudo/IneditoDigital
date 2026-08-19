@@ -201,9 +201,15 @@ $vers = $vers->fetchAll();
       <div style="font-size:17px;font-weight:700;margin-bottom:<?= isset($g['ayuda']) ? '4' : '14' ?>px"><?= e($g['nombre']) ?></div>
       <?php if (isset($g['ayuda'])): ?><div class="mini" style="margin-bottom:14px"><?= e($g['ayuda']) ?></div><?php endif; ?>
 
-      <?php foreach ($g['campos'] as $k => $c):
+      <?php $ultimoEnlace = null;
+      foreach ($g['campos'] as $k => $c):
           $v = $d[$k] ?? '';
-          $req = !empty($c['req']) ? 'required' : ''; ?>
+          $req = !empty($c['req']) ? 'required' : '';
+          // Separador entre un enlace y el siguiente, para no leer 48 campos seguidos
+          if ($gk === 'enlaces' && preg_match('/^e(\d+)_/', $k, $mm) && $mm[1] !== $ultimoEnlace):
+              $ultimoEnlace = $mm[1]; ?>
+            <div style="border-top:1px solid var(--line);margin:18px 0 14px;padding-top:14px;font-size:13px;color:var(--mut2)">Enlace <?= e($mm[1]) ?></div>
+      <?php endif; ?>
         <div style="margin-bottom:14px">
           <label style="display:block;font-size:13px;color:var(--mut);margin-bottom:5px"><?= e($c['label']) ?></label>
 
@@ -216,6 +222,13 @@ $vers = $vers->fetchAll();
               <input type="checkbox" name="<?= e($k) ?>" value="1" <?= $v === '1' ? 'checked' : '' ?> style="width:auto;margin:0">
               Sí, mostrarla
             </label>
+
+          <?php elseif ($c['tipo'] === 'lista'): ?>
+            <select name="<?= e($k) ?>">
+              <?php foreach ($c['opciones'] as $ov => $ol): ?>
+                <option value="<?= e($ov) ?>" <?= $v === $ov ? 'selected' : '' ?>><?= e($ol) ?></option>
+              <?php endforeach; ?>
+            </select>
 
           <?php elseif ($c['tipo'] === 'color'): ?>
             <div style="display:flex;gap:8px;align-items:center">
