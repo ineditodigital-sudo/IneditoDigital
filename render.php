@@ -15,7 +15,7 @@ function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); retu
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
 // ---- cargar datos ----
-$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = []; $nuevas = [];
+$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = []; $nuevas = []; $miembros = [];
 try {
   $pdo = db_connect($cfg);
   foreach ($pdo->query("SELECT k,v FROM site_settings") as $r) $settings[$r['k']] = $r['v'];
@@ -28,6 +28,8 @@ try {
     if ($r['tipo'] === 'bloques') {
       $reg['enMenu'] = (bool)$r['en_menu'];
       $nuevas[$r['slug']] = $reg;
+    } elseif ($r['tipo'] === 'miembro') {
+      $miembros[$r['slug']] = $reg;
     } else {
       $paginas[$r['slug']] = $reg;
     }
@@ -162,6 +164,58 @@ if (!$is404 && isset($paginasPorRuta[$path])) {
   if (!empty($pg['seo_image'])) $GLOBALS['seoImagenPagina'] = $pg['seo_image'];
 }
 
+/* Páginas de contacto del equipo: son personas, así que llevan su propio
+   título, su foto al compartir y una ficha Person para los buscadores. */
+$slugMiembro = $paginasPorRuta[$path] ?? null;
+if ($slugMiembro !== null && isset($miembros[$slugMiembro])) {
+  $pg = $miembros[$slugMiembro];
+  $dm = is_array($pg['contenido']) ? $pg['contenido'] : [];
+  $is404 = false;
+  $quien = trim(($dm['nombre'] ?? $pg['nombre']) . ($dm['puesto'] ? ' · ' . $dm['puesto'] : ''));
+  $title = $pg['seo_title'] ?: ($quien . ' | ' . $siteName);
+  $desc  = $pg['seo_desc'] ?: trim($dm['frase'] ?? '');
+  if ($desc === '') {
+    $desc = 'Contacto de ' . ($dm['nombre'] ?? $pg['nombre'])
+          . ($dm['puesto'] ? ', ' . $dm['puesto'] : '')
+          . ($dm['empresa'] ? ' en ' . $dm['empresa'] : '') . '.';
+  }
+  $canonical = $BASE . $path;
+  $crumbs[] = [$dm['nombre'] ?? $pg['nombre'], $path];
+  if (!empty($dm['foto'])) $GLOBALS['seoImagenPagina'] = $dm['foto'];
+
+  $perfiles = [];
+  foreach (['instagram','facebook','linkedin','tiktok','youtube','behance'] as $red) {
+    if (!empty($dm[$red])) $perfiles[] = $dm[$red];
+  }
+  $person = ['@context' => 'https://schema.org', '@type' => 'Person',
+             'name' => $dm['nombre'] ?? $pg['nombre'], 'url' => $canonical];
+  if (!empty($dm['puesto']))   $person['jobTitle'] = $dm['puesto'];
+  if (!empty($dm['foto']))     $person['image'] = $dm['foto'];
+  if (!empty($dm['email']))    $person['email'] = $dm['email'];
+  if (!empty($dm['telefono'])) $person['telephone'] = $dm['telefono'];
+  if (!empty($dm['empresa']))  $person['worksFor'] = ['@type' => 'Organization', 'name' => $dm['empresa']];
+  if ($perfiles)               $person['sameAs'] = $perfiles;
+  $GLOBALS['schemaMiembro'] = $person;
+
+  // Lo que lee un buscador, que no ejecuta JavaScript.
+  $bodyBuilder = function() use ($dm, $pg) {
+    $h  = '<h1>' . e($dm['nombre'] ?? $pg['nombre']) . '</h1>';
+    if (!empty($dm['puesto']))  $h .= '<p><strong>' . e($dm['puesto']) . '</strong>'
+                                   . (!empty($dm['empresa']) ? ' · ' . e($dm['empresa']) : '') . '</p>';
+    if (!empty($dm['frase']))   $h .= '<p>' . e($dm['frase']) . '</p>';
+    if (!empty($dm['telefono']))$h .= '<p>Teléfono: ' . e($dm['telefono']) . '</p>';
+    if (!empty($dm['whatsapp']))$h .= '<p>WhatsApp: ' . e($dm['whatsapp']) . '</p>';
+    if (!empty($dm['email']))   $h .= '<p>Email: ' . e($dm['email']) . '</p>';
+    $r = [];
+    foreach (['instagram'=>'Instagram','facebook'=>'Facebook','linkedin'=>'LinkedIn',
+              'tiktok'=>'TikTok','youtube'=>'YouTube','behance'=>'Behance'] as $k => $n) {
+      if (!empty($dm[$k])) $r[] = '<a href="' . e($dm[$k]) . '">' . $n . '</a>';
+    }
+    if ($r) $h .= '<p>' . implode(' · ', $r) . '</p>';
+    return $h;
+  };
+}
+
 /* Páginas creadas desde el panel: dejan de ser 404 y se les arma el HTML
    que ven los buscadores a partir de sus bloques. */
 $slugNueva = $paginasPorRuta[$path] ?? null;
@@ -292,6 +346,7 @@ if ($propio): ?>
 <meta name="twitter:title" content="<?= e($title) ?>" />
 <meta name="twitter:description" content="<?= e($desc) ?>" />
 <meta name="twitter:image" content="<?= e($ogImg) ?>" />
+<?php if (!empty($GLOBALS['schemaMiembro'])) $schema[] = $GLOBALS['schemaMiembro']; ?>
 <?php foreach ($schema as $sch): ?>
 <script type="application/ld+json"><?= json_encode($sch, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?></script>
 <?php endforeach; ?>
@@ -311,7 +366,11 @@ if ($propio): ?>
     $paginasNuevas[$sl] = ['nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'bloques' => $pg['contenido'],
                            'seoTitle' => $pg['seo_title'], 'seoDesc' => $pg['seo_desc'], 'enMenu' => !empty($pg['enMenu'])];
   }
-  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas];
+  $miembrosLS = [];
+  foreach ($miembros as $sl => $pg) {
+    $miembrosLS[$sl] = ['slug' => $sl, 'nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'datos' => $pg['contenido']];
+  }
+  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas,'inedito_miembros'=>$miembrosLS];
 ?>
 <script>try{
 <?php foreach($LS as $k=>$v): ?>localStorage.setItem(<?= json_encode($k) ?>, <?= json_encode(json_encode($v, JSON_UNESCAPED_UNICODE), $FL) ?>);

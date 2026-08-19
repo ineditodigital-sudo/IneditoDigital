@@ -105,6 +105,7 @@ Si lo dejas vacío usamos uno automático, así que no es obligatorio.
 | Sección | Para qué |
 |---|---|
 | **Páginas** | Todo el texto y las fotos del sitio: Inicio, Nosotros, Contacto, Servicios de IA y sus cuatro páginas, Tarjetas NFC, Portafolio, Blog, Privacidad, Términos, la página de error, el asistente virtual y la marca (logo, ícono, colores, menús y pie) |
+| **Equipo** | La página de contacto de cada integrante, la que abre su tarjeta NFC |
 | **Servicios** | Tu lista de servicios: agregar, editar, quitar |
 | **Blog** | Tus artículos |
 | **Portafolio** | Tus proyectos y casos de éxito |
@@ -125,6 +126,20 @@ Seguramente lo guardaste sin publicar. Vuelve a la página y dale a
 Sí. En **Páginas › Marca y menús › Colores** eliges los tres tonos de la
 marca y se aplican en todo el sitio. El acomodo de las secciones sí está
 fijo, para que nunca se descuadre.
+
+**¿Cómo le hago una página de contacto a alguien del equipo?**
+En **Equipo**, escribe su nombre y listo: la dirección se arma sola
+(Armando Trejo → `inedito.digital/armando-trejo`). Esa es la dirección que
+se graba en su tarjeta NFC, así que **no cambia después**. Llena sus datos
+y dale a *Publicar*.
+
+Lo que dejes vacío no aparece: si alguien no tiene TikTok, ese botón
+simplemente no se dibuja. Si no le pones foto, se muestra la inicial de su
+nombre.
+
+**Ojo antes de borrar a alguien:** si ya tiene tarjetas NFC impresas,
+dejarán de funcionar. Si solo se fue del equipo, es mejor dejar su página o
+cambiarle los datos.
 
 **¿Cómo cambio el ícono de la pestaña del navegador?**
 En **Páginas › Marca y menús › Logo**, campo *Ícono de la pestaña*. Tiene que
