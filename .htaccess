@@ -56,6 +56,10 @@ Options -Indexes
 
   # --- Assets con hash en el nombre: caché de un año ---
   Header set Cache-Control "public, max-age=31536000, immutable" "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/ && %{REQUEST_URI} =~ m#^/assets/#"
+  # Los archivos sueltos con nombre fijo (video de fondo, iconos, videos del
+  # 404) no llevan huella en el nombre, asi que se cachean un mes en vez de un
+  # año: si alguno se reemplaza, se renueva solo en un plazo razonable.
+  Header set Cache-Control "public, max-age=2592000" "expr=%{HTTP_HOST} =~ /^(www\.)?inedito\.digital$/ && %{REQUEST_URI} =~ m#\.(mp4|webm|ico|png|webp|jpg|svg|woff2)$#"
 
   # --- index.html nunca se cachea: render.php lee de ahí los hashes ---
   <FilesMatch "^index\.html$">
