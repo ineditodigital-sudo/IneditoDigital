@@ -147,9 +147,17 @@ nombre.
 
 **El fondo de líneas**
 En *Colores y fondo* puedes prender o apagar las curvas que se mueven despacio
-detrás de todo, elegir sus dos colores, qué tanto se notan y cuántas son. Es
-el mismo fondo que usa el sitio en la portada, así que aunque le cambies el
-color se sigue viendo de la casa.
+detrás de todo, elegir su color y qué tanto se notan.
+
+Hay dos formas de dibujarlas:
+
+- **La animación original** — el diseño tal cual, un video de 458 KB. Se ve
+  idéntico al archivo que nos pasaste.
+- **Dibujadas al vuelo** — el sitio las genera solas, no descarga nada. Se
+  ven muy parecidas y no gastan datos.
+
+Si la tarjeta se va a abrir mucho en la calle, con datos móviles, la segunda
+opción es más considerada con quien la abre.
 
 **La tarjeta que se guardan (.vcf)**
 Hasta abajo de la página del integrante hay un apartado que se llama

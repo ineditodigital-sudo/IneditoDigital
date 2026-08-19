@@ -167,7 +167,7 @@ if (!$m) { set_flash('No encontramos esa página.'); redirect('/panel/?p=miembro
 $d = miembro_con_respaldo(json_decode((string)($m['borrador'] ?: $m['contenido']), true) ?: []);
 $hayCambios = $m['status'] === 'published' && (string)$m['borrador'] !== (string)$m['contenido'];
 
-$vers = db()->prepare('SELECT id, autor, creado FROM page_versions WHERE page_id = :p ORDER BY id DESC LIMIT 10');
+$vers = db()->prepare('SELECT id, autor, created_at FROM page_versions WHERE page_id = :p ORDER BY id DESC LIMIT 10');
 $vers->execute([':p' => $id]);
 $vers = $vers->fetchAll();
 ?>
@@ -309,7 +309,7 @@ $vers = $vers->fetchAll();
     <table><tbody>
       <?php foreach ($vers as $v): ?>
         <tr>
-          <td><?= e($v['creado']) ?><?php if ($v['autor']): ?> <span class="mini">por <?= e($v['autor']) ?></span><?php endif; ?></td>
+          <td><?= e($v['created_at']) ?><?php if ($v['autor']): ?> <span class="mini">por <?= e($v['autor']) ?></span><?php endif; ?></td>
           <td style="text-align:right">
             <form method="post" style="display:inline">
               <input type="hidden" name="csrf" value="<?= $ct ?>">

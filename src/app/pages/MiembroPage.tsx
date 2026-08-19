@@ -135,6 +135,19 @@ function Renglon({ f, acento, i }: { f: Fila; acento: string; i: number }) {
   );
 }
 
+/** El morado con el que está grabada la animación: #7800CF, tono 275°. */
+const TONO_BASE = 275;
+
+/** El tono de un color #RRGGBB, de 0 a 360. */
+function tonoDe(hex: string): number {
+  const n = parseInt(hex.slice(1), 16);
+  const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  if (d === 0) return TONO_BASE;
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+}
+
 /* ------------------------------------------------------------------ */
 /* Utilidades                                                          */
 /* ------------------------------------------------------------------ */
@@ -259,6 +272,9 @@ export default function MiembroPage() {
     });
   }
 
+  const sinMovimiento = typeof window !== 'undefined'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const esAndroid = typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent);
 
   /* Android sabe abrir su propia pantalla de contacto nuevo con los datos ya
@@ -315,15 +331,41 @@ export default function MiembroPage() {
       />
 
       {/* Las curvas de nivel, encima de los halos y debajo del contenido.
-          Se dibujan una vez y la textura se va desplazando, así que el
-          movimiento no le pesa al celular. */}
+
+          Dos formas de hacerlo, a elección desde el panel:
+          - el video, que es la animación original ya optimizada;
+          - o dibujarlas al vuelo, que no gasta un solo byte de datos.
+
+          El video va grabado en morado sobre negro; con la mezcla "screen" el
+          negro desaparece y solo quedan las líneas, y el giro de tono las
+          lleva al color de cada integrante sin necesidad de otro archivo. */}
       {d.topo_ver !== '0' && (
-        <TopographyCanvas
-          colorA={d.topo_a || '#9933FF'}
-          colorB={d.topo_b || '#7700CE'}
-          intensidad={Number(d.topo_fuerza) || 1}
-          curvas={Number(d.topo_densidad) || 8}
-        />
+        d.topo_estilo === 'canvas' ? (
+          <TopographyCanvas
+            colorA={d.topo_a || '#9933FF'}
+            colorB={d.topo_b || '#7700CE'}
+            intensidad={Number(d.topo_fuerza) || 1}
+            curvas={Number(d.topo_densidad) || 8}
+          />
+        ) : (
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+            <div className="mx-auto h-full max-w-[560px]">
+              <video
+                className="w-full h-full object-cover mix-blend-screen"
+                style={{
+                  filter: `hue-rotate(${Math.round(tonoDe(d.topo_a || '#9933FF') - TONO_BASE)}deg)`,
+                  opacity: 0.55 * (Number(d.topo_fuerza) || 1),
+                }}
+                src="/topo-lineas.mp4"
+                autoPlay={!sinMovimiento}
+                loop
+                muted
+                playsInline
+                preload="metadata"
+              />
+            </div>
+          </div>
+        )
       )}
 
       <div className="relative mx-auto w-full max-w-[440px] px-5 pt-6 pb-14">
