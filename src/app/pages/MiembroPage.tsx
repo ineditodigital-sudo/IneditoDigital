@@ -135,19 +135,6 @@ function Renglon({ f, acento, i }: { f: Fila; acento: string; i: number }) {
   );
 }
 
-/** El morado con el que está grabada la animación: #7800CF, tono 275°. */
-const TONO_BASE = 275;
-
-/** El tono de un color #RRGGBB, de 0 a 360. */
-function tonoDe(hex: string): number {
-  const n = parseInt(hex.slice(1), 16);
-  const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
-  if (d === 0) return TONO_BASE;
-  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
-  return (h * 60 + 360) % 360;
-}
-
 /* ------------------------------------------------------------------ */
 /* Utilidades                                                          */
 /* ------------------------------------------------------------------ */
@@ -371,20 +358,39 @@ export default function MiembroPage() {
             curvas={Number(d.topo_densidad) || 8}
           />
         ) : (
-          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-            <div className="mx-auto h-full max-w-[560px]">
+          <div
+            className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-screen"
+            style={{ opacity: 0.6 * (Number(d.topo_fuerza) || 1) }}
+            aria-hidden
+          >
+            {/* El teñido.
+
+                La animación viene grabada en un solo morado, así que girar el
+                tono no alcanzaba: no puede aclarar, apagar ni volver gris un
+                color, y el que se elegía en el panel casi no se notaba.
+
+                Aquí se decolora primero, quedando líneas blancas sobre negro, y
+                encima se multiplica un degradado con los dos colores elegidos:
+                blanco por color da el color, y negro por lo que sea sigue
+                siendo negro. El "screen" de afuera se come ese negro y deja
+                solo las líneas, ya del color exacto que se pidió. */}
+            <div className="relative mx-auto h-full max-w-[560px]" style={{ isolation: 'isolate' }}>
               <video
-                className="w-full h-full object-cover mix-blend-screen"
-                style={{
-                  filter: `hue-rotate(${Math.round(tonoDe(d.topo_a || '#9933FF') - TONO_BASE)}deg)`,
-                  opacity: 0.55 * (Number(d.topo_fuerza) || 1),
-                }}
+                className="w-full h-full object-cover"
+                style={{ filter: 'grayscale(1) brightness(3.4)' }}
                 src="/topo-lineas.mp4"
                 autoPlay={!sinMovimiento}
                 loop
                 muted
                 playsInline
                 preload="metadata"
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(160deg, ${d.topo_a || '#9933FF'}, ${d.topo_b || '#7700CE'})`,
+                  mixBlendMode: 'multiply',
+                }}
               />
             </div>
           </div>
