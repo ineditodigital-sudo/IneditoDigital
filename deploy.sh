@@ -33,7 +33,7 @@ step() { printf "\n\033[1m%s\033[0m\n" "$1"; }
 step "1/6  Respaldando produccion"
 BK="../RESPALDO-PRODUCCION-$(date +%Y%m%d-%H%M)"
 mkdir -p "$BK/api" "$BK/panel"
-for f in .htaccess index.html render.php sitemap.php llms.php robots.txt; do
+for f in .htaccess index.html render.php sitemap.php llms.php robots.txt tarjeta.php; do
   fget "public_html/$f" "$BK/$f" 2>/dev/null && [ -s "$BK/$f" ] && ok "$f" || rm -f "$BK/$f"
 done
 fget "public_html/api/.htaccess"      "$BK/api/.htaccess"      2>/dev/null && ok "api/.htaccess"
@@ -72,6 +72,8 @@ for f in render.php sitemap.php llms.php; do
 done
 fput api/.htaccess       public_html/api/.htaccess        >/dev/null 2>&1 && ok "api/.htaccess"
 fput api/hit.php         public_html/api/hit.php          >/dev/null 2>&1 && ok "api/hit.php"
+fput tarjeta.php         public_html/tarjeta.php          >/dev/null 2>&1 && ok "tarjeta.php"
+fput panel/inc/vcard.php public_html/panel/inc/vcard.php  >/dev/null 2>&1 && ok "panel/inc/vcard.php"
 fput panel/bootstrap.php public_html/panel/bootstrap.php  >/dev/null 2>&1 && ok "panel/bootstrap.php"
 echo "  (api/config.php y panel/setup.php NO se suben, a proposito)"
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router';
 import { motion } from 'motion/react';
 import {
@@ -51,6 +51,8 @@ type Fila = {
   Icono: typeof Link2;
   destacado?: boolean;
   externo?: boolean;
+  /** El renglón entrega un archivo en vez de navegar. */
+  descarga?: boolean;
 };
 
 /**
@@ -109,22 +111,26 @@ function Renglon({ f, acento, i }: { f: Fila; acento: string; i: number }) {
     transition: { duration: 0.4, delay: 0.22 + i * 0.045, ease: [0.22, 1, 0.36, 1] as const },
   };
 
-  if (f.onClick) {
+  // Si hay dirección va como enlace, aunque además tenga algo que hacer al
+  // tocarlo: así "Guardar mi contacto" descarga de verdad y de paso avisa.
+  if (f.href) {
     return (
-      <motion.button {...anim} onClick={f.onClick} className="block w-full">
+      <motion.a
+        {...anim}
+        href={f.href}
+        onClick={f.onClick}
+        {...(f.descarga ? { download: '' } : {})}
+        {...(f.externo ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        className="block"
+      >
         {cuerpo}
-      </motion.button>
+      </motion.a>
     );
   }
   return (
-    <motion.a
-      {...anim}
-      href={f.href}
-      {...(f.externo ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      className="block"
-    >
+    <motion.button {...anim} onClick={f.onClick} className="block w-full">
       {cuerpo}
-    </motion.a>
+    </motion.button>
   );
 }
 
@@ -134,37 +140,6 @@ function Renglon({ f, acento, i }: { f: Fila; acento: string; i: number }) {
 
 /** Deja el teléfono como lo quiere un enlace: solo dígitos y el signo. */
 const soloNumero = (v: string) => v.replace(/[^\d+]/g, '');
-
-/**
- * Arma el archivo de contacto que guarda el celular.
- *
- * Se genera aquí y no en el servidor para que funcione aunque la persona
- * abra la página sin señal, con la tarjeta ya cargada.
- */
-function armarVCard(d: Record<string, string>, url: string): string {
-  const partes = (d.nombre || '').trim().split(/\s+/);
-  const nombre = partes[0] || '';
-  const apellidos = partes.slice(1).join(' ');
-
-  const l: string[] = ['BEGIN:VCARD', 'VERSION:3.0'];
-  l.push(`N:${apellidos};${nombre};;;`);
-  l.push(`FN:${d.nombre || ''}`);
-  if (d.empresa) l.push(`ORG:${d.empresa}`);
-  if (d.puesto) l.push(`TITLE:${d.puesto}`);
-  if (d.telefono) l.push(`TEL;TYPE=CELL:${soloNumero(d.telefono)}`);
-  if (d.whatsapp && soloNumero(d.whatsapp) !== soloNumero(d.telefono || '')) {
-    l.push(`TEL;TYPE=WORK:${soloNumero(d.whatsapp)}`);
-  }
-  if (d.email) l.push(`EMAIL;TYPE=INTERNET:${d.email}`);
-  if (d.ciudad) l.push(`ADR;TYPE=WORK:;;;${d.ciudad};;;`);
-  l.push(`URL:${url}`);
-  for (const red of ['instagram', 'facebook', 'linkedin', 'tiktok', 'youtube', 'behance', 'sitio']) {
-    if (d[red]) l.push(`URL;TYPE=${red.toUpperCase()}:${d[red]}`);
-  }
-  if (d.frase) l.push(`NOTE:${d.frase.replace(/\n/g, '\\n')}`);
-  l.push('END:VCARD');
-  return l.join('\r\n');
-}
 
 const REDES: { campo: string; nombre: string; Icono: typeof Instagram }[] = [
   { campo: 'instagram', nombre: 'Instagram', Icono: Instagram },
@@ -186,7 +161,6 @@ export default function MiembroPage() {
 
   const d = m?.datos ?? {};
   const url = typeof window !== 'undefined' ? window.location.href : '';
-  const vcard = useMemo(() => (m ? armarVCard(d, url) : ''), [m, d, url]);
 
   if (!m) return <NotFoundPage />;
 
@@ -200,19 +174,10 @@ export default function MiembroPage() {
 
   const redes = REDES.filter((r) => (d[r.campo] || '').trim() !== '');
 
-  /** Descarga el contacto. El objeto se libera solo para no dejar basura. */
-  const guardarContacto = () => {
-    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
-    const enlace = document.createElement('a');
-    enlace.href = URL.createObjectURL(blob);
-    enlace.download = `${slug || 'contacto'}.vcf`;
-    document.body.appendChild(enlace);
-    enlace.click();
-    document.body.removeChild(enlace);
-    setTimeout(() => URL.revokeObjectURL(enlace.href), 4000);
-    setGuardado(true);
-    setTimeout(() => setGuardado(false), 2600);
-  };
+  /* El archivo lo arma el servidor: es el mismo que se ve en el panel, lleva
+     la foto adentro y en iPhone abre la ficha de contacto en vez de bajar un
+     archivo suelto que el usuario tenga que buscar. */
+  const urlTarjeta = `/${slug}.vcf`;
 
   /** Comparte con el menú del celular; en escritorio copia el enlace. */
   const compartir = async () => {
@@ -235,7 +200,12 @@ export default function MiembroPage() {
       sub: d.b_guardar_sub || 'Se agrega a la agenda de tu celular',
       Icono: guardado ? Check : UserPlus,
       destacado: true,
-      onClick: guardarContacto,
+      href: urlTarjeta,
+      descarga: true,
+      onClick: () => {
+        setGuardado(true);
+        setTimeout(() => setGuardado(false), 2600);
+      },
     },
     waUrl && {
       clave: 'whatsapp',

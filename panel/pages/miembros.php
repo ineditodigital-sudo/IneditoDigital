@@ -11,6 +11,7 @@
  */
 require __DIR__ . '/../inc/contenido.php';
 require __DIR__ . '/../inc/miembros.php';
+require __DIR__ . '/../inc/vcard.php';
 
 $grupos = campos_miembro();
 $id = (int)($_GET['id'] ?? 0);
@@ -254,6 +255,33 @@ $vers = $vers->fetchAll();
       <?php endforeach; ?>
     </div>
   <?php endforeach; ?>
+
+  <?php
+  /* Lo que de verdad se va a entregar: se arma con el mismo generador que
+     sirve el archivo, no con una imitación. La foto se pide aparte para no
+     bajar la imagen cada vez que se abre esta pantalla. */
+  $vcfTexto = vcard_texto($d, 'https://www.inedito.digital' . $m['ruta'], false);
+  $vcfArchivo = vcard_archivo($d, (string)$m['slug']);
+  $conFoto = ($d['vcf_foto'] ?? '1') !== '0' && trim((string)$d['foto']) !== '';
+  ?>
+  <div class="card">
+    <div style="font-size:17px;font-weight:700;margin-bottom:4px">La tarjeta que se van a guardar</div>
+    <div class="mini" style="margin-bottom:14px">
+      Esto es exactamente lo que recibe el celular de quien toca “<?= e($d['b_guardar'] ?: 'Guardar mi contacto') ?>”.
+      <?php if ($conFoto): ?>La foto se agrega al final, encogida.<?php endif; ?>
+    </div>
+    <pre style="background:#0a0a10;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;font-size:12px;line-height:1.55;color:#c9c9dd;margin:0"><?= e($vcfTexto) ?><?php if ($conFoto): ?>PHOTO;ENCODING=b;TYPE=JPEG:<span style="color:var(--mut2)">(la foto, ya encogida)</span>
+<?php endif; ?></pre>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center">
+      <?php if ($m['status'] === 'published'): ?>
+        <a class="btn small ghost" href="<?= e($m['ruta']) ?>.vcf" target="_blank">Descargar para probarla</a>
+      <?php endif; ?>
+      <span class="mini">Se guarda como <code><?= e($vcfArchivo) ?></code></span>
+    </div>
+    <?php if ($m['status'] !== 'published'): ?>
+      <div class="mini" style="margin-top:10px">La podrás descargar en cuanto publiques la página.</div>
+    <?php endif; ?>
+  </div>
 
   <div class="card">
     <div style="font-size:17px;font-weight:700;margin-bottom:4px">Cómo se ve al compartir</div>
