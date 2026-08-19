@@ -30,6 +30,8 @@ Options -Indexes
 
   # Recursos generados dinámicamente
   RewriteRule ^sitemap\.xml$ /sitemap.php [L]
+  # La tarjeta de contacto de un integrante: /armando-trejo.vcf
+  RewriteRule ^([a-z0-9-]+)\.vcf$ /tarjeta.php?m=$1 [L,QSA]
   RewriteRule ^llms\.txt$    /llms.php    [L]
   RewriteRule ^$             /render.php  [L]
 

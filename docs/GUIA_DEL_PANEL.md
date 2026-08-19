@@ -145,6 +145,20 @@ Lo que dejes vacío no aparece: si alguien no tiene TikTok, ese botón
 simplemente no se dibuja. Si no le pones foto, se muestra la inicial de su
 nombre.
 
+**La tarjeta que se guardan (.vcf)**
+Hasta abajo de la página del integrante hay un apartado que se llama
+*La tarjeta de contacto*. Ahí decides qué se guarda en la agenda del celular
+de quien toca «Guardar mi contacto»: si va con foto, si van las redes, cómo
+se escribe su nombre en la agenda, la dirección completa, la nota. Lo que
+dejes vacío se toma de los datos de arriba, así no escribes dos veces lo
+mismo.
+
+Debajo de esos campos verás **exactamente el archivo que se va a entregar**,
+y un botón para descargarlo y probarlo en tu propio celular antes de mandar
+a imprimir tarjetas.
+
+Esa tarjeta también vive en su propia dirección: `inedito.digital/armando-trejo.vcf`.
+
 **Ojo antes de borrar a alguien:** si ya tiene tarjetas NFC impresas,
 dejarán de funcionar. Si solo se fue del equipo, es mejor dejar su página o
 cambiarle los datos.
