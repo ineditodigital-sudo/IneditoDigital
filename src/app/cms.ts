@@ -38,6 +38,7 @@ function leerTodo(): Record<string, Pagina> {
 export function refrescarContenido() {
   cache = null;
   cachePaginas = null;
+  cacheMiembros = null;
 }
 
 export interface LectorSeccion {
@@ -113,6 +114,44 @@ export function paginasDelMenu(): { nombre: string; ruta: string }[] {
   return Object.values(todas)
     .filter((p) => (p as PaginaBloques & { enMenu?: boolean }).enMenu)
     .map((p) => ({ nombre: p.nombre, ruta: p.ruta }));
+}
+
+/* ------------------------------------------------------------------ */
+/* Páginas de contacto del equipo                                      */
+/* ------------------------------------------------------------------ */
+
+export interface Miembro {
+  slug: string;
+  nombre: string;
+  ruta: string;
+  datos: Record<string, string>;
+}
+
+let cacheMiembros: Record<string, Miembro> | null = null;
+
+function leerMiembros(): Record<string, Miembro> {
+  if (cacheMiembros) return cacheMiembros;
+  try {
+    const crudo = localStorage.getItem('inedito_miembros');
+    const parsed = crudo ? JSON.parse(crudo) : {};
+    cacheMiembros = parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    cacheMiembros = {};
+  }
+  return cacheMiembros!;
+}
+
+/** La página de contacto de ese integrante, o null si esa dirección no es de nadie. */
+export function miembro(slug: string): Miembro | null {
+  if (!slug) return null;
+  const m = leerMiembros()[slug];
+  if (!m || typeof m.datos !== 'object' || m.datos === null) return null;
+  return m;
+}
+
+/** ¿Esta dirección pertenece a un integrante del equipo? */
+export function esMiembro(slug: string): boolean {
+  return miembro(slug) !== null;
 }
 
 /* ------------------------------------------------------------------ */

@@ -18,7 +18,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
-const PaginaCMS = lazy(() => import('./pages/PaginaCMS'));
+const RutaLibre = lazy(() => import('./pages/RutaLibre'));
 
 // Redirect pages
 const PatronFlexRedirect = lazy(() => import('./pages/PatronFlexRedirect'));
@@ -64,10 +64,11 @@ export const router = createBrowserRouter([
       // Legacy WordPress redirects
       { path: 'wp-content/uploads/PDFS/PATRON-FLEX.pdf', Component: PatronFlexRedirect },
       { path: 'wp-content/uploads/PDFS/NUEVO-MENU-LA-BARAJA.pdf', Component: LaBarajaMenuRedirect },
-      // Páginas creadas desde el panel. Va DESPUÉS de todas las rutas fijas,
-      // así que solo atrapa direcciones que no pertenecen a ninguna otra.
-      // Si el slug no corresponde a ninguna página creada, muestra el 404.
-      { path: ':slug', Component: PaginaCMS },
+      // Direcciones sueltas. Va DESPUÉS de todas las rutas fijas, así que solo
+      // atrapa lo que no pertenece a ninguna otra: la página de contacto de
+      // alguien del equipo o una página armada con bloques. Si no es ninguna,
+      // muestra el 404.
+      { path: ':slug', Component: RutaLibre },
       // 404 catch-all
       { path: '*', Component: NotFoundPage },
     ],
