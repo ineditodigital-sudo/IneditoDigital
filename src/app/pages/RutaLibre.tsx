@@ -14,5 +14,9 @@ const PaginaCMS = lazy(() => import('./PaginaCMS'));
  */
 export default function RutaLibre() {
   const { slug } = useParams<{ slug: string }>();
-  return esMiembro(slug || '') ? <MiembroPage /> : <PaginaCMS />;
+  // El editor del panel abre ?previa=1 para poder ver a alguien que todavía
+  // no se publica; si no, esa dirección no sería de nadie y saldría el 404.
+  const enPrevia = typeof window !== 'undefined'
+    && new URLSearchParams(window.location.search).has('previa');
+  return enPrevia || esMiembro(slug || '') ? <MiembroPage /> : <PaginaCMS />;
 }
