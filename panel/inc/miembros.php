@@ -12,43 +12,79 @@
  * y ya. Un campo vacío simplemente no se dibuja, en vez de dejar un hueco.
  */
 
+/** Cuántos enlaces libres puede poner cada integrante. */
+const MIEMBRO_ENLACES = 8;
+
+/** Los íconos que puede elegir para cada enlace. */
+function iconos_enlace(): array
+{
+    return [
+        'enlace'     => 'Enlace',
+        'sitio'      => 'Sitio web',
+        'agenda'     => 'Agendar cita',
+        'portafolio' => 'Portafolio',
+        'catalogo'   => 'Catálogo o tienda',
+        'documento'  => 'Documento',
+        'video'      => 'Video',
+        'foto'       => 'Fotos',
+        'mapa'       => 'Ubicación',
+        'correo'     => 'Correo',
+        'telefono'   => 'Teléfono',
+        'whatsapp'   => 'WhatsApp',
+        'instagram'  => 'Instagram',
+        'facebook'   => 'Facebook',
+        'linkedin'   => 'LinkedIn',
+        'tiktok'     => 'TikTok',
+        'youtube'    => 'YouTube',
+        'estrella'   => 'Destacado',
+    ];
+}
+
 /** Los campos de una página de contacto, agrupados como se ven en el panel. */
 function campos_miembro(): array
 {
+    $enlaces = [];
+    for ($i = 1; $i <= MIEMBRO_ENLACES; $i++) {
+        $enlaces["e{$i}_ver"] = ['label' => "Enlace $i · mostrar", 'tipo' => 'switch', 'def' => $i === 1 ? '1' : '0'];
+        $enlaces["e{$i}_titulo"] = ['label' => "Enlace $i · título", 'tipo' => 'texto'];
+        $enlaces["e{$i}_sub"] = ['label' => "Enlace $i · renglón de abajo", 'tipo' => 'texto'];
+        $enlaces["e{$i}_url"] = ['label' => "Enlace $i · destino", 'tipo' => 'enlace'];
+        $enlaces["e{$i}_icono"] = ['label' => "Enlace $i · ícono", 'tipo' => 'lista', 'opciones' => iconos_enlace(), 'def' => 'enlace'];
+        $enlaces["e{$i}_destacado"] = ['label' => "Enlace $i · resaltar en morado", 'tipo' => 'switch', 'def' => '0'];
+    }
+
     return [
 
         'quien' => [
             'nombre' => 'Quién es',
             'campos' => [
-                'nombre'   => ['label' => 'Nombre completo', 'tipo' => 'texto', 'req' => true],
-                'puesto'   => ['label' => 'Puesto', 'tipo' => 'texto', 'ayuda' => 'Ej. Director Creativo'],
-                'empresa'  => ['label' => 'Empresa', 'tipo' => 'texto', 'def' => 'Inédito Digital'],
-                'ciudad'   => ['label' => 'Ciudad', 'tipo' => 'texto', 'def' => 'Aguascalientes'],
-                'foto'     => ['label' => 'Foto', 'tipo' => 'imagen',
-                               'ayuda' => 'Cuadrada y de buena calidad. Se ve en grande al abrir la página.'],
-                'saludo'   => ['label' => 'Texto encima del nombre', 'tipo' => 'texto', 'def' => 'Hola, soy'],
-                'frase'    => ['label' => 'Frase corta', 'tipo' => 'parrafo',
-                               'ayuda' => 'Dos renglones sobre lo que haces. Se lee debajo de la foto.'],
+                'nombre'  => ['label' => 'Nombre completo', 'tipo' => 'texto', 'req' => true],
+                'puesto'  => ['label' => 'Puesto', 'tipo' => 'texto', 'ayuda' => 'Ej. Director Creativo'],
+                'empresa' => ['label' => 'Empresa', 'tipo' => 'texto', 'def' => 'Inédito Digital'],
+                'ciudad'  => ['label' => 'Ciudad', 'tipo' => 'texto', 'def' => 'Aguascalientes'],
+                'foto'    => ['label' => 'Foto', 'tipo' => 'imagen',
+                              'ayuda' => 'Cuadrada, de la cara para arriba. Se ve redonda y en grande hasta arriba.'],
+                'frase'   => ['label' => 'Descripción corta', 'tipo' => 'parrafo',
+                              'ayuda' => 'Dos o tres renglones. Se lee debajo del nombre.'],
             ],
         ],
 
         'contacto' => [
             'nombre' => 'Cómo lo contactan',
-            'ayuda'  => 'Lo que dejes vacío no aparece. Los teléfonos van con lada.',
+            'ayuda'  => 'Con esto se arman solos los botones de arriba. Lo que dejes vacío no aparece.',
             'campos' => [
                 'telefono' => ['label' => 'Teléfono', 'tipo' => 'texto', 'ayuda' => 'Ej. 4495136907'],
                 'whatsapp' => ['label' => 'WhatsApp', 'tipo' => 'texto', 'ayuda' => 'Con lada del país, ej. +52 1 449 583 9229'],
                 'wa_texto' => ['label' => 'Mensaje con el que abre WhatsApp', 'tipo' => 'texto',
                                'def' => 'Hola, vi tu tarjeta y me gustaría platicar contigo.'],
                 'email'    => ['label' => 'Correo', 'tipo' => 'texto'],
-                'sitio'    => ['label' => 'Sitio web', 'tipo' => 'enlace', 'def' => 'https://www.inedito.digital'],
                 'maps'     => ['label' => 'Ubicación en Google Maps', 'tipo' => 'enlace'],
             ],
         ],
 
         'redes' => [
             'nombre' => 'Redes sociales',
-            'ayuda'  => 'Pega la dirección completa. La que dejes vacía no se muestra.',
+            'ayuda'  => 'Salen como los botones redondos debajo de la descripción. La que dejes vacía no se muestra.',
             'campos' => [
                 'instagram' => ['label' => 'Instagram', 'tipo' => 'enlace'],
                 'facebook'  => ['label' => 'Facebook', 'tipo' => 'enlace'],
@@ -56,43 +92,35 @@ function campos_miembro(): array
                 'tiktok'    => ['label' => 'TikTok', 'tipo' => 'enlace'],
                 'youtube'   => ['label' => 'YouTube', 'tipo' => 'enlace'],
                 'behance'   => ['label' => 'Behance', 'tipo' => 'enlace'],
+                'sitio'     => ['label' => 'Sitio web', 'tipo' => 'enlace', 'def' => 'https://www.inedito.digital'],
             ],
+        ],
+
+        'enlaces' => [
+            'nombre' => 'Enlaces de la lista',
+            'ayuda'  => 'Los renglones grandes, en orden. Sirven para lo que quieras: agendar una cita, un portafolio, un catálogo. Enciende el interruptor del que quieras usar.',
+            'campos' => $enlaces,
         ],
 
         'botones' => [
-            'nombre' => 'Textos de los botones',
+            'nombre' => 'Textos de los botones automáticos',
+            'ayuda'  => 'Los que se arman con los datos de contacto. Debajo de cada uno se muestra solo el dato.',
             'campos' => [
-                'b_guardar'  => ['label' => 'Guardar contacto', 'tipo' => 'texto', 'def' => 'Guardar contacto'],
-                'b_whatsapp' => ['label' => 'WhatsApp', 'tipo' => 'texto', 'def' => 'WhatsApp'],
-                'b_llamar'   => ['label' => 'Llamar', 'tipo' => 'texto', 'def' => 'Llamar'],
-                'b_email'    => ['label' => 'Correo', 'tipo' => 'texto', 'def' => 'Correo'],
-                'b_ubicacion'=> ['label' => 'Ubicación', 'tipo' => 'texto', 'def' => 'Ubicación'],
-                't_redes'    => ['label' => 'Título de la sección de redes', 'tipo' => 'texto', 'def' => 'Sígueme'],
-                't_agencia'  => ['label' => 'Título de la sección de la agencia', 'tipo' => 'texto', 'def' => 'Lo que hacemos'],
-                't_contacto' => ['label' => 'Título de la sección de contacto', 'tipo' => 'texto', 'def' => 'Contáctame'],
-            ],
-        ],
-
-        'agencia' => [
-            'nombre' => 'Enlaces de la agencia',
-            'ayuda'  => 'Las tres tarjetas del final que llevan al sitio. Apaga el interruptor para quitar la sección.',
-            'campos' => [
-                'ver'       => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                'a1_titulo' => ['label' => 'Tarjeta 1 · título', 'tipo' => 'texto', 'def' => 'Tarjetas NFC'],
-                'a1_url'    => ['label' => 'Tarjeta 1 · destino', 'tipo' => 'enlace', 'def' => '/servicios/tarjetas-de-presentacion-digital'],
-                'a2_titulo' => ['label' => 'Tarjeta 2 · título', 'tipo' => 'texto', 'def' => 'Servicios'],
-                'a2_url'    => ['label' => 'Tarjeta 2 · destino', 'tipo' => 'enlace', 'def' => '/servicios'],
-                'a3_titulo' => ['label' => 'Tarjeta 3 · título', 'tipo' => 'texto', 'def' => 'Portafolio'],
-                'a3_url'    => ['label' => 'Tarjeta 3 · destino', 'tipo' => 'enlace', 'def' => '/portafolio'],
+                'b_guardar'   => ['label' => 'Guardar contacto', 'tipo' => 'texto', 'def' => 'Guardar mi contacto'],
+                'b_whatsapp'  => ['label' => 'WhatsApp', 'tipo' => 'texto', 'def' => 'Escríbeme por WhatsApp'],
+                'b_llamar'    => ['label' => 'Llamar', 'tipo' => 'texto', 'def' => 'Llámame'],
+                'b_email'     => ['label' => 'Correo', 'tipo' => 'texto', 'def' => 'Mándame un correo'],
+                'b_ubicacion' => ['label' => 'Ubicación', 'tipo' => 'texto', 'def' => 'Dónde estamos'],
+                'b_guardar_sub' => ['label' => 'Renglón bajo “Guardar contacto”', 'tipo' => 'texto',
+                                    'def' => 'Se agrega a la agenda de tu celular'],
             ],
         ],
 
         'apariencia' => [
-            'nombre' => 'Colores de la página',
-            'ayuda'  => 'Por si algún día quieres distinguir a alguien del equipo con otro tono.',
+            'nombre' => 'Color',
+            'ayuda'  => 'El tono del anillo de la foto y de los enlaces resaltados. Por si algún día quieres distinguir a alguien del equipo.',
             'campos' => [
-                'fondo' => ['label' => 'Color de fondo', 'tipo' => 'color', 'def' => '#B18AFF'],
-                'tinta' => ['label' => 'Color del texto y las tarjetas', 'tipo' => 'color', 'def' => '#0D0010'],
+                'acento' => ['label' => 'Color de acento', 'tipo' => 'color', 'def' => '#7700CE'],
             ],
         ],
     ];
@@ -120,14 +148,19 @@ function miembro_limpio(array $datos): array
     foreach (campos_miembro() as $g) {
         foreach ($g['campos'] as $k => $c) {
             $v = trim((string)($datos[$k] ?? ''));
+
             if ($c['tipo'] === 'switch') {
                 $out[$k] = $v === '1' ? '1' : '0';
+                continue;
+            }
+            if ($c['tipo'] === 'lista') {
+                $out[$k] = isset($c['opciones'][$v]) ? $v : (string)($c['def'] ?? '');
                 continue;
             }
             if ($c['tipo'] === 'color' && $v !== '' && !preg_match('/^#[0-9a-fA-F]{6}$/', $v)) {
                 $v = (string)($c['def'] ?? '');
             }
-            // Los enlaces y las imágenes solo aceptan direcciones, no javascript:
+            // Los enlaces y las imágenes solo aceptan direcciones, nunca javascript:
             if (($c['tipo'] === 'enlace' || $c['tipo'] === 'imagen') && $v !== '') {
                 $ok = str_starts_with($v, '/')
                     || str_starts_with($v, 'https://')

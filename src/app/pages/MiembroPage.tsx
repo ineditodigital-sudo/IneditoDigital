@@ -1,9 +1,11 @@
-import { Fragment, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { motion } from 'motion/react';
 import {
   Phone, MessageCircle, Mail, MapPin, Instagram, Facebook, Linkedin,
-  Youtube, Globe, Share2, Check, ArrowUpRight, UserPlus,
+  Youtube, Globe, Share2, Check, ChevronRight, UserPlus, Link2,
+  CalendarDays, Briefcase, ShoppingBag, FileText, Play, Image as ImageIcon,
+  Star, Music2,
 } from 'lucide-react';
 import { miembro } from '../cms';
 import NotFoundPage from './NotFoundPage';
@@ -13,71 +15,116 @@ import NotFoundPage from './NotFoundPage';
  * PÁGINA DE CONTACTO DE UN INTEGRANTE
  * ============================================================
  *
- * Es lo que se abre al acercar una tarjeta NFC, así que se diseña para un
- * celular y para resolver una sola cosa: que quien la abrió se pueda quedar
- * con el contacto en menos de tres segundos.
+ * Es lo que se abre al acercar una tarjeta NFC, así que está pensada para un
+ * celular y para resolver una sola cosa: que quien la abrió se quede con el
+ * contacto en menos de tres segundos.
  *
- * Todo el contenido sale del panel. Un dato vacío no se dibuja, así que la
- * página se acomoda sola: quien no tenga TikTok simplemente no lo muestra.
+ * La forma es una lista de enlaces, de arriba abajo, con el fondo oscuro y el
+ * morado del sitio. Los dos primeros renglones son los que más se tocan
+ * (guardar el contacto y WhatsApp), por eso van resaltados.
  *
- * El sitio no pone su encabezado ni su pie aquí a propósito: la tarjeta es
- * de la persona, no un recorrido por la agencia.
+ * Todo sale del panel. Un dato vacío no se dibuja, así que la página se
+ * acomoda sola: quien no tenga TikTok simplemente no lo muestra.
+ *
+ * No lleva el encabezado ni el pie del sitio a propósito: la tarjeta es de la
+ * persona, no un recorrido por la agencia.
  */
 
 /* ------------------------------------------------------------------ */
-/* La unión entre píldoras                                             */
+/* Piezas                                                              */
 /* ------------------------------------------------------------------ */
+
+const ICONOS = {
+  enlace: Link2, sitio: Globe, agenda: CalendarDays, portafolio: Briefcase,
+  catalogo: ShoppingBag, documento: FileText, video: Play, foto: ImageIcon,
+  mapa: MapPin, correo: Mail, telefono: Phone, whatsapp: MessageCircle,
+  instagram: Instagram, facebook: Facebook, linkedin: Linkedin,
+  tiktok: Music2, youtube: Youtube, estrella: Star,
+} as const;
+
+type Fila = {
+  clave: string;
+  titulo: string;
+  sub?: string;
+  href?: string;
+  onClick?: () => void;
+  Icono: typeof Link2;
+  destacado?: boolean;
+  externo?: boolean;
+};
 
 /**
- * El nudo que une dos píldoras.
+ * Un renglón de la lista.
  *
- * Son dos círculos del color del fondo que muerden por arriba y por abajo un
- * puente relleno, y eso deja la cintura cóncava. Solo funciona sobre un fondo
- * liso, que es justo donde se usa.
- *
- * `diametro` es el tamaño de esos círculos: alrededor del 60% del alto de la
- * píldora deja la cintura como en la referencia. Más grande la estrangula.
+ * El destacado va con el degradado de la marca; el resto en vidrio oscuro,
+ * como las tarjetas del sitio. Se hunde un poco al tocarlo para que en un
+ * celular se sienta que respondió.
  */
-function Nudo({ fondo, tinta, diametro = 24 }: { fondo: string; tinta: string; diametro?: number }) {
-  return (
-    <span className="relative self-stretch shrink-0" style={{ width: 12, background: tinta }} aria-hidden>
-      <span
-        className="absolute left-1/2 top-0 rounded-full -translate-x-1/2 -translate-y-1/2"
-        style={{ width: diametro, height: diametro, background: fondo }}
-      />
-      <span
-        className="absolute left-1/2 bottom-0 rounded-full -translate-x-1/2 translate-y-1/2"
-        style={{ width: diametro, height: diametro, background: fondo }}
-      />
-    </span>
-  );
-}
+function Renglon({ f, acento, i }: { f: Fila; acento: string; i: number }) {
+  const { Icono } = f;
 
-function Cadena({
-  items, fondo, tinta, className = '', pastilla = 'px-4 py-2 text-sm',
-}: {
-  items: React.ReactNode[];
-  fondo: string;
-  tinta: string;
-  className?: string;
-  pastilla?: string;
-}) {
-  const visibles = items.filter(Boolean);
-  if (visibles.length === 0) return null;
-  return (
-    <div className={`inline-flex items-stretch ${className}`}>
-      {visibles.map((it, i) => (
-        <Fragment key={i}>
-          {i > 0 && <Nudo fondo={fondo} tinta={tinta} />}
-          <span
-            className={`rounded-full whitespace-nowrap flex items-center ${pastilla}`}
-            style={{ background: tinta, color: fondo }}
-          >
-            {it}
-          </span>
-        </Fragment>
-      ))}
+  const contenido = (
+    <>
+      <span
+        className="w-11 h-11 rounded-xl grid place-items-center shrink-0 transition-colors"
+        style={
+          f.destacado
+            ? { background: 'rgba(255,255,255,0.18)' }
+            : { background: `${acento}22`, color: '#CC66FF' }
+        }
+      >
+        <Icono size={20} className={f.destacado ? 'text-white' : ''} />
+      </span>
+
+      <span className="flex-1 min-w-0">
+        <span className="block text-[15px] font-semibold text-white leading-snug truncate">{f.titulo}</span>
+        {f.sub && <span className="block text-xs text-white/50 leading-snug truncate mt-0.5">{f.sub}</span>}
+      </span>
+
+      <ChevronRight size={20} className={f.destacado ? 'text-white/70' : 'text-white/25'} />
+    </>
+  );
+
+  const clases =
+    'w-full flex items-center gap-3.5 rounded-2xl p-3 pr-4 text-left transition-all duration-200 active:scale-[0.98]';
+
+  const estilo = f.destacado
+    ? {
+        background: `linear-gradient(100deg, ${acento}, #9933FF)`,
+        boxShadow: `0 0 30px ${acento}59`,
+      }
+    : undefined;
+
+  const cuerpo = f.destacado ? (
+    <div className={clases} style={estilo}>{contenido}</div>
+  ) : (
+    <div className={`${clases} bg-white/[0.04] border border-white/10 hover:bg-white/[0.07] hover:border-white/20`}>
+      {contenido}
     </div>
+  );
+
+  const anim = {
+    initial: { opacity: 0, y: 14 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4, delay: 0.22 + i * 0.045, ease: [0.22, 1, 0.36, 1] as const },
+  };
+
+  if (f.onClick) {
+    return (
+      <motion.button {...anim} onClick={f.onClick} className="block w-full">
+        {cuerpo}
+      </motion.button>
+    );
+  }
+  return (
+    <motion.a
+      {...anim}
+      href={f.href}
+      {...(f.externo ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      className="block"
+    >
+      {cuerpo}
+    </motion.a>
   );
 }
 
@@ -111,7 +158,7 @@ function armarVCard(d: Record<string, string>, url: string): string {
   if (d.email) l.push(`EMAIL;TYPE=INTERNET:${d.email}`);
   if (d.ciudad) l.push(`ADR;TYPE=WORK:;;;${d.ciudad};;;`);
   l.push(`URL:${url}`);
-  for (const red of ['instagram', 'facebook', 'linkedin', 'tiktok', 'youtube', 'behance']) {
+  for (const red of ['instagram', 'facebook', 'linkedin', 'tiktok', 'youtube', 'behance', 'sitio']) {
     if (d[red]) l.push(`URL;TYPE=${red.toUpperCase()}:${d[red]}`);
   }
   if (d.frase) l.push(`NOTE:${d.frase.replace(/\n/g, '\\n')}`);
@@ -121,18 +168,13 @@ function armarVCard(d: Record<string, string>, url: string): string {
 
 const REDES: { campo: string; nombre: string; Icono: typeof Instagram }[] = [
   { campo: 'instagram', nombre: 'Instagram', Icono: Instagram },
+  { campo: 'tiktok', nombre: 'TikTok', Icono: Music2 },
+  { campo: 'youtube', nombre: 'YouTube', Icono: Youtube },
   { campo: 'facebook', nombre: 'Facebook', Icono: Facebook },
   { campo: 'linkedin', nombre: 'LinkedIn', Icono: Linkedin },
-  { campo: 'youtube', nombre: 'YouTube', Icono: Youtube },
-  { campo: 'tiktok', nombre: 'TikTok', Icono: Globe },
   { campo: 'behance', nombre: 'Behance', Icono: Globe },
+  { campo: 'sitio', nombre: 'Sitio web', Icono: Globe },
 ];
-
-const entra = {
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
-};
 
 /* ------------------------------------------------------------------ */
 
@@ -148,8 +190,7 @@ export default function MiembroPage() {
 
   if (!m) return <NotFoundPage />;
 
-  const fondo = /^#[0-9a-fA-F]{6}$/.test(d.fondo || '') ? d.fondo : '#B18AFF';
-  const tinta = /^#[0-9a-fA-F]{6}$/.test(d.tinta || '') ? d.tinta : '#0D0010';
+  const acento = /^#[0-9a-fA-F]{6}$/.test(d.acento || '') ? d.acento : '#7700CE';
 
   const tel = soloNumero(d.telefono || '');
   const wa = soloNumero(d.whatsapp || '');
@@ -158,12 +199,6 @@ export default function MiembroPage() {
     : '';
 
   const redes = REDES.filter((r) => (d[r.campo] || '').trim() !== '');
-
-  const agencia = [
-    { titulo: d.a1_titulo, url: d.a1_url },
-    { titulo: d.a2_titulo, url: d.a2_url },
-    { titulo: d.a3_titulo, url: d.a3_url },
-  ].filter((a) => (a.titulo || '').trim() !== '' && (a.url || '').trim() !== '');
 
   /** Descarga el contacto. El objeto se libera solo para no dejar basura. */
   const guardarContacto = () => {
@@ -179,7 +214,7 @@ export default function MiembroPage() {
     setTimeout(() => setGuardado(false), 2600);
   };
 
-  /** Comparte con el menú nativo del celular; en escritorio copia el enlace. */
+  /** Comparte con el menú del celular; en escritorio copia el enlace. */
   const compartir = async () => {
     const datos = { title: `${d.nombre} · ${d.puesto || d.empresa || ''}`.trim(), url };
     if (navigator.share) {
@@ -192,195 +227,190 @@ export default function MiembroPage() {
     } catch { /* sin permiso de portapapeles: no hacemos ruido */ }
   };
 
-  /* Los accesos redondos de arriba. Solo salen los que tienen dato. */
-  const accesos = [
-    tel && { etiqueta: d.b_llamar || 'Llamar', Icono: Phone, href: `tel:${tel}` },
-    waUrl && { etiqueta: d.b_whatsapp || 'WhatsApp', Icono: MessageCircle, href: waUrl, externo: true },
-    d.email && { etiqueta: d.b_email || 'Correo', Icono: Mail, href: `mailto:${d.email}` },
-    d.maps && { etiqueta: d.b_ubicacion || 'Ubicación', Icono: MapPin, href: d.maps, externo: true },
-  ].filter(Boolean) as { etiqueta: string; Icono: typeof Phone; href: string; externo?: boolean }[];
+  /* Los renglones automáticos, armados con los datos de contacto. */
+  const filas: Fila[] = [
+    {
+      clave: 'guardar',
+      titulo: guardado ? '¡Guardado!' : d.b_guardar || 'Guardar mi contacto',
+      sub: d.b_guardar_sub || 'Se agrega a la agenda de tu celular',
+      Icono: guardado ? Check : UserPlus,
+      destacado: true,
+      onClick: guardarContacto,
+    },
+    waUrl && {
+      clave: 'whatsapp',
+      titulo: d.b_whatsapp || 'Escríbeme por WhatsApp',
+      sub: d.whatsapp,
+      Icono: MessageCircle,
+      href: waUrl,
+      externo: true,
+    },
+    tel && {
+      clave: 'tel',
+      titulo: d.b_llamar || 'Llámame',
+      sub: d.telefono,
+      Icono: Phone,
+      href: `tel:${tel}`,
+    },
+    d.email && {
+      clave: 'mail',
+      titulo: d.b_email || 'Mándame un correo',
+      sub: d.email,
+      Icono: Mail,
+      href: `mailto:${d.email}`,
+    },
+    d.maps && {
+      clave: 'maps',
+      titulo: d.b_ubicacion || 'Dónde estamos',
+      sub: d.ciudad,
+      Icono: MapPin,
+      href: d.maps,
+      externo: true,
+    },
+  ].filter(Boolean) as Fila[];
+
+  /* Y los que el integrante agregó a mano desde el panel. */
+  for (let i = 1; i <= 8; i++) {
+    const titulo = (d[`e${i}_titulo`] || '').trim();
+    const href = (d[`e${i}_url`] || '').trim();
+    if (d[`e${i}_ver`] === '0' || titulo === '' || href === '') continue;
+    const icono = (d[`e${i}_icono`] || 'enlace') as keyof typeof ICONOS;
+    filas.push({
+      clave: `e${i}`,
+      titulo,
+      sub: (d[`e${i}_sub`] || '').trim() || undefined,
+      href,
+      Icono: ICONOS[icono] ?? Link2,
+      destacado: d[`e${i}_destacado`] === '1',
+      externo: /^https?:\/\//i.test(href),
+    });
+  }
+
+  const anio = new Date().getFullYear();
 
   return (
-    <div className="min-h-screen w-full" style={{ background: fondo, color: tinta }}>
-      <div className="mx-auto w-full max-w-[560px] px-5 pt-7 pb-40">
+    <div className="relative min-h-screen w-full overflow-hidden bg-[#0D0010]">
+      {/* Los halos de la marca, los mismos que la portada del sitio */}
+      <div
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[34rem] h-[34rem] rounded-full blur-[130px] opacity-40"
+        style={{ background: acento }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute top-1/3 -left-32 w-[26rem] h-[26rem] rounded-full blur-[130px] opacity-20 bg-[#9933FF]"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute bottom-0 -right-32 w-[26rem] h-[26rem] rounded-full blur-[130px] opacity-15 bg-[#CC66FF]"
+        aria-hidden
+      />
 
-        {/* ---------- barra de arriba ---------- */}
-        <motion.div {...entra} className="flex items-center justify-between mb-9">
-          <a
-            href="/"
-            className="text-[11px] tracking-[0.28em] uppercase font-bold opacity-70 hover:opacity-100 transition-opacity"
-          >
-            {d.empresa || 'Inédito Digital'}
-          </a>
+      <div className="relative mx-auto w-full max-w-[440px] px-5 pt-6 pb-14">
+
+        {/* ---------- compartir ---------- */}
+        <div className="flex justify-end mb-2">
           <button
             onClick={compartir}
             aria-label="Compartir esta página"
-            className="w-11 h-11 rounded-full border-2 flex items-center justify-center active:scale-90 transition-transform"
-            style={{ borderColor: tinta }}
+            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:border-white/25 active:scale-90 transition-all"
           >
-            {copiado ? <Check size={18} /> : <Share2 size={18} />}
+            {copiado ? <Check size={17} /> : <Share2 size={17} />}
           </button>
-        </motion.div>
+        </div>
 
-        {/* ---------- nombre ---------- */}
-        <motion.div {...entra} transition={{ ...entra.transition, delay: 0.05 }}>
-          {d.saludo && <div className="text-base opacity-60 mb-1">{d.saludo}</div>}
-          <h1 className="heading text-[42px] leading-[0.95] mb-5 break-words">{d.nombre}</h1>
-        </motion.div>
-
-        {/* ---------- las etiquetas encadenadas ---------- */}
+        {/* ---------- quién es ---------- */}
         <motion.div
-          {...entra}
-          transition={{ ...entra.transition, delay: 0.1 }}
-          className="-mx-5 px-5 overflow-x-auto mb-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-7"
         >
-          <Cadena
-            fondo={fondo}
-            tinta={tinta}
-            items={[d.puesto, d.empresa, d.ciudad].filter((v) => (v || '').trim() !== '')}
-            pastilla="px-5 py-2.5 text-sm font-medium"
-          />
-        </motion.div>
-
-        {/* ---------- contacto ---------- */}
-        {(accesos.length > 0 || d.foto) && (
-          <motion.section {...entra} transition={{ ...entra.transition, delay: 0.15 }} className="mb-11">
-            <h2 className="heading text-2xl mb-5">{d.t_contacto || 'Contáctame'}</h2>
-
-            <div className="grid grid-cols-2 gap-3">
-              {/* los accesos redondos */}
-              {accesos.length > 0 && (
-                <div className="grid grid-cols-2 gap-3 content-start">
-                  {accesos.map(({ etiqueta, Icono, href, externo }) => (
-                    <a
-                      key={etiqueta}
-                      href={href}
-                      {...(externo ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="aspect-square rounded-full flex flex-col items-center justify-center gap-1.5 active:scale-95 transition-transform"
-                      style={{ background: tinta, color: fondo }}
-                    >
-                      <Icono size={22} />
-                      <span className="text-[11px] font-medium px-1 text-center leading-tight">{etiqueta}</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-
-              {/* la tarjeta con la foto */}
-              <div
-                className="rounded-[26px] p-3 flex flex-col"
-                style={{ background: tinta, color: fondo }}
-              >
-                {d.foto ? (
-                  <img
-                    src={d.foto}
-                    alt={d.nombre}
-                    className="w-full aspect-square object-cover rounded-[18px] mb-3"
-                    loading="eager"
-                  />
-                ) : (
-                  <div
-                    className="w-full aspect-square rounded-[18px] mb-3 flex items-center justify-center heading text-5xl"
-                    style={{ background: fondo, color: tinta }}
-                  >
-                    {(d.nombre || '?').charAt(0)}
-                  </div>
-                )}
-                <div className="px-1 pb-1">
-                  <div className="font-bold leading-tight mb-1">{d.nombre}</div>
-                  {d.puesto && <div className="text-xs opacity-60 leading-snug">{d.puesto}</div>}
-                </div>
+          <div
+            className="mx-auto w-[124px] h-[124px] rounded-full p-[3px] mb-4"
+            style={{ background: `linear-gradient(140deg, ${acento}, #9933FF 55%, #CC66FF)` }}
+          >
+            {d.foto ? (
+              <img
+                src={d.foto}
+                alt={d.nombre}
+                className="w-full h-full rounded-full object-cover bg-[#0D0010]"
+                loading="eager"
+              />
+            ) : (
+              <div className="w-full h-full rounded-full bg-[#0D0010] grid place-items-center heading text-4xl text-white/85">
+                {(d.nombre || '?').charAt(0)}
               </div>
-            </div>
-
-            {d.frase && (
-              <p className="mt-5 text-[15px] leading-relaxed opacity-75">{d.frase}</p>
             )}
-          </motion.section>
-        )}
+          </div>
+
+          <h1 className="heading text-[26px] leading-tight text-white mb-1.5">{d.nombre}</h1>
+
+          {d.puesto && (
+            <p
+              className="text-[15px] font-semibold mb-3 bg-clip-text text-transparent"
+              style={{ backgroundImage: `linear-gradient(90deg, #CC66FF, ${acento})` }}
+            >
+              {d.puesto}
+              {d.empresa && <span className="text-white/45 font-normal"> · {d.empresa}</span>}
+            </p>
+          )}
+
+          {d.frase && (
+            <p className="text-sm text-white/65 leading-relaxed max-w-[19rem] mx-auto whitespace-pre-line">
+              {d.frase}
+            </p>
+          )}
+        </motion.div>
 
         {/* ---------- redes ---------- */}
         {redes.length > 0 && (
-          <motion.section {...entra} transition={{ ...entra.transition, delay: 0.2 }} className="mb-11">
-            <h2 className="heading text-2xl mb-5">{d.t_redes || 'Sígueme'}</h2>
-            <div className="flex flex-col gap-2.5">
-              {redes.map(({ campo, nombre, Icono }, i) => (
-                <a
-                  key={campo}
-                  href={d[campo]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-[22px] px-5 py-4 flex items-center justify-between active:scale-[0.98] transition-transform"
-                  style={
-                    i === 0
-                      ? { background: tinta, color: fondo }
-                      : { border: `2px solid ${tinta}` }
-                  }
-                >
-                  <span className="flex items-center gap-3 font-medium">
-                    <Icono size={20} />
-                    {nombre}
-                  </span>
-                  <ArrowUpRight size={18} className="opacity-60" />
-                </a>
-              ))}
-            </div>
-          </motion.section>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            className="flex justify-center flex-wrap gap-2.5 mb-7"
+          >
+            {redes.map(({ campo, nombre, Icono }) => (
+              <a
+                key={campo}
+                href={d[campo]}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={nombre}
+                title={nombre}
+                className="w-11 h-11 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/75 hover:text-white active:scale-90 transition-all"
+                style={{ transitionProperty: 'transform, color, border-color' }}
+                onMouseEnter={(ev) => { ev.currentTarget.style.borderColor = acento; }}
+                onMouseLeave={(ev) => { ev.currentTarget.style.borderColor = ''; }}
+              >
+                <Icono size={19} />
+              </a>
+            ))}
+          </motion.div>
         )}
 
-        {/* ---------- la agencia ---------- */}
-        {d.ver !== '0' && agencia.length > 0 && (
-          <motion.section {...entra} transition={{ ...entra.transition, delay: 0.25 }}>
-            <h2 className="heading text-2xl mb-5">{d.t_agencia || 'Lo que hacemos'}</h2>
-            <div className="-mx-5 px-5 flex gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {agencia.map((a) => (
-                <a
-                  key={a.titulo}
-                  href={a.url}
-                  className="shrink-0 rounded-[22px] px-5 py-4 flex items-center gap-2 font-medium active:scale-[0.98] transition-transform"
-                  style={{ border: `2px solid ${tinta}` }}
-                >
-                  {a.titulo}
-                  <ArrowUpRight size={17} className="opacity-60" />
-                </a>
-              ))}
-            </div>
-          </motion.section>
-        )}
-      </div>
-
-      {/* ---------- la barra que siempre se ve ---------- */}
-      <div className="fixed bottom-0 left-0 right-0 pb-5 px-5 pointer-events-none">
-        <div className="mx-auto w-full max-w-[560px] flex justify-center">
-          <div className="pointer-events-auto flex items-stretch">
-            <button
-              onClick={guardarContacto}
-              className="rounded-full pl-6 pr-7 py-4 flex items-center gap-2.5 font-bold active:scale-95 transition-transform shadow-[0_10px_40px_rgba(0,0,0,0.28)]"
-              style={{ background: tinta, color: fondo }}
-            >
-              {guardado ? <Check size={20} /> : <UserPlus size={20} />}
-              <span className="whitespace-nowrap">
-                {guardado ? '¡Listo!' : d.b_guardar || 'Guardar contacto'}
-              </span>
-            </button>
-
-            {waUrl && (
-              <>
-                <Nudo fondo={fondo} tinta={tinta} diametro={34} />
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={d.b_whatsapp || 'WhatsApp'}
-                  className="rounded-full px-5 flex items-center active:scale-95 transition-transform shadow-[0_10px_40px_rgba(0,0,0,0.28)]"
-                  style={{ background: tinta, color: fondo }}
-                >
-                  <MessageCircle size={22} />
-                </a>
-              </>
-            )}
-          </div>
+        {/* ---------- la lista ---------- */}
+        <div className="flex flex-col gap-2.5">
+          {filas.map((f, i) => (
+            <Renglon key={f.clave} f={f} acento={acento} i={i} />
+          ))}
         </div>
+
+        {/* ---------- pie ---------- */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-10 text-center"
+        >
+          <a
+            href="/"
+            className="text-[11px] tracking-[0.22em] uppercase text-white/35 hover:text-white/70 transition-colors"
+          >
+            {d.empresa || 'Inédito Digital'}
+          </a>
+          <p className="text-[11px] text-white/20 mt-1.5">© {anio}</p>
+        </motion.div>
       </div>
     </div>
   );
