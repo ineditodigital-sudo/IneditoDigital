@@ -1,6 +1,31 @@
 import { useEffect, useRef, memo } from 'react';
 
-function TopographyCanvas() {
+interface TopographyCanvasProps {
+  /** Color de una de cada dos curvas. Por defecto, el morado del sitio. */
+  colorA?: string;
+  /** Color de las otras. */
+  colorB?: string;
+  /** Qué tan marcadas se ven, de 0 a 1. */
+  intensidad?: number;
+  /** Cuántas curvas dibuja. Más líneas = más denso y un poco más pesado. */
+  curvas?: number;
+}
+
+/**
+ * El fondo de curvas de nivel, como un mapa topográfico.
+ *
+ * Se dibuja una sola vez en una textura y esa textura se va desplazando, así
+ * que el movimiento cuesta casi nada aunque las curvas sean complicadas.
+ *
+ * Los colores se pueden cambiar desde fuera. Sin pasarle nada queda igual que
+ * siempre, que es como se ve en el resto del sitio.
+ */
+function TopographyCanvas({
+  colorA,
+  colorB,
+  intensidad = 1,
+  curvas = 8,
+}: TopographyCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>();
@@ -19,9 +44,19 @@ function TopographyCanvas() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // --------- Ajustes ultra-ligeros ----------
-    const PURPLE_A = 'rgba(168,85,247,0.18)';
-    const PURPLE_B = 'rgba(124,58,237,0.12)';
-    const CONTOURS = 8;          // menos líneas = más ligero
+    /* Un color puede llegar como #RRGGBB desde el panel; aquí se le pone la
+       transparencia que le toca. Si viene cualquier otra cosa, se usa el
+       morado de siempre en vez de dibujar nada raro. */
+    const conAlfa = (hex: string | undefined, base: string, alfa: number) => {
+      if (!hex || !/^#[0-9a-fA-F]{6}$/.test(hex)) return base;
+      const n = parseInt(hex.slice(1), 16);
+      return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alfa})`;
+    };
+
+    const fuerza = Math.max(0, Math.min(2, intensidad));
+    const PURPLE_A = conAlfa(colorA, 'rgba(168,85,247,0.18)', 0.18 * fuerza);
+    const PURPLE_B = conAlfa(colorB, 'rgba(124,58,237,0.12)', 0.12 * fuerza);
+    const CONTOURS = Math.max(3, Math.min(24, Math.round(curvas)));
     const TEX_SIZE = 900;        // textura (px)
     const GRID_STEP = 22;        // más grande = ondas más amplias + menos cómputo
     const WAVE_SCALE = 0.008;    // más pequeño = ondas más amplias
@@ -253,7 +288,7 @@ function TopographyCanvas() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       runningRef.current = false;
     };
-  }, []);
+  }, [colorA, colorB, intensidad, curvas]);
 
   return (
     <div

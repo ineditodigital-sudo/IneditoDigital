@@ -145,10 +145,19 @@ function campos_miembro(): array
         ],
 
         'apariencia' => [
-            'nombre' => 'Color',
-            'ayuda'  => 'El tono del anillo de la foto y de los enlaces resaltados. Por si algún día quieres distinguir a alguien del equipo.',
+            'nombre' => 'Colores y fondo',
+            'ayuda'  => 'Para distinguir a cada quien del equipo sin salirse de la marca.',
             'campos' => [
-                'acento' => ['label' => 'Color de acento', 'tipo' => 'color', 'def' => '#7700CE'],
+                'acento'      => ['label' => 'Color de acento', 'tipo' => 'color', 'def' => '#7700CE',
+                                  'ayuda' => 'Tiñe el anillo de la foto y los enlaces resaltados.'],
+                'topo_ver'    => ['label' => 'Líneas de fondo', 'tipo' => 'switch', 'def' => '1',
+                                  'ayuda' => 'Las curvas que se mueven despacio detrás de todo, como un mapa.'],
+                'topo_a'      => ['label' => 'Líneas · color 1', 'tipo' => 'color', 'def' => '#9933FF'],
+                'topo_b'      => ['label' => 'Líneas · color 2', 'tipo' => 'color', 'def' => '#7700CE'],
+                'topo_fuerza' => ['label' => 'Qué tanto se notan', 'tipo' => 'lista', 'def' => '1',
+                                  'opciones' => ['0.5' => 'Apenas', '1' => 'Normal', '1.7' => 'Marcadas']],
+                'topo_densidad' => ['label' => 'Cuántas líneas', 'tipo' => 'lista', 'def' => '8',
+                                    'opciones' => ['5' => 'Pocas', '8' => 'Normales', '14' => 'Muchas']],
             ],
         ],
     ];

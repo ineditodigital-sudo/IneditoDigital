@@ -145,6 +145,12 @@ Lo que dejes vacío no aparece: si alguien no tiene TikTok, ese botón
 simplemente no se dibuja. Si no le pones foto, se muestra la inicial de su
 nombre.
 
+**El fondo de líneas**
+En *Colores y fondo* puedes prender o apagar las curvas que se mueven despacio
+detrás de todo, elegir sus dos colores, qué tanto se notan y cuántas son. Es
+el mismo fondo que usa el sitio en la portada, así que aunque le cambies el
+color se sigue viendo de la casa.
+
 **La tarjeta que se guardan (.vcf)**
 Hasta abajo de la página del integrante hay un apartado que se llama
 *La tarjeta de contacto*. Ahí decides qué se guarda en la agenda del celular
