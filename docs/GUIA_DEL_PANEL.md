@@ -145,6 +145,14 @@ Lo que dejes vacío no aparece: si alguien no tiene TikTok, ese botón
 simplemente no se dibuja. Si no le pones foto, se muestra la inicial de su
 nombre.
 
+**El editor**
+Al abrir a alguien del equipo verás el formulario a la izquierda y **su página
+de verdad a la derecha**, dentro de un celular. Se actualiza mientras escribes,
+antes de guardar: si algo no te gusta, lo ves ahí mismo.
+
+Las secciones están plegadas; abre la que necesites. Junto al nombre de cada
+una dice cuántos campos llevas llenos.
+
 **El fondo de líneas**
 En *Colores y fondo* puedes prender o apagar las curvas que se mueven despacio
 detrás de todo, elegir su color y qué tanto se notan.

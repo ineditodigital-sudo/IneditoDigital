@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { motion } from 'motion/react';
 import {
@@ -174,11 +174,34 @@ export default function MiembroPage() {
   const [copiado, setCopiado] = useState(false);
   const [ayuda, setAyuda] = useState(false);
   const [copiadoCampo, setCopiadoCampo] = useState('');
+  const [previa, setPrevia] = useState<Record<string, string> | null>(null);
 
-  const d = m?.datos ?? {};
+  /* Vista previa dentro del panel.
+     Cuando esta página se abre en el recuadro del editor, el panel le va
+     mandando lo que el cliente escribe y aquí se dibuja al momento. Solo se
+     aceptan mensajes del propio sitio, y solo cuando estamos dentro de un
+     recuadro: en una visita normal esto no hace nada. */
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.parent === window) return;
+    const alRecibir = (ev: MessageEvent) => {
+      if (ev.origin !== window.location.origin) return;
+      const m = ev.data;
+      if (m && m.tipo === 'inedito:previa' && m.datos && typeof m.datos === 'object') {
+        setPrevia(m.datos as Record<string, string>);
+      }
+    };
+    window.addEventListener('message', alRecibir);
+    // Avisar que ya estamos listos, para que el panel mande el primer estado
+    window.parent.postMessage({ tipo: 'inedito:previa-lista' }, window.location.origin);
+    return () => window.removeEventListener('message', alRecibir);
+  }, []);
+
+  const d = previa ?? m?.datos ?? {};
   const url = typeof window !== 'undefined' ? window.location.href : '';
 
-  if (!m) return <NotFoundPage />;
+  // Sin datos guardados y sin vista previa no hay nada que enseñar. Con vista
+  // previa sí: así se puede ver a alguien que todavía está en borrador.
+  if (!m && !previa) return <NotFoundPage />;
 
   const acento = /^#[0-9a-fA-F]{6}$/.test(d.acento || '') ? d.acento : '#7700CE';
 

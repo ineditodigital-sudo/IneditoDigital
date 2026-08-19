@@ -14,7 +14,8 @@ export default function RootLayout() {
      recorrido por la agencia, y quien la abrió llegó acercando el celular a
      una tarjeta NFC. El encabezado, el pie y los botones flotantes del sitio
      sobrarían y le taparían los datos. */
-  const soloTarjeta = esMiembro(location.pathname.replace(/^\/|\/$/g, ''));
+  const soloTarjeta = esMiembro(location.pathname.replace(/^\/|\/$/g, ''))
+    || new URLSearchParams(location.search).has('previa');
 
   // Scroll to top on route change
   useEffect(() => {
