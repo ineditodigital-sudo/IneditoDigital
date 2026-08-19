@@ -159,6 +159,15 @@ a imprimir tarjetas.
 
 Esa tarjeta también vive en su propia dirección: `inedito.digital/armando-trejo.vcf`.
 
+**¿Y si a alguien no se le guarda?**
+En iPhone el contacto se abre solo. En Android baja a la carpeta de
+descargas y hay que tocar el aviso; y si la persona llegó desde el navegador
+de Instagram o Facebook, esos navegadores a veces bloquean las descargas.
+Por eso hasta abajo de la página hay un enlace que dice *¿No se guardó el
+contacto?*: ahí puede abrir Contactos con los datos ya escritos, o copiar
+el teléfono y el correo de un toque. No hace falta que hagas nada, ya está
+puesto en todas las páginas.
+
 **Ojo antes de borrar a alguien:** si ya tiene tarjetas NFC impresas,
 dejarán de funcionar. Si solo se fue del equipo, es mejor dejar su página o
 cambiarle los datos.

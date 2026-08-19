@@ -5,7 +5,7 @@ import {
   Phone, MessageCircle, Mail, MapPin, Instagram, Facebook, Linkedin,
   Youtube, Globe, Share2, Check, ChevronRight, UserPlus, Link2,
   CalendarDays, Briefcase, ShoppingBag, FileText, Play, Image as ImageIcon,
-  Star, Music2,
+  Star, Music2, Copy, HelpCircle,
 } from 'lucide-react';
 import { miembro } from '../cms';
 import NotFoundPage from './NotFoundPage';
@@ -158,6 +158,8 @@ export default function MiembroPage() {
   const m = miembro(slug || '');
   const [guardado, setGuardado] = useState(false);
   const [copiado, setCopiado] = useState(false);
+  const [ayuda, setAyuda] = useState(false);
+  const [copiadoCampo, setCopiadoCampo] = useState('');
 
   const d = m?.datos ?? {};
   const url = typeof window !== 'undefined' ? window.location.href : '';
@@ -255,6 +257,42 @@ export default function MiembroPage() {
       externo: /^https?:\/\//i.test(href),
     });
   }
+
+  const esAndroid = typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent);
+
+  /* Android sabe abrir su propia pantalla de contacto nuevo con los datos ya
+     escritos. No lleva foto, pero no depende de bajar ni de abrir un archivo,
+     así que funciona incluso donde la descarga está bloqueada. Si el celular
+     no entiende la instrucción, se va al archivo de siempre. */
+  const intentAndroid = (() => {
+    const extras: string[] = [];
+    const meter = (k: string, v?: string) => { if (v && v.trim()) extras.push(`S.${k}=${encodeURIComponent(v.trim())}`); };
+    meter('name', d.nombre);
+    meter('phone', d.telefono || d.whatsapp);
+    meter('email', d.email);
+    meter('company', d.empresa);
+    meter('job_title', d.puesto);
+    meter('notes', d.frase);
+    // Chrome solo acepta una dirección completa aquí; con una relativa la ignora
+    const respaldo = typeof window !== 'undefined' ? window.location.origin + urlTarjeta : urlTarjeta;
+    extras.push(`S.browser_fallback_url=${encodeURIComponent(respaldo)}`);
+    return `intent://contacto#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/contact;${extras.join(';')};end`;
+  })();
+
+  const datosSueltos = [
+    { etiqueta: 'Nombre', valor: [d.nombre, d.puesto].filter(Boolean).join(' · ') },
+    d.telefono && { etiqueta: 'Teléfono', valor: d.telefono },
+    d.whatsapp && d.whatsapp !== d.telefono && { etiqueta: 'WhatsApp', valor: d.whatsapp },
+    d.email && { etiqueta: 'Correo', valor: d.email },
+  ].filter(Boolean) as { etiqueta: string; valor: string }[];
+
+  const copiar = async (etiqueta: string, valor: string) => {
+    try {
+      await navigator.clipboard.writeText(valor);
+      setCopiadoCampo(etiqueta);
+      setTimeout(() => setCopiadoCampo(''), 2000);
+    } catch { /* sin permiso de portapapeles: el dato igual se ve y se puede seleccionar */ }
+  };
 
   const anio = new Date().getFullYear();
 
@@ -364,6 +402,64 @@ export default function MiembroPage() {
           {filas.map((f, i) => (
             <Renglon key={f.clave} f={f} acento={acento} i={i} />
           ))}
+        </div>
+
+        {/* ---------- plan B ----------
+            En iPhone el archivo abre solo la ficha de contacto. En Android
+            baja a la carpeta de descargas y hay que tocar el aviso, y dentro
+            de los navegadores de Instagram o Facebook a veces ni eso: esos
+            navegadores bloquean las descargas. Por eso aquí hay una salida
+            que no depende de ningún archivo. */}
+        <div className="mt-6">
+          {!ayuda ? (
+            <button
+              onClick={() => setAyuda(true)}
+              className="w-full flex items-center justify-center gap-2 py-3 text-xs text-white/40 hover:text-white/70 transition-colors"
+            >
+              <HelpCircle size={14} />
+              ¿No se guardó el contacto?
+            </button>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 overflow-hidden"
+            >
+              <p className="text-xs text-white/55 leading-relaxed mb-3">
+                Algunos celulares no abren el archivo solos, sobre todo si llegaste
+                desde Instagram o Facebook. Con esto lo agregas igual.
+              </p>
+
+              {esAndroid && (
+                <a
+                  href={intentAndroid}
+                  className="flex items-center gap-2.5 rounded-xl p-3 mb-3 text-[13px] font-semibold text-white"
+                  style={{ background: `linear-gradient(100deg, ${acento}, #9933FF)` }}
+                >
+                  <UserPlus size={17} />
+                  Abrir Contactos con los datos ya puestos
+                </a>
+              )}
+
+              <div className="flex flex-col gap-1.5">
+                {datosSueltos.map(({ etiqueta, valor }) => (
+                  <button
+                    key={etiqueta}
+                    onClick={() => copiar(etiqueta, valor)}
+                    className="flex items-center gap-2.5 text-left rounded-xl px-3 py-2.5 bg-white/[0.03] hover:bg-white/[0.07] transition-colors"
+                  >
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[10px] uppercase tracking-wider text-white/35">{etiqueta}</span>
+                      <span className="block text-[13px] text-white/85 truncate">{valor}</span>
+                    </span>
+                    {copiadoCampo === etiqueta
+                      ? <Check size={15} className="text-white/70 shrink-0" />
+                      : <Copy size={15} className="text-white/30 shrink-0" />}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* ---------- pie ---------- */}

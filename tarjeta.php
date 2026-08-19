@@ -45,7 +45,16 @@ $esquema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' 
 $host = (string)($_SERVER['HTTP_HOST'] ?? 'www.inedito.digital');
 $vcf = vcard_texto($d, $esquema . '://' . $host . '/' . $slug);
 
-header('Content-Type: text/vcard; charset=utf-8');
+/* Android reconoce el contacto por el tipo del archivo, y los filtros que
+   traen muchos celulares (sobre todo los de fábrica y los que no son Google)
+   solo declaran el tipo viejo, text/x-vcard. Los Android modernos entienden
+   los dos, así que mandarles el viejo no le quita nada a nadie. iOS sí quiere
+   el tipo nuevo: con el viejo lo baja como archivo suelto en vez de ofrecer
+   agregar el contacto. */
+$ua = (string)($_SERVER['HTTP_USER_AGENT'] ?? '');
+$tipo = stripos($ua, 'android') !== false ? 'text/x-vcard' : 'text/vcard';
+header('Content-Type: ' . $tipo . '; charset=utf-8');
+header('Vary: User-Agent');
 header('Content-Disposition: attachment; filename="' . vcard_archivo($d, $slug) . '"');
 header('Content-Length: ' . strlen($vcf));
 // Cinco minutos: suficiente para no rearmar la foto en cada toque, y poco
