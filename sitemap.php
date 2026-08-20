@@ -4,7 +4,7 @@ $cfg = require __DIR__ . '/api/config.php'; require __DIR__ . '/api/db.php';
 header('Content-Type: application/xml; charset=utf-8');
 $BASE='https://www.inedito.digital'; $today=date('Y-m-d');
 $urls=[['/','1.0','weekly'],['/servicios','0.9','weekly'],['/portafolio','0.8','monthly'],['/blog','0.8','weekly'],
-['/servicios-ia','0.8','monthly'],['/servicios-ia/whatsapp','0.7','monthly'],['/servicios-ia/ventas','0.7','monthly'],
+['/servicios-ia','0.8','monthly'],['/servicios/posicionamiento-en-ia','0.9','monthly'],['/servicios-ia/whatsapp','0.7','monthly'],['/servicios-ia/ventas','0.7','monthly'],
 ['/servicios-ia/marketing','0.7','monthly'],['/servicios-ia/ecommerce','0.7','monthly'],
 ['/nosotros','0.6','monthly'],['/contacto','0.7','monthly'],['/privacidad','0.3','yearly'],['/terminos','0.3','yearly']];
 try { $pdo=db_connect($cfg);

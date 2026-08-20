@@ -166,6 +166,95 @@ if (!$is404 && isset($paginasPorRuta[$path])) {
   if (!empty($pg['seo_image'])) $GLOBALS['seoImagenPagina'] = $pg['seo_image'];
 }
 
+/* Posicionamiento GEO: la página se arma con lo que el cliente escribió en el
+   panel, y sus preguntas se publican como FAQPage. Un asistente que no ejecuta
+   JavaScript tiene que poder leerla completa desde aquí; si no, estaríamos
+   vendiendo un servicio que nuestra propia página no aplica. */
+if ($path === '/servicios/posicionamiento-en-ia') {
+  $is404 = false;
+  $g   = $paginas['posicionamiento-ia']['contenido'] ?? [];
+  $gp  = $g['portada'] ?? [];
+  $gf  = $g['preguntas'] ?? [];
+  $gs  = $g['servicio'] ?? [];
+  $gl  = $g['local'] ?? [];
+
+  $title = ($gp['seo_titulo'] ?? '') ?: 'Posicionamiento en IA (GEO) en Aguascalientes | ' . $siteName;
+  $desc  = ($gp['seo_desc'] ?? '') ?: 'Logramos que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen bien a tu negocio. Diagnóstico gratuito en Aguascalientes.';
+  $canonical = $BASE . $path;
+  $crumbs[] = ['Servicios', '/servicios'];
+  $crumbs[] = ['Posicionamiento en IA', $path];
+
+  // Las preguntas, marcadas para que Google y los asistentes las reconozcan
+  $faq = [];
+  for ($i = 1; $i <= 12; $i++) {
+    $q = trim((string)($gf['q' . $i] ?? ''));
+    $a = trim((string)($gf['r' . $i] ?? ''));
+    if ($q === '' || $a === '') continue;
+    $faq[] = ['@type' => 'Question', 'name' => $q,
+              'acceptedAnswer' => ['@type' => 'Answer', 'text' => $a]];
+  }
+  if ($faq) {
+    $schema[] = ['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $faq];
+  }
+
+  $schema[] = [
+    '@context' => 'https://schema.org',
+    '@type'    => 'Service',
+    'name'     => 'Posicionamiento en inteligencia artificial (GEO)',
+    'alternateName' => ['Generative Engine Optimization', 'Posicionamiento GEO', 'Posicionamiento en ChatGPT'],
+    'serviceType'   => 'Generative Engine Optimization',
+    'description'   => $desc,
+    'url'      => $canonical,
+    'provider' => [
+      '@type' => 'LocalBusiness',
+      'name'  => $settings['businessName'] ?? $siteName,
+      'url'   => $BASE,
+      'address' => [
+        '@type' => 'PostalAddress',
+        'streetAddress'   => $settings['businessAddress'] ?? '',
+        'addressLocality' => $settings['businessCity'] ?? 'Aguascalientes',
+        'addressRegion'   => $settings['businessState'] ?? 'Aguascalientes',
+        'postalCode'      => $settings['businessZip'] ?? '',
+        'addressCountry'  => 'MX',
+      ],
+    ],
+    'areaServed' => [
+      ['@type' => 'City',  'name' => 'Aguascalientes'],
+      ['@type' => 'State', 'name' => 'Aguascalientes'],
+      ['@type' => 'Country', 'name' => 'México'],
+    ],
+    'offers' => ['@type' => 'Offer', 'availability' => 'https://schema.org/InStock',
+                 'description' => 'Diagnóstico de posicionamiento en IA sin costo'],
+  ];
+
+  // Y esto es lo que lee quien no ejecuta JavaScript
+  $bodyBuilder = function() use ($gp, $gs, $gf, $gl, $g) {
+    $h  = '<h1>' . e(trim(($gp['titulo_1'] ?? 'Tus clientes ya no buscan.') . ' ' . ($gp['titulo_2'] ?? 'Preguntan.'))) . '</h1>';
+    $h .= '<p>' . e($gp['bajada'] ?? '') . '</p>';
+
+    $mot = $g['motores'] ?? [];
+    $lista = [];
+    for ($i = 1; $i <= 6; $i++) if (!empty($mot['m' . $i])) $lista[] = $mot['m' . $i];
+    if ($lista) $h .= '<h2>' . e(trim(($mot['titulo_1'] ?? '') . ' ' . ($mot['titulo_2'] ?? ''))) . '</h2><ul><li>' . implode('</li><li>', array_map('e', $lista)) . '</li></ul>';
+
+    $h .= '<h2>' . e(trim(($gs['titulo_1'] ?? 'Qué') . ' ' . ($gs['titulo_2'] ?? 'hacemos'))) . '</h2><ul>';
+    for ($i = 1; $i <= 6; $i++) {
+      if (empty($gs['s' . $i . '_t'])) continue;
+      $h .= '<li><strong>' . e($gs['s' . $i . '_t']) . '</strong>: ' . e($gs['s' . $i . '_d'] ?? '') . '</li>';
+    }
+    $h .= '</ul>';
+
+    $h .= '<h2>Preguntas frecuentes</h2>';
+    for ($i = 1; $i <= 12; $i++) {
+      if (empty($gf['q' . $i])) continue;
+      $h .= '<h3>' . e($gf['q' . $i]) . '</h3><p>' . e($gf['r' . $i] ?? '') . '</p>';
+    }
+
+    if (!empty($gl['titulo'])) $h .= '<h2>' . e($gl['titulo']) . '</h2><p>' . e($gl['texto'] ?? '') . '</p>';
+    return $h;
+  };
+}
+
 /* Páginas de contacto del equipo: son personas, así que llevan su propio
    título, su foto al compartir y una ficha Person para los buscadores. */
 $slugMiembro = $paginasPorRuta[$path] ?? null;

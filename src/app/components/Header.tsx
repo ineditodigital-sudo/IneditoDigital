@@ -35,6 +35,7 @@ export default function Header() {
       label: m('servicios_ia', 'Servicios IA'),
       path: '/servicios-ia',
       submenu: [
+        { label: mIA('geo', 'Posicionamiento en IA'), path: '/servicios/posicionamiento-en-ia', description: mIA('geo_desc', 'Que ChatGPT te recomiende') },
         { label: mIA('whatsapp', 'IA para WhatsApp'), path: '/servicios-ia/whatsapp', description: mIA('whatsapp_desc', 'Ventas y Soporte 24/7') },
         { label: mIA('ventas', 'IA de Ventas'), path: '/servicios-ia/ventas', description: mIA('ventas_desc', 'Prospección Inteligente') },
         { label: mIA('marketing', 'IA para Marketing'), path: '/servicios-ia/marketing', description: mIA('marketing_desc', 'Optimización Automática') },

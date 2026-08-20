@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage';
 const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const ServiceDetailPage = lazy(() => import('./pages/ServiceDetailPage'));
 const TarjetasDigitalesPage = lazy(() => import('./pages/TarjetasDigitalesPage'));
+const GeoPage = lazy(() => import('./pages/GeoPage'));
 const PortfolioPage = lazy(() => import('./pages/PortfolioPage'));
 const PortfolioDetailPage = lazy(() => import('./pages/PortfolioDetailPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
@@ -49,6 +50,7 @@ export const router = createBrowserRouter([
       // Ruta estatica: DEBE ir antes de servicios/:slug. Pagina a medida,
       // muy visual/animada, en vez del render generico de ServiceDetailPage.
       { path: 'servicios/tarjetas-de-presentacion-digital', Component: TarjetasDigitalesPage },
+      { path: 'servicios/posicionamiento-en-ia', Component: GeoPage },
       { path: 'servicios/:slug', Component: ServiceDetailPage },
       // Portfolio routes
       { path: 'portafolio', Component: PortfolioPage },
