@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoría SEO + GEO · Inédito Digital · Agosto 2026</title>
+<style>
+/* ==========================================================
+   Identidad visual extraída del sitio auditado (Fase 0)
+   ========================================================== */
+:root{
+  --pur:#7700CE;        /* morado principal */
+  --pur2:#9933FF;       /* morado claro */
+  --pur3:#CC66FF;       /* brillo */
+  --fondo:#0D0010;      /* fondo oscuro del sitio */
+  --fondo2:#07060B;     /* fondo alterno */
+  --tinta:#ECECF4;      /* texto sobre oscuro */
+  --mut:#8a8aa0;        /* texto atenuado */
+  --linea:#2a2a3a;
+  --ok:#22c55e; --alto:#f97316; --medio:#eab308; --critico:#ef4444;
+  --wa:#25D366;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fondo);color:var(--tinta);font-family:Arial,Helvetica,sans-serif;line-height:1.6;font-size:15px}
+h1,h2,h3,h4{font-weight:700;text-transform:uppercase;letter-spacing:.02em;line-height:1.15}
+h1{font-size:clamp(26px,5vw,44px)}
+h2{font-size:clamp(20px,3.4vw,28px);margin:0 0 14px;color:#fff}
+h2 span{color:var(--pur2)}
+h3{font-size:17px;margin:22px 0 10px;color:var(--pur3)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section{padding:44px 0;border-bottom:1px solid var(--linea)}
+p{color:var(--mut);max-width:72ch}
+strong{color:var(--tinta)}
+a{color:var(--pur3)}
+code{background:#1a1424;border:1px solid var(--linea);border-radius:6px;padding:1px 7px;font-size:13px;color:var(--pur3);word-break:break-all}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+th{background:#160b22;color:#fff;text-align:left;padding:9px 10px;border:1px solid var(--linea);text-transform:uppercase;font-size:11px;letter-spacing:.06em}
+td{padding:9px 10px;border:1px solid var(--linea);vertical-align:top;color:var(--mut)}
+td:first-child{white-space:nowrap;font-weight:700;color:var(--tinta)}
+.tablewrap{overflow-x:auto}
+.sev{display:inline-block;border-radius:20px;padding:1px 10px;font-size:11px;font-weight:700;white-space:nowrap}
+.s-crit{background:#3d1113;color:#ff8a8a}.s-alto{background:#3a2410;color:#ffb37a}
+.s-medio{background:#37300e;color:#f2d96b}.s-mejora{background:#0f3320;color:#7ce3a5}
+.portada{padding:80px 0 60px;border-bottom:1px solid var(--linea);background:
+  radial-gradient(60rem 30rem at 70% -20%,rgba(119,0,206,.35),transparent),
+  radial-gradient(40rem 24rem at 10% 110%,rgba(153,51,255,.18),transparent)}
+.logo{font-size:22px;font-weight:700;letter-spacing:.04em}
+.logo b{color:var(--pur2)}
+.pill{display:inline-block;border:1px solid rgba(153,51,255,.5);background:rgba(119,0,206,.15);
+  border-radius:30px;padding:5px 16px;font-size:12px;letter-spacing:.2em;margin-bottom:18px;color:#fff}
+.grad{background:linear-gradient(90deg,var(--pur),var(--pur2),var(--pur3));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* medidores de calificación */
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin:22px 0}
+.score{background:rgba(255,255,255,.04);border:1px solid var(--linea);border-radius:16px;padding:16px}
+.score .n{font-size:30px;font-weight:700;color:#fff}
+.score .a{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--pur3);margin-bottom:6px}
+.score .j{font-size:12px;color:var(--mut);margin-top:8px;line-height:1.45}
+.bar{height:8px;background:#221a30;border-radius:6px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--pur),var(--pur3))}
+.global{background:linear-gradient(120deg,rgba(119,0,206,.25),rgba(153,51,255,.08));border-color:rgba(153,51,255,.45)}
+.global .n{font-size:52px}
+/* matriz impacto x esfuerzo */
+.matriz{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;margin:16px 0}
+.cuad{border:1px solid var(--linea);border-radius:14px;padding:14px;min-height:130px;background:rgba(255,255,255,.03)}
+.cuad h4{font-size:12px;letter-spacing:.08em;margin-bottom:8px}
+.cuad.p1{border-color:rgba(34,197,94,.5)} .cuad.p1 h4{color:var(--ok)}
+.cuad.p2 h4{color:var(--medio)} .cuad.p3 h4{color:var(--alto)} .cuad.p4 h4{color:var(--mut)}
+.cuad li{font-size:12.5px;color:var(--mut);margin:4px 0 4px 16px}
+.nota{border-left:3px solid var(--pur2);background:rgba(119,0,206,.08);padding:12px 16px;border-radius:0 12px 12px 0;margin:14px 0;font-size:13.5px;color:var(--mut)}
+.mono{font-family:Consolas,Menlo,monospace;font-size:12.5px;background:#12081c;border:1px solid var(--linea);
+  border-radius:12px;padding:14px;overflow-x:auto;color:#cfc3e6;white-space:pre}
+footer{padding:34px 0;color:var(--mut);font-size:12px}
+@media print{
+  body{background:#fff;color:#111}
+  p,td,.score .j,.cuad li{color:#333}
+  th{background:#eee;color:#111}
+  .portada{background:none}
+  section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="portada"><div class="wrap">
+  <div class="logo">INÉDITO <b>DIGITAL</b></div>
+  <div style="height:26px"></div>
+  <span class="pill">AUDITORÍA INTEGRAL</span>
+  <h1>SEO + GEO<br><span class="grad">inedito.digital</span></h1>
+  <p style="margin-top:14px">Auditoría técnica completa · 20 de agosto de 2026 · Realizada con acceso total al código fuente y al servidor de producción.</p>
+</div></div>
+
+<!-- ============================== RESUMEN ============================== -->
+<section><div class="wrap">
+  <h2>Resumen <span>ejecutivo</span></h2>
+  <div class="scores">
+    <div class="score global">
+      <div class="a">Calificación global</div><div class="n">67<span style="font-size:20px;color:var(--mut)">/100</span></div>
+      <div class="bar"><i style="width:67%"></i></div>
+      <div class="j">Base técnica muy por encima del promedio local; los puntos débiles están en la herencia del sitio anterior, la profundidad de contenido y la capa local.</div>
+    </div>
+    <div class="score"><div class="a">Indexación y rastreo</div><div class="n">72</div><div class="bar"><i style="width:72%"></i></div>
+      <div class="j">Sitemap limpio (37/37 en 200), pero Google conserva 11+ URLs del WordPress anterior que hoy dan 404 sin redirección.</div></div>
+    <div class="score"><div class="a">SEO técnico</div><div class="n">68</div><div class="bar"><i style="width:68%"></i></div>
+      <div class="j">Cabeceras y compresión bien; el bundle de 665 KB y el LCP dependiente de JavaScript son el freno principal.</div></div>
+    <div class="score"><div class="a">On-page</div><div class="n">74</div><div class="bar"><i style="width:74%"></i></div>
+      <div class="j">Estructura sólida; 4 titles fuera de rango y 3 descripciones cortas.</div></div>
+    <div class="score"><div class="a">Contenido y E-E-A-T</div><div class="n">58</div><div class="bar"><i style="width:58%"></i></div>
+      <div class="j">Blog con pocos artículos, sin fechas visibles ni en schema, y con autor genérico en vez de personas.</div></div>
+    <div class="score"><div class="a">Keywords</div><div class="n">64</div><div class="bar"><i style="width:64%"></i></div>
+      <div class="j">Buena cobertura de servicios; faltan páginas para búsquedas locales de alto valor y clusters informacionales.</div></div>
+    <div class="score"><div class="a">Off-page</div><div class="n">45</div><div class="bar"><i style="width:45%"></i></div>
+      <div class="j">Perfil de enlaces mínimo verificable (Delfos, Grupo Maen). Estimación: sin herramienta de backlinks.</div></div>
+    <div class="score"><div class="a">SEO local</div><div class="n">55</div><div class="bar"><i style="width:55%"></i></div>
+      <div class="j">GBP existe con 5★/7 reseñas (fuente secundaria), pero el NAP está inconsistente y el schema no lleva coordenadas ni horarios.</div></div>
+    <div class="score"><div class="a">GEO (motores de IA)</div><div class="n">78</div><div class="bar"><i style="width:78%"></i></div>
+      <div class="j">llms.txt, robots de IA abiertos, FAQPage y HTML sin JS en las plantillas clave: muy por delante del mercado local. Faltan llms-full.txt y engordar 6 plantillas delgadas.</div></div>
+  </div>
+
+  <h3>Top 10 hallazgos críticos</h3>
+  <div class="tablewrap"><table>
+    <tr><th>#</th><th>ID</th><th>Hallazgo</th><th>Severidad</th></tr>
+    <tr><td>1</td><td>IDX-01</td><td>11+ URLs del WordPress anterior siguen indexadas en Google y devuelven 404 sin redirección: tráfico y autoridad tirados a la basura.</td><td><span class="sev s-crit">🔴 Crítico</span></td></tr>
+    <tr><td>2</td><td>LOC-01</td><td>NAP inconsistente: el sitio dice “Jardines Eternos 902-Loc 2” y el directorio Delfos publica “902-Local 1”. Las IAs castigan la contradicción.</td><td><span class="sev s-crit">🔴 Crítico</span></td></tr>
+    <tr><td>3</td><td>GEO-02</td><td>6 plantillas entregan menos de 35 palabras a los bots que no ejecutan JavaScript (nosotros, contacto, servicios-ia y las 4 páginas de IA, privacidad).</td><td><span class="sev s-alto">🟠 Alto</span></td></tr>
+    <tr><td>4</td><td>CON-01</td><td>El blog no publica fechas: ni visibles ni <code>datePublished</code>/<code>dateModified</code> en el schema. Google y las IAs favorecen frescura demostrable.</td><td><span class="sev s-alto">🟠 Alto</span></td></tr>
+    <tr><td>5</td><td>TEC-01</td><td>Bundle principal de 665 KB (209 KB comprimido) y LCP que depende 100 % de JavaScript: la portada pinta tarde en móvil con datos.</td><td><span class="sev s-alto">🟠 Alto</span></td></tr>
+    <tr><td>6</td><td>LOC-02</td><td>El schema <code>ProfessionalService</code> no lleva <code>geo</code> (coordenadas) ni <code>openingHoursSpecification</code>, y el negocio sí tiene horario definido.</td><td><span class="sev s-alto">🟠 Alto</span></td></tr>
+    <tr><td>7</td><td>CON-02</td><td>Autoría genérica (“Equipo Inédito Digital”) sin páginas de autor ni schema <code>Person</code>, teniendo ya páginas de equipo con Person que no se enlazan desde el blog.</td><td><span class="sev s-alto">🟠 Alto</span></td></tr>
+    <tr><td>8</td><td>KW-01</td><td>Sin páginas para búsquedas locales de dinero (“diseño de páginas web en Aguascalientes”, “agencia SEO Aguascalientes”): el blog las toca de refilón y los competidores tienen landing dedicada.</td><td><span class="sev s-alto">🟠 Alto</span></td></tr>
+    <tr><td>9</td><td>GEO-03</td><td>No existe <code>llms-full.txt</code>; el llms.txt actual resume pero no da el contenido completo que los agentes usan para citar con precisión.</td><td><span class="sev s-medio">🟡 Medio</span></td></tr>
+    <tr><td>10</td><td>ONP-01</td><td>4 titles fuera de rango (64–76 caracteres: home, GEO, artículo SEO local, proyecto Ofitodo) y 3 metas cortas (blog, IA WhatsApp, equipo).</td><td><span class="sev s-medio">🟡 Medio</span></td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASE 0 ============================== -->
+<section><div class="wrap">
+  <h2>Fase 0 · <span>Reconocimiento</span></h2>
+  <div class="tablewrap"><table>
+    <tr><td>Giro</td><td>Agencia de marketing digital con especialidad en IA (diseño web, SEO/GEO, Google Ads, chatbots, e-commerce, tarjetas NFC). Confirmado contra el contenido del sitio y su ficha en Delfos.</td></tr>
+    <tr><td>Mercado</td><td>Aguascalientes, Ags. y el Bajío; servicios entregables a todo México.</td></tr>
+    <tr><td>Buyer</td><td>PyME local que quiere vender más (dueño/gerente, no técnico); segundo perfil: negocio que ya invierte en Ads/redes y busca resultados medibles con IA.</td></tr>
+    <tr><td>Objetivo</td><td>Generación de leads (formulario, asistente con captura y WhatsApp).</td></tr>
+    <tr><td>Stack</td><td>SPA React 18 + Vite, servida por <code>render.php</code> (PHP 8.3) que inyecta SEO y contenido por página; MariaDB; LiteSpeed + Cloudflare; CMS propio con 833 campos editables. El renderizado para bots es HTML generado en servidor: híbrido poco común y ventaja frente al típico WordPress local.</td></tr>
+    <tr><td>Dimensión</td><td>37 URLs en sitemap (5 artículos de blog, 9 servicios, 4 páginas IA, 6 proyectos, institucionales) + páginas de equipo fuera de sitemap. Un idioma (es-MX): hreflang no aplica.</td></tr>
+    <tr><td>Identidad visual</td><td>Primario <code>#7700CE</code> · claro <code>#9933FF</code> · brillo <code>#CC66FF</code> · fondos <code>#0D0010</code>/<code>#07060B</code>/blanco · verde WhatsApp <code>#25D366</code>. Títulos: Hanson Bold (mayúsculas, tracking 0.02em); cuerpo: system/Arial. Componentes: tarjetas de vidrio (blanco 4–5 % + borde blanco 10 %), radios 16–24 px, botones píldora con degradado morado y glow. Logo: <code>https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp</code>. Este reporte usa esa paleta.</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASE 1 ============================== -->
+<section><div class="wrap">
+  <h2>Fase 1 · <span>Indexación y rastreo</span></h2>
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia (medida)</th><th>Impacto</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>IDX-01</td><td><span class="sev s-crit">🔴</span></td>
+      <td>Google conserva indexadas 11+ URLs del sitio WordPress anterior; todas devuelven 404 y ninguna redirige.</td>
+      <td><code>site:inedito.digital</code> devuelve <code>/apps/</code>, <code>/paginas-web/</code>, <code>/diseno-y-desarrollo-web/</code>, <code>/posicionamiento-organico/</code>, <code>/tarjetas-digitales/</code>, <code>/creacion-de-logo/</code>, <code>/ofitodo-…/</code>, <code>/casos-de-exito/…</code>, <code>/alaman/</code>, <code>/espacios-publicitarios/…</code>. Verificado con curl: las 8 probadas responden <strong>404</strong>.</td>
+      <td>Cada clic desde Google a esas URLs muere en un 404; la autoridad acumulada por años de esas páginas no se transfiere a las nuevas. Es la fuga número uno.</td>
+      <td>Redirecciones 301 en <code>.htaccess</code> hacia el equivalente nuevo (mapa completo en <code>instrucciones-correcciones.md</code>).</td><td>Bajo</td></tr>
+    <tr><td>IDX-02</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>Sitemap sano y completo.</td>
+      <td>37 URLs, <strong>37/37 responden 200</strong> (verificado una por una); <code>lastmod</code> presente; referenciado desde robots.txt.</td>
+      <td>—</td><td>El <code>lastmod</code> es la fecha del día para todas: usar la fecha real de última modificación por URL cuando el CMS la tenga.</td><td>Bajo</td></tr>
+    <tr><td>IDX-03</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>Canónicos correctos, incluso con barra final.</td>
+      <td><code>/servicios/</code> responde 200 pero canonicaliza a <code>/servicios</code> (verificado). Dominio: http→https y raíz→www con 301 en cadena de un solo salto.</td>
+      <td>—</td><td>Nada.</td><td>—</td></tr>
+    <tr><td>IDX-04</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Las páginas de contacto del equipo no están en el sitemap.</td>
+      <td><code>/armando-trejo</code> responde 200 con Person schema pero no aparece entre las 37 URLs del sitemap.</td>
+      <td>Las IAs y Google tardan más en descubrir las fichas de las personas: son la base de la autoría (CON-02).</td>
+      <td>Añadir las páginas tipo <code>miembro</code> publicadas al sitemap.php.</td><td>Bajo</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASE 2 ============================== -->
+<section><div class="wrap">
+  <h2>Fase 2 · <span>Técnico y rendimiento</span></h2>
+  <p><strong>Nota de medición:</strong> Core Web Vitals de campo (CrUX) y Lighthouse no se pudieron ejecutar desde este entorno; los valores de laboratorio quedan pendientes y así se declara en Limitaciones. Lo que sigue es <strong>medido directamente</strong> con curl contra producción.</p>
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia (medida)</th><th>Impacto</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>TEC-01</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Bundle JavaScript principal pesado y LCP dependiente de JS.</td>
+      <td><code>index-*.js</code>: <strong>665 KB</strong> (209 KB comprimido). El HTML inicial para navegadores no contiene la imagen del hero: el mosaico de la portada se monta por JS, así que el LCP espera descarga + parse + render de React.</td>
+      <td>En un celular con 4G regular, la portada tarda visiblemente en pintar; el LCP alto baja posiciones en móvil, que es donde busca el cliente local.</td>
+      <td>1) <code>&lt;link rel="preload" as="image"&gt;</code> de la imagen LCP en render.php; 2) partir el vendor (motion, react-slick, recharts si existe) en chunks; 3) auditar imports del catálogo de lucide.</td><td>Medio</td></tr>
+    <tr><td>TEC-02</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>Compresión y caché bien configuradas.</td>
+      <td>HTML 163 KB → <strong>43 KB</strong> comprimido; assets con <code>immutable</code> 1 año; archivos sueltos 1 mes; HTML <code>no-cache</code> (correcto para contenido dinámico).</td>
+      <td>—</td><td>Nada.</td><td>—</td></tr>
+    <tr><td>TEC-03</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>TTFB dentro de umbral en todas las páginas medidas.</td>
+      <td>Home 584 ms · servicios 355 ms · GEO 535 ms · contacto 553 ms · artículo 568 ms (objetivo &lt; 800 ms). Cloudflare al frente.</td>
+      <td>—</td><td>Si se quiere bajar más: caché de página completa en Cloudflare para anónimos.</td><td>Medio</td></tr>
+    <tr><td>TEC-04</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Sin Content-Security-Policy; HSTS sin <code>includeSubDomains</code>.</td>
+      <td>Cabeceras presentes: nosniff, X-Frame, Referrer-Policy, Permissions-Policy, HSTS <code>max-age=31536000</code> (sin subdominios ni preload). CSP: ausente.</td>
+      <td>Riesgo bajo pero real de inyección; los subdominios (imagenes.*) quedan fuera del HSTS.</td>
+      <td>CSP en modo Report-Only primero; ampliar HSTS cuando se confirme que todos los subdominios sirven https.</td><td>Medio</td></tr>
+    <tr><td>TEC-05</td><td><span class="sev s-medio">🟡</span></td>
+      <td>6 archivos del código dependen de imágenes de Unsplash.</td>
+      <td><code>grep images.unsplash.com src/</code> → 6 componentes (páginas IA y plantilla de servicio). Sin dimensiones declaradas ni control del peso.</td>
+      <td>Dependencia de un tercero (si Unsplash cambia o limita, se rompen), sin WebP garantizado, y CLS potencial por falta de width/height.</td>
+      <td>Descargarlas, convertir a WebP, servirlas desde imagenes.inedito.digital con dimensiones; ya son editables desde el panel, solo hay que sustituir los valores.</td><td>Bajo</td></tr>
+    <tr><td>TEC-06</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>Datos estructurados sólidos y validables.</td>
+      <td>Inventario por plantilla (medido): base <code>ProfessionalService</code>+<code>BreadcrumbList</code> en todo el sitio; servicios con <code>Service</code>+<code>FAQPage</code>; blog con <code>BlogPosting</code>; GEO con <code>FAQPage</code>+<code>Service</code>+<code>areaServed</code>; equipo con <code>Person</code>.</td>
+      <td>—</td><td>Faltantes puntuales: ver LOC-02 (geo/horarios), CON-01 (fechas), y <code>WebSite</code>+<code>SearchAction</code> en la home.</td><td>Bajo</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASE 3 ============================== -->
+<section><div class="wrap">
+  <h2>Fase 3 · <span>On-page</span></h2>
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia (medida)</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>ONP-01</td><td><span class="sev s-medio">🟡</span></td>
+      <td>4 titles fuera del rango 50–60 caracteres.</td>
+      <td>Home 64 · GEO 63 · artículo SEO local 76 · proyecto Ofitodo 69 (medidos del HTML servido).</td>
+      <td>Reescrituras exactas en <code>instrucciones-correcciones.md</code> §4; editables desde el panel sin tocar código.</td><td>Bajo</td></tr>
+    <tr><td>ONP-02</td><td><span class="sev s-medio">🟡</span></td>
+      <td>3 meta descriptions cortas (&lt;70 caracteres) que desaprovechan el espacio en la SERP.</td>
+      <td>/blog 57 · /servicios-ia/whatsapp 64 · /armando-trejo 64.</td>
+      <td>Reescrituras en el mismo apartado.</td><td>Bajo</td></tr>
+    <tr><td>ONP-03</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>H1 único por página, jerarquía limpia, Open Graph completo con imagen, lang y favicon correctos.</td>
+      <td>Verificado en las 13 plantillas: og:image presente en todas; artículos con 10 encabezados; GEO con 12.</td>
+      <td>—</td><td>—</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASES 4-5 ============================== -->
+<section><div class="wrap">
+  <h2>Fases 4–5 · <span>Arquitectura, contenido y E-E-A-T</span></h2>
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia</th><th>Impacto</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>CON-01</td><td><span class="sev s-alto">🟠</span></td>
+      <td>El blog no publica fechas: ni visibles ni en el schema.</td>
+      <td>El <code>BlogPosting</code> del artículo de SEO local no contiene <code>datePublished</code> ni <code>dateModified</code> (verificado con grep sobre el HTML servido).</td>
+      <td>Google no puede mostrar la fecha en la SERP y las IAs no pueden juzgar la frescura: en GEO la frescura demostrable es criterio de cita.</td>
+      <td>Guardar y publicar fecha de publicación y de actualización; mostrarlas en la página y en el schema.</td><td>Bajo</td></tr>
+    <tr><td>CON-02</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Autoría genérica: “Equipo Inédito Digital” como Organization.</td>
+      <td><code>"author":{"@type":"Organization"…}</code> en los artículos. Y el sitio YA tiene páginas de persona con schema Person (<code>/armando-trejo</code>) que no se enlazan desde ningún artículo.</td>
+      <td>E-E-A-T pide personas con nombre y credenciales; la infraestructura existe y está desaprovechada.</td>
+      <td>Firmar cada artículo con un integrante, enlazar a su página y emitir <code>author</code> como Person con <code>url</code>.</td><td>Bajo</td></tr>
+    <tr><td>CON-03</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Blog corto para sostener autoridad temática: 5 artículos.</td>
+      <td>5 URLs de blog en el sitemap.</td>
+      <td>Las IAs citan a quien cubre el tema de punta a punta; con 5 piezas no se sostiene un cluster.</td>
+      <td>Calendario en <code>keywords.md</code>: 12 piezas priorizadas por cluster con URL propuesta.</td><td>Alto</td></tr>
+    <tr><td>ARQ-01</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Los proyectos del portafolio entregan poco texto (108 palabras al bot) y sin cifras estructuradas.</td>
+      <td><code>/portafolio/ofitodo</code>: 108 palabras, 4 encabezados; el caso afirma +80 % tráfico orgánico pero la cifra no está en el HTML de bots de forma citable.</td>
+      <td>Los casos de éxito son la evidencia que las IAs citan al recomendar agencias; hoy casi no aportan.</td>
+      <td>Ampliar el bodyBuilder del proyecto: reto, solución, resultados con cifras, testimonio.</td><td>Medio</td></tr>
+    <tr><td>ARQ-02</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>Arquitectura plana y sana: ninguna página de dinero a más de 2 clics; breadcrumbs visibles y con schema; 404 real (verificado: ruta inexistente → 404 con página útil).</td>
+      <td>—</td><td>—</td><td>—</td><td>—</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASES 6-8 ============================== -->
+<section><div class="wrap">
+  <h2>Fases 6–8 · <span>Keywords, off-page y local</span></h2>
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia</th><th>Impacto</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>KW-01</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Sin landing para las búsquedas locales de dinero.</td>
+      <td>En la búsqueda “agencia de marketing digital Aguascalientes” (hecha desde EE. UU.; posición local exacta no medible desde aquí) la home de Inédito aparece, pero los 7 resultados por encima son competidores con landing dedicada (SeoImpacto, Atracción Digital, Luna, Intermedia, Maxgueta…). Inédito compite con la home genérica.</td>
+      <td>La keyword más valiosa del giro se pelea con la página menos específica del sitio.</td>
+      <td>Crear las landings del mapa keyword→URL: agencia SEO Ags, diseño web Ags, Google Ads Ags (briefs completos en instrucciones §8).</td><td>Alto</td></tr>
+    <tr><td>KW-02</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>El nicho GEO en Aguascalientes está casi vacío.</td>
+      <td>Búsqueda “posicionamiento GEO ChatGPT Aguascalientes”: solo ConlineWeb (landing programática) y un directorio; ninguna agencia local con página fuerte. La página nueva de Inédito aún no aparece (tiene un día).</td>
+      <td>Ventana abierta para ser el referente antes de que llegue nadie.</td>
+      <td>Sostener la página nueva con el cluster de contenido GEO (5 piezas en keywords.md) y conseguir menciones locales.</td><td>Medio</td></tr>
+    <tr><td>OFF-01</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Perfil de enlaces mínimo. <em>(Estimado: sin herramienta de backlinks.)</em></td>
+      <td>Verificable por búsqueda: ficha en Delfos y mención en Grupo Maen. No se detectan menciones en medios locales ni directorios del giro.</td>
+      <td>La autoridad de dominio es el multiplicador de todo lo demás; hoy casi no existe.</td>
+      <td>Plan en checklist: CANACO Ags, directorios del giro, notas en medios locales (LJA, Hidrocálido digital), perfil Clutch/Sortlist.</td><td>Alto</td></tr>
+    <tr><td>LOC-01</td><td><span class="sev s-crit">🔴</span></td>
+      <td>NAP inconsistente entre el sitio y los directorios.</td>
+      <td>Sitio: “Jardines Eternos <strong>902-Loc 2</strong>, Panorama”. Delfos: “Jardines Eternos <strong>902-Local 1</strong>”. (La ficha de GBP no se pudo abrir desde aquí: verificar también ahí.)</td>
+      <td>La consistencia nombre-dirección-teléfono es la señal local número uno para Google y para las IAs; una contradicción resta confianza a ambas fuentes.</td>
+      <td>Definir la forma canónica exacta y corregirla en Delfos, GBP y cualquier directorio. Checklist §30 días.</td><td>Bajo</td></tr>
+    <tr><td>LOC-02</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Schema local incompleto: sin <code>geo</code>, sin <code>openingHoursSpecification</code>, sin <code>aggregateRating</code>.</td>
+      <td>Verificado en el JSON-LD de la home: ProfessionalService trae dirección, teléfono, sameAs y hasMap, pero no coordenadas ni horarios — y el negocio sí tiene horario (L-V 9:00-18:00, guardado en el propio CMS).</td>
+      <td>La IA no puede responder “¿a qué hora abre?” ni ubicar con precisión; datos que ya existen y no se publican.</td>
+      <td>Bloque JSON-LD final listo en instrucciones §5.</td><td>Bajo</td></tr>
+    <tr><td>LOC-03</td><td><span class="sev s-medio">🟡</span></td>
+      <td>GBP con pocas reseñas para pelear el map pack. <em>(Fuente secundaria: Delfos reporta 5★ con 7 reseñas; sin acceso directo a GBP.)</em></td>
+      <td>Competidores como SeoImpacto presumen cientos de casos y perfiles nutridos.</td>
+      <td>El map pack es el 50 % del SEO local de servicios.</td>
+      <td>Rutina de reseñas: pedirla a cada cliente al cierre con enlace directo; responder todas.</td><td>Bajo</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASE 9 ============================== -->
+<section><div class="wrap">
+  <h2>Fase 9 · <span>GEO — motores generativos</span></h2>
+  <div class="nota">Contexto justo: este sitio ya está <strong>muy por delante</strong> del mercado local en GEO — robots de IA abiertos, llms.txt, FAQPage, HTML para bots, página de servicio GEO dedicada. Los hallazgos siguientes son para consolidar esa ventaja, no para tapar carencias.</div>
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia (medida)</th><th>Impacto</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>GEO-01</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>Política de crawlers de IA correcta y explícita.</td>
+      <td>robots.txt permite GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, anthropic-ai, PerplexityBot, Google-Extended, Applebot-Extended y CCBot; bloquea /panel/ y /api/.</td>
+      <td>—</td>
+      <td>Completar con los que faltan (Claude-User, Perplexity-User, Amazonbot, meta-externalagent, Bytespider) para que la política sea decisión y no omisión. Archivo final en instrucciones §2.</td><td>Bajo</td></tr>
+    <tr><td>GEO-02</td><td><span class="sev s-alto">🟠</span></td>
+      <td>6 plantillas entregan contenido casi vacío al bot sin JavaScript.</td>
+      <td>Palabras en el HTML de bots (medido con UA de GPTBot): nosotros <strong>22</strong> · contacto <strong>34</strong> · servicios-ia <strong>24</strong> · IA WhatsApp <strong>26</strong> · privacidad <strong>20</strong>. En contraste: GEO 712, tarjetas NFC 407, artículo 414.</td>
+      <td>Justo las páginas que responden “quiénes son” y “cómo los contacto” — las que una IA consulta para recomendar — están mudas para ella.</td>
+      <td>Extender los bodyBuilder de render.php con el contenido real que ya está en el CMS. Especificación en instrucciones §6.</td><td>Medio</td></tr>
+    <tr><td>GEO-03</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Falta <code>llms-full.txt</code>.</td>
+      <td><code>/llms.txt</code>: 200 (4.7 KB, bien formado). <code>/llms-full.txt</code>: <strong>404</strong>.</td>
+      <td>Los agentes que quieren el detalle completo no tienen dónde leerlo de una pasada.</td>
+      <td>Generarlo desde la base de datos con el contenido completo de servicios y preguntas frecuentes. Código en instrucciones §3.</td><td>Bajo</td></tr>
+    <tr><td>GEO-04</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Prueba de citabilidad en asistentes: no ejecutable desde este entorno.</td>
+      <td>Sin acceso a ChatGPT/Gemini/Perplexity desde la sesión. Señal indirecta medida: en el resumen generativo de la búsqueda de marca, la información citada (servicios, dirección, caso Ofitodo +80 %) proviene del propio sitio y de Delfos — las fuentes ya se están usando.</td>
+      <td>Sin línea base no se puede medir el avance del servicio GEO propio.</td>
+      <td>Correr manualmente las 15 preguntas del guion (keywords.md §Preguntas GEO) en ChatGPT, Gemini y Perplexity, y guardar capturas como línea base mensual.</td><td>Bajo</td></tr>
+    <tr><td>GEO-05</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Entidad sin presencia en las fuentes que las IAs consultan.</td>
+      <td>Sin Wikidata, sin perfil en directorios de agencias (Clutch, Sortlist aparece en la SERP local), canal de YouTube no enlazado en sameAs del sitio.</td>
+      <td>Las IAs triangulan: cuantas más fuentes independientes digan lo mismo, más citan.</td>
+      <td>Crear entidad en Wikidata, perfiles en 2 directorios de agencias, y unificar sameAs.</td><td>Medio</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ============================== FASE 10 ============================== -->
+<section><div class="wrap">
+  <h2>Fase 10 · <span>Competencia</span></h2>
+  <p>Identificados desde las SERPs reales (búsquedas hechas desde EE. UU.; la posición exacta local puede variar — declarado en Limitaciones):</p>
+  <div class="tablewrap"><table>
+    <tr><th>Competidor</th><th>Fortaleza observable</th><th>Debilidad observable</th><th>Qué hacer</th></tr>
+    <tr><td>SeoImpacto</td><td>Landing local dedicada, marca personal fuerte (fundador), presume +200 casos.</td><td>Nada visible de GEO/IA; sitio WordPress convencional.</td><td>Superarlo en la conversación de IA: es el rival directo por “agencia SEO Aguascalientes”.</td></tr>
+    <tr><td>Seonet Digital</td><td>Autoridad de dominio alta (opera en 6 países), contenido de blog masivo.</td><td>Genérico, sin foco Aguascalientes real.</td><td>No pelear su volumen: ganarle en local + GEO.</td></tr>
+    <tr><td>Luna Social Media</td><td>Posiciona con dominio propio local, foco Ads.</td><td>Sin capa técnica visible.</td><td>Imitación: su claridad de oferta local.</td></tr>
+    <tr><td>Atracción Digital / Intermedia / Maxgueta</td><td>Landing local por keyword.</td><td>Contenido delgado tipo plantilla.</td><td>Batibles con las landings propuestas + casos con cifras.</td></tr>
+    <tr><td>ConlineWeb (GEO)</td><td>Única landing GEO que menciona Aguascalientes.</td><td>Página programática (misma plantilla por ciudad), sin evidencia local.</td><td>La página GEO de Inédito ya es superior en contenido; falta indexarla y sostenerla con cluster.</td></tr>
+  </table></div>
+  <p><strong>Conclusión:</strong> imitar la claridad local de las landings de los competidores; superar a todos en GEO (nadie lo trabaja en serio); dejar de pelear el volumen editorial de Seonet y competir en profundidad local con casos y cifras.</p>
+</div></section>
+
+<!-- ============================== FASE 11 ============================== -->
+<section><div class="wrap">
+  <h2>Fase 11 · <span>Priorización</span></h2>
+  <div class="matriz">
+    <div class="cuad p1"><h4>⚡ Alto impacto · Bajo esfuerzo — YA</h4><ul>
+      <li>IDX-01 · 301 de las 11 URLs viejas</li>
+      <li>LOC-01 · Unificar NAP (sitio, Delfos, GBP)</li>
+      <li>LOC-02 · geo + horarios + WebSite en schema</li>
+      <li>CON-01 · Fechas en blog (visible + schema)</li>
+      <li>GEO-03 · llms-full.txt</li>
+      <li>ONP-01/02 · titles y metas</li>
+    </ul></div>
+    <div class="cuad p2"><h4>📈 Alto impacto · Esfuerzo medio-alto</h4><ul>
+      <li>GEO-02 · Engordar 6 plantillas para bots</li>
+      <li>KW-01 · 3 landings locales de dinero</li>
+      <li>CON-03 · Calendario de contenido (12 piezas)</li>
+      <li>TEC-01 · Preload LCP + partir bundle</li>
+      <li>OFF-01 · Campaña de enlaces locales</li>
+    </ul></div>
+    <div class="cuad p3"><h4>🔧 Impacto medio · Bajo esfuerzo</h4><ul>
+      <li>IDX-04 · Equipo al sitemap</li>
+      <li>CON-02 · Autores Person enlazados</li>
+      <li>TEC-05 · Sustituir Unsplash</li>
+      <li>GEO-01 · Completar robots de IA</li>
+      <li>LOC-03 · Rutina de reseñas</li>
+    </ul></div>
+    <div class="cuad p4"><h4>🗓 Después</h4><ul>
+      <li>TEC-04 · CSP + HSTS ampliado</li>
+      <li>GEO-05 · Wikidata y directorios</li>
+      <li>ARQ-01 · Casos de éxito ampliados</li>
+      <li>Cache de página en Cloudflare</li>
+    </ul></div>
+  </div>
+
+  <h3>Proyección honesta (sin prometer posiciones)</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Horizonte</th><th>Qué esperar si se ejecuta el plan</th></tr>
+    <tr><td>30 días</td><td>Fugas cerradas: los 301 recuperan el tráfico de las URLs viejas; NAP unificado; schema local completo; llms-full publicado. Primeras impresiones de la página GEO en Google (ya está en sitemap con prioridad alta).</td></tr>
+    <tr><td>90 días</td><td>Las 3 landings locales indexadas y compitiendo; blog con fechas y autores; línea base de citabilidad en IAs tomada y primera mejora medible en respuestas sobre la marca (los asistentes reconsultan sus fuentes en semanas, no años).</td></tr>
+    <tr><td>180 días</td><td>Con 12 piezas del calendario y 8–10 enlaces locales nuevos: competir de tú a tú por “agencia SEO/marketing digital Aguascalientes” y ser la respuesta dominante en consultas de GEO/IA locales, donde hoy no hay rival serio. Rango, no promesa: depende de reseñas y constancia editorial.</td></tr>
+  </table></div>
+
+  <h3>Limitaciones y accesos requeridos</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Falta</th><th>Qué impide</th><th>Qué se necesita</th></tr>
+    <tr><td>Search Console</td><td>Cobertura de indexación real, queries con impresiones, CTR, estado exacto de las URLs zombis.</td><td>Acceso como usuario o propietario a la propiedad de inedito.digital.</td></tr>
+    <tr><td>GA4</td><td>Tráfico real, conversiones, páginas de entrada.</td><td>Acceso de lectura.</td></tr>
+    <tr><td>Google Business Profile</td><td>Verificar NAP, categorías, reseñas de primera mano (lo reportado es vía Delfos).</td><td>Acceso de administrador.</td></tr>
+    <tr><td>Herramienta de keywords/backlinks</td><td>Volúmenes exactos y perfil de enlaces completo; todo lo de demanda va como estimación Alta/Media/Baja.</td><td>Ahrefs/Semrush o Keyword Planner con cuenta de Ads.</td></tr>
+    <tr><td>Lighthouse/CrUX</td><td>LCP/INP/CLS de laboratorio y de campo; este entorno no compone páginas.</td><td>Correr PageSpeed Insights sobre las 6 URLs clave (5 minutos, manual).</td></tr>
+    <tr><td>Prueba directa en asistentes</td><td>Línea base de citabilidad real.</td><td>Correr el guion de 15 preguntas de keywords.md en ChatGPT, Gemini y Perplexity.</td></tr>
+  </table></div>
+  <p style="margin-top:10px"><strong>Nota de método:</strong> las búsquedas en Google se hicieron desde infraestructura en EE. UU.; el orden local exacto en Aguascalientes puede variar. Todo lo demás — estados HTTP, cabeceras, pesos, contenido para bots, schema — está medido directamente contra producción el 20 de agosto de 2026.</p>
+</div></section>
+
+<footer><div class="wrap">
+  Auditoría SEO + GEO · inedito.digital · 20 de agosto de 2026 · Entregables hermanos: reporte-cliente.pdf · keywords.md · checklist-proximos-pasos.md · instrucciones-correcciones.md
+</div></footer>
+</body>
+</html>
