@@ -612,6 +612,183 @@ function registro_paginas(): array {
 
         /* ---------------------------------------------------------- */
 
+        'posicionamiento-ia' => [
+            'nombre'    => 'Posicionamiento en IA (GEO)',
+            'ruta'      => '/servicios/posicionamiento-en-ia',
+            'ayuda'     => 'La página que vende el posicionamiento en inteligencias artificiales. Sus preguntas frecuentes son lo que más citan los asistentes, así que conviene mantenerlas claras y verificables.',
+            'secciones' => [
+
+                'portada' => [
+                    'nombre' => 'Portada',
+                    'ayuda'  => 'Lo primero que se ve al entrar.',
+                    'campos' => [
+                        'seo_titulo' => ['label' => 'Título para buscadores', 'tipo' => 'texto', 'def' => 'Posicionamiento en IA (GEO) en Aguascalientes | INÉDITO DIGITAL'],
+                        'seo_desc' => ['label' => 'Descripción para buscadores', 'tipo' => 'parrafo', 'def' => 'Logramos que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen bien a tu negocio. Diagnóstico gratuito en Aguascalientes.'],
+                        'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'POSICIONAMIENTO GEO'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'Tus clientes ya no buscan.'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'Preguntan.'],
+                        'bajada' => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Cuando alguien le pregunta a una inteligencia artificial por un servicio como el tuyo en Aguascalientes, la respuesta menciona a unos cuantos negocios. Nuestro trabajo es que estés en esa lista, con tus datos correctos y sin que te confundan con nadie.'],
+                        'boton_1' => ['label' => 'Botón principal', 'tipo' => 'texto', 'def' => 'DIAGNÓSTICO GRATUITO'],
+                        'boton_2' => ['label' => 'Botón secundario', 'tipo' => 'texto', 'def' => 'CÓMO FUNCIONA'],
+                    ],
+                ],
+
+                'problema' => [
+                    'nombre' => 'Por qué ahora',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'El buscador dejó de ser la primera parada'],
+                        'texto' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Cada vez más gente le pregunta directamente a un asistente en vez de abrir diez pestañas. La IA responde en una sola frase y nombra dos o tres opciones. Si tu negocio no está entre ellas, no perdiste una posición: no apareciste en la conversación. Y a diferencia del buscador, aquí no hay una segunda página donde te puedan encontrar.'],
+                    ],
+                ],
+
+                'motores' => [
+                    'nombre' => 'Los seis asistentes',
+                    'ayuda'  => 'Dónde se revisa la marca. Cambia los nombres si algún día conviene otra lista.',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'm1' => ['label' => 'Asistente 1 · nombre', 'tipo' => 'texto', 'def' => 'ChatGPT'],
+                        'm1_d' => ['label' => 'Asistente 1 · descripción', 'tipo' => 'texto', 'def' => 'OpenAI'],
+                        'm2' => ['label' => 'Asistente 2 · nombre', 'tipo' => 'texto', 'def' => 'Google Gemini'],
+                        'm2_d' => ['label' => 'Asistente 2 · descripción', 'tipo' => 'texto', 'def' => 'Google'],
+                        'm3' => ['label' => 'Asistente 3 · nombre', 'tipo' => 'texto', 'def' => 'AI Overviews'],
+                        'm3_d' => ['label' => 'Asistente 3 · descripción', 'tipo' => 'texto', 'def' => 'Resúmenes de Google'],
+                        'm4' => ['label' => 'Asistente 4 · nombre', 'tipo' => 'texto', 'def' => 'Perplexity'],
+                        'm4_d' => ['label' => 'Asistente 4 · descripción', 'tipo' => 'texto', 'def' => 'Búsqueda con fuentes'],
+                        'm5' => ['label' => 'Asistente 5 · nombre', 'tipo' => 'texto', 'def' => 'Claude'],
+                        'm5_d' => ['label' => 'Asistente 5 · descripción', 'tipo' => 'texto', 'def' => 'Anthropic'],
+                        'm6' => ['label' => 'Asistente 6 · nombre', 'tipo' => 'texto', 'def' => 'Copilot'],
+                        'm6_d' => ['label' => 'Asistente 6 · descripción', 'tipo' => 'texto', 'def' => 'Microsoft y Bing'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'DÓNDE'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'TE BUSCAMOS'],
+                        'bajada' => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Revisamos los seis asistentes que de verdad usan tus clientes en México, no una lista larga para impresionar.'],
+                    ],
+                ],
+
+                'comparacion' => [
+                    'nombre' => 'Antes y después',
+                    'ayuda'  => 'Las dos columnas que comparan cómo responde la IA.',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'a1' => ['label' => 'Sin GEO · punto 1', 'tipo' => 'texto', 'def' => 'Te confunde con otro negocio de nombre parecido'],
+                        'a2' => ['label' => 'Sin GEO · punto 2', 'tipo' => 'texto', 'def' => 'Repite un teléfono o un horario que cambiaste hace años'],
+                        'a3' => ['label' => 'Sin GEO · punto 3', 'tipo' => 'texto', 'def' => 'Dice que no encuentra información y recomienda a tu competencia'],
+                        'd1' => ['label' => 'Con Inédito · punto 1', 'tipo' => 'texto', 'def' => 'Te nombra con tu giro y tu ciudad, sin confundirte'],
+                        'd2' => ['label' => 'Con Inédito · punto 2', 'tipo' => 'texto', 'def' => 'Usa los datos que tú publicas y que puede verificar'],
+                        'd3' => ['label' => 'Con Inédito · punto 3', 'tipo' => 'texto', 'def' => 'Te incluye cuando alguien pregunta por tu servicio en tu zona'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'LO QUE CAMBIA'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'EN LA RESPUESTA'],
+                        'antes' => ['label' => 'Encabezado de la columna izquierda', 'tipo' => 'texto', 'def' => 'SIN TRABAJO DE GEO'],
+                        'despues' => ['label' => 'Encabezado de la columna derecha', 'tipo' => 'texto', 'def' => 'CON INÉDITO'],
+                        'nota' => ['label' => 'Nota al pie', 'tipo' => 'texto', 'def' => 'Ejemplos de lo que encontramos con más frecuencia. Lo tuyo lo vemos en el diagnóstico.'],
+                    ],
+                ],
+
+                'servicio' => [
+                    'nombre' => 'Qué hacemos',
+                    'ayuda'  => 'Los seis frentes del servicio.',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        's1_t' => ['label' => 'Frente 1 · título', 'tipo' => 'texto', 'def' => 'Diagnóstico de lo que dicen hoy'],
+                        's1_d' => ['label' => 'Frente 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Le preguntamos a cada motor por tu marca, tu giro y tus competidores, y te entregamos las respuestas tal cual salen. Casi siempre hay sorpresas.'],
+                        's2_t' => ['label' => 'Frente 2 · título', 'tipo' => 'texto', 'def' => 'Datos estructurados en tu sitio'],
+                        's2_d' => ['label' => 'Frente 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Marcado Schema.org bien puesto: quién eres, dónde estás, qué vendes y cómo contactarte. Es la forma en que un rastreador entiende tu negocio sin adivinar.'],
+                        's3_t' => ['label' => 'Frente 3 · título', 'tipo' => 'texto', 'def' => 'Contenido que se puede citar'],
+                        's3_d' => ['label' => 'Frente 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Preguntas reales con respuestas claras y verificables. Un modelo cita lo que puede extraer sin interpretar; escribimos pensando en eso.'],
+                        's4_t' => ['label' => 'Frente 4 · título', 'tipo' => 'texto', 'def' => 'Consistencia en tus fuentes'],
+                        's4_d' => ['label' => 'Frente 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Mismo nombre, misma dirección, mismo teléfono y mismo giro en tu ficha de Google, directorios, reseñas y redes. Las contradicciones son lo que más te cuesta.'],
+                        's5_t' => ['label' => 'Frente 5 · título', 'tipo' => 'texto', 'def' => 'Corrección de datos viejos'],
+                        's5_d' => ['label' => 'Frente 5 · descripción', 'tipo' => 'parrafo', 'def' => 'Rastreamos de dónde salen los datos desactualizados que aparecen sobre ti y trabajamos en la fuente, que es el único lugar donde se arreglan de verdad.'],
+                        's6_t' => ['label' => 'Frente 6 · título', 'tipo' => 'texto', 'def' => 'Medición mes con mes'],
+                        's6_d' => ['label' => 'Frente 6 · descripción', 'tipo' => 'parrafo', 'def' => 'Un reporte que se entiende: en qué preguntas apareces, en cuáles no, qué cambió y qué sigue. Sin métricas inventadas.'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'HACEMOS'],
+                        'bajada' => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Seis frentes concretos. Todos se pueden revisar y medir.'],
+                    ],
+                ],
+
+                'proceso' => [
+                    'nombre' => 'Cómo trabajamos',
+                    'ayuda'  => 'Los cuatro pasos.',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'p1_t' => ['label' => 'Paso 1 · título', 'tipo' => 'texto', 'def' => 'Escuchamos'],
+                        'p1_d' => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Corremos las preguntas que haría un cliente tuyo en los seis motores y guardamos las respuestas como punto de partida.'],
+                        'p2_t' => ['label' => 'Paso 2 · título', 'tipo' => 'texto', 'def' => 'Ordenamos'],
+                        'p2_d' => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Dejamos tu sitio legible para las IAs: datos estructurados, fichas de entidad y acceso limpio para sus rastreadores.'],
+                        'p3_t' => ['label' => 'Paso 3 · título', 'tipo' => 'texto', 'def' => 'Publicamos'],
+                        'p3_d' => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Creamos el contenido que faltaba para responder esas preguntas mejor que nadie en tu zona.'],
+                        'p4_t' => ['label' => 'Paso 4 · título', 'tipo' => 'texto', 'def' => 'Medimos'],
+                        'p4_d' => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Volvemos a preguntar cada mes, comparamos contra el punto de partida y ajustamos lo que no movió.'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'TRABAJAMOS'],
+                    ],
+                ],
+
+                'diagnostico' => [
+                    'nombre' => 'Diagnóstico gratuito',
+                    'ayuda'  => 'El bloque que pide el diagnóstico.',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'SIN COSTO'],
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿Qué dicen las IAs de tu negocio hoy?'],
+                        'texto' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Le preguntamos por ti a los seis asistentes y te mandamos las respuestas tal cual salen, junto con lo que habría que corregir. Sin compromiso y sin letra chica: si con eso te arreglas solo, qué bueno.'],
+                        'boton' => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'PEDIR MI DIAGNÓSTICO'],
+                    ],
+                ],
+
+                'preguntas' => [
+                    'nombre' => 'Preguntas frecuentes',
+                    'ayuda'  => 'Esta sección es la que más citan las inteligencias artificiales. Entre más claras y verificables sean las respuestas, mejor.',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'q1' => ['label' => 'Pregunta 1 · pregunta', 'tipo' => 'texto', 'def' => '¿Qué es el posicionamiento GEO?'],
+                        'r1' => ['label' => 'Pregunta 1 · respuesta', 'tipo' => 'parrafo', 'def' => 'GEO significa Generative Engine Optimization: el trabajo de lograr que los asistentes de inteligencia artificial encuentren, entiendan y citen correctamente a tu negocio cuando alguien les pregunta. Es el equivalente al SEO, pero para ChatGPT, Gemini, Perplexity y los resúmenes de Google en vez de la lista de resultados azules.'],
+                        'q2' => ['label' => 'Pregunta 2 · pregunta', 'tipo' => 'texto', 'def' => '¿En qué se diferencia del SEO de toda la vida?'],
+                        'r2' => ['label' => 'Pregunta 2 · respuesta', 'tipo' => 'parrafo', 'def' => 'El SEO busca que tu página aparezca en una lista y que la persona haga clic. El GEO busca que la IA use tu información al redactar su respuesta, aunque nadie entre a tu sitio. Comparten mucha base técnica, pero cambia lo que se optimiza: en GEO importa más que tus datos sean verificables, consistentes y fáciles de extraer que la posición en un ranking.'],
+                        'q3' => ['label' => 'Pregunta 3 · pregunta', 'tipo' => 'texto', 'def' => '¿Se puede modificar lo que ChatGPT dice de mi empresa?'],
+                        'r3' => ['label' => 'Pregunta 3 · respuesta', 'tipo' => 'parrafo', 'def' => 'No directamente: nadie puede reentrenar un modelo desde fuera, y quien te prometa eso te está vendiendo algo que no existe. Lo que sí se puede es cambiar la materia prima con la que responde. Estos asistentes consultan la web en tiempo real y se apoyan en fuentes verificables, así que ordenar esas fuentes, corregir los datos viejos y publicar información citable sí cambia sus respuestas.'],
+                        'q4' => ['label' => 'Pregunta 4 · pregunta', 'tipo' => 'texto', 'def' => '¿Cuánto tarda en verse un cambio?'],
+                        'r4' => ['label' => 'Pregunta 4 · respuesta', 'tipo' => 'parrafo', 'def' => 'Lo que depende de tu sitio, como los datos estructurados, se refleja en días. Lo que depende de fuentes externas, como directorios y reseñas, toma más: entre uno y tres meses según qué tan regada esté la información. Te lo medimos cada mes para que no sea cuestión de fe.'],
+                        'q5' => ['label' => 'Pregunta 5 · pregunta', 'tipo' => 'texto', 'def' => '¿Sirve para un negocio local de Aguascalientes?'],
+                        'r5' => ['label' => 'Pregunta 5 · respuesta', 'tipo' => 'parrafo', 'def' => 'Sirve especialmente. Cuando alguien pregunta por un servicio en una ciudad concreta, los asistentes se apoyan mucho en señales locales: la ficha de Google, las reseñas, los directorios de la zona y la coherencia entre todos. Un negocio local bien ordenado compite muy bien en esas respuestas, incluso contra marcas más grandes.'],
+                        'q6' => ['label' => 'Pregunta 6 · pregunta', 'tipo' => 'texto', 'def' => '¿Necesito rehacer mi sitio web?'],
+                        'r6' => ['label' => 'Pregunta 6 · respuesta', 'tipo' => 'parrafo', 'def' => 'Casi nunca. Buena parte del trabajo se hace sobre lo que ya tienes. Si tu sitio no se puede editar o los rastreadores no lo pueden leer, te lo decimos en el diagnóstico y lo tratamos aparte, sin meterlo en el mismo paquete.'],
+                        'q7' => ['label' => 'Pregunta 7 · pregunta', 'tipo' => 'texto', 'def' => '¿Cuánto cuesta?'],
+                        'r7' => ['label' => 'Pregunta 7 · respuesta', 'tipo' => 'parrafo', 'def' => 'Depende del tamaño de tu marca y de qué tan dispersa esté hoy tu información, así que se cotiza después del diagnóstico. El diagnóstico no tiene costo y no compromete a nada.'],
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
+                    ],
+                ],
+
+                'local' => [
+                    'nombre' => 'Aguascalientes',
+                    'ayuda'  => 'El bloque que ancla el servicio a la ciudad.',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'Posicionamiento GEO en Aguascalientes'],
+                        'texto' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Somos una agencia de marketing digital con base en Aguascalientes, y trabajamos el posicionamiento en inteligencia artificial para negocios de la ciudad y del Bajío. Conocer el mercado local importa: cuando alguien pregunta por un servicio en Aguascalientes, las respuestas se arman con fuentes de aquí, y saber cuáles son es la mitad del trabajo.'],
+                        'enlace_1_url' => ['label' => 'Enlace 1 · destino', 'tipo' => 'enlace', 'def' => '/servicios'],
+                        'enlace_1' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Todos nuestros servicios'],
+                        'enlace_2_url' => ['label' => 'Enlace 2 · destino', 'tipo' => 'enlace', 'def' => '/servicios-ia'],
+                        'enlace_2' => ['label' => 'Enlace 2 · texto', 'tipo' => 'texto', 'def' => 'Soluciones de IA'],
+                        'enlace_3_url' => ['label' => 'Enlace 3 · destino', 'tipo' => 'enlace', 'def' => '/contacto'],
+                        'enlace_3' => ['label' => 'Enlace 3 · texto', 'tipo' => 'texto', 'def' => 'Hablar con nosotros'],
+                    ],
+                ],
+
+                'cierre' => [
+                    'nombre' => 'Llamado final',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => '¿EMPEZAMOS POR VER'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'DÓNDE ESTÁS?'],
+                        'texto' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'El diagnóstico no cuesta y te lo entregamos aunque decidas no contratarnos.'],
+                        'boton' => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'QUIERO MI DIAGNÓSTICO'],
+                    ],
+                ],
+            ],
+        ],
+
         'servicio-detalle' => [
             'nombre'    => 'Plantilla de página de servicio',
             'ruta'      => '/servicios/…',
@@ -1486,6 +1663,8 @@ function registro_paginas(): array {
                 'menu_ia' => [
                     'nombre' => 'Submenú de Servicios IA',
                     'campos' => [
+                        'geo'             => ['label' => 'Posicionamiento en IA · nombre', 'tipo' => 'texto', 'def' => 'Posicionamiento en IA'],
+                        'geo_desc'        => ['label' => 'Posicionamiento en IA · descripción', 'tipo' => 'texto', 'def' => 'Que ChatGPT te recomiende'],
                         'whatsapp'        => ['label' => 'IA para WhatsApp · nombre', 'tipo' => 'texto', 'def' => 'IA para WhatsApp'],
                         'whatsapp_desc'   => ['label' => 'IA para WhatsApp · descripción', 'tipo' => 'texto', 'def' => 'Ventas y Soporte 24/7'],
                         'ventas'          => ['label' => 'IA de Ventas · nombre', 'tipo' => 'texto', 'def' => 'IA de Ventas'],
