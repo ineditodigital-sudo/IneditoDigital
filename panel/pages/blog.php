@@ -1,7 +1,7 @@
 <?php require __DIR__ . '/../inc/crud.php';
 crud('blog', [
   'table'=>'blog_posts','single'=>'Post','plural'=>'Blog','title_field'=>'title','sub_field'=>'category',
-  'note'=>'Administrar aquí guarda en la base de datos (MySQL). Reflejar este contenido en el sitio público es una fase posterior.',
+  'note'=>'Lo que publiques aquí sale en el sitio. Dos campos pesan más de lo que parece: la FECHA DE PUBLICACIÓN (sin ella, Google y las IAs no pueden juzgar si el artículo está vigente) y el AUTOR (si escribes el nombre tal como aparece en Equipo, el artículo se firma con esa persona y enlaza a su página, que vale mucho más que firmar como empresa).',
   'fields'=>[
     'title'=>['label'=>'Título','type'=>'text'],
     'slug'=>['label'=>'Slug (URL)','type'=>'text','help'=>'Se genera del título si lo dejas vacío.'],

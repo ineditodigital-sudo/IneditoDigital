@@ -23,7 +23,7 @@ try {
   foreach ($pdo->query("SELECT k,v FROM site_settings") as $r) $settings[$r['k']] = $r['v'];
   foreach ($pdo->query("SELECT k,v FROM seo_settings") as $r) $seo[$r['k']] = $r['v'];
   foreach ($pdo->query("SELECT * FROM services WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); $o['shortDescription']=$r['short_desc']?:($o['shortDescription']??''); if($r['image'])$o['bannerImage']=$r['image']; $fl=lines($r['features']); if($fl)$o['features']=$fl; $bl=lines($r['benefits']); if($bl)$o['benefits']=$bl; $services[]=$o; }
-  foreach ($pdo->query("SELECT * FROM blog_posts WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['excerpt'])$o['excerpt']=$r['excerpt']; if($r['content'])$o['content']=$r['content']; if($r['image'])$o['image']=$r['image']; if($r['author'])$o['author']=$r['author']; if($r['category'])$o['category']=$r['category']; $portfolio_meta=null; $blog[]=$o; }
+  foreach ($pdo->query("SELECT * FROM blog_posts WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['excerpt'])$o['excerpt']=$r['excerpt']; if($r['content'])$o['content']=$r['content']; if($r['image'])$o['image']=$r['image']; if($r['author'])$o['author']=$r['author']; if($r['category'])$o['category']=$r['category']; /* Las fechas viven en columnas propias y no en data_json: sin copiarlas aqui, el schema del articulo salia sin datePublished (CON-01). */ $o['publish_date']=$r['publish_date'] ?? ''; $o['created_at']=$r['created_at'] ?? ''; $o['updated_at']=$r['updated_at'] ?? ''; $portfolio_meta=null; $blog[]=$o; }
   foreach ($pdo->query("SELECT slug, nombre, tipo, contenido, seo_title, seo_desc, seo_image, ruta, en_menu FROM pages WHERE status='published'") as $r) {
     $c = json_decode((string)$r['contenido'], true);
     $reg = ['contenido' => is_array($c) ? $c : [], 'nombre' => $r['nombre'], 'seo_title' => $r['seo_title'], 'seo_desc' => $r['seo_desc'], 'seo_image' => $r['seo_image'], 'ruta' => $r['ruta']];
@@ -41,6 +41,36 @@ try {
 } catch (Throwable $ex) { /* si falla la BD, servimos el SPA base */ }
 
 $siteName = $seo['siteName'] ?: 'Inédito Digital';
+
+/* Autoría del blog (CON-02).
+   Si el nombre coincide con alguien del equipo, se publica como Person con
+   enlace a su página: eso es lo que Google y las IAs entienden por autoría
+   real. Si no, se queda como la organización, que sigue siendo cierto. */
+$GLOBALS['autorArticulo'] = function(string $nombre, array $miembros, string $BASE): array {
+  foreach ($miembros as $slug => $m) {
+    $dm = is_array($m['contenido'] ?? null) ? $m['contenido'] : [];
+    if (mb_strtolower(trim((string)($dm['nombre'] ?? $m['nombre']))) === mb_strtolower(trim($nombre))) {
+      $p = ['@type' => 'Person', 'name' => $nombre, 'url' => $BASE . $m['ruta']];
+      if (!empty($dm['puesto'])) $p['jobTitle'] = $dm['puesto'];
+      return $p;
+    }
+  }
+  return ['@type' => 'Organization', 'name' => $nombre];
+};
+
+/* Fechas del artículo (CON-01).
+   Se usa la fecha de publicación que el cliente puso en el panel; si todavía
+   no la llena, la de alta en el sistema, que es real. Sin fecha, ni Google ni
+   los asistentes pueden juzgar si el contenido está vigente. */
+$GLOBALS['fechasArticulo'] = function(array $b): array {
+  $pub = trim((string)($b['publish_date'] ?? ''));
+  if ($pub === '' || $pub === '0000-00-00') $pub = substr((string)($b['created_at'] ?? ''), 0, 10);
+  if ($pub === '') return [];
+  $o = ['datePublished' => $pub];
+  $mod = trim((string)($b['updated_at'] ?? ''));
+  $o['dateModified'] = $mod !== '' ? substr($mod, 0, 10) : $pub;
+  return $o;
+};
 $defaultDesc = 'Agencia de marketing digital en Aguascalientes: diseño web, branding, SEO, campañas y soluciones de IA para ventas, WhatsApp, e-commerce y marketing.';
 $logo = 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp';
 $findBySlug = function(array $arr, string $slug) { foreach ($arr as $x) if (($x['slug'] ?? '') === $slug) return $x; return null; };
@@ -110,7 +140,7 @@ elseif ($seg[0] === 'blog' && isset($seg[1])) {
   if ($b) {
     $title=($b['title'] ?? '').' | Blog · '.$siteName; $desc=$b['excerpt'] ?? $defaultDesc; $ogType='article';
     $canonical=$BASE.'/blog/'.$b['slug']; $crumbs[]=['Blog','/blog']; $crumbs[]=[$b['title'],'/blog/'.$b['slug']];
-    $schema[]=['@context'=>'https://schema.org','@type'=>'BlogPosting','headline'=>$b['title'] ?? '','description'=>$b['excerpt'] ?? '','image'=>$b['image'] ?? $GLOBALS['logo'],'author'=>['@type'=>'Organization','name'=>$b['author'] ?? $siteName],'publisher'=>['@type'=>'Organization','name'=>$siteName,'logo'=>['@type'=>'ImageObject','url'=>$GLOBALS['logo']]],'mainEntityOfPage'=>$canonical,'inLanguage'=>'es'];
+    $schema[]=['@context'=>'https://schema.org','@type'=>'BlogPosting','headline'=>$b['title'] ?? '','description'=>$b['excerpt'] ?? '','image'=>$b['image'] ?? $GLOBALS['logo'],'author'=>$GLOBALS['autorArticulo']($b['author'] ?? $siteName, $miembros, $BASE),'publisher'=>['@type'=>'Organization','name'=>$siteName,'logo'=>['@type'=>'ImageObject','url'=>$GLOBALS['logo']]],'mainEntityOfPage'=>$canonical,'inLanguage'=>'es'] + $GLOBALS['fechasArticulo']($b);
     $bodyBuilder=function() use ($b){ $md=(string)($b['content'] ?? ''); if(trim($md)==='') $md=$b['excerpt'] ?? ''; return md_html($md); };
   } else { $is404 = true; }
 }
@@ -122,7 +152,7 @@ elseif (($seg[0] ?? '') === 'contacto') {
   $title = 'Contacto | ' . $siteName;
   $desc = 'Contactanos para una consulta gratuita de marketing digital en Aguascalientes.';
   $canonical = $BASE . '/contacto'; $crumbs[] = ['Contacto', '/contacto'];
-  $bodyBuilder = function() use ($settings) {
+  $bodyBuilder = function() use ($settings, $paginas) {
     $addr = trim(($settings['businessAddress'] ?? '') . ', ' . ($settings['businessCity'] ?? '') . ', ' . ($settings['businessState'] ?? '') . ' ' . ($settings['businessZip'] ?? ''), ', ');
     $maps = $settings['mapsUrl'] ?? '';
     $h = '<h1>Contacto</h1>';
@@ -131,6 +161,20 @@ elseif (($seg[0] ?? '') === 'contacto') {
     $h .= '<p><strong>Email:</strong> ' . e($settings['businessEmail'] ?? '') . '</p>';
     $h .= '<p><strong>WhatsApp:</strong> ' . e($settings['whatsappNumber'] ?? '') . '</p>';
     $h .= '<p><strong>Horario:</strong> ' . e($settings['businessHours'] ?? '') . '</p>';
+    /* Lo que el cliente escribió en el panel para esta página: sin esto un
+       asistente leía cuatro renglones de datos y nada más (GEO-02). */
+    $cc = is_array($paginas['contacto']['contenido'] ?? null) ? $paginas['contacto']['contenido'] : [];
+    $enc = $cc['encabezado'] ?? []; $tar = $cc['tarjetas'] ?? []; $frm = $cc['formulario'] ?? [];
+    if (!empty($enc['bajada'])) $h .= '<p>' . e($enc['bajada']) . '</p>';
+    if (!empty($tar['wa_titulo'])) $h .= '<h2>' . e($tar['wa_titulo']) . '</h2><p>' . e($tar['wa_texto'] ?? '') . '</p>';
+    if (!empty($frm['titulo'])) {
+      $h .= '<h2>' . e($frm['titulo']) . '</h2>';
+      if (!empty($frm['bajada'])) $h .= '<p>' . e($frm['bajada']) . '</p>';
+    }
+    $h .= '<h2>Zona de servicio</h2><p>Atendemos a negocios de Aguascalientes y el Bajío, '
+        . 'y damos servicio a distancia a todo México. Especialidades: diseño y desarrollo web, '
+        . 'posicionamiento en buscadores (SEO), posicionamiento en inteligencias artificiales (GEO), '
+        . 'Google Ads, chatbots y agentes de IA, e-commerce y tarjetas de presentación NFC.</p>';
     return $h;
   };
 }
@@ -152,7 +196,136 @@ else {
     $title = $pages[$path][0]; $desc = $pages[$path][1]; $canonical = $BASE . $path;
     if ($path !== '/servicios-ia' && strpos($path, '/servicios-ia/') === 0) $crumbs[] = ['Servicios de IA', '/servicios-ia'];
     $crumbs[] = [explode(' | ', $title)[0], $path];
-    $bodyBuilder = function() use ($title,$desc){ return '<h1>'.e(explode(' | ',$title)[0]).'</h1><p>'.e($desc).'</p>'; };
+    /* Lo que lee un buscador o un asistente que no ejecuta JavaScript.
+       Antes eran dos líneas para las ocho páginas; ahora cada una vuelca el
+       contenido que el cliente ya escribió en el panel. Si una sección se
+       queda vacía simplemente no se dibuja, igual que en el sitio. */
+    $bodyBuilder = function() use ($title, $desc, $path, $paginas, $settings) {
+      $c = function(string $slug) use ($paginas): array {
+        return is_array($paginas[$slug]['contenido'] ?? null) ? $paginas[$slug]['contenido'] : [];
+      };
+      $h = '<h1>' . e(explode(' | ', $title)[0]) . '</h1><p>' . e($desc) . '</p>';
+
+      /** Un bloque de título + texto, si tiene algo. */
+      $bloque = function(?string $t, ?string $p) {
+        $o = '';
+        if (trim((string)$t) !== '') $o .= '<h2>' . e($t) . '</h2>';
+        if (trim((string)$p) !== '') $o .= '<p>' . e($p) . '</p>';
+        return $o;
+      };
+
+      if ($path === '/nosotros') {
+        $d = $c('nosotros');
+        $enc = $d['encabezado'] ?? []; $mis = $d['mision'] ?? [];
+        $val = $d['valores'] ?? [];   $cif = $d['cifras'] ?? [];
+        if (!empty($enc['bajada'])) $h .= '<p>' . e($enc['bajada']) . '</p>';
+        $h .= $bloque($mis['mision_titulo'] ?? '', $mis['mision_texto'] ?? '');
+        $h .= $bloque($mis['vision_titulo'] ?? '', $mis['vision_texto'] ?? '');
+        if (!empty($val['titulo'])) {
+          $h .= '<h2>' . e($val['titulo']) . '</h2><ul>';
+          for ($i = 1; $i <= 4; $i++) {
+            if (empty($val["v{$i}_titulo"])) continue;
+            $h .= '<li><strong>' . e($val["v{$i}_titulo"]) . '</strong>: ' . e($val["v{$i}_texto"] ?? '') . '</li>';
+          }
+          $h .= '</ul>';
+        }
+        $nums = [];
+        for ($i = 1; $i <= 3; $i++) {
+          if (empty($cif["c{$i}_valor"])) continue;
+          $nums[] = e($cif["c{$i}_valor"]) . ' ' . e($cif["c{$i}_texto"] ?? '');
+        }
+        if ($nums) $h .= '<p>' . implode(' · ', $nums) . '</p>';
+      }
+
+      elseif ($path === '/servicios-ia') {
+        $d = $c('servicios-ia');
+        $sol = $d['soluciones'] ?? []; $tar = $d['tarjetas'] ?? [];
+        $por = $d['por_que'] ?? [];    $cif = $d['cifras'] ?? [];
+        if (!empty($sol['bajada'])) $h .= '<p>' . e($sol['bajada']) . '</p>';
+        $h .= '<h2>' . e(trim(($sol['titulo_1'] ?? 'Soluciones') . ' ' . ($sol['titulo_2'] ?? ''))) . '</h2><ul>';
+        foreach (['w', 'v', 'm', 'e'] as $k) {
+          if (empty($tar["{$k}_titulo"])) continue;
+          $h .= '<li><strong>' . e($tar["{$k}_titulo"]) . '</strong>'
+              . (!empty($tar["{$k}_sub"]) ? ' (' . e($tar["{$k}_sub"]) . ')' : '')
+              . ': ' . e($tar["{$k}_texto"] ?? '') . '</li>';
+        }
+        $h .= '</ul>';
+        if (!empty($por['titulo_2'])) {
+          $h .= '<h2>' . e(trim(($por['titulo_1'] ?? '') . ' ' . $por['titulo_2'])) . '</h2><ul>';
+          for ($i = 1; $i <= 3; $i++) {
+            if (empty($por["r{$i}_titulo"])) continue;
+            $h .= '<li><strong>' . e($por["r{$i}_titulo"]) . '</strong>: ' . e($por["r{$i}_texto"] ?? '') . '</li>';
+          }
+          $h .= '</ul>';
+        }
+        $nums = [];
+        for ($i = 1; $i <= 4; $i++) {
+          if (empty($cif["c{$i}_valor"])) continue;
+          $nums[] = e($cif["c{$i}_valor"]) . ' ' . e($cif["c{$i}_texto"] ?? '');
+        }
+        if ($nums) $h .= '<p>' . implode(' · ', $nums) . '</p>';
+      }
+
+      elseif (strpos($path, '/servicios-ia/') === 0) {
+        $mapa = ['/servicios-ia/whatsapp' => 'servicios-ia-whatsapp', '/servicios-ia/ventas' => 'servicios-ia-ventas',
+                 '/servicios-ia/marketing' => 'servicios-ia-marketing', '/servicios-ia/ecommerce' => 'servicios-ia-ecommerce'];
+        $d = $c($mapa[$path] ?? '');
+        $ben = $d['beneficios'] ?? []; $inc = $d['incluye'] ?? [];
+        $how = $d['como_funciona'] ?? []; $ide = $d['ideal_para'] ?? [];
+        if (!empty($ben['titulo_2'])) {
+          $h .= '<h2>' . e(trim(($ben['titulo_1'] ?? '') . ' ' . $ben['titulo_2'])) . '</h2><ul>';
+          for ($i = 1; $i <= 6; $i++) {
+            if (empty($ben["b{$i}_titulo"])) continue;
+            $h .= '<li><strong>' . e($ben["b{$i}_titulo"]) . '</strong>: ' . e($ben["b{$i}_texto"] ?? '') . '</li>';
+          }
+          $h .= '</ul>';
+        }
+        if (!empty($inc['titulo_2'])) {
+          $h .= '<h2>' . e(trim(($inc['titulo_1'] ?? '') . ' ' . $inc['titulo_2'])) . '</h2><ul>';
+          for ($i = 1; $i <= 8; $i++) {
+            if (empty($inc["f{$i}"])) continue;
+            $h .= '<li>' . e($inc["f{$i}"]) . '</li>';
+          }
+          $h .= '</ul>';
+        }
+        if (!empty($how['titulo_2'])) {
+          $h .= '<h2>' . e(trim(($how['titulo_1'] ?? '') . ' ' . $how['titulo_2'])) . '</h2>';
+          if (!empty($how['bajada'])) $h .= '<p>' . e($how['bajada']) . '</p>';
+          $h .= '<ol>';
+          for ($i = 1; $i <= 4; $i++) {
+            if (empty($how["p{$i}_titulo"])) continue;
+            $h .= '<li><strong>' . e($how["p{$i}_titulo"]) . '</strong>: ' . e($how["p{$i}_texto"] ?? '') . '</li>';
+          }
+          $h .= '</ol>';
+        }
+        if (!empty($ide['titulo_2'])) {
+          $h .= '<h2>' . e(trim(($ide['titulo_1'] ?? '') . ' ' . $ide['titulo_2'])) . '</h2><ul>';
+          for ($i = 1; $i <= 8; $i++) {
+            if (empty($ide["i{$i}"])) continue;
+            $h .= '<li>' . e($ide["i{$i}"]) . '</li>';
+          }
+          $h .= '</ul>';
+        }
+      }
+
+      elseif ($path === '/privacidad' || $path === '/terminos') {
+        $d = $c($path === '/privacidad' ? 'privacidad' : 'terminos');
+        $ap = $d['apartados'] ?? [];
+        for ($i = 1; $i <= 10; $i++) {
+          if (($ap["a{$i}_ver"] ?? '1') === '0') continue;
+          $t = trim((string)($ap["a{$i}_titulo"] ?? ''));
+          $x = trim((string)($ap["a{$i}_texto"] ?? ''));
+          if ($t === '' && $x === '') continue;
+          if ($t !== '') $h .= '<h2>' . e($t) . '</h2>';
+          if ($x !== '') $h .= '<p>' . nl2br(e($x)) . '</p>';
+          $pts = array_filter(array_map('trim', explode("\n", (string)($ap["a{$i}_lista"] ?? ''))));
+          if ($pts) $h .= '<ul><li>' . implode('</li><li>', array_map('e', $pts)) . '</li></ul>';
+        }
+        if (!empty($d['encabezado']['fecha'])) $h .= '<p>' . e($d['encabezado']['fecha']) . '</p>';
+      }
+
+      return $h;
+    };
   } elseif ($path !== '/') {
     $is404 = true;
   }
