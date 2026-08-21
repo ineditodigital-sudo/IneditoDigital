@@ -15,6 +15,15 @@
 - [ ] Correr **PageSpeed Insights** sobre las 6 URLs clave y guardar los números como línea base `(Medio · Bajo · Negocio)` — TEC-01
 - [ ] Correr el **guion de 15 preguntas GEO** en ChatGPT, Gemini y Perplexity; guardar capturas como línea base `(Alto · Bajo · Negocio)` — GEO-04
 
+## 🔴 PRIORIDAD REPLANTEADA (21/08, con las 224 consultas reales)
+
+> El sitio ya está en página 1 para las búsquedas locales de dinero y **recibe cero clics**. Esto sube al primer lugar del plan, por encima de las landings.
+
+- [ ] **Google Business Profile a fondo**: categorías correctas, fotos reales, horarios, servicios listados, publicaciones mensuales `(Impacto: Alto · Esfuerzo: Medio · Responsable: Negocio)` — CTR-01
+- [ ] **Campaña de reseñas**: pedir reseña a cada cliente al cierre con enlace directo; responder el 100 % de las que hay `(Alto · Bajo · Negocio)` — CTR-01 / LOC-03
+- [ ] **Reescribir title y meta de la home** con diferenciador concreto, y medir el CTR a 30 días contra la línea base de hoy (1.3 % en las locales) `(Alto · Bajo · Contenido)` — CTR-01
+- [ ] **Agregar "agencia de publicidad" al vocabulario** del sitio: home, listado de servicios y ficha de Google Ads. Son 139 impresiones que te buscan con esa palabra `(Alto · Bajo · Contenido)` — KW-05
+
 ## ⚡ Nuevos, tras conectar Search Console (21/08)
 
 - [ ] **Solicitar indexación** de `/servicios/posicionamiento-en-ia` (Search Console → inspeccionar URL → Solicitar indexación). Google todavía no la conoce `(Impacto: Alto · Esfuerzo: Bajo · Responsable: Negocio)` — GEO-07
