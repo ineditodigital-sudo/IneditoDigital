@@ -96,7 +96,7 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
     <div class="score global">
       <div class="a">Calificación global</div><div class="n">67<span style="font-size:20px;color:var(--mut)">/100</span></div>
       <div class="bar"><i style="width:67%"></i></div>
-      <div class="j">Base técnica muy por encima del promedio local; los puntos débiles están en la herencia del sitio anterior, la profundidad de contenido y la capa local.</div>
+      <div class="j">Base técnica muy por encima del promedio local. <strong>Corregido el 21/08 con datos reales:</strong> el sitio rankea mejor de lo estimado (página 1 en las locales) pero no convierte esa posición en clics. Ver el replanteo al final.</div>
     </div>
     <div class="score"><div class="a">Indexación y rastreo</div><div class="n">72</div><div class="bar"><i style="width:72%"></i></div>
       <div class="j">Sitemap limpio (37/37 en 200), pero Google conserva 11+ URLs del WordPress anterior que hoy dan 404 sin redirección.</div></div>
@@ -460,6 +460,88 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
 
   <h3>Nota sobre el perfil de enlaces (OFF-01)</h3>
   <p>Sigue siendo <strong>estimación</strong>: la API de Search Console no expone el informe de enlaces, solo búsquedas, sitemaps e inspección de URL. Para convertirlo en dato medido hay que exportarlo a mano desde <em>Enlaces → Exportar</em> en la interfaz. Es la única pieza de la auditoría que la conexión no resolvió.</p>
+</div></section>
+
+<!-- ============================== REPLANTEO ============================== -->
+<section><div class="wrap">
+  <h2>Replanteo · <span>no es un problema de posición, es de clic</span></h2>
+  <div class="nota"><strong>21/08/2026, con las 224 consultas del export completo.</strong> Este anexo corrige el diagnóstico central de la auditoría original. Los datos cambian la prioridad del plan.</div>
+
+  <h3>El hallazgo que lo reordena todo</h3>
+  <p>El sitio <strong>ya está en página 1</strong> para las búsquedas que dejan dinero. Y no recibe clics.</p>
+
+  <div class="tablewrap"><table>
+    <tr><th>Consulta real</th><th>Impresiones</th><th>Posición</th><th>Clics</th></tr>
+    <tr><td>agencias marketing aguascalientes</td><td>116</td><td>5.9</td><td><span class="sev s-crit">0</span></td></tr>
+    <tr><td>agencias de publicidad en aguascalientes</td><td>81</td><td>7.3</td><td><span class="sev s-crit">0</span></td></tr>
+    <tr><td>agencias de marketing en aguascalientes</td><td>82</td><td>5.7</td><td>1</td></tr>
+    <tr><td>agencia de marketing aguascalientes</td><td>86</td><td>5.4</td><td>3</td></tr>
+    <tr><td>agencia de marketing digital aguascalientes</td><td>143</td><td>7.1</td><td>4</td></tr>
+    <tr><td>agencia de publicidad en aguascalientes</td><td>29</td><td>7.8</td><td><span class="sev s-crit">0</span></td></tr>
+    <tr><td>seo en aguascalientes</td><td>23</td><td>6.3</td><td><span class="sev s-crit">0</span></td></tr>
+    <tr><td>agencias de marketing</td><td>30</td><td>4.8</td><td><span class="sev s-crit">0</span></td></tr>
+    <tr><td>agencia de marketing digital</td><td>42</td><td>8.4</td><td><span class="sev s-crit">0</span></td></tr>
+  </table></div>
+
+  <p>En posición 5–8 lo esperable es un CTR de entre 3 % y 8 %. Aquí es <strong>cero o casi cero</strong> en las consultas de mayor intención local. Eso no se arregla con más contenido ni subiendo posiciones: <strong>se arregla ganando el clic</strong>.</p>
+
+  <h3>Las dos causas, y cuál pesa más</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Causa</th><th>Por qué se sospecha</th><th>Qué la resuelve</th></tr>
+    <tr><td><strong>El bloque de mapas se lleva los clics</strong> (la más probable)</td>
+        <td>Son búsquedas locales con intención de contratar. En ese tipo de resultado, el mapa con tres negocios y sus estrellas ocupa la parte alta y absorbe la mayoría de los clics. Estar en posición 6 <em>debajo</em> del mapa vale mucho menos que estar dentro de él.</td>
+        <td>Google Business Profile: reseñas, categorías, fotos y publicaciones. Es la palanca número uno del plan a partir de ahora.</td></tr>
+    <tr><td>El resultado no invita a entrar</td>
+        <td>El título y la descripción compiten contra 7 agencias que prometen resultados concretos.</td>
+        <td>Reescribir title y meta de la home con diferenciador y llamada, y medir el CTR a 30 días.</td></tr>
+  </table></div>
+
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia (medida)</th><th>Solución</th><th>Esf.</th></tr>
+
+    <tr><td>CTR-01</td><td><span class="sev s-crit">🔴</span></td>
+      <td>Cero clics en las consultas locales de mayor intención, estando en página 1.</td>
+      <td>Ver tabla arriba: 9 consultas, 632 impresiones, 8 clics en total (CTR 1.3 %).</td>
+      <td>Prioridad absoluta a Google Business Profile y reseñas. Reescritura de title/meta. Medir a 30 días.</td><td>Bajo</td></tr>
+
+    <tr><td>KW-05</td><td><span class="sev s-alto">🟠</span></td>
+      <td>"Publicidad" es un término por el que te buscan y que el sitio no usa.</td>
+      <td><em>agencias de publicidad en aguascalientes</em> 81 impr/pos 7.3 · <em>agencia de publicidad en aguascalientes</em> 29/7.8 · <em>agencia de publicidad aguascalientes</em> 29/8.8. En total, el tema de publicidad y ads suma <strong>36 consultas y 192 impresiones con 0 clics</strong>, posición media 40.7.</td>
+      <td>Incorporar "agencia de publicidad" al vocabulario del sitio (home, servicios, ficha de Google Ads). Es la misma oferta con otro nombre, el que usa parte del mercado.</td><td>Bajo</td></tr>
+
+    <tr><td>KW-06</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Las 620 impresiones de "inédito" e "inedito" no son búsquedas de marca.</td>
+      <td><em>inédito</em>: 358 impr, pos 10.1, 0 clics. <em>inedito</em>: 262 impr, pos 6.6, 0 clics.</td>
+      <td>Es una palabra común del español; la mayoría de esas búsquedas no buscan a la agencia. Explica buena parte del CTR bajo del sitio y conviene descontarla al medir. La marca con intención real es <em>inedito digital</em>: 20 impresiones, posición 1.1, CTR 30 %.</td><td>—</td></tr>
+
+    <tr><td>GEO-08</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Las únicas búsquedas con forma de pregunta que recibe el dominio son de un proyecto de cliente.</td>
+      <td>De 224 consultas, solo 2 tienen forma de pregunta: <em>"que es el aparato reproductor masculino"</em> y su variante, ambas de <code>sanasexualidad.inedito.digital</code>.</td>
+      <td>Confirma GEO-06 con datos y explica por qué el sitio no aparece en respuestas de IA: <strong>no tiene contenido en formato de pregunta</strong>. El calendario de <code>keywords.md</code> (las piezas de "cuánto cuesta" y "cómo aparecer en") ataca exactamente ese vacío.</td><td>Alto</td></tr>
+
+    <tr><td>KW-07</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>Durango se suma al Bajío en la demanda fuera de Aguascalientes.</td>
+      <td><em>agencias marketing durango</em>: 61 impresiones, posición 51. Con Celaya (89), Abasolo, Pénjamo y Salamanca: <strong>171 impresiones de otras ciudades</strong>.</td>
+      <td>Segunda tanda de landings geográficas, después de consolidar Aguascalientes.</td><td>Medio</td></tr>
+
+    <tr><td>KW-08</td><td><span class="sev s-medio">🟡</span></td>
+      <td>"diseño web aguascalientes" existe y está enterrada.</td>
+      <td>34 impresiones, <strong>posición 45.2</strong>. Confirma KW-01 con número exacto.</td>
+      <td>La landing de diseño web local del plan de 90 días.</td><td>Medio</td></tr>
+  </table></div>
+
+  <h3>Qué cambia en el plan</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Antes decía</th><th>Ahora dice</th></tr>
+    <tr><td>La prioridad es crear landings locales para entrar a página 1.</td>
+        <td>Ya estás en página 1. La prioridad es <strong>Google Business Profile y reseñas</strong>, que es lo que se lleva el clic en búsquedas locales. Las landings siguen, pero después.</td></tr>
+    <tr><td>Off-page es la peor nota y hay que conseguir enlaces.</td>
+        <td>Sigue siendo cierto, pero rinde menos a corto plazo que arreglar el clic. El orden se invierte.</td></tr>
+    <tr><td>Contenido nuevo para posicionar.</td>
+        <td>Contenido nuevo <strong>en formato de pregunta</strong>, que es el que falta por completo y el que citan las IAs.</td></tr>
+  </table></div>
+
+  <p style="margin-top:12px"><strong>Nota de método:</strong> el export lista 224 consultas con 2.788 impresiones; la API reporta 4.339 en el mismo periodo. La diferencia son consultas demasiado poco frecuentes, que Search Console agrupa y no detalla para proteger la privacidad. Es comportamiento normal, no un error del dato.</p>
 </div></section>
 
 <footer><div class="wrap">
