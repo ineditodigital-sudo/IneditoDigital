@@ -1,9 +1,78 @@
 # Keywords · inedito.digital · Agosto 2026
 
-> **Nota de honestidad:** no hubo herramienta de volúmenes (Ahrefs/Semrush/Planner). La columna *Demanda* es **estimación con criterio del giro** (Alta/Media/Baja), nunca un número inventado. *Estado* se basa en las búsquedas hechas durante la auditoría (desde EE. UU.) y en el inventario del sitio.
+> **Actualizado el 21/08/2026 con datos reales de Search Console.** La sección
+> *Datos medidos* al inicio ya no es estimación: son las consultas por las que
+> el sitio aparece de verdad, con impresiones y posición de los últimos 90 días.
+> El resto de la tabla sigue siendo **estimación con criterio del giro**
+> (Alta/Media/Baja) para keywords que todavía no generan impresiones, y así se
+> marca. Nunca hay números inventados.
 >
 > Intención: **I**nformacional · **C**omercial · **T**ransaccional · **N**avegacional · **L**ocal.
 > Prioridad: **1** = atacar ya · 2 = siguientes 90 días · 3 = después.
+
+---
+
+## 📊 Datos medidos · Search Console, 90 días (23 may – 19 ago 2026)
+
+**Totales del sitio:** 70 clics · 4,339 impresiones · CTR 1.6 % · posición media 20.8
+
+Estas son las consultas por las que el sitio **ya aparece**. Sustituyen a la
+estimación: son el punto de partida real.
+
+| Consulta real | Clics | Impresiones | CTR | Posición | Lectura |
+|---|---|---|---|---|---|
+| inedito digital | 6 | 20 | 30.0 % | 1.1 | Marca protegida. Pocas búsquedas: la marca aún no tiene demanda propia |
+| agencia de marketing digital aguascalientes | 4 | 141 | 2.8 % | **7.2** | **La keyword principal ya está en página 1.** Estaba mejor de lo que estimé |
+| agencia de marketing aguascalientes | 3 | 84 | 3.6 % | 5.4 | También en página 1 |
+| agencias de marketing en aguascalientes | 1 | 80 | 1.2 % | 5.6 | Misma familia, mismo terreno ganado |
+| marketing digital aguascalientes | 1 | 44 | 2.3 % | 20.0 | Página 2: la variante más floja de las locales |
+| agencia de marketing digital | 0 | 42 | 0 % | 8.4 | Nacional, página 1, cero clics |
+| agencia de marketing | 0 | 34 | 0 % | 8.6 | Igual |
+| agencia de ia | 0 | 1 | 0 % | **4.0** | Posición 4 con casi nada de contenido: señal del nicho |
+| agencia de diseño web | 0 | 3 | 0 % | 20.7 | Confirma KW-01: sin landing, sin posición |
+
+### Descubrimiento 1 · El clúster de "contenido" que nadie pidió
+
+Unas **200 impresiones** en consultas de *agencia de contenido / contenidos /
+marketing de contenidos*, todas en **posición 79–90** (páginas 8 y 9). Google
+asocia el sitio con ese tema pero lo entierra.
+
+| Consulta | Impr. | Pos. |
+|---|---|---|
+| agencia de contenido digital | 41 | 81.8 |
+| agencia de contenidos digitales | 32 | 85.2 |
+| agencia de conteudo digital *(en portugués)* | 27 | 80.1 |
+| agencia de marketing de contenidos | 23 | 89.4 |
+| agencia de contenido | 7 | 79.1 |
+| agencia creacion de contenidos | 9 | 83.0 |
+
+**Decisión pendiente:** ¿Inédito ofrece marketing de contenidos como servicio
+con nombre propio? Si sí, hay una ficha por crear que ya tiene demanda
+demostrada. Si no, es ruido que se ignora.
+
+### Descubrimiento 2 · El Bajío pregunta por Aguascalientes
+
+| Consulta | Impr. | Pos. |
+|---|---|---|
+| agencia de marketing digital en celaya | 86 | 58.0 |
+| agencia de marketing digital en abasolo | 26 | 90.4 |
+| agencia de marketing digital en pénjamo | 25 | 38.8 |
+| agencia de marketing digital en salamanca | 5 | 73.0 |
+
+Google ya muestra el sitio para **otras ciudades del Bajío**. Celaya con 86
+impresiones es la más fuerte. Oportunidad real de expansión geográfica, con
+la misma receta de landing local del cluster 3.
+
+### Descubrimiento 3 · Móvil rankea 3 veces mejor que escritorio
+
+| Dispositivo | Clics | Impresiones | Posición |
+|---|---|---|---|
+| Escritorio | 43 | 2,956 | 26.2 |
+| **Móvil** | 26 | 1,366 | **9.2** |
+| Tableta | 1 | 17 | 10.2 |
+
+En móvil el sitio está en página 1; en escritorio, en página 3. Refuerza que
+el trabajo local y móvil es donde está el terreno ganado.
 
 ---
 
@@ -11,11 +80,11 @@
 
 | Keyword | Int. | Tipo | Demanda | Pri. | URL objetivo | Estado | Nota |
 |---|---|---|---|---|---|---|---|
-| agencia de marketing digital aguascalientes | C+L | principal | Alta | 1 | `/` | posiciona (fuera del top local visible) | 7 competidores con landing dedicada arriba |
-| agencia de marketing aguascalientes | C+L | variante | Alta | 1 | `/` | posiciona débil | mismo frente |
+| agencia de marketing digital aguascalientes | C+L | principal | **141 impr/90d** | 1 | `/` | **posición 7.2 (medido)** | Ya en página 1. La pelea es subir del 7 al 3, no entrar |
+| agencia de marketing aguascalientes | C+L | variante | **84 impr/90d** | 1 | `/` | **posición 5.4 (medido)** | mejor de lo estimado |
 | agencia de publicidad aguascalientes | C+L | variante | Media | 2 | `/` | no posiciona | variante que los competidores sí trabajan |
 | mejores agencias de marketing en aguascalientes | C+L | comparativa | Media | 1 | POR CREAR: `/blog/mejores-agencias-marketing-aguascalientes` | no posiciona | formato listado; las IAs citan listados |
-| inedito digital | N | marca | Media | 1 | `/` | posiciona #1 | proteger con NAP consistente |
+| inedito digital | N | marca | **20 impr/90d** | 1 | `/` | **posición 1.1, CTR 30% (medido)** | La marca aún genera poca búsqueda propia: eso se construye |
 | agencia de marketing con inteligencia artificial | C | principal | Media | 1 | `/servicios-ia` | posiciona parcial | diferenciador real de la marca |
 | agencia marketing digital bajio | C+L | variante | Baja | 3 | `/` | no posiciona | ampliación geográfica |
 | agencia de mercadotecnia aguascalientes | C+L | variante | Media | 2 | `/` | no posiciona | sinónimo que usa el buyer mayor |

@@ -15,6 +15,16 @@
 - [ ] Correr **PageSpeed Insights** sobre las 6 URLs clave y guardar los números como línea base `(Medio · Bajo · Negocio)` — TEC-01
 - [ ] Correr el **guion de 15 preguntas GEO** en ChatGPT, Gemini y Perplexity; guardar capturas como línea base `(Alto · Bajo · Negocio)` — GEO-04
 
+## ⚡ Nuevos, tras conectar Search Console (21/08)
+
+- [ ] **Solicitar indexación** de `/servicios/posicionamiento-en-ia` (Search Console → inspeccionar URL → Solicitar indexación). Google todavía no la conoce `(Impacto: Alto · Esfuerzo: Bajo · Responsable: Negocio)` — GEO-07
+- [ ] **Reenviar el sitemap** principal (se envió en enero con 35 URLs; hoy tiene 38) `(Medio · Bajo · Negocio)` — IDX-06
+- [ ] **Borrar los 2 sitemaps rotos** de `cdn.` e `imagenes.` enviados en enero, que solo generan errores `(Bajo · Bajo · Negocio)` — IDX-06
+- [ ] **Consolidar www**: revisar que ningún enlace apunte a `inedito.digital` sin www; solicitar indexación de la versión con www `(Alto · Bajo · Desarrollo)` — IDX-05
+- [ ] **Decidir sobre los subdominios de clientes** (`sanasexualidad.`, `crm-dent.`, `hypatiastyle.`): moverlos fuera de la marca o ponerles `noindex` `(Alto · Medio · Negocio)` — GEO-06
+- [ ] **Decidir si "marketing de contenidos" es un servicio con nombre propio**: hay 200 impresiones/90d esperando una página `(Medio · Medio · Negocio)` — KW-03
+- [ ] **Exportar el informe de Enlaces** a CSV y mandármelo: es lo único que la API no expone `(Alto · Bajo · Negocio)` — OFF-01
+
 ## 📅 Primeros 30 días
 
 - [ ] **Fechas en el blog**: publicación y última actualización, visibles y en el schema `(Alto · Bajo · Desarrollo)` — CON-01

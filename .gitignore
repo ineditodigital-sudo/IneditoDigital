@@ -18,6 +18,13 @@ CLAVES*
 *.key
 *.ppk
 
+# Credenciales de OAuth de Google: el archivo que descarga la consola
+# se llama client_secret_*.json y cae en la carpeta del proyecto.
+client_secret*.json
+*client_secret*
+google_oauth*.json
+service-account*.json
+
 # --- Volcados de base de datos (contienen datos personales de leads) ---
 *.sql
 !api/schema.sql

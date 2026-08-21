@@ -391,7 +391,7 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
   <h3>Limitaciones y accesos requeridos</h3>
   <div class="tablewrap"><table>
     <tr><th>Falta</th><th>Qué impide</th><th>Qué se necesita</th></tr>
-    <tr><td>Search Console</td><td>Cobertura de indexación real, queries con impresiones, CTR, estado exacto de las URLs zombis.</td><td>Acceso como usuario o propietario a la propiedad de inedito.digital.</td></tr>
+    <tr><td>Search Console</td><td class=""><strong>RESUELTO el 21/08:</strong> conectado por API. Ver el anexo de datos reales al final. Queda pendiente solo el informe de enlaces, que la API no expone.</td><td>Exportar <em>Enlaces</em> a CSV desde la interfaz.</td></tr>
     <tr><td>GA4</td><td>Tráfico real, conversiones, páginas de entrada.</td><td>Acceso de lectura.</td></tr>
     <tr><td>Google Business Profile</td><td>Verificar NAP, categorías, reseñas de primera mano (lo reportado es vía Delfos).</td><td>Acceso de administrador.</td></tr>
     <tr><td>Herramienta de keywords/backlinks</td><td>Volúmenes exactos y perfil de enlaces completo; todo lo de demanda va como estimación Alta/Media/Baja.</td><td>Ahrefs/Semrush o Keyword Planner con cuenta de Ads.</td></tr>
@@ -399,6 +399,67 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
     <tr><td>Prueba directa en asistentes</td><td>Línea base de citabilidad real.</td><td>Correr el guion de 15 preguntas de keywords.md en ChatGPT, Gemini y Perplexity.</td></tr>
   </table></div>
   <p style="margin-top:10px"><strong>Nota de método:</strong> las búsquedas en Google se hicieron desde infraestructura en EE. UU.; el orden local exacto en Aguascalientes puede variar. Todo lo demás — estados HTTP, cabeceras, pesos, contenido para bots, schema — está medido directamente contra producción el 20 de agosto de 2026.</p>
+</div></section>
+
+<!-- ============================== DATOS REALES ============================== -->
+<section><div class="wrap">
+  <h2>Anexo · <span>datos reales de Search Console</span></h2>
+  <div class="nota"><strong>Actualización del 21/08/2026.</strong> Se conectó Search Console por API. Lo que sigue ya no es estimación: es lo medido en los últimos 90 días (23 may – 19 ago). Tres hallazgos nuevos, uno de ellos crítico.</div>
+
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Evidencia (medida)</th><th>Impacto</th><th>Solución</th><th>Esf.</th></tr>
+
+    <tr><td>IDX-05</td><td><span class="sev s-crit">🔴</span></td>
+      <td>La versión sin www sigue indexada aparte, y capta el 11 % de las impresiones.</td>
+      <td>De 4.755 impresiones con www, hay <strong>608 más repartidas en 4 URLs de <code>https://inedito.digital</code></strong> (sin www). La home sin www aparece en <strong>posición 4.9</strong>, mejor que la con www (20.9). El 301 existe y funciona, pero Google conserva ambas versiones.</td>
+      <td>Las señales se parten entre dos hosts: la autoridad que debería sumar a una URL se reparte. Y la que mejor rankea es la que queremos retirar.</td>
+      <td>Está bien resuelto a nivel servidor; falta que Google consolide. Acelerar con: inspección de URL + solicitud de indexación de la versión con www, y verificar que ningún enlace interno o externo apunte al host sin www.</td><td>Bajo</td></tr>
+
+    <tr><td>GEO-06</td><td><span class="sev s-alto">🟠</span></td>
+      <td>Proyectos de clientes viven en subdominios de la marca y aparecen en las búsquedas del dominio.</td>
+      <td>Dentro de la propiedad aparecen <code>sanasexualidad.inedito.digital</code> (27 impresiones, con páginas sobre salud sexual indexadas), <code>crm-dent.inedito.digital</code> y <code>hypatiastyle.inedito.digital</code>.</td>
+      <td>Para un motor generativo, la entidad "inedito.digital" incluye todo ese contenido. Al preguntar por la agencia, un asistente puede encontrar y mezclar material de proyectos de clientes que no tiene relación con el servicio — y en el caso de contenido sensible, con riesgo reputacional.</td>
+      <td>Decisión de arquitectura: mover los proyectos de clientes a dominios propios, o al menos a un subdominio neutro que no sea la marca (ej. <code>proyectos.otrodominio.mx</code>). Mientras tanto, <code>noindex</code> en los que no deban aparecer.</td><td>Medio</td></tr>
+
+    <tr><td>IDX-06</td><td><span class="sev s-medio">🟡</span></td>
+      <td>Dos sitemaps rotos enviados desde enero, y el principal está desactualizado.</td>
+      <td><code>cdn.inedito.digital/sitemap.xml</code> (1 error) y <code>imagenes.inedito.digital/sitemap.xml</code> (2 errores), ambos enviados el 14/01/2026. El principal se envió el 12/01 con 35 URLs; hoy tiene 38.</td>
+      <td>Errores permanentes en el informe y URLs nuevas que tardan más en descubrirse.</td>
+      <td>Borrar los dos sitemaps de subdominios y reenviar el principal.</td><td>Bajo</td></tr>
+
+    <tr><td>KW-02</td><td><span class="sev s-mejora">🟢</span></td>
+      <td><strong>Corrección a la auditoría:</strong> la keyword principal está mejor de lo que estimé.</td>
+      <td><em>agencia de marketing digital aguascalientes</em>: <strong>posición 7.2</strong> con 141 impresiones. <em>agencia de marketing aguascalientes</em>: <strong>5.4</strong>. Estimé que no competía; sí compite, en página 1.</td>
+      <td>Cambia la estrategia: no hay que entrar a página 1, hay que subir del 7 al 3. Eso se gana con las landings locales y con reseñas, no con contenido nuevo.</td>
+      <td>Mantener KW-01, pero la expectativa de resultado es más cercana de lo proyectado.</td><td>—</td></tr>
+
+    <tr><td>KW-03</td><td><span class="sev s-medio">🟡</span></td>
+      <td>200 impresiones desperdiciadas en el clúster de "agencia de contenido", todas en posición 79–90.</td>
+      <td><em>agencia de contenido digital</em> 41 impr/pos 81.8 · <em>agencia de contenidos digitales</em> 32/85.2 · <em>agencia de conteudo digital</em> 27/80.1 (portugués) · <em>agencia de marketing de contenidos</em> 23/89.4, y más.</td>
+      <td>Google ya asocia el sitio con marketing de contenidos, pero no hay página que lo respalde, así que lo entierra en página 8.</td>
+      <td>Decisión de negocio: si el servicio existe, darle ficha propia; si no, ignorar. Detalle en <code>keywords.md</code>.</td><td>Medio</td></tr>
+
+    <tr><td>KW-04</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>El Bajío ya pregunta: Celaya, Abasolo, Pénjamo y Salamanca generan impresiones.</td>
+      <td><em>agencia de marketing digital en celaya</em>: <strong>86 impresiones</strong>, posición 58. Abasolo 26, Pénjamo 25, Salamanca 5.</td>
+      <td>Demanda real fuera de Aguascalientes que hoy se pierde por completo.</td>
+      <td>Después de las landings de Aguascalientes, replicar la receta para Celaya. Es expansión con demanda ya demostrada.</td><td>Medio</td></tr>
+
+    <tr><td>TEC-07</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>En móvil el sitio rankea 3 veces mejor que en escritorio.</td>
+      <td>Móvil: posición <strong>9.2</strong> con 1.366 impresiones. Escritorio: posición 26.2 con 2.956. Tableta: 10.2.</td>
+      <td>El terreno ganado está en móvil, que es donde busca el cliente local. Refuerza la prioridad de TEC-01 (LCP móvil).</td>
+      <td>Priorizar el trabajo de rendimiento móvil sobre el de escritorio.</td><td>—</td></tr>
+
+    <tr><td>GEO-07</td><td><span class="sev s-alto">🟠</span></td>
+      <td>La página nueva de GEO todavía no la conoce Google.</td>
+      <td>Inspección de URL de <code>/servicios/posicionamiento-en-ia</code>: <em>"Google no reconoce esta URL"</em>. Tiene dos días.</td>
+      <td>La página que debe ganar el nicho no existe para el buscador todavía.</td>
+      <td>Solicitar indexación manualmente desde Search Console (inspeccionar la URL → Solicitar indexación) y reenviar el sitemap.</td><td>Bajo</td></tr>
+  </table></div>
+
+  <h3>Nota sobre el perfil de enlaces (OFF-01)</h3>
+  <p>Sigue siendo <strong>estimación</strong>: la API de Search Console no expone el informe de enlaces, solo búsquedas, sitemaps e inspección de URL. Para convertirlo en dato medido hay que exportarlo a mano desde <em>Enlaces → Exportar</em> en la interfaz. Es la única pieza de la auditoría que la conexión no resolvió.</p>
 </div></section>
 
 <footer><div class="wrap">
