@@ -54,7 +54,8 @@ $H = function($t){ return '<h1>'.e($t).'</h1>'; };
 $P = function($t){ return '<p>'.e($t).'</p>'; };
 
 if ($path === '/') {
-  $title = $siteName.' | Agencia de Marketing Digital en Aguascalientes';
+  // 54 caracteres: entra completo en el resultado de Google (ONP-01)
+  $title = 'Agencia de Marketing Digital con IA en Aguascalientes';
   $desc = $defaultDesc;
   $bodyBuilder = function() use ($services,$settings,$P,$e) {
     $h = '<h1>Inédito Digital · Agencia de Marketing Digital en Aguascalientes</h1>';
@@ -376,6 +377,21 @@ $org = ['@context'=>'https://schema.org','@type'=>($seo['orgType'] ?: 'Professio
 $mapsUrl = $settings['mapsUrl'] ?? '';
 if ($mapsUrl) $org['hasMap'] = $mapsUrl;
 if (!empty($seo['latitude']) && !empty($seo['longitude'])) $org['geo'] = ['@type'=>'GeoCoordinates','latitude'=>$seo['latitude'],'longitude'=>$seo['longitude']];
+/* Horario, para que un asistente pueda responder "¿a qué hora abren?".
+   Se arma leyendo lo que el cliente escribió en Ajustes; si algún día pone
+   un formato que no entendemos, simplemente no se publica el bloque. */
+if (!empty($settings['businessHours']) && preg_match('/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/', $settings['businessHours'], $hm)) {
+  $org['openingHoursSpecification'] = [[
+    '@type' => 'OpeningHoursSpecification',
+    'dayOfWeek' => ['Monday','Tuesday','Wednesday','Thursday','Friday'],
+    'opens'  => sprintf('%02d:%02d', (int)$hm[1], (int)$hm[2]),
+    'closes' => sprintf('%02d:%02d', (int)$hm[3], (int)$hm[4]),
+  ]];
+}
+/* El sitio como entidad. No se declara SearchAction porque no hay buscador
+   interno: anunciar uno que no existe es peor que omitirlo. */
+$schema[] = ['@context'=>'https://schema.org','@type'=>'WebSite','name'=>$seo['orgName'] ?: $siteName,
+             'url'=>$BASE,'inLanguage'=>'es-MX','publisher'=>['@type'=>'Organization','name'=>$seo['orgName'] ?: $siteName]];
 array_unshift($schema, $org);
 if (count($crumbs) > 1) { $bl=['@context'=>'https://schema.org','@type'=>'BreadcrumbList','itemListElement'=>[]]; $i=1; foreach($crumbs as $c){ $bl['itemListElement'][]=['@type'=>'ListItem','position'=>$i++,'name'=>$c[0],'item'=>$BASE.$c[1]]; } $schema[]=$bl; }
 

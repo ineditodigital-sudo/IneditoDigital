@@ -115,7 +115,7 @@ try {
 
 $n = $ss['businessName'] ?? 'Inédito Digital';
 echo "# $n — información completa\n\n";
-echo "> Agencia de marketing digital en Aguascalientes, México (Jardines Eternos 902-Loc 2, Panorama, CP 20040). ";
+echo "> Agencia de marketing digital en Aguascalientes, México (Jardines Eternos 902-Local 2, Panorama, CP 20040). ";
 echo "Diseño y desarrollo web, SEO, posicionamiento en inteligencias artificiales (GEO), Google Ads, chatbots y agentes de IA, e-commerce y tarjetas de presentación NFC.\n\n";
 echo "Contacto: WhatsApp " . ($ss['whatsappNumber'] ?? '') . " · " . ($ss['businessEmail'] ?? '') . " · Horario: " . ($ss['businessHours'] ?? '') . "\n\n";
 
@@ -200,10 +200,9 @@ Se cambian **desde el panel** (Páginas → sección "Cómo se ve al compartir" 
 ```php
 $schemaNegocio['geo'] = [
   '@type' => 'GeoCoordinates',
-  // Pin de Jardines Eternos 902, Panorama, Aguascalientes.
-  // VERIFICAR contra el pin exacto de Google Business Profile al tener acceso.
-  'latitude'  => 21.9110,
-  'longitude' => -102.3060,
+  // Pin real, extraido del enlace de Maps guardado en Ajustes.
+  'latitude'  => 21.8896517,
+  'longitude' => -102.3165204,
 ];
 $schemaNegocio['openingHoursSpecification'] = [[
   '@type'     => 'OpeningHoursSpecification',

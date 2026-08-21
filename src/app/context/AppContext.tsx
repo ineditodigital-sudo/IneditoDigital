@@ -96,7 +96,7 @@ const STORAGE_KEYS = {
 const DEFAULT_SETTINGS: SiteSettings = {
   whatsappNumber: '5214491204353',
   businessName: 'INÉDITO DIGITAL',
-  businessAddress: 'Jardines Eternos 902-Loc 2, Panorama',
+  businessAddress: 'Jardines Eternos 902-Local 2, Panorama',
   businessCity: 'Aguascalientes',
   businessState: 'AGS',
   businessZip: '20040',
