@@ -32,6 +32,21 @@ Options -Indexes
   RewriteRule ^sitemap\.xml$ /sitemap.php [L]
   # La tarjeta de contacto de un integrante: /armando-trejo.vcf
   RewriteRule ^([a-z0-9-]+)\.vcf$ /tarjeta.php?m=$1 [L,QSA]
+  RewriteRule ^llms-full\.txt$ /llms-full.php [L]
+
+  # ---- 301 de las URLs del sitio WordPress anterior (auditoría IDX-01) ----
+  # Google todavía las tiene indexadas y hoy mueren en 404: cada una se manda
+  # a su equivalente actual para no tirar la autoridad acumulada.
+  RewriteRule ^diseno-y-desarrollo-web/?$ /servicios/diseno-y-desarrollo-web [R=301,L]
+  RewriteRule ^paginas-web/?$ /servicios/diseno-y-desarrollo-web [R=301,L]
+  RewriteRule ^posicionamiento-organico/?$ /servicios/posicionamiento-organico [R=301,L]
+  RewriteRule ^tarjetas-digitales/?$ /servicios/tarjetas-de-presentacion-digital [R=301,L]
+  RewriteRule ^ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/?$ /portafolio/ofitodo [R=301,L]
+  RewriteRule ^casos-de-exito(/.*)?$ /portafolio [R=301,L]
+  RewriteRule ^alaman/?$ /portafolio [R=301,L]
+  RewriteRule ^apps/?$ /servicios [R=301,L]
+  RewriteRule ^espacios-publicitarios(-[a-z0-9-]*)?/?$ / [R=301,L]
+  RewriteRule ^creacion-de-logo/?$ /servicios [R=301,L]
   RewriteRule ^llms\.txt$    /llms.php    [L]
   RewriteRule ^$             /render.php  [L]
 

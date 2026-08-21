@@ -149,7 +149,7 @@
 | marketing digital para constructoras / inmobiliarias | I+C | nicho | Media | 3 | POR CREAR | no posiciona | según cartera |
 | casos de exito marketing digital mexico | I | variante | Baja | 2 | `/portafolio` | posiciona débil | ampliar casos con cifras (ARQ-01) |
 | que hace una agencia de marketing digital | I | pregunta | Media | 2 | POR CREAR: `/blog/que-hace-una-agencia-marketing-digital` | no posiciona | citable por IAs al definir el giro |
-| tendencias marketing digital 2026 | I | temporal | Alta | 3 | `/blog/tendencias-marketing-digital-2026` (existe) | posiciona parcial | actualizar y fechar |
+| tendencias marketing digital 2026 | I | temporal | Alta | 3 | `/blog/tendencias-marketing-digital-2025` (existe) | posiciona parcial | actualizar y fechar |
 | como conseguir clientes por internet | I | pregunta | Alta | 2 | POR CREAR: `/blog/como-conseguir-clientes-por-internet` | no posiciona | pilar del funnel completo |
 | estrategias de marketing para pymes | I | variante | Media | 3 | misma pieza | no posiciona | |
 | cuanto cuesta el marketing digital | I | pregunta | Alta | 1 | `/blog/cuanto-cuesta-marketing-digital` | no posiciona | ya está en preguntas GEO |
