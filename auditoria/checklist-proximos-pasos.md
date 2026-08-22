@@ -15,6 +15,15 @@
 - [ ] Correr **PageSpeed Insights** sobre las 6 URLs clave y guardar los números como línea base `(Medio · Bajo · Negocio)` — TEC-01
 - [ ] Correr el **guion de 15 preguntas GEO** en ChatGPT, Gemini y Perplexity; guardar capturas como línea base `(Alto · Bajo · Negocio)` — GEO-04
 
+## 🚨 LO PRIMERO DE TODO (21/08, tras ver el informe de cobertura)
+
+> 21 de 38 páginas del sitemap están fuera del índice de Google, y 18 nunca fueron rastreadas. Media web no compite porque Google no la ha visitado.
+
+- [ ] **Reenviar el sitemap** en Search Console → Sitemaps → escribir `sitemap.xml` → Enviar. Se envió en enero y no se ha vuelto a mandar `(Impacto: Alto · Esfuerzo: Bajo · Responsable: Negocio)` — IDX-07
+- [ ] **Solicitar indexación manual**, ~10 al día, en este orden: `/nosotros`, `/servicios-ia`, `/servicios/posicionamiento-en-ia`, `/portafolio/ofitodo`, `/servicios/google-ads`, `/servicios-ia/whatsapp`, `/servicios-ia/ventas`, `/servicios/chatbots-y-agentes`, `/blog/como-mejorar-seo-local-aguascalientes`, `/armando-trejo` `(Alto · Bajo · Negocio)` — IDX-07
+- [ ] **Exportar el detalle de las 404 (27) y de los 403 (2)**: Search Console → Indexación → Páginas → clic en cada motivo → Exportar. Sin ese listado no puedo completar los 301 `(Alto · Bajo · Negocio)` — IDX-08 / IDX-09
+- [ ] **Enlaces entrantes en serio.** Deja de ser "mejorar autoridad" y pasa a ser la causa raíz: sin autoridad no hay presupuesto de rastreo, y sin rastreo media web no existe `(Alto · Alto · Negocio)` — OFF-01
+
 ## 🔴 PRIORIDAD REPLANTEADA (21/08, con las 224 consultas reales)
 
 > El sitio ya está en página 1 para las búsquedas locales de dinero y **recibe cero clics**. Esto sube al primer lugar del plan, por encima de las landings.
