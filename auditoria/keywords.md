@@ -297,3 +297,27 @@ Estas son las preguntas **tal como las hace la gente** a los asistentes. Correrl
 | 12 piezas POR CREAR (arriba) | una pregunta cada una | — |
 
 **Canibalizaciones detectadas:** ninguna activa hoy. Riesgo futuro: la landing SEO local nueva vs `/servicios/posicionamiento-organico` — se resuelve con la landing apuntando a intención local+comercial y la ficha a la explicación del servicio, enlazadas entre sí.
+
+---
+
+## Demanda medida en URLs que ya no existen (21/08/2026)
+
+No sale de ninguna herramienta de keywords: sale de preguntarle a Search Console qué URLs sigue mostrando y comprobar cuáles están muertas. Es demanda real, con impresiones y clics contados por Google, para servicios que **el sitio actual no ofrece en ninguna página**.
+
+| Lo que buscaban | URL del sitio anterior | Impresiones (16 m) | Clics | Página equivalente hoy |
+|---|---|---|---|---|
+| Espacios publicitarios, Feria de San Marcos | `/espacios-publicitarios/` y variantes | 1.452 | 7 | **Ninguna.** `/servicios/activaciones-para-expo` es otra cosa: photobooth y RA para stands, no venta de espacios |
+| Producción audiovisual | `/produccion-audiovisual/` | 813 | **15** | **Ninguna** |
+| Desarrollo de apps | `/apps/` | 222 | 3 | **Ninguna** |
+| Marketing digital (paraguas) | `/marketing-digital/` | 184 | 3 | Cubierto por `/servicios` |
+| Gestión de redes sociales | `/redes-sociales/` | 63 | 0 | **Ninguna** |
+
+**2.734 impresiones y 28 clics** para servicios sin página propia. Los 28 clics son el 9% de los 301 que recibe todo el sitio vivo.
+
+`/produccion-audiovisual/` merece atención aparte: con 15 clics era la URL rota que más tráfico traía, casi tantos como los 17 clics que el sitio entero registró en los últimos 28 días.
+
+### Qué hacer con esto
+
+1. **Decidir primero si el servicio se ofrece.** Crear una página para algo que no se vende es peor que no tenerla.
+2. Para los que sí: ficha propia bajo `/servicios/`, siguiendo el patrón de las que ya existen.
+3. Redirigir la URL vieja a la ficha nueva en cuanto exista. Hoy van a `/servicios`, que es lo más honesto sin prometer algo que no está.

@@ -45,7 +45,7 @@ Options -Indexes
   RewriteRule ^casos-de-exito(/.*)?$ /portafolio [R=301,L]
   RewriteRule ^alaman/?$ /portafolio [R=301,L]
   RewriteRule ^apps/?$ /servicios [R=301,L]
-  RewriteRule ^espacios-publicitarios(-[a-z0-9-]*)?/?$ / [R=301,L]
+  RewriteRule ^espacios-publicitarios(-[a-z0-9-]*)?/?$ /servicios [R=301,L]
   RewriteRule ^creacion-de-logo/?$ /servicios/creacion-de-logo [R=301,L]
 
   # ---- 301 medidas con datos de Google (21/08/2026, IDX-08) ----

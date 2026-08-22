@@ -598,6 +598,85 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
   </table></div>
 </div></section>
 
+<!-- ====================== URLS MUERTAS (MEDIDO) ====================== -->
+<section><div class="wrap">
+  <h2>Uno de cada ocho clics de Google <span>caía en una página de error</span></h2>
+  <div class="nota"><strong>21/08/2026, medido.</strong> La auditoría pedía este listado al cliente porque Search Console no lo expone por API. Se resolvió por otra vía: se le pidió a Google la dimensión <code>page</code> de rendimiento —las URLs que aún muestra en resultados, 16 meses, 125 URLs— y se comprobó el código HTTP real de cada una. Aquí ya no hay nada estimado.</div>
+
+  <div class="tablewrap"><table>
+    <tr><th>Estado real</th><th>URLs</th><th>Impresiones</th><th>Clics</th></tr>
+    <tr><td><span class="sev s-mejora">200 · vivas</span></td><td>39</td><td>24.491</td><td>301</td></tr>
+    <tr><td>301 · redirigen</td><td>32</td><td>13.985</td><td>152</td></tr>
+    <tr><td><span class="sev s-crit">404 · no existían</span></td><td><strong>53</strong></td><td><strong>5.345</strong></td><td><strong>42</strong></td></tr>
+  </table></div>
+
+  <p>De esas 404, <strong>44 eran del dominio principal: 4.696 impresiones y 41 clics</strong>. Todo el sitio vivo suma 301 clics, así que <strong>uno de cada ocho clics que Google mandaba moría en un error</strong>. Eran restos del WordPress anterior: fichas de servicio (<code>/branding/</code>, <code>/email-mkt/</code>, <code>/google-ads/</code>), fichas de cliente (<code>/evince/</code>, <code>/coraca/</code>, <code>/maindsoft/</code>), el blog viejo bajo <code>/technology/</code> y la versión en inglés.</p>
+
+  <div class="nota" style="border-color:#1e4d2b;background:#0a1a10"><strong>Corregido y verificado el mismo día.</strong> 43 de las 44 ya redirigen con 301 a una página que existe en el sitemap, comprobadas una por una contra el servidor. La 44 es una imagen del gestor anterior y se deja en 404 a propósito: mandar una imagen a una página HTML cuenta como error blando, y eso es peor que el 404.</div>
+
+  <h3>Lo que el listado destapó: cuatro servicios con demanda y sin página</h3>
+  <p>Al decidir a dónde debía ir cada URL muerta apareció un hueco que no estaba en la auditoría original: hay búsquedas llegando a servicios que el sitio actual no ofrece en ninguna página.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Lo que buscaban</th><th>Impresiones</th><th>Clics</th><th>Página hoy</th></tr>
+    <tr><td>Espacios publicitarios / Feria de San Marcos</td><td>1.452</td><td>7</td><td>Ninguna. <em>Activaciones para Expo</em> es otra cosa: photobooth y realidad aumentada, no venta de espacios</td></tr>
+    <tr><td>Producción audiovisual (video, foto)</td><td>813</td><td><strong>15</strong></td><td>Ninguna</td></tr>
+    <tr><td>Desarrollo de apps</td><td>222</td><td>3</td><td>Ninguna</td></tr>
+    <tr><td>Gestión de redes sociales</td><td>63</td><td>0</td><td>Ninguna</td></tr>
+  </table></div>
+  <div class="nota"><strong>2.734 impresiones y 28 clics</strong> pidiendo servicios sin página propia. Esos 28 clics son el 9% de todo lo que el sitio recibe. <code>/produccion-audiovisual/</code> por sí sola era la URL con más clics de todas las rotas.</div>
+
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>IDX-08</td><td><span class="sev s-mejora">RESUELTO</span></td>
+      <td>44 URLs del dominio devolvían 404 con 4.696 impresiones y 41 clics.</td>
+      <td>43 redirecciones 301 desplegadas y verificadas el 21/08. Falta que Google las vuelva a rastrear.</td><td>Hecho</td></tr>
+    <tr><td>IDX-09</td><td><span class="sev s-medio">PENDIENTE</span></td>
+      <td>Las 2 URLs con 403 no aparecen aquí: no tienen impresiones, así que este método no las ve.</td>
+      <td>Siguen necesitando el export manual de Search Console. Impacto bajo: sin impresiones, no pierden tráfico.</td><td>Bajo</td></tr>
+    <tr><td>SRV-01</td><td><span class="sev s-alto">NUEVO</span></td>
+      <td>Cuatro servicios con demanda medida y sin página: espacios publicitarios, producción audiovisual, apps y redes sociales.</td>
+      <td>Decidir cuáles se ofrecen de verdad. Los que sí, con ficha propia. Empezar por producción audiovisual, que es la que más clics traía.</td><td>Medio</td></tr>
+    <tr><td>SUB-01</td><td><span class="sev s-medio">NUEVO</span></td>
+      <td><code>ofitodo.inedito.digital</code>, subdominio de cliente, tiene 9 URLs en 404 (una con 598 impresiones). Cuelga del mismo dominio, así que sus errores forman parte del perfil de Inédito.</td>
+      <td>Avisar al cliente o redirigir dentro de ese subdominio.</td><td>Bajo</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ====================== RENDIMIENTO MEDIDO ====================== -->
+<section><div class="wrap">
+  <h2>Rendimiento · <span>medido en navegador, no estimado</span></h2>
+  <div class="nota">La auditoría declaraba los Core Web Vitals como limitación. Se cierra en parte: estas son medidas de laboratorio tomadas en un navegador real sobre la home, el 21/08/2026, en una ventana de 1280 px y con la red sin limitar.</div>
+  <div class="tablewrap"><table>
+    <tr><th>Medida</th><th>Valor</th><th>Lectura</th></tr>
+    <tr><td>TTFB (lo que tarda el servidor en contestar)</td><td>205 ms</td><td><span class="sev s-mejora">Bueno.</span> Muy por debajo de los 800 ms recomendados</td></tr>
+    <tr><td>DOM listo</td><td>336 ms</td><td><span class="sev s-mejora">Bueno</span></td></tr>
+    <tr><td>Carga completa</td><td>929 ms</td><td><span class="sev s-mejora">Bueno</span></td></tr>
+    <tr><td>CLS (saltos de maquetación)</td><td>0</td><td><span class="sev s-mejora">Perfecto.</span> Nada se mueve mientras carga</td></tr>
+    <tr><td>TBT (tiempo con la página bloqueada)</td><td>57 ms</td><td><span class="sev s-mejora">Bueno.</span> Una sola tarea larga</td></tr>
+    <tr><td>Peso de la home</td><td>781 kB en 21 peticiones, HTTP/2</td><td>Aceptable, pero ver abajo</td></tr>
+    <tr><td>LCP y datos de usuarios reales</td><td>sin medir</td><td>Este navegador no expone las métricas de pintado. Hace falta una clave de PageSpeed</td></tr>
+  </table></div>
+
+  <h3>Lo que sí apareció: el 70% del peso son fotos de banco ajenas</h3>
+  <p>De los 781 kB de la home, <strong>546 kB son cuatro fotos de Unsplash</strong> servidas desde <code>images.unsplash.com</code>. En todo el sitio hay <strong>73 imágenes de banco</strong> con ese origen.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Por qué importa</th><th>Detalle</th></tr>
+    <tr><td>Peso</td><td>546 de 781 kB. Llegan a 1080 px de ancho en JPEG, sin adaptarse al tamaño real ni convertirse a WebP</td></tr>
+    <tr><td>Velocidad</td><td>Dominio ajeno: el navegador tiene que resolver el DNS y negociar el cifrado con Unsplash antes de empezar a bajarlas</td></tr>
+    <tr><td>Credibilidad</td><td>Una agencia que vende diseño se presenta con fotos de catálogo. La primera imagen de la home es una búsqueda de banco por <em>artificial intelligence technology</em></td></tr>
+    <tr><td>Control</td><td>Ya son editables desde el panel: se sustituyen sin tocar código</td></tr>
+  </table></div>
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>IMG-04</td><td><span class="sev s-alto">NUEVO</span></td>
+      <td>73 fotos de banco de Unsplash; 546 kB (el 70%) del peso de la home, desde un dominio ajeno.</td>
+      <td>Sustituirlas por trabajo propio desde el panel, empezando por las 4 de la home. Subirlas a <code>imagenes.inedito.digital</code> en WebP y al ancho real.</td><td>Medio</td></tr>
+    <tr><td>TEC-01</td><td><span class="sev s-medio">PARCIAL</span></td>
+      <td>La velocidad medida en laboratorio sale bien. Faltan el LCP y los datos de usuarios reales.</td>
+      <td>Crear una clave de API de PageSpeed en el proyecto de Google que ya existe (1 minuto) y la medición se automatiza.</td><td>Bajo</td></tr>
+  </table></div>
+</div></section>
+
 <footer><div class="wrap">
   Auditoría SEO + GEO · inedito.digital · 20 de agosto de 2026 · Entregables hermanos: reporte-cliente.pdf · keywords.md · checklist-proximos-pasos.md · instrucciones-correcciones.md
 </div></footer>
