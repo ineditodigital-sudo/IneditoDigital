@@ -98,8 +98,8 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
       <div class="bar"><i style="width:67%"></i></div>
       <div class="j">Base técnica muy por encima del promedio local. <strong>Corregido el 21/08 con datos reales:</strong> el sitio rankea mejor de lo estimado (página 1 en las locales) pero no convierte esa posición en clics. Ver el replanteo al final.</div>
     </div>
-    <div class="score"><div class="a">Indexación y rastreo</div><div class="n">72</div><div class="bar"><i style="width:72%"></i></div>
-      <div class="j">Sitemap limpio (37/37 en 200), pero Google conserva 11+ URLs del WordPress anterior que hoy dan 404 sin redirección.</div></div>
+    <div class="score"><div class="a">Indexación y rastreo</div><div class="n">38</div><div class="bar"><i style="width:38%"></i></div>
+      <div class="j"><strong>Corregido el 21/08 con datos de Google:</strong> 21 de 38 URLs del sitemap están fuera del índice y 18 nunca fueron rastreadas. Era 72 con lo que se podía ver desde fuera.</div></div>
     <div class="score"><div class="a">SEO técnico</div><div class="n">68</div><div class="bar"><i style="width:68%"></i></div>
       <div class="j">Cabeceras y compresión bien; el bundle de 665 KB y el LCP dependiente de JavaScript son el freno principal.</div></div>
     <div class="score"><div class="a">On-page</div><div class="n">74</div><div class="bar"><i style="width:74%"></i></div>
@@ -542,6 +542,60 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
   </table></div>
 
   <p style="margin-top:12px"><strong>Nota de método:</strong> el export lista 224 consultas con 2.788 impresiones; la API reporta 4.339 en el mismo periodo. La diferencia son consultas demasiado poco frecuentes, que Search Console agrupa y no detalla para proteger la privacidad. Es comportamiento normal, no un error del dato.</p>
+</div></section>
+
+<!-- ============================== INDEXACIÓN ============================== -->
+<section><div class="wrap">
+  <h2>La causa raíz · <span>media web no existe para Google</span></h2>
+  <div class="nota"><strong>21/08/2026, informe de cobertura + inspección URL por URL.</strong> Este es el hallazgo mayor de toda la auditoría, y explica casi todo lo demás.</div>
+
+  <p>Del sitio hay <strong>34 páginas indexadas y 137 sin indexar</strong>. Inspeccioné una por una las 38 URLs del sitemap con la API de Google:</p>
+
+  <div class="tablewrap"><table>
+    <tr><th>Estado</th><th>Cuántas</th><th>Qué significa</th></tr>
+    <tr><td><span class="sev s-mejora">Indexada</span></td><td><strong>17</strong></td><td>Compite en Google</td></tr>
+    <tr><td><span class="sev s-crit">Descubierta, sin rastrear</span></td><td><strong>18</strong></td><td>Google sabe que existe y <strong>nunca la ha visitado</strong></td></tr>
+    <tr><td><span class="sev s-alto">Rastreada, sin indexar</span></td><td>1</td><td>La visitó y decidió no incluirla (la de GEO, tiene 2 días)</td></tr>
+    <tr><td><span class="sev s-crit">Google no la conoce</span></td><td>2</td><td>Ni siquiera la ha descubierto</td></tr>
+  </table></div>
+
+  <h3>Lo que está fuera del índice</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Página</th><th>Por qué duele</th></tr>
+    <tr><td><code>/nosotros</code></td><td>La página que responde "quiénes son". Una de las que más consulta una IA antes de recomendar.</td></tr>
+    <tr><td><code>/servicios-ia</code> y <code>/servicios-ia/whatsapp</code></td><td>El hub del diferenciador de la marca.</td></tr>
+    <tr><td><strong>5 de 6 casos del portafolio</strong>: ofitodo, aldea-digital, early-ties, xpo-sedde, evince-kubera</td><td>Son la prueba del trabajo. Sin ellas, la agencia no tiene evidencia pública indexada.</td></tr>
+    <tr><td><strong>4 de 6 artículos del blog</strong>, incluido <code>como-mejorar-seo-local-aguascalientes</code></td><td>Corrige un dato de esta misma auditoría: escribí que ese artículo "posiciona". No está indexado.</td></tr>
+    <tr><td><code>/servicios/google-ads</code>, <code>/funnels-de-venta</code>, <code>/email-marketing</code>, <code>/creacion-de-logo</code>, <code>/activaciones-para-expo</code></td><td>Cinco servicios que no compiten por nada.</td></tr>
+    <tr><td><code>/servicios-ia/ventas</code> y <code>/servicios/chatbots-y-agentes</code></td><td>Google ni siquiera sabe que existen.</td></tr>
+  </table></div>
+
+  <h3>Por qué pasa (y qué se descartó)</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Hipótesis</th><th>Verificación</th><th>Veredicto</th></tr>
+    <tr><td>No están enlazadas desde ningún lado</td><td>Medido: el HTML que ve Googlebot en <code>/portafolio</code> enlaza a los 6 proyectos; <code>/blog</code> a sus artículos; <code>/servicios</code> a las 9 fichas.</td><td><strong>Descartada.</strong> El enlazado interno está bien.</td></tr>
+    <tr><td>Están bloqueadas</td><td>robots.txt permite todo salvo panel y api; ninguna lleva noindex.</td><td><strong>Descartada.</strong></td></tr>
+    <tr><td>Contenido pobre</td><td>Si fuera eso, aparecerían como "Rastreada: sin indexar". Aparecen como <strong>"Descubierta"</strong>: Google nunca las visitó, así que no ha juzgado su calidad.</td><td><strong>Descartada.</strong></td></tr>
+    <tr><td><strong>Presupuesto de rastreo bajo por falta de autoridad</strong></td><td>El sitemap se envió el 12/01/2026 y no se ha reenviado. El perfil de enlaces es casi inexistente (OFF-01). Un dominio con poca autoridad recibe pocas visitas de Googlebot, y Google las gasta en la home y los listados.</td><td><strong>Es la causa.</strong></td></tr>
+  </table></div>
+
+  <div class="nota"><strong>Esto reordena la auditoría entera.</strong> OFF-01 (autoridad, 45/100) no era un punto suelto de la lista: es <strong>la causa raíz</strong>. Poca autoridad → poco rastreo → 21 de 38 páginas nunca visitadas → no pueden posicionar → el sitio depende por completo de la home. Y como solo la home compite, todo el tráfico se concentra ahí y choca con el bloque de mapas (CTR-01).</div>
+
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>IDX-07</td><td><span class="sev s-crit">🔴</span></td>
+      <td>21 de 38 URLs del sitemap fuera del índice; 18 de ellas nunca rastreadas.</td>
+      <td>1) Reenviar el sitemap (se envió hace 7 meses). 2) Solicitar indexación manual de las 10 prioritarias, ~10 al día. 3) Atacar OFF-01 en serio: es lo que abre el presupuesto de rastreo.</td><td>Bajo + Alto</td></tr>
+    <tr><td>IDX-08</td><td><span class="sev s-alto">🟠</span></td>
+      <td>27 URLs devuelven 404 en el informe de Google, más del doble de las 11 que encontré con <code>site:</code>.</td>
+      <td>Necesito el listado: Search Console → Indexación → Páginas → clic en "No se ha encontrado (404)" → Exportar. Con eso completo el mapa de 301.</td><td>Bajo</td></tr>
+    <tr><td>IDX-09</td><td><span class="sev s-medio">🟡</span></td>
+      <td>2 páginas devuelven 403 a Google.</td>
+      <td>Averiguar cuáles (mismo export). Un 403 a Googlebot suele ser una regla de seguridad demasiado amplia.</td><td>Bajo</td></tr>
+    <tr><td>IDX-10</td><td><span class="sev s-mejora">🟢</span></td>
+      <td>La tendencia va a favor: de 191 sin indexar y 23 indexadas en mayo, a 137 y 34 en agosto.</td>
+      <td>El sitio nuevo está siendo absorbido. Acelerarlo, no rehacerlo.</td><td>—</td></tr>
+  </table></div>
 </div></section>
 
 <footer><div class="wrap">

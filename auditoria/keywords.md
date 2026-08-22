@@ -141,7 +141,7 @@ el trabajo local y móvil es donde está el terreno ganado.
 |---|---|---|---|---|---|---|---|
 | agencia seo aguascalientes | C+L | principal | Alta | 1 | POR CREAR: `/servicios/seo-aguascalientes` (o bloque local en posicionamiento-organico) | no posiciona | SeoImpacto es el dueño actual |
 | posicionamiento en google aguascalientes | C+L | variante | Media | 1 | misma | no posiciona | |
-| seo local aguascalientes | I+L | long-tail | Media | 1 | `/blog/como-mejorar-seo-local-aguascalientes` | posiciona | ya existe; enlazarla desde la landing |
+| seo local aguascalientes | I+L | long-tail | Media | 1 | `/blog/como-mejorar-seo-local-aguascalientes` | **NO INDEXADA (medido 21/08)** | Corrección: escribí que posicionaba. Google nunca la ha rastreado |
 | cuanto cuesta el seo en mexico | I | pregunta | Media | 2 | POR CREAR: `/blog/cuanto-cuesta-seo-mexico` | no posiciona | |
 | que es el posicionamiento organico | I | pregunta | Media | 2 | `/servicios/posicionamiento-organico` | posiciona parcial | responder en los primeros 60 caracteres |
 | auditoria seo gratis | T | long-tail | Media | 2 | POR CREAR: oferta en landing SEO | no posiciona | espejo del diagnóstico GEO |
