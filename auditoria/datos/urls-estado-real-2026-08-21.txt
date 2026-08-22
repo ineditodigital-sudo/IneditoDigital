@@ -1,0 +1,136 @@
+Google conserva 125 URLs con impresiones en 16 meses.
+Comprobando el codigo real de cada una...
+
+===== HTTP 404  (53 URLs)  NO EXISTEN (hay que redirigir)
+  /produccion-audiovisual/                                     813 impr   15 clics
+  /la-mejor-opcion-en-marketing-digital-en-aguascalientes/     771 impr    2 clics
+  /technology/personalizacion-con-inteligencia-artificial/     605 impr    1 clics
+  https://ofitodo.inedito.digital/tipo/mobiliario/             598 impr    0 clics
+  /technology/realidad-virtual-adentrate-en-el-futuro-del-marketing-digital/   412 impr    1 clics
+  /technology/marketing-de-voz-escucha-las-nuevas-tendencias-del-2024/   220 impr    1 clics
+  /marketing-digital/                                          184 impr    3 clics
+  /maindsoft/                                                  172 impr    3 clics
+  /branding/                                                   145 impr    2 clics
+  /servicios-qr/                                               131 impr    1 clics
+  /category/casos-de-exito/                                    100 impr    0 clics
+  /coraca/                                                      96 impr    2 clics
+  /feria-de-san-marcos-un-caso-de-exito-rotundo-gracias-al-seo/    96 impr    0 clics
+  /seo-sem/                                                     84 impr    0 clics
+  /alver-un-caso-de-exito-en-ventas-de-equipo-de-seguridad-industrial-gracias-a-google-ads/    82 impr    1 clics
+  /email-mkt/                                                   81 impr    2 clics
+  /redes-sociales/                                              63 impr    0 clics
+  /5-senales-de-que-tu-negocio-nececita-ayusa-de-expertos-en-marketing-digital/    58 impr    0 clics
+  /sostenibilidad-en-marketing-la-clave-para-conquistar-en-la-era-digital/    55 impr    0 clics
+  /marketing-de-voz-escucha-las-nuevas-tendencias-del-2024/     47 impr    0 clics
+  /ibarra-duran-asociados/                                      42 impr    1 clics
+  /technology/sostenibilidad-en-marketing-la-clave-para-conquistar-en-la-era-digital/    42 impr    0 clics
+  /alver/                                                       41 impr    0 clics
+  /hanshake/                                                    40 impr    3 clics
+  /rentacargo/                                                  40 impr    0 clics
+  /google-ads/                                                  36 impr    0 clics
+  /cgu-convierte-a-tus-clientes-en-las-estrellas/               31 impr    0 clics
+  https://ofitodo.inedito.digital/muebles-para-restaurante/     27 impr    0 clics
+  /fnsm/                                                        25 impr    0 clics
+  /evince/                                                      24 impr    0 clics
+  /inteligencia-artificial/                                     21 impr    2 clics
+  /personalizacion-con-inteligencia-artificial/                 21 impr    0 clics
+  /megamenu/home-menu/                                          19 impr    0 clics
+  /riolimpio/                                                   19 impr    0 clics
+  /technology/cgu-convierte-a-tus-clientes-en-las-estrellas/    17 impr    0 clics
+  /en                                                           11 impr    0 clics
+  https://ofitodo.inedito.digital/el-secreto-de-las-oficinas-de-alto-rendimiento-como-el-mobiliario-estrategico-puede-transformar-tu-productividad-y-bienestar/    10 impr    0 clics
+  /en/home/                                                     10 impr    0 clics
+  /realidad-virtual-adentrate-en-el-futuro-del-marketing-digital/     9 impr    0 clics
+  /1828-brasa-y-carbon/                                          8 impr    0 clics
+  /chat-bots/                                                    8 impr    0 clics
+  https://ofitodo.inedito.digital/tipo/lockers-y-vestidores/     7 impr    0 clics
+  /microinfluencers-la-nueva-ola-del-marketing-digital-que-conquista-a-las-marcas/     6 impr    1 clics
+  /ofitodo/                                                      4 impr    0 clics
+  /prueba-club-campestre/                                        3 impr    0 clics
+  https://ofitodo.inedito.digital/producto/restaurantes/mesas/mesa-para-restaurante-ofitodo/     2 impr    0 clics
+  https://ofitodo.inedito.digital/tipo/libreros-y-archiveros/archiveros-metalicos/     2 impr    0 clics
+  /wp-content/uploads/2024/06/341264564_254043657008599_5890914694891605825_n-1.webp     2 impr    0 clics
+  https://ofitodo.inedito.digital/producto/restaurantes/sillas-restaurantes/sillas/silla-directiva-modelo-montenegro-gris-ofitodo/     1 impr    1 clics
+  https://essento.inedito.digital/category/uncategorized/        1 impr    0 clics
+  https://ofitodo.inedito.digital/producto/mesas-de-juntas/mesa-modular-de-juntas-modelo-mjof-1000/     1 impr    0 clics
+  /en/                                                           1 impr    0 clics
+  /technology/microinfluencers-la-nueva-ola-del-marketing-digital-que-conquista-a-las-marcas/     1 impr    0 clics
+
+===== HTTP 302  (1 URLs)  
+  https://hypatiastyle.inedito.digital/                          3 impr    0 clics  -> https://hypatiastyle.inedito.digital/login.php
+
+===== HTTP 301  (32 URLs)  redirigen
+  https://inedito.digital/                                    6617 impr  115 clics  -> /
+  /posicionamiento-organico/                                  1480 impr    0 clics  -> /servicios/posicionamiento-organico
+  /casos-de-exito/la-mejor-opcion-en-marketing-digital-en-aguascalientes/  1444 impr    1 clics  -> /portafolio
+  /espacios-publicitarios/                                    1103 impr    4 clics  -> /
+  /tarjetas-digitales/                                         671 impr   17 clics  -> /servicios/tarjetas-de-presentacion-digital
+  /casos-de-exito/5-senales-de-que-tu-negocio-nececita-ayusa-de-expertos-en-marketing-digital/   534 impr    0 clics  -> /portafolio
+  /espacios-publicitarios-feria-de-san-marcos-205/             296 impr    3 clics  -> /
+  /casos-de-exito/feria-de-san-marcos-un-caso-de-exito-rotundo-gracias-al-seo/   259 impr    1 clics  -> /portafolio
+  /apps/                                                       222 impr    3 clics  -> /servicios
+  https://inedito.digital/servicios/posicionamiento-organico   204 impr    0 clics  -> /servicios/posicionamiento-organico
+  /creacion-de-logo/                                           162 impr    1 clics  -> /servicios
+  /diseno-y-desarrollo-web/                                    146 impr    2 clics  -> /servicios/diseno-y-desarrollo-web
+  https://inedito.digital/servicios/                           144 impr    0 clics  -> /servicios/
+  https://inedito.digital/contacto/                            106 impr    1 clics  -> /contacto/
+  /ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/    97 impr    0 clics  -> /portafolio/ofitodo
+  https://inedito.digital/portafolio/                           75 impr    2 clics  -> /portafolio/
+  /casos-de-exito/alver-un-caso-de-exito-en-ventas-de-equipo-de-seguridad-industrial-gracias-a-google-ads/    66 impr    0 clics  -> /portafolio
+  https://inedito.digital/contacto                              60 impr    1 clics  -> /contacto
+  /espacios-publicitarios-feria-de-san-marcos-205               53 impr    0 clics  -> /
+  https://inedito.digital/portafolio                            52 impr    0 clics  -> /portafolio
+  /alaman/                                                      45 impr    1 clics  -> /portafolio
+  https://inedito.digital/servicios/servicios-qr                26 impr    0 clics  -> /servicios/servicios-qr
+  https://inedito.digital/apps/                                 25 impr    0 clics  -> /apps/
+  https://inedito.digital/blog                                  21 impr    0 clics  -> /blog
+  /casos-de-exito/ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/    21 impr    0 clics  -> /portafolio
+  /paginas-web/                                                 17 impr    0 clics  -> /servicios/diseno-y-desarrollo-web
+  https://inedito.digital/casos-de-exito/ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/    16 impr    0 clics  -> /casos-de-exito/ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/
+  https://inedito.digital/blog/google-ads-vs-facebook-ads-cual-elegir     9 impr    0 clics  -> /blog/google-ads-vs-facebook-ads-cual-elegir
+  https://inedito.digital/5-senales-de-que-tu-negocio-nececita-ayusa-de-expertos-en-marketing-digital/     7 impr    0 clics  -> /5-senales-de-que-tu-negocio-nececita-ayusa-de-expertos-en-marketing-digital/
+  https://inedito.digital/blog/funnels-venta-alta-conversion     3 impr    0 clics  -> /blog/funnels-venta-alta-conversion
+  https://inedito.digital/ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/     2 impr    0 clics  -> /ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/
+  https://inedito.digital/terminos                               2 impr    0 clics  -> /terminos
+
+===== HTTP 200  (39 URLs)  vivas
+  /                                                          21148 impr  290 clics
+  /contacto/                                                   460 impr    1 clics
+  /portafolio/                                                 457 impr    1 clics
+  /servicios/                                                  370 impr    2 clics
+  /contacto                                                    336 impr    1 clics
+  https://ofitodo.inedito.digital/                             315 impr    0 clics
+  /portafolio                                                  285 impr    1 clics
+  /servicios/posicionamiento-organico                          247 impr    0 clics
+  /servicios                                                   234 impr    3 clics
+  /servicios/branding                                          138 impr    0 clics
+  /servicios/servicios-qr                                       86 impr    0 clics
+  /terminos                                                     68 impr    0 clics
+  /blog/google-ads-vs-facebook-ads-cual-elegir                  41 impr    0 clics
+  /blog                                                         39 impr    0 clics
+  https://sanasexualidad.inedito.digital/                       37 impr    0 clics
+  /servicios-ia/ecommerce                                       31 impr    1 clics
+  /portafolio/1828-brasa-carbon                                 30 impr    1 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/3-2-2-aparato-reproductor-masculino/    29 impr    0 clics
+  https://sanasexualidad.inedito.digital/category/prefiero-no-decir-mi-genero/    18 impr    0 clics
+  https://sanasexualidad.inedito.digital/privacy-policy/        18 impr    0 clics
+  https://krafter.inedito.digital/                              14 impr    0 clics
+  /blog/funnels-venta-alta-conversion                           14 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/esto-es-todo-lo-que-debes-saber-sobre-la-salud-sexual/    12 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-femenino/aborto/     8 impr    0 clics
+  https://sanasexualidad.inedito.digital/category/genero-masculino/sana-salud-sexual/     7 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/3-2-5-metodos-anticonceptivos/     7 impr    0 clics
+  /servicios-ia/marketing                                        7 impr    0 clics
+  https://trents.inedito.digital/                                6 impr    0 clics
+  https://essento.inedito.digital/                               4 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/3-1-1-que-es/     4 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/3-2-3-faq/     4 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/3-2-4-facts/     4 impr    0 clics
+  https://crm-dent.inedito.digital/                              3 impr    0 clics
+  https://sanasexualidad.inedito.digital/category/prefiero-no-decir-mi-genero/sana-salud-sexual-prefiero-no-decir-mi-genero/     3 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-femenino/embarazos/     3 impr    0 clics
+  https://imagenes.inedito.digital/PREVENFIX/pintura.webp        1 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/3-2-1-e-t-s/     1 impr    0 clics
+  https://sanasexualidad.inedito.digital/genero-masculino/con-la-salud-mental-no-se-juega/     1 impr    0 clics
+  /privacidad                                                    1 impr    0 clics
+
