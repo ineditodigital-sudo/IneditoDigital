@@ -41,12 +41,53 @@ Options -Indexes
   RewriteRule ^paginas-web/?$ /servicios/diseno-y-desarrollo-web [R=301,L]
   RewriteRule ^posicionamiento-organico/?$ /servicios/posicionamiento-organico [R=301,L]
   RewriteRule ^tarjetas-digitales/?$ /servicios/tarjetas-de-presentacion-digital [R=301,L]
-  RewriteRule ^ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/?$ /portafolio/ofitodo [R=301,L]
+  RewriteRule ^(casos-de-exito/)?ofitodo-posicionamiento-en-ventas-digitales-gracias-a-inedito-digital/?$ /portafolio/ofitodo [R=301,L]
   RewriteRule ^casos-de-exito(/.*)?$ /portafolio [R=301,L]
   RewriteRule ^alaman/?$ /portafolio [R=301,L]
   RewriteRule ^apps/?$ /servicios [R=301,L]
   RewriteRule ^espacios-publicitarios(-[a-z0-9-]*)?/?$ / [R=301,L]
-  RewriteRule ^creacion-de-logo/?$ /servicios [R=301,L]
+  RewriteRule ^creacion-de-logo/?$ /servicios/creacion-de-logo [R=301,L]
+
+  # ---- 301 medidas con datos de Google (21/08/2026, IDX-08) ----
+  # Salen de pedirle a Search Console las URLs que aun muestra en resultados y
+  # comprobar el codigo real de cada una: 44 daban 404, con 4.696 impresiones y
+  # 41 clics cayendo en una pagina de error. Cada regla apunta a una pagina que
+  # existe de verdad en el sitemap; ninguna es un destino inventado.
+
+  # Servicios del sitio anterior que hoy tienen ficha propia
+  RewriteRule ^branding/?$              /servicios/branding [R=301,L]
+  RewriteRule ^servicios-qr/?$          /servicios/servicios-qr [R=301,L]
+  RewriteRule ^email-mkt/?$             /servicios/email-marketing [R=301,L]
+  RewriteRule ^google-ads/?$            /servicios/google-ads [R=301,L]
+  RewriteRule ^chat-bots/?$             /servicios/chatbots-y-agentes [R=301,L]
+  RewriteRule ^seo-sem/?$               /servicios/posicionamiento-organico [R=301,L]
+  RewriteRule ^(technology/)?(personalizacion-con-)?inteligencia-artificial/?$ /servicios-ia [R=301,L]
+
+  # Servicios sin equivalente exacto: al listado, que es lo mas cercano honesto.
+  # /produccion-audiovisual es el 404 con mas clics de todo el sitio (813
+  # impresiones, 15 clics): merece pagina propia, no solo una redireccion.
+  RewriteRule ^produccion-audiovisual/?$ /servicios [R=301,L]
+  RewriteRule ^marketing-digital/?$      /servicios [R=301,L]
+  RewriteRule ^redes-sociales/?$         /servicios [R=301,L]
+
+  # Fichas de cliente del sitio anterior que hoy son casos del portafolio
+  RewriteRule ^evince/?$                /portafolio/evince-kubera [R=301,L]
+  RewriteRule ^1828-brasa-y-carbon/?$   /portafolio/1828-brasa-carbon [R=301,L]
+  RewriteRule ^ofitodo/?$               /portafolio/ofitodo [R=301,L]
+  RewriteRule ^(maindsoft|coraca|alver|hanshake|rentacargo|fnsm|riolimpio|ibarra-duran-asociados|prueba-club-campestre)/?$ /portafolio [R=301,L]
+  RewriteRule ^la-mejor-opcion-en-marketing-digital-en-aguascalientes/?$ /portafolio [R=301,L]
+  RewriteRule ^(feria-de-san-marcos-un-caso-de-exito-rotundo-gracias-al-seo|alver-un-caso-de-exito-en-ventas-de-equipo-de-seguridad-industrial-gracias-a-google-ads)/?$ /portafolio [R=301,L]
+  RewriteRule ^category/casos-de-exito/?$ /portafolio [R=301,L]
+
+  # Blog anterior: vivia bajo /technology/ y tambien en la raiz. Ninguno de esos
+  # articulos se reescribio, asi que van al listado del blog actual.
+  RewriteRule ^technology(/.*)?$ /blog [R=301,L]
+  RewriteRule ^(realidad-virtual-adentrate-en-el-futuro-del-marketing-digital|marketing-de-voz-escucha-las-nuevas-tendencias-del-2024|sostenibilidad-en-marketing-la-clave-para-conquistar-en-la-era-digital|cgu-convierte-a-tus-clientes-en-las-estrellas|microinfluencers-la-nueva-ola-del-marketing-digital-que-conquista-a-las-marcas|5-senales-de-que-tu-negocio-nececita-ayusa-de-expertos-en-marketing-digital)/?$ /blog [R=301,L]
+
+  # Restos del gestor anterior: version en ingles que ya no existe y el menu.
+  RewriteRule ^en(/home)?/?$   / [R=301,L]
+  RewriteRule ^megamenu(/.*)?$ / [R=301,L]
+
   RewriteRule ^llms\.txt$    /llms.php    [L]
   RewriteRule ^$             /render.php  [L]
 
