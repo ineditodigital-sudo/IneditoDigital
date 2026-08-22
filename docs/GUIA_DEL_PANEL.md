@@ -106,6 +106,7 @@ Si lo dejas vacío usamos uno automático, así que no es obligatorio.
 |---|---|
 | **Páginas** | Todo el texto y las fotos del sitio: Inicio, Nosotros, Contacto, Servicios de IA y sus cuatro páginas, Tarjetas NFC, Portafolio, Blog, Privacidad, Términos, la página de error, el asistente virtual y la marca (logo, ícono, colores, menús y pie) |
 | **Páginas › Posicionamiento en IA (GEO)** | Toda la página del servicio. Sus **preguntas frecuentes** son lo que más citan ChatGPT y Gemini: entre más claras y verificables, mejor te encuentran |
+| **Cómo te ve Google** | Cuántas de tus páginas conoce Google, qué busca la gente para encontrarte y qué cambió. Se actualiza solo una vez al día |
 | **Equipo** | La página de contacto de cada integrante, la que abre su tarjeta NFC |
 | **Servicios** | Tu lista de servicios: agregar, editar, quitar |
 | **Blog** | Tus artículos |
