@@ -183,7 +183,7 @@ else {
   // segmento: si no, las 4 subpáginas de /servicios-ia heredaban el canonical
   // de /servicios-ia y Google las descartaba como duplicadas.
   $pages = [
-    '/nosotros'                => ['Nosotros | '.$siteName, 'Conoce a Inédito Digital, agencia de marketing digital en Aguascalientes.'],
+    '/nosotros'                => ['Nosotros · Agencia de marketing digital en Aguascalientes | '.$siteName, 'Agencia de marketing digital en Aguascalientes que trabaja como dirección comercial asistida por IA. Todo conectado a datos reales y medido hasta la venta.'],
     '/privacidad'              => ['Aviso de Privacidad | '.$siteName, 'Aviso de privacidad de Inédito Digital.'],
     '/terminos'                => ['Términos y Condiciones | '.$siteName, 'Términos y condiciones de Inédito Digital.'],
     '/servicios-ia'            => ['Servicios de IA | '.$siteName, 'Soluciones de inteligencia artificial para ventas, WhatsApp, marketing y e-commerce.'],
