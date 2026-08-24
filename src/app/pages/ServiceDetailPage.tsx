@@ -213,6 +213,7 @@ export default function ServiceDetailPage() {
 
           {/* ---------- ZONA 2 · EL PROCESO ---------- */}
           <RecorridoProceso
+            slug={service.slug}
             pasos={service.process}
             sello={tEnc('proceso_sello', 'Proceso comprobado')}
             titulo={

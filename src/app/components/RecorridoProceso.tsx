@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, ReactNode } from 'react';
 import { motion, useMotionValue } from 'motion/react';
-import { Search, Layers, Settings2, Rocket, Check } from 'lucide-react';
+import { Search, Layers, Settings2, Rocket } from 'lucide-react';
+import { Escena } from './EscenasProceso';
 
 /*
  * El proceso de un servicio, armandose con el scroll.
@@ -18,100 +19,14 @@ import { Search, Layers, Settings2, Rocket, Check } from 'lucide-react';
 const iconos = [Search, Layers, Settings2, Rocket];
 
 /* ------------------------------------------------------------------ */
-/* El lienzo que se arma. Cada pieza entra cuando su paso llega.       */
-/* ------------------------------------------------------------------ */
-function Lienzo({ activo }: { activo: number }) {
-  const pieza = (n: number) => ({
-    initial: { opacity: 0, y: 14, scale: 0.96 },
-    animate: activo >= n ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 14, scale: 0.96 },
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
-  });
-
-  return (
-    <div className="relative mx-auto w-full max-w-md">
-      {/* halo que crece con el avance */}
-      <motion.div
-        className="pointer-events-none absolute -inset-8 rounded-[2rem] bg-[#7700CE]/25 blur-[60px]"
-        animate={{ opacity: 0.25 + activo * 0.2 }}
-        transition={{ duration: 0.6 }}
-      />
-
-      <motion.div
-        className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/12 p-5"
-        style={{ background: 'linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02))' }}
-        initial={{ opacity: 0, scale: 0.94 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* barrido continuo: da sensacion de trabajo en curso */}
-        <motion.div
-          className="pointer-events-none absolute inset-x-0 h-24"
-          style={{ background: 'linear-gradient(180deg, transparent, rgba(204,102,255,.16), transparent)' }}
-          animate={{ y: ['-20%', '420%'] }}
-          transition={{ duration: 3.2, repeat: Infinity, ease: 'linear' }}
-        />
-
-        {/* cabecera del lienzo: siempre */}
-        <div className="mb-5 flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-white/25" />
-          <span className="h-2 w-2 rounded-full bg-white/15" />
-          <span className="h-2 w-2 rounded-full bg-white/15" />
-          <motion.span
-            className="ml-auto h-1.5 w-16 rounded-full bg-[#CC66FF]/50"
-            animate={{ width: `${20 + activo * 14}%` }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          />
-        </div>
-
-        {/* paso 2: aparece la estructura */}
-        <div className="flex gap-4">
-          <motion.div {...pieza(1)} className="h-20 w-14 shrink-0 rounded-lg border border-[#CC66FF]/25 bg-[#CC66FF]/10" />
-          <div className="flex-1 space-y-2.5 pt-1">
-            {[100, 78, 88].map((w, i) => (
-              <motion.div
-                key={i}
-                {...pieza(1)}
-                transition={{ duration: 0.5, delay: activo >= 1 ? i * 0.08 : 0, ease: [0.22, 1, 0.36, 1] }}
-                className="h-2 rounded-full bg-white/15"
-                style={{ width: `${w}%` }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* paso 3: se llena de contenido */}
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          {[0, 1].map((i) => (
-            <motion.div
-              key={i}
-              {...pieza(2)}
-              transition={{ duration: 0.5, delay: activo >= 2 ? i * 0.1 : 0, ease: [0.22, 1, 0.36, 1] }}
-              className="h-14 rounded-lg border border-white/10"
-              style={{ background: 'linear-gradient(140deg, rgba(119,0,206,.3), rgba(255,255,255,.03))' }}
-            />
-          ))}
-        </div>
-
-        {/* paso 4: el resultado */}
-        <motion.div
-          {...pieza(3)}
-          className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full border border-[#CC66FF]/40 bg-[#CC66FF]/15 px-3 py-1.5 backdrop-blur"
-        >
-          <Check size={13} className="text-[#CC66FF]" strokeWidth={3} />
-          <span className="font-mono text-[10px] uppercase tracking-[.14em] text-[#CC66FF]">Listo</span>
-        </motion.div>
-      </motion.div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 
 export function RecorridoProceso({
+  slug,
   pasos,
   titulo,
   sello,
 }: {
+  slug: string;
   pasos: { step: number; title: string; description: string }[];
   titulo: ReactNode;
   sello: string;
@@ -222,8 +137,8 @@ export function RecorridoProceso({
                 </motion.div>
               </div>
 
-              {/* lo que se va armando */}
-              <Lienzo activo={activo} />
+              {/* lo que se va armando: la escena propia de este servicio */}
+              <Escena slug={slug} activo={activo} />
             </div>
           </div>
         </div>
