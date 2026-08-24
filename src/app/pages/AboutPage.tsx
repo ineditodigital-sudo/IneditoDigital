@@ -1,7 +1,17 @@
+import { motion } from 'motion/react';
 import SEO from '../components/SEO';
 import { contenido } from '../cms';
-import { GlassCard } from '../components/GlassCard';
-import { Target, Users, Zap, Heart } from 'lucide-react';
+import { TopoLineas } from '../components/TopoLineas';
+import { CifraAnimada } from '../components/CifraAnimada';
+import { ShieldCheck, Radar, LineChart, Target, Compass } from 'lucide-react';
+
+/* Entrada estandar del sitio: aparecer subiendo, una sola vez. */
+const entra = (retraso = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' },
+  transition: { duration: 0.6, delay: retraso },
+});
 
 export default function AboutPage() {
   /* Textos editables. El segundo argumento es el respaldo: lo que hay hoy. */
@@ -10,6 +20,33 @@ export default function AboutPage() {
   const tVal = contenido('nosotros', 'valores');
   const tEle = contenido('nosotros', 'elegirnos');
   const tCif = contenido('nosotros', 'cifras');
+
+  /* Las tres promesas. Cada una con su icono: no son pasos de un proceso,
+     asi que no van numeradas. */
+  const promesas = [
+    {
+      Icono: ShieldCheck,
+      titulo: tVal('v1_titulo', 'FORMALIDAD Y CONFIANZA'),
+      texto: tVal('v1_texto', 'Cuando alguien busca a tu empresa, encuentra un negocio serio: presencia cuidada, datos consistentes en todas partes y soporte real detrás.'),
+    },
+    {
+      Icono: Radar,
+      titulo: tVal('v2_titulo', 'VISIBILIDAD COMPLETA'),
+      texto: tVal('v2_texto', 'No solo Google. También los motores de IA que cada vez más recomiendan proveedores: ChatGPT, Claude, Gemini y Perplexity.'),
+    },
+    {
+      Icono: LineChart,
+      titulo: tVal('v3_titulo', 'MEDICIÓN HASTA LA VENTA'),
+      texto: tVal('v3_texto', 'Tableros conectados a datos reales y, cuando tu ERP lo permite, cruce directo entre campañas y ventas cerradas. No clics ni likes.'),
+    },
+  ];
+
+  const cifras = [
+    { valor: tCif('c1_valor', '100+'), texto: tCif('c1_texto', 'Proyectos exitosos') },
+    { valor: tCif('c2_valor', '5X'), texto: tCif('c2_texto', 'ROI promedio') },
+    { valor: tCif('c3_valor', '3'), texto: tCif('c3_texto', 'Niveles de servicio: construir, mejorar y vender') },
+  ];
+
   return (
     <>
       <SEO
@@ -17,80 +54,134 @@ export default function AboutPage() {
         description="Agencia de marketing digital en Aguascalientes que trabaja como dirección comercial asistida por IA. Todo conectado a datos reales y medido hasta la venta."
       />
 
-      <div className="py-16 md:py-24 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <h1 className="heading text-4xl md:text-6xl mb-6">
-              {tEnc('titulo_1', 'SOBRE')} <span className="text-[#7700CE]">{tEnc('titulo_2', 'NOSOTROS')}</span>
-            </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              {tEnc('bajada', 'Somos una agencia de marketing digital en Aguascalientes que combina creatividad, tecnología y estrategia para impulsar el crecimiento de negocios.')}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <GlassCard>
-              <Target className="text-[#7700CE] mb-4" size={32} />
-              <h2 className="heading text-2xl mb-3">{tMis('mision_titulo', 'NUESTRA MISIÓN')}</h2>
-              <p className="text-white/70">
-                {tMis('mision_texto', 'Democratizar el acceso a marketing digital de clase mundial para empresas de todos los tamaños en Aguascalientes y México, utilizando IA y automatización para generar resultados medibles y escalables.')}
-              </p>
-            </GlassCard>
-
-            <GlassCard>
-              <Zap className="text-[#7700CE] mb-4" size={32} />
-              <h2 className="heading text-2xl mb-3">{tMis('vision_titulo', 'NUESTRA VISIÓN')}</h2>
-              <p className="text-white/70">
-                {tMis('vision_texto', 'Ser la agencia líder en transformación digital en el Bajío, reconocida por nuestra innovación en IA, automatización y resultados consistentes que superan las expectativas de nuestros clientes.')}
-              </p>
-            </GlassCard>
-          </div>
-
-          {tVal.visible() && (
-          <div className="mb-16">
-            <h2 className="heading text-3xl mb-8 text-center">{tVal('titulo', 'NUESTROS VALORES')}</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <GlassCard className="text-center">
-                <Users className="text-[#7700CE] mx-auto mb-4" size={32} />
-                <h3 className="heading text-xl mb-2">{tVal('v1_titulo', 'TRANSPARENCIA')}</h3>
-                <p className="text-white/60 text-sm">{tVal('v1_texto', 'Reportes claros, sin letra pequeña. Sabes exactamente dónde va tu inversión.')}</p>
-              </GlassCard>
-              <GlassCard className="text-center">
-                <Zap className="text-[#7700CE] mx-auto mb-4" size={32} />
-                <h3 className="heading text-xl mb-2">{tVal('v2_titulo', 'RESULTADOS')}</h3>
-                <p className="text-white/60 text-sm">{tVal('v2_texto', 'Nos medimos por ROI real, no por vanity metrics.')}</p>
-              </GlassCard>
-              <GlassCard className="text-center">
-                <Heart className="text-[#7700CE] mx-auto mb-4" size={32} />
-                <h3 className="heading text-xl mb-2">{tVal('v3_titulo', 'PARTNERSHIP')}</h3>
-                <p className="text-white/60 text-sm">{tVal('v3_texto', 'Tu éxito es nuestro éxito. Somos tu equipo de crecimiento.')}</p>
-              </GlassCard>
-            </div>
-          </div>
-          )}
-
-          <GlassCard glow className="text-center p-8">
-            <h2 className="heading text-3xl mb-4">{tEle('titulo', '¿POR QUÉ ELEGIRNOS?')}</h2>
-            <p className="text-white/70 max-w-2xl mx-auto mb-6">
-              No somos una agencia más. Combinamos años de experiencia en marketing tradicional con las últimas tecnologías de IA para crear estrategias que realmente funcionan.
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 text-left">
-              <div>
-                <div className="heading text-2xl text-[#7700CE] mb-2">{tCif('c1_valor', '100+')}</div>
-                <div className="text-white/60">{tCif('c1_texto', 'Proyectos exitosos')}</div>
-              </div>
-              <div>
-                <div className="heading text-2xl text-[#7700CE] mb-2">{tCif('c2_valor', '5X')}</div>
-                <div className="text-white/60">{tCif('c2_texto', 'ROI promedio')}</div>
-              </div>
-              <div>
-                <div className="heading text-2xl text-[#7700CE] mb-2">{tCif('c3_valor', '98%')}</div>
-                <div className="text-white/60">{tCif('c3_texto', 'Satisfacción del cliente')}</div>
-              </div>
-            </div>
-          </GlassCard>
+      {/* ---------------------------------------------------- portada */}
+      <section className="relative overflow-hidden border-b border-[#AA66FF]/15">
+        <TopoLineas className="pointer-events-none absolute inset-0 h-full w-full" />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: 'radial-gradient(70% 55% at 50% 45%, rgba(10,10,10,.86) 0%, rgba(10,10,10,.55) 55%, transparent 100%)' }}
+        />
+        <div className="relative mx-auto max-w-5xl px-4 py-24 text-center md:py-36">
+          <motion.p
+            {...entra()}
+            className="mb-6 font-mono text-[11px] uppercase tracking-[.22em] text-[#AA66FF]"
+          >
+            Aguascalientes, México
+          </motion.p>
+          <motion.h1 {...entra(0.08)} className="heading text-4xl leading-[0.95] md:text-7xl">
+            {tEnc('titulo_1', 'SOBRE')}{' '}
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#AA66FF)' }}
+            >
+              {tEnc('titulo_2', 'NOSOTROS')}
+            </span>
+          </motion.h1>
+          <motion.p
+            {...entra(0.16)}
+            className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl"
+          >
+            {tEnc('bajada', 'Somos un equipo de Aguascalientes. Trabajamos con empresas que quieren dejar de invertir en digital a ciegas: conectamos objetivos, datos y campañas en un solo lugar, y auditamos con IA si la estrategia está dando resultado.')}
+          </motion.p>
         </div>
-      </div>
+      </section>
+
+      {/* ---------------------------------------------- mision y vision */}
+      {/* Deliberadamente distintas: la mision en panel morado, la vision en
+          oscuro. Dos tarjetas gemelas era justo lo que aplanaba la pagina. */}
+      <section className="px-4 py-20 md:py-28">
+        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
+          <motion.article
+            {...entra()}
+            className="relative overflow-hidden rounded-3xl border border-[#9933FF]/25 p-8 md:p-10"
+            style={{ background: 'linear-gradient(155deg, rgba(119,0,206,.20), rgba(119,0,206,.04) 65%)' }}
+          >
+            <span className="absolute inset-y-0 left-0 w-[3px]" style={{ background: 'linear-gradient(180deg,#9933FF,transparent)' }} />
+            <Target className="mb-5 text-[#AA66FF]" size={30} strokeWidth={1.6} />
+            <h2 className="heading mb-4 text-2xl md:text-[1.75rem]">{tMis('mision_titulo', 'NUESTRA MISIÓN')}</h2>
+            <p className="text-[15.5px] leading-relaxed text-white/80">
+              {tMis('mision_texto', 'Que cada peso que una empresa invierte en digital se pueda medir contra ventas reales. Conectamos los objetivos de dirección con Search Console, Analytics y las campañas en un solo tablero, y revisamos periódicamente si la estrategia está funcionando.')}
+            </p>
+          </motion.article>
+
+          <motion.article
+            {...entra(0.12)}
+            className="relative overflow-hidden rounded-3xl border border-white/12 bg-white/[.035] p-8 md:p-10"
+          >
+            <span className="absolute inset-y-0 left-0 w-[3px]" style={{ background: 'linear-gradient(180deg,rgba(255,255,255,.35),transparent)' }} />
+            <Compass className="mb-5 text-white/85" size={30} strokeWidth={1.6} />
+            <h2 className="heading mb-4 text-2xl md:text-[1.75rem]">{tMis('vision_titulo', 'NUESTRA VISIÓN')}</h2>
+            <p className="text-[15.5px] leading-relaxed text-white/80">
+              {tMis('vision_texto', 'Que las empresas de Aguascalientes no solo aparezcan en Google, sino también en las respuestas que dan ChatGPT, Claude y Gemini cuando alguien pregunta por un proveedor. Casi nadie en el mercado está trabajando eso todavía.')}
+            </p>
+          </motion.article>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------- las promesas */}
+      {tVal.visible() && (
+        <section className="border-y border-[#AA66FF]/12 bg-[#0D0010] px-4 py-20 md:py-28">
+          <div className="mx-auto max-w-5xl">
+            <motion.h2 {...entra()} className="heading mb-3 text-center text-3xl md:text-4xl">
+              {tVal('titulo', 'NUESTRAS TRES PROMESAS')}
+            </motion.h2>
+            <motion.p {...entra(0.06)} className="mx-auto mb-14 max-w-xl text-center text-white/60">
+              Lo que sostiene todo lo que hacemos.
+            </motion.p>
+
+            <div className="grid gap-5 md:grid-cols-3">
+              {promesas.map(({ Icono, titulo, texto }, i) => (
+                <motion.article
+                  key={i}
+                  {...entra(i * 0.12)}
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-7
+                             transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40 hover:bg-white/[.06]"
+                >
+                  <span
+                    className="absolute inset-x-0 top-0 h-px opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{ background: 'linear-gradient(90deg,transparent,#9933FF,transparent)' }}
+                  />
+                  <div
+                    className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-[#9933FF]/30"
+                    style={{ background: 'rgba(119,0,206,.16)' }}
+                  >
+                    <Icono className="text-[#AA66FF]" size={22} strokeWidth={1.7} />
+                  </div>
+                  <h3 className="heading mb-3 text-lg leading-tight">{titulo}</h3>
+                  <p className="text-[14.5px] leading-relaxed text-white/70">{texto}</p>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ------------------------------------------------ por que elegirnos */}
+      <section className="px-4 py-20 md:py-28">
+        <motion.div
+          {...entra()}
+          className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-[#9933FF]/25 p-9 text-center md:p-14"
+          style={{ background: 'radial-gradient(120% 100% at 50% 0%, rgba(119,0,206,.22) 0%, rgba(13,0,16,.6) 60%, rgba(10,10,10,.9) 100%)' }}
+        >
+          <h2 className="heading mb-5 text-3xl md:text-4xl">{tEle('titulo', '¿POR QUÉ ELEGIRNOS?')}</h2>
+          <p className="mx-auto mb-14 max-w-2xl text-[15.5px] leading-relaxed text-white/80">
+            {tEle('texto', 'No vendemos campañas sueltas. Conectamos los objetivos de tu dirección con los datos reales del negocio, y una IA audita cada mes si la estrategia está funcionando. Si no funciona, lo dice.')}
+          </p>
+
+          <div className="grid gap-8 border-t border-white/10 pt-10 sm:grid-cols-3">
+            {cifras.map((c, i) => (
+              <motion.div key={i} {...entra(0.1 + i * 0.1)} className="text-center">
+                <CifraAnimada
+                  valor={c.valor}
+                  className="heading block bg-clip-text text-4xl leading-none text-transparent md:text-5xl"
+                  style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#AA66FF)' }}
+                />
+                <div className="mx-auto mt-4 max-w-[15rem] text-sm leading-snug text-white/65">{c.texto}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
     </>
   );
 }
