@@ -677,6 +677,73 @@ footer{padding:34px 0;color:var(--mut);font-size:12px}
   </table></div>
 </div></section>
 
+<!-- ====================== PERFIL DE ENLACES (MEDIDO) ====================== -->
+<section><div class="wrap">
+  <h2>La causa raíz, ya medida: <span>catorce dominios, y casi todos son suyos</span></h2>
+  <div class="nota"><strong>24/08/2026, informe de Enlaces de Search Console.</strong> Era el único hallazgo de toda la auditoría que seguía estimado, porque la API de Google no expone este informe. Con el export ya se puede decir exactamente qué pasa.</div>
+
+  <p>567 páginas enlazan a inedito.digital. Suena bien hasta que se agrupan por dominio: <strong>salen catorce</strong>, y tres de ellos concentran el <strong>91,5%</strong>.</p>
+
+  <div class="tablewrap"><table>
+    <tr><th>Dominio</th><th>Páginas</th><th>%</th><th>Qué es</th></tr>
+    <tr><td><code>feriasanmarcos.mx</code></td><td>235</td><td>41,4%</td><td>Sitio de la Feria Nacional de San Marcos, hecho por Inédito</td></tr>
+    <tr><td><code>maindsoft.net</code></td><td>200</td><td>35,3%</td><td>La empresa hermana</td></tr>
+    <tr><td><code>play.google.com</code></td><td>84</td><td>14,8%</td><td>La misma ficha de la app de la Feria, repetida en 84 idiomas</td></tr>
+    <tr><td><code>1828brasaycarbon.mx</code></td><td>19</td><td>3,4%</td><td>Cliente (está en el portafolio)</td></tr>
+    <tr><td><code>toldos</code> / <code>persianas</code> / <code>cortinas</code><br><span style="font-size:.85em">…deaguascalientes.com</span></td><td>20</td><td>3,5%</td><td>Clientes del mismo grupo</td></tr>
+    <tr><td><code>appmagic.rocks</code> · <code>appbrain.com</code></td><td>4</td><td>0,7%</td><td>Directorios que copian la ficha de Play automáticamente</td></tr>
+    <tr><td><code>linkatomic.com</code></td><td>1</td><td>0,2%</td><td>Directorio de agencias</td></tr>
+    <tr><td><code>babylovegrowth.ai</code></td><td>1</td><td>0,2%</td><td>Blog generado por IA. Valor nulo o negativo</td></tr>
+    <tr><td><code>feriadelauva.com</code> · <code>inteligenciaartificial…</code></td><td>2</td><td>0,4%</td><td>Proyectos propios</td></tr>
+    <tr><td><strong><code>grupomaen.mx</code></strong></td><td>1</td><td>0,2%</td><td><strong>El único enlace editorial de un tercero independiente.</strong> De junio de 2024</td></tr>
+  </table></div>
+
+  <h3>Y además, todos son enlaces de plantilla</h3>
+  <p>Abrí las páginas para ver qué tipo de enlace es cada uno. No son menciones dentro de un texto: son elementos fijos que se repiten en todas las páginas del sitio.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Origen</th><th>Cómo aparece el enlace</th></tr>
+    <tr><td><code>maindsoft.net</code></td><td>Bloque de pie con la clase <code>footer-sister</code>: «Trabajamos junto a Inédito Digital para integrar soluciones…»</td></tr>
+    <tr><td><code>persianasdeaguascalientes.com</code></td><td>«Copyright © 2026 Persa | <strong>Hecho por Inédito Digital</strong>»</td></tr>
+    <tr><td><code>1828brasaycarbon.mx</code></td><td>«Inédito Digital © 2024. Todos los Derechos Reservados.»</td></tr>
+    <tr><td><code>feriasanmarcos.mx</code></td><td>Banner fijo: «¿Te interesa anunciarte con nosotros? Contáctanos»</td></tr>
+  </table></div>
+  <div class="nota"><strong>Google colapsa los enlaces de plantilla.</strong> Doscientas páginas de maindsoft.net con el mismo pie no valen doscientos enlaces: valen aproximadamente uno. Y los créditos de desarrollador («hecho por…») están entre los tipos de enlace que más se descuentan, precisamente porque los pone quien hizo el sitio, no quien lo recomienda.</div>
+
+  <div class="nota" style="border-color:#1e4d2b;background:#0a1a10"><strong>Que quede claro: aquí no hay nada tóxico.</strong> Los créditos de desarrollador son normales y no hay riesgo de penalización. El problema no es que haya enlaces malos, es que <strong>casi no hay enlaces de terceros</strong>. En la práctica, un solo enlace editorial independiente en dos años.</div>
+
+  <h3>Esto cierra el diagnóstico completo</h3>
+  <p>Ya se puede seguir la cadena entera con datos medidos en cada eslabón, sin estimar en ninguno:</p>
+  <div class="tablewrap"><table>
+    <tr><th>Eslabón</th><th>Medido</th></tr>
+    <tr><td>Casi ningún dominio independiente enlaza al sitio</td><td>14 dominios, ~10 del propio grupo, 1 editorial</td></tr>
+    <tr><td>→ Google le asigna poco presupuesto de rastreo</td><td>18 URLs del sitemap nunca visitadas</td></tr>
+    <tr><td>→ Media web no puede posicionar</td><td>21 de 38 fuera del índice</td></tr>
+    <tr><td>→ Todo depende de la portada</td><td>21.148 de 24.491 impresiones son de la portada</td></tr>
+    <tr><td>→ Y la portada choca con el bloque de mapas</td><td>Posición 7,2 con casi cero clics</td></tr>
+  </table></div>
+
+  <h3>El activo que no se está usando</h3>
+  <div class="nota"><strong>Inédito hizo el sitio y la app oficial de la Feria Nacional de San Marcos</strong>, uno de los eventos más grandes de México, con ficha publicada en 84 idiomas. Y no existe <em>ni una sola nota de prensa</em> que lo cuente. Un artículo en un medio local diciendo «la agencia de Aguascalientes que hizo la app de la Feria» valdría más, para efectos de autoridad, que los 235 enlaces de plantilla de feriasanmarcos.mx juntos.</div>
+
+  <div class="tablewrap"><table>
+    <tr><th>ID</th><th>Sev.</th><th>Hallazgo</th><th>Solución</th><th>Esf.</th></tr>
+    <tr><td>OFF-01</td><td><span class="sev s-crit">🔴</span></td>
+      <td><strong>Medido:</strong> 14 dominios enlazan al sitio; unos 10 son del propio grupo y todos los relevantes son enlaces de plantilla. Un solo enlace editorial de un tercero en dos años.</td>
+      <td>Conseguir enlaces editoriales reales. No se quita nada de lo que hay: se suma lo que falta.</td><td>Alto</td></tr>
+    <tr><td>OFF-04</td><td><span class="sev s-alto">NUEVO</span></td>
+      <td>El trabajo de la Feria Nacional de San Marcos no tiene cobertura de prensa.</td>
+      <td>Escribir la nota y ofrecerla a medios locales. Es la historia más publicable que tiene la agencia y es gratis.</td><td>Bajo</td></tr>
+    <tr><td>OFF-05</td><td><span class="sev s-medio">NUEVO</span></td>
+      <td>Sin presencia en cámaras ni directorios con revisión editorial.</td>
+      <td>CANACO Aguascalientes, COPARMEX, CANIETI. Las fichas de socio suelen ser páginas indexadas con enlace.</td><td>Bajo</td></tr>
+    <tr><td>OFF-06</td><td><span class="sev s-medio">NUEVO</span></td>
+      <td>Los casos de éxito los publica solo Inédito. Los clientes no los cuentan en sus propios sitios.</td>
+      <td>Pedir a los clientes con sala de prensa que publiquen el proyecto como noticia suya. Eso sí es un enlace editorial.</td><td>Medio</td></tr>
+  </table></div>
+
+  <div class="nota" style="font-size:.94em"><strong>Una salvedad sobre el dato.</strong> El export usado es «Últimos enlaces», que Search Console limita a las 1.000 filas más recientes; llegaron 567, por debajo del tope, así que es probable que sea el conjunto completo reciente. El informe de «Sitios con más enlaces» daría el total histórico por dominio para confirmarlo. La conclusión no cambiaría: la concentración es demasiado alta para que un dato adicional la mueva.</div>
+</div></section>
+
 <footer><div class="wrap">
   Auditoría SEO + GEO · inedito.digital · 20 de agosto de 2026 · Entregables hermanos: reporte-cliente.pdf · keywords.md · checklist-proximos-pasos.md · instrucciones-correcciones.md
 </div></footer>
