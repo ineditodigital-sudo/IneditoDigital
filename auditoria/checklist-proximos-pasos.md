@@ -27,7 +27,11 @@
 - [ ] **Sustituir las fotos de banco.** Hay 73 imágenes de Unsplash en el sitio; 4 de ellas son 546 kB de los 781 kB de la home, el 70% del peso. Se cambian desde el panel sin tocar código, y una agencia de diseño con fotos de catálogo se vende peor `(Medio · Medio · Negocio)` — IMG-04
 - [ ] **Avisar a Ofitodo**: su subdominio tiene 9 URLs en 404, una con 598 impresiones. Cuelga de inedito.digital, así que esos errores cuentan como del dominio `(Bajo · Bajo · Negocio)` — SUB-01
 - [ ] **Crear una clave de API de PageSpeed** en el proyecto de Google que ya existe: Cloud Console → APIs y servicios → Credenciales → Crear credenciales → Clave de API. Con eso se automatiza la medición de velocidad igual que ya se hace con Search Console `(Medio · Bajo · Negocio)` — TEC-01
-- [ ] **Enlaces entrantes en serio.** Deja de ser "mejorar autoridad" y pasa a ser la causa raíz: sin autoridad no hay presupuesto de rastreo, y sin rastreo media web no existe `(Alto · Alto · Negocio)` — OFF-01
+- [x] ~~**Exportar el informe de Enlaces**~~ — **Hecho el 24/08.** Resultado: **14 dominios**, de los que ~10 son del propio grupo (feriasanmarcos.mx 41%, maindsoft.net 35%, Play Store 15%). Todos los relevantes son enlaces de plantilla (pies de página y créditos de «hecho por»). **Un solo enlace editorial de un tercero independiente en dos años** — OFF-01
+- [ ] **Escribir la nota de prensa de la Feria Nacional de San Marcos** y ofrecerla a medios locales. Inédito hizo el sitio y la app oficial de uno de los eventos más grandes de México y no hay ni una nota que lo cuente. Es la historia más publicable que tiene la agencia, y es gratis `(Alto · Bajo · Negocio)` — OFF-04
+- [ ] **Darse de alta en cámaras**: CANACO Aguascalientes, COPARMEX, CANIETI. Las fichas de socio suelen ser páginas indexadas con enlace, y son de las pocas fuentes locales con revisión editorial `(Medio · Bajo · Negocio)` — OFF-05
+- [ ] **Pedir a los clientes que publiquen el proyecto como noticia suya.** Hoy los casos de éxito los cuenta solo Inédito. Que los cuente el cliente en su propia sala de prensa sí es un enlace editorial `(Medio · Medio · Negocio)` — OFF-06
+- [ ] **No quitar los créditos de pie de los sitios de clientes.** No son tóxicos y no hay riesgo de penalización; simplemente no construyen autoridad. El error sería seguir contando con ellos `(— · — · Nota)` — OFF-01
 
 ## 🔴 PRIORIDAD REPLANTEADA (21/08, con las 224 consultas reales)
 
