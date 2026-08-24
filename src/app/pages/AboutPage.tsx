@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { FranjaLogosIA } from '../components/LogosIA';
 import SEO from '../components/SEO';
 import { contenido } from '../cms';
 import { TopoLineas } from '../components/TopoLineas';
@@ -149,6 +150,7 @@ export default function AboutPage() {
                   </div>
                   <h3 className="heading mb-3 text-lg leading-tight">{titulo}</h3>
                   <p className="text-[14.5px] leading-relaxed text-white/70">{texto}</p>
+                  {i === 1 && <FranjaLogosIA size={17} className="mt-4 text-white/60" />}
                 </motion.article>
               ))}
             </div>

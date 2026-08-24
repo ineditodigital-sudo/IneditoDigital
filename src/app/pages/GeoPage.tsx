@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { logoPorNombre } from '../components/LogosIA';
 import { Link } from 'react-router';
 import {
   ArrowRight, Check, X, Search, FileCode2, Quote, RefreshCw,
@@ -230,6 +231,14 @@ export default function GeoPage() {
               {motores.map((m, i) => (
                 <motion.div key={m.n} {...aparece} transition={{ ...aparece.transition, delay: i * 0.06 }}>
                   <GlassCard className="h-full text-center">
+                    {(() => {
+                      const Logo = logoPorNombre(m.n + ' ' + m.d);
+                      return Logo ? (
+                        <div className="mb-2.5 flex justify-center text-white/85">
+                          <Logo size={26} />
+                        </div>
+                      ) : null;
+                    })()}
                     <div className="heading text-base text-white md:text-lg">{m.n}</div>
                     <div className="mt-1 text-[11px] text-white/50 md:text-xs">{m.d}</div>
                   </GlassCard>
