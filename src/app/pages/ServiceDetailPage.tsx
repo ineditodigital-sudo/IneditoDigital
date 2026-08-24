@@ -125,11 +125,8 @@ function Recorrido({
                   <motion.div
                     key={p.step}
                     className="absolute inset-0 flex flex-col justify-center"
-                    animate={{
-                      opacity: i === activo ? 1 : 0,
-                      y: i === activo ? 0 : 22,
-                      pointerEvents: i === activo ? 'auto' : 'none',
-                    }}
+                    style={{ pointerEvents: i === activo ? 'auto' : 'none' }}
+                    animate={{ opacity: i === activo ? 1 : 0, y: i === activo ? 0 : 22 }}
                     transition={{ duration: 0.45, ease: [0.22, 0.61, 0.36, 1] }}
                   >
                     <span
@@ -238,16 +235,9 @@ export default function ServiceDetailPage() {
         <div className="relative z-10">
           {/* ---------- ZONA 0 · PORTADA ---------- */}
           <section className="relative overflow-hidden px-4 pt-10 pb-16 md:pt-16 md:pb-24">
-            {service.bannerImage ? (
-              <div className="pointer-events-none absolute inset-0 -z-10">
-                <img src={service.bannerImage} alt="" className="h-full w-full object-cover opacity-25" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#07060B]/70 via-[#07060B]/85 to-[#07060B]" />
-              </div>
-            ) : (
-              <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
-                <TopoLineas className="h-full w-full" />
-              </div>
-            )}
+            <div className="pointer-events-none absolute inset-0 -z-10">
+              <TopoLineas className="h-full w-full" />
+            </div>
 
             <div className="container mx-auto max-w-5xl">
               <div className="mb-9 flex flex-wrap items-center gap-3">
