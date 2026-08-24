@@ -1,0 +1,19 @@
+Respaldo del JSON guardado (por si hay que revertir):
+----8<----
+{"encabezado":{"titulo_1":"SOBRE","titulo_2":"NOSOTROS","bajada":"Somos una agencia de marketing digital en Aguascalientes que combina creatividad, tecnología y estrategia para impulsar el crecimiento de negocios."},"mision":{"mision_titulo":"NUESTRA MISIÓN","mision_texto":"Democratizar el acceso a marketing digital de clase mundial para empresas de todos los tamaños en Aguascalientes y México, utilizando IA y automatización para generar resultados medibles y escalables.","vision_titulo":"NUESTRA VISIÓN","vision_texto":"Ser la agencia líder en transformación digital en el Bajío, reconocida por nuestra innovación en IA, automatización y resultados consistentes que superan las expectativas de nuestros clientes."},"valores":{"visible":"1","titulo":"NUESTROS VALORES","v1_titulo":"TRANSPARENCIA","v1_texto":"Reportes claros, sin letra pequeña. Sabes exactamente dónde va tu inversión.","v2_titulo":"RESULTADOS","v2_texto":"Nos medimos por ROI real, no por vanity metrics.","v3_titulo":"PARTNERSHIP","v3_texto":"Tu éxito es nuestro éxito. Somos tu equipo de crecimiento."},"elegirnos":{"visible":"1","titulo":"¿POR QUÉ ELEGIRNOS?"},"cifras":{"c1_valor":"100+","c1_texto":"Proyectos exitosos","c2_valor":"5X","c2_texto":"ROI promedio","c3_valor":"98%","c3_texto":"Satisfacción del cliente"}}
+----8<----
+
+  suelto   encabezado.bajada      -> vuelve al respaldo nuevo
+  suelto   mision.mision_texto    -> vuelve al respaldo nuevo
+  suelto   mision.vision_texto    -> vuelve al respaldo nuevo
+  suelto   valores.titulo         -> vuelve al respaldo nuevo
+  suelto   valores.v1_titulo      -> vuelve al respaldo nuevo
+  suelto   valores.v1_texto       -> vuelve al respaldo nuevo
+  suelto   valores.v2_titulo      -> vuelve al respaldo nuevo
+  suelto   valores.v2_texto       -> vuelve al respaldo nuevo
+  suelto   valores.v3_titulo      -> vuelve al respaldo nuevo
+  suelto   valores.v3_texto       -> vuelve al respaldo nuevo
+  suelto   cifras.c3_valor        -> vuelve al respaldo nuevo
+  suelto   cifras.c3_texto        -> vuelve al respaldo nuevo
+
+  sueltos: 12 · respetados: 0 · no estaban: 0

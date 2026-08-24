@@ -13,8 +13,8 @@ export default function AboutPage() {
   return (
     <>
       <SEO
-        title="Nosotros - Agencia de Marketing Digital en Aguascalientes"
-        description="Conoce a INÉDITO DIGITAL. Agencia de marketing digital en Aguascalientes especializada en IA, automatización y resultados medibles."
+        title="Nosotros · Agencia de marketing digital en Aguascalientes"
+        description="Agencia de marketing digital en Aguascalientes que trabaja como dirección comercial asistida por IA. Todo conectado a datos reales y medido hasta la venta."
       />
 
       <div className="py-16 md:py-24 px-4">
