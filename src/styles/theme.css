@@ -117,7 +117,10 @@
     background: #0A0A0A;
     min-height: 100vh;
     position: relative;
-    overflow-x: hidden;
+    /* clip, no hidden: hidden convierte al body en contenedor de scroll
+       y eso rompe cualquier position:sticky de dentro. Con hidden, el
+       recorrido del proceso se quedaba clavado en el paso 1. */
+    overflow-x: clip;
   }
 
   /* Orb gradients background */
