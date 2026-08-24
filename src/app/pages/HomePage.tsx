@@ -27,6 +27,7 @@ export default function HomePage() {
   const tTar    = contenido('home', 'tarjetas');
   const tTarIA  = contenido('home', 'tarjetas_ia');
   const tVal    = contenido('home', 'valores');
+  const tEnf    = contenido('home', 'enfoque');
 
   const features = [
     { icon: Sparkles,   title: tTar('t1_titulo', 'IA'),          description: tTar('t1_texto', 'Automatización y chatbots 24/7'),  image: tTar('t1_imagen', 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
@@ -194,6 +195,61 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
+
+      {/* ---- Banda del nuevo enfoque ----
+           No toca el titular ni nada de lo que ya posiciona. Su trabajo es de
+           rastreo: la portada es la unica pagina que Google visita siempre, y
+           un enlace desde aqui es la via mas rapida para que descubra lo nuevo. */}
+      {tEnf.visible() && (
+        <section className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
+          <div className="container mx-auto max-w-5xl">
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.55 }}
+              className="relative overflow-hidden rounded-3xl border border-[#9933FF]/25 p-8 md:p-12"
+              style={{ background: 'linear-gradient(155deg, rgba(119,0,206,.20), rgba(13,0,16,.55) 62%)' }}
+            >
+              <span className="mb-4 inline-block rounded-full bg-[#9933FF]/20 px-3 py-1 font-mono text-[11px] uppercase tracking-[.18em] text-[#AA66FF]">
+                {tEnf('etiqueta', 'NUEVO')}
+              </span>
+              <h2 className="heading mb-4 text-2xl leading-tight md:text-4xl">
+                {tEnf('titulo', 'DIRECCIÓN COMERCIAL ASISTIDA POR IA')}
+              </h2>
+              <p className="mb-10 max-w-2xl text-[15.5px] leading-relaxed text-white/80 md:text-lg">
+                {tEnf('texto', 'Marketing digital, publicidad y contenido con todo conectado a datos reales: dirección define los objetivos, y una IA audita cada mes si la estrategia está funcionando.')}
+              </p>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[1, 2, 3, 4].map((i) => {
+                  const url = tEnf(`e${i}_url`, '');
+                  if (!url) return null;
+                  return (
+                    <Link
+                      key={i}
+                      to={url}
+                      className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[.04] p-4
+                                 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#AA66FF]/40 hover:bg-white/[.07]"
+                    >
+                      <ArrowRight
+                        size={17}
+                        className="mt-1 shrink-0 text-[#AA66FF] transition-transform group-hover:translate-x-1"
+                      />
+                      <span>
+                        <span className="block font-semibold text-white">{tEnf(`e${i}_titulo`, '')}</span>
+                        <span className="mt-0.5 block text-[13.5px] leading-snug text-white/65">
+                          {tEnf(`e${i}_texto`, '')}
+                        </span>
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
       )}
 
       {/* Services Grid */}

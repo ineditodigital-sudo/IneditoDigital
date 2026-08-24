@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router';
+import { TopoLineas } from '../components/TopoLineas';
 import { motion } from 'motion/react';
 import { ArrowLeft, CheckCircle2, ExternalLink, Gamepad2, Camera, Grid3x3 } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
@@ -44,16 +45,16 @@ export default function ServiceDetailPage() {
       <section className="relative min-h-[40vh] md:min-h-[50vh] flex items-center justify-center overflow-hidden">
         {/* Imagen de fondo */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={service.bannerImage} 
-            alt={service.title}
-            className="w-full h-full object-cover"
-            loading="eager"
-            onError={(e) => {
-              // Fallback image si la imagen principal no carga
-              e.currentTarget.src = tImg('respaldo', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080');
-            }}
-          />
+          {service.bannerImage ? (
+            <img
+              src={service.bannerImage}
+              alt={service.title}
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
+          ) : (
+            <TopoLineas className="h-full w-full" />
+          )}
           {/* Overlay oscuro con gradiente */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
           {/* Overlay morado */}
