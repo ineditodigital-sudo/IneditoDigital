@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router';
-import { motion, useMotionValue } from 'motion/react';
+import { motion } from 'motion/react';
 import {
   ArrowLeft, ArrowRight, Check, ExternalLink, Gamepad2, Camera, Grid3x3, Sparkles,
 } from 'lucide-react';
 import { TopoLineas } from '../components/TopoLineas';
+import { RecorridoProceso } from '../components/RecorridoProceso';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
@@ -36,143 +36,6 @@ const entra = (retraso = 0) => ({
   viewport: { once: true, margin: '-70px' },
   transition: { duration: 0.6, delay: retraso },
 });
-
-/* ------------------------------------------------------------------ */
-/* El proceso, armandose con el scroll.                                */
-/* En pantallas grandes se queda pegado y los pasos se encienden uno a */
-/* uno. En movil no: ahi el scroll pegajoso estorba mas que ayuda.     */
-/* ------------------------------------------------------------------ */
-function Recorrido({
-  pasos,
-  titulo,
-  sello,
-}: {
-  pasos: { step: number; title: string; description: string }[];
-  titulo: React.ReactNode;
-  sello: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [activo, setActivo] = useState(0);
-  /* La barra de avance va por motion value, no por estado: cambia en cada
-     frame del scroll y con useState forzaria un re-render por frame. */
-  const avance = useMotionValue(0);
-
-  useEffect(() => {
-    if (!pasos.length) return;
-    const alScroll = () => {
-      const el = ref.current;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const total = r.height - window.innerHeight;
-      if (total <= 0) return;
-      const p = Math.min(Math.max(-r.top / total, 0), 1);
-      avance.set(p);
-      const i = Math.min(Math.floor(p * pasos.length), pasos.length - 1);
-      setActivo((prev) => (prev === i ? prev : i));   // solo re-render al cambiar de paso
-    };
-    window.addEventListener('scroll', alScroll, { passive: true });
-    window.addEventListener('resize', alScroll);
-    alScroll();
-    return () => {
-      window.removeEventListener('scroll', alScroll);
-      window.removeEventListener('resize', alScroll);
-    };
-  }, [pasos.length, avance]);
-
-  if (!pasos.length) return null;
-
-  return (
-    <>
-      {/* ---- pantallas grandes: recorrido pegajoso ---- */}
-      <div ref={ref} className="relative hidden lg:block" style={{ height: `${pasos.length * 85}vh` }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-          <div className="container mx-auto w-full max-w-6xl px-4">
-            <div className="mb-12 text-center">
-              <div className="mb-2 font-mono text-[11px] uppercase tracking-[.3em] text-[#CC66FF]">{sello}</div>
-              <h2 className="heading text-3xl md:text-5xl">{titulo}</h2>
-              <div className="mt-3 text-xs text-white/35">
-                Paso {activo + 1} de {pasos.length}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-[auto_1fr] items-center gap-12 xl:gap-20">
-              {/* riel de avance */}
-              <div className="relative h-72 w-px self-center bg-white/10">
-                <motion.div
-                  className="absolute left-0 top-0 w-px origin-top bg-gradient-to-b from-[#9933FF] to-[#CC66FF]"
-                  style={{ height: '100%', scaleY: avance }}
-                />
-                {pasos.map((p, i) => (
-                  <div
-                    key={p.step}
-                    className="absolute -left-[7px]"
-                    style={{ top: `${(i / Math.max(pasos.length - 1, 1)) * 100}%`, transform: 'translateY(-50%)' }}
-                  >
-                    <span
-                      className={`block h-[15px] w-[15px] rounded-full border transition-all duration-300 ${
-                        i <= activo
-                          ? 'scale-110 border-[#CC66FF] bg-[#CC66FF]'
-                          : 'border-white/20 bg-[#07060B]'
-                      }`}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* el paso activo */}
-              <div className="relative min-h-[18rem]">
-                {pasos.map((p, i) => (
-                  <motion.div
-                    key={p.step}
-                    className="absolute inset-0 flex flex-col justify-center"
-                    style={{ pointerEvents: i === activo ? 'auto' : 'none' }}
-                    animate={{ opacity: i === activo ? 1 : 0, y: i === activo ? 0 : 22 }}
-                    transition={{ duration: 0.45, ease: [0.22, 0.61, 0.36, 1] }}
-                  >
-                    <span
-                      className="heading mb-3 block text-7xl leading-none text-transparent"
-                      style={{ WebkitTextStroke: '1px rgba(204,102,255,.4)' }}
-                    >
-                      {String(p.step).padStart(2, '0')}
-                    </span>
-                    <h3 className="heading mb-4 text-3xl leading-tight xl:text-4xl">{p.title}</h3>
-                    <p className="max-w-xl text-lg leading-relaxed text-white/75">{p.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ---- movil: los mismos pasos, apilados ---- */}
-      <div className="px-4 py-16 lg:hidden">
-        <div className="container mx-auto max-w-2xl">
-          <div className="mb-10 text-center">
-            <div className="mb-2 font-mono text-[11px] uppercase tracking-[.3em] text-[#CC66FF]">{sello}</div>
-            <h2 className="heading text-3xl">{titulo}</h2>
-          </div>
-          <div className="space-y-8">
-            {pasos.map((p, i) => (
-              <motion.div key={p.step} {...entra(i * 0.06)} className="flex gap-5">
-                <div className="flex flex-col items-center">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#CC66FF]/40 bg-[#CC66FF]/12 text-sm font-bold text-[#CC66FF]">
-                    {String(p.step).padStart(2, '0')}
-                  </span>
-                  {i < pasos.length - 1 && <span className="mt-2 w-px flex-1 bg-white/10" />}
-                </div>
-                <div className="pb-2">
-                  <h3 className="heading mb-2 text-xl leading-tight">{p.title}</h3>
-                  <p className="text-[15px] leading-relaxed text-white/75">{p.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 
@@ -349,7 +212,7 @@ export default function ServiceDetailPage() {
           )}
 
           {/* ---------- ZONA 2 · EL PROCESO ---------- */}
-          <Recorrido
+          <RecorridoProceso
             pasos={service.process}
             sello={tEnc('proceso_sello', 'Proceso comprobado')}
             titulo={
