@@ -608,6 +608,7 @@ if ($propio): ?>
 <link rel="icon" href="<?= e($fav) ?>" />
 <link rel="apple-touch-icon" href="<?= e($fav) ?>" />
 <?php else: ?>
+<link rel="preload" href="/fonts/Hanson-Bold.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
