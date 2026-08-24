@@ -1,37 +1,206 @@
+import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router';
+import { motion, useMotionValue } from 'motion/react';
+import {
+  ArrowLeft, ArrowRight, Check, ExternalLink, Gamepad2, Camera, Grid3x3, Sparkles,
+} from 'lucide-react';
 import { TopoLineas } from '../components/TopoLineas';
-import { motion } from 'motion/react';
-import { ArrowLeft, CheckCircle2, ExternalLink, Gamepad2, Camera, Grid3x3 } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
 import { contenido } from '../cms';
 
+/*
+ * ESTRUCTURA tomada de la pagina de tarjetas NFC, que es la que funciona:
+ *
+ *   0. PORTADA          titulo grande sobre fondo vivo, sin foto de banco
+ *   1. QUE INCLUYE      bento asimetrico, no una rejilla uniforme
+ *   2. EL PROCESO       recorrido pegajoso: se arma con el scroll
+ *   3. BENEFICIOS       sobre BLANCO, para no perder el ritmo del sitio
+ *   4. DEMOS            solo activaciones para expo (funcionalidad real)
+ *   5. IDEAL PARA       oscuro, compacto
+ *   6. FAQ + CIERRE     sobre BLANCO
+ *
+ * El blanco vuelve en las zonas 3 y 6 igual que en tarjetas: mantiene el
+ * ritmo del sitio sin recuperar la formula de secciones apiladas iguales.
+ *
+ * Antes esta pagina eran seis bloques de 50/50 con una foto de Unsplash en
+ * cada uno. Los datos mandan el diseno: features, process, benefits, ideal y
+ * faq salen del panel, asi que cada seccion se adapta a cuantos elementos
+ * haya en vez de asumir un numero fijo.
+ */
+
+const entra = (retraso = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-70px' },
+  transition: { duration: 0.6, delay: retraso },
+});
+
+/* ------------------------------------------------------------------ */
+/* El proceso, armandose con el scroll.                                */
+/* En pantallas grandes se queda pegado y los pasos se encienden uno a */
+/* uno. En movil no: ahi el scroll pegajoso estorba mas que ayuda.     */
+/* ------------------------------------------------------------------ */
+function Recorrido({
+  pasos,
+  titulo,
+  sello,
+}: {
+  pasos: { step: number; title: string; description: string }[];
+  titulo: React.ReactNode;
+  sello: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [activo, setActivo] = useState(0);
+  /* La barra de avance va por motion value, no por estado: cambia en cada
+     frame del scroll y con useState forzaria un re-render por frame. */
+  const avance = useMotionValue(0);
+
+  useEffect(() => {
+    if (!pasos.length) return;
+    const alScroll = () => {
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const total = r.height - window.innerHeight;
+      if (total <= 0) return;
+      const p = Math.min(Math.max(-r.top / total, 0), 1);
+      avance.set(p);
+      const i = Math.min(Math.floor(p * pasos.length), pasos.length - 1);
+      setActivo((prev) => (prev === i ? prev : i));   // solo re-render al cambiar de paso
+    };
+    window.addEventListener('scroll', alScroll, { passive: true });
+    window.addEventListener('resize', alScroll);
+    alScroll();
+    return () => {
+      window.removeEventListener('scroll', alScroll);
+      window.removeEventListener('resize', alScroll);
+    };
+  }, [pasos.length, avance]);
+
+  if (!pasos.length) return null;
+
+  return (
+    <>
+      {/* ---- pantallas grandes: recorrido pegajoso ---- */}
+      <div ref={ref} className="relative hidden lg:block" style={{ height: `${pasos.length * 85}vh` }}>
+        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+          <div className="container mx-auto w-full max-w-6xl px-4">
+            <div className="mb-12 text-center">
+              <div className="mb-2 font-mono text-[11px] uppercase tracking-[.3em] text-[#CC66FF]">{sello}</div>
+              <h2 className="heading text-3xl md:text-5xl">{titulo}</h2>
+              <div className="mt-3 text-xs text-white/35">
+                Paso {activo + 1} de {pasos.length}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-[auto_1fr] items-center gap-12 xl:gap-20">
+              {/* riel de avance */}
+              <div className="relative h-72 w-px self-center bg-white/10">
+                <motion.div
+                  className="absolute left-0 top-0 w-px origin-top bg-gradient-to-b from-[#9933FF] to-[#CC66FF]"
+                  style={{ height: '100%', scaleY: avance }}
+                />
+                {pasos.map((p, i) => (
+                  <div
+                    key={p.step}
+                    className="absolute -left-[7px]"
+                    style={{ top: `${(i / Math.max(pasos.length - 1, 1)) * 100}%`, transform: 'translateY(-50%)' }}
+                  >
+                    <span
+                      className={`block h-[15px] w-[15px] rounded-full border transition-all duration-300 ${
+                        i <= activo
+                          ? 'scale-110 border-[#CC66FF] bg-[#CC66FF]'
+                          : 'border-white/20 bg-[#07060B]'
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* el paso activo */}
+              <div className="relative min-h-[18rem]">
+                {pasos.map((p, i) => (
+                  <motion.div
+                    key={p.step}
+                    className="absolute inset-0 flex flex-col justify-center"
+                    animate={{
+                      opacity: i === activo ? 1 : 0,
+                      y: i === activo ? 0 : 22,
+                      pointerEvents: i === activo ? 'auto' : 'none',
+                    }}
+                    transition={{ duration: 0.45, ease: [0.22, 0.61, 0.36, 1] }}
+                  >
+                    <span
+                      className="heading mb-3 block text-7xl leading-none text-transparent"
+                      style={{ WebkitTextStroke: '1px rgba(204,102,255,.4)' }}
+                    >
+                      {String(p.step).padStart(2, '0')}
+                    </span>
+                    <h3 className="heading mb-4 text-3xl leading-tight xl:text-4xl">{p.title}</h3>
+                    <p className="max-w-xl text-lg leading-relaxed text-white/75">{p.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ---- movil: los mismos pasos, apilados ---- */}
+      <div className="px-4 py-16 lg:hidden">
+        <div className="container mx-auto max-w-2xl">
+          <div className="mb-10 text-center">
+            <div className="mb-2 font-mono text-[11px] uppercase tracking-[.3em] text-[#CC66FF]">{sello}</div>
+            <h2 className="heading text-3xl">{titulo}</h2>
+          </div>
+          <div className="space-y-8">
+            {pasos.map((p, i) => (
+              <motion.div key={p.step} {...entra(i * 0.06)} className="flex gap-5">
+                <div className="flex flex-col items-center">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#CC66FF]/40 bg-[#CC66FF]/12 text-sm font-bold text-[#CC66FF]">
+                    {String(p.step).padStart(2, '0')}
+                  </span>
+                  {i < pasos.length - 1 && <span className="mt-2 w-px flex-1 bg-white/10" />}
+                </div>
+                <div className="pb-2">
+                  <h3 className="heading mb-2 text-xl leading-tight">{p.title}</h3>
+                  <p className="text-[15px] leading-relaxed text-white/75">{p.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
 export default function ServiceDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { services, settings, openAssistant } = useApp();
-  
-  const service = services.find(s => s.slug === slug);
+
+  const service = services.find((s) => s.slug === slug);
   const tEnc = contenido('servicio-detalle', 'encabezados');
   const tDem = contenido('servicio-detalle', 'demos');
-  const tImg = contenido('servicio-detalle', 'imagenes');
   const tCie = contenido('servicio-detalle', 'cierre');
 
   if (!service) {
-    return <div className="min-h-screen flex items-center justify-center">
-      <p className="text-white">{contenido('servicio-detalle', 'encabezados')('no_encontrado', 'Servicio no encontrado')}</p>
-    </div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-white">
+          {contenido('servicio-detalle', 'encabezados')('no_encontrado', 'Servicio no encontrado')}
+        </p>
+      </div>
+    );
   }
 
-  const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(`Hola, me interesa el servicio de ${service.title}`)}`;
- 
-  // Imágenes para las diferentes secciones
-  const sectionImages = {
-    features: tImg('features', 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201009_b8eb3ed100b2.webp'),
-    ideal: tImg('ideal', 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwc3RyYXRlZ3l8ZW58MXx8fHwxNzY1OTMwMzkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
-    process: tImg('process', 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3NjU5Nzc4MzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'),
-    results: tImg('results', 'https://images.unsplash.com/photo-1730382624709-81e52dd294d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY1ODkwNDMyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')
-  };
+  const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+    `Hola, me interesa el servicio de ${service.title}`
+  )}`;
 
   return (
     <>
@@ -41,485 +210,349 @@ export default function ServiceDetailPage() {
         keywords={[service.title.toLowerCase(), 'marketing digital aguascalientes', service.category.toLowerCase()]}
       />
 
-      {/* Hero Banner con Imagen de Fondo */}
-      <section className="relative min-h-[40vh] md:min-h-[50vh] flex items-center justify-center overflow-hidden">
-        {/* Imagen de fondo */}
-        <div className="absolute inset-0 z-0">
-          {service.bannerImage ? (
-            <img
-              src={service.bannerImage}
-              alt={service.title}
-              className="w-full h-full object-cover"
-              loading="eager"
-            />
-          ) : (
-            <TopoLineas className="h-full w-full" />
-          )}
-          {/* Overlay oscuro con gradiente */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
-          {/* Overlay morado */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/40 to-[#9933FF]/20 mix-blend-overlay" />
-        </div>
-
-        {/* Contenido del Hero */}
-        <div className="container mx-auto max-w-5xl relative z-20 px-4 text-center py-8 md:py-12">
+      <div className="relative bg-[#07060B]">
+        {/* Atmosfera: rejilla de puntos con mascara y dos manchas que derivan.
+            Es la misma que usa la pagina de tarjetas. */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div
+            className="absolute inset-0 opacity-[0.15]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, rgba(153,51,255,0.5) 1px, transparent 1px)',
+              backgroundSize: '34px 34px',
+              maskImage: 'radial-gradient(ellipse 75% 40% at 50% 12%, black, transparent)',
+              WebkitMaskImage: 'radial-gradient(ellipse 75% 40% at 50% 12%, black, transparent)',
+            }}
+          />
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="inline-block px-3 py-1.5 text-xs md:text-sm rounded-full bg-[#7700CE]/30 border border-[#7700CE]/50 backdrop-blur-xl text-[#CC66FF] font-bold mb-4">
-              {service.category}
-            </span>
-            
-            <h1 className="heading mb-3 md:mb-4 text-white drop-shadow-[0_0_40px_rgba(119,0,206,0.6)]">
-              {service.title}
-            </h1>
-            
-            <p className="text-sm md:text-base text-white/90 max-w-3xl mx-auto mb-6 leading-relaxed">
-              {service.shortDescription}
-            </p>
-
-            <Link 
-              to="/servicios" 
-              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors group"
-            >
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-              <span>{tEnc('volver', 'Volver a servicios')}</span>
-            </Link>
-          </motion.div>
+            className="absolute -top-1/4 left-1/4 h-[34rem] w-[34rem] rounded-full bg-[#7700CE]/20 blur-[130px]"
+            animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
+            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute bottom-1/3 right-0 h-[26rem] w-[26rem] rounded-full bg-[#9933FF]/14 blur-[120px]"
+            animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+          />
         </div>
 
-        {/* Decoración inferior */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent z-10" />
-      </section>
+        <div className="relative z-10">
+          {/* ---------- ZONA 0 · PORTADA ---------- */}
+          <section className="relative overflow-hidden px-4 pt-10 pb-16 md:pt-16 md:pb-24">
+            {service.bannerImage ? (
+              <div className="pointer-events-none absolute inset-0 -z-10">
+                <img src={service.bannerImage} alt="" className="h-full w-full object-cover opacity-25" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#07060B]/70 via-[#07060B]/85 to-[#07060B]" />
+              </div>
+            ) : (
+              <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
+                <TopoLineas className="h-full w-full" />
+              </div>
+            )}
 
-      {/* Contenido Principal */}
-      <div className="bg-black">
-        {/* QUÉ INCLUYE - Layout: Contenido izquierda, Imagen derecha */}
-        <section className="py-6 md:py-10 px-4 bg-white">
-          <div className="container mx-auto max-w-7xl">
-            <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
-              {/* Contenido */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
+            <div className="container mx-auto max-w-5xl">
+              <div className="mb-9 flex flex-wrap items-center gap-3">
+                <Link
+                  to="/servicios"
+                  className="group inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[.18em] text-white/40 transition-colors hover:text-white"
+                >
+                  <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-0.5" />
+                  {tEnc('volver', 'Volver a servicios')}
+                </Link>
+                <span className="text-white/15">/</span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[.18em] text-[#CC66FF]">
+                  <Sparkles size={15} />
+                  {service.category}
+                </span>
+              </div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 26 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="heading max-w-4xl text-4xl leading-[0.95] md:text-6xl lg:text-7xl"
               >
-                <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
-                  {tEnc('inc_1', 'QUÉ')} <span className="text-[#7700CE]">{tEnc('inc_2', 'INCLUYE')}</span>
-                </h2>
-                <div className="space-y-2.5 md:space-y-3">
-                  {service.features.map((feature, i) => (
+                {service.title}
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.12 }}
+                className="mt-7 max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl"
+              >
+                {service.shortDescription}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.22 }}
+                className="mt-10 flex flex-wrap gap-3"
+              >
+                <button
+                  onClick={() => openAssistant(service.title, `cotizar ${service.title}`)}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-7 py-3.5 text-sm font-bold tracking-wide text-white transition-transform hover:scale-[1.03]"
+                >
+                  {tCie('boton', 'COTIZAR AHORA')}
+                  <ArrowRight size={17} />
+                </button>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 text-sm font-bold tracking-wide text-white transition-colors hover:border-[#CC66FF]/50 hover:bg-white/5"
+                >
+                  WHATSAPP
+                </a>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* ---------- ZONA 1 · QUÉ INCLUYE (bento asimétrico) ---------- */}
+          {service.features.length > 0 && (
+            <section className="px-4 pb-16 md:pb-24">
+              <div className="container mx-auto max-w-6xl">
+                <motion.h2 {...entra()} className="heading mb-10 text-3xl md:text-5xl">
+                  {tEnc('inc_1', 'QUÉ')}{' '}
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                  >
+                    {tEnc('inc_2', 'INCLUYE')}
+                  </span>
+                </motion.h2>
+
+                <div className="grid gap-4 md:grid-cols-3">
+                  {service.features.map((f, i) => (
                     <motion.div
                       key={i}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                      className="flex items-start gap-2.5 p-3 md:p-3.5 rounded-lg bg-white/80 border border-gray-200 hover:border-[#7700CE]/30 transition-colors"
+                      {...entra(Math.min(i * 0.06, 0.4))}
+                      /* La primera ocupa el doble: rompe la rejilla uniforme
+                         que hacia que todo pesara igual. */
+                      className={i === 0 ? 'md:col-span-2' : ''}
                     >
-                      <CheckCircle2 className="text-[#7700CE] flex-shrink-0 mt-0.5" size={18} />
-                      <span className="text-gray-700 text-sm md:text-base">{feature}</span>
+                      <div
+                        className="group h-full rounded-2xl border border-white/10 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#CC66FF]/40"
+                        style={{
+                          background:
+                            i === 0
+                              ? 'linear-gradient(150deg, rgba(119,0,206,.22), rgba(255,255,255,.02) 60%)'
+                              : 'rgba(255,255,255,.035)',
+                        }}
+                      >
+                        <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-[#CC66FF]/30 bg-[#CC66FF]/12">
+                          <Check size={17} className="text-[#CC66FF]" strokeWidth={2.4} />
+                        </span>
+                        <p
+                          className={`leading-relaxed text-white/85 ${
+                            i === 0 ? 'text-lg md:text-xl' : 'text-[15px]'
+                          }`}
+                        >
+                          {f}
+                        </p>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
+            </section>
+          )}
 
-              {/* Imagen */}
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative rounded-2xl overflow-hidden order-first lg:order-last"
-              >
-                <div className="aspect-[5/3] relative">
-                  <img 
-                    src={sectionImages.features}
-                    alt="Características del servicio"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </motion.div>
+          {/* ---------- ZONA 2 · EL PROCESO ---------- */}
+          <Recorrido
+            pasos={service.process}
+            sello={tEnc('proceso_sello', 'Proceso comprobado')}
+            titulo={
+              <>
+                {tEnc('proceso_1', 'NUESTRO')}{' '}
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                >
+                  {tEnc('proceso_2', 'PROCESO')}
+                </span>
+              </>
+            }
+          />
+        </div>
+      </div>
+
+      {/* ---------- ZONA 3 · BENEFICIOS, SOBRE BLANCO ---------- */}
+      {/* El dato ya existia en el panel y no se mostraba en ninguna parte. */}
+      {service.benefits.length > 0 && (
+        <section className="bg-white px-4 py-16 md:py-24">
+          <div className="container mx-auto max-w-5xl">
+            <motion.h2 {...entra()} className="heading mb-3 text-3xl text-[#0A0A0A] md:text-5xl">
+              {tEnc('ben_1', 'LO QUE')} <span className="text-[#7700CE]">{tEnc('ben_2', 'GANAS')}</span>
+            </motion.h2>
+            <motion.p {...entra(0.06)} className="mb-12 max-w-xl text-[#0A0A0A]/60">
+              {tEnc('ben_bajada', 'Para qué sirve, en concreto.')}
+            </motion.p>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              {service.benefits.map((b, i) => (
+                <motion.div key={i} {...entra(i * 0.08)} className="flex items-start gap-4">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#7700CE]/12">
+                    <Check size={16} className="text-[#7700CE]" strokeWidth={2.6} />
+                  </span>
+                  <p className="text-[16px] leading-relaxed text-[#0A0A0A]/80">{b}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
+      )}
 
-        {/* DEMOS - Solo para Activaciones para Expo */}
+      <div className="relative bg-[#07060B]">
+        {/* ---------- ZONA 4 · DEMOS (solo activaciones para expo) ---------- */}
         {slug === 'activaciones-para-expo' && tDem.visible() && (
-          <section className="py-8 md:py-12 px-4 bg-gradient-to-b from-black via-[#0D0010] to-black relative overflow-hidden">
-            {/* Orbs de fondo */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#7700CE]/20 rounded-full blur-[120px]" />
-              <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#9933FF]/15 rounded-full blur-[100px]" />
+          <section className="relative overflow-hidden px-4 py-16 md:py-24">
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+              <div className="absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-[#7700CE]/20 blur-[120px]" />
             </div>
+            <div className="container mx-auto max-w-6xl">
+              <motion.div {...entra()} className="mb-12 text-center">
+                <h2 className="heading mb-4 text-3xl md:text-5xl">
+                  {tDem('titulo_1', 'PRUEBA NUESTROS')}{' '}
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                  >
+                    {tDem('titulo_2', 'DEMOS')}
+                  </span>
+                </h2>
+                <p className="mx-auto max-w-2xl text-white/70">
+                  {tDem('bajada', 'Explora en vivo las activaciones interactivas que podemos implementar en tu stand.')}
+                </p>
+              </motion.div>
 
-            <div className="container mx-auto max-w-7xl relative z-10">
-              {/* Título */}
-              <div className="text-center mb-8 md:mb-12">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <h2 className="heading text-2xl md:text-3xl lg:text-4xl mb-3">
-                    {tDem('titulo_1', 'PRUEBA NUESTROS')} <span className="text-[#7700CE]">{tDem('titulo_2', 'DEMOS')}</span>
-                  </h2>
-                  <p className="text-white/70 text-sm md:text-base max-w-2xl mx-auto">
-                    {tDem('bajada', 'Explora en vivo las activaciones interactivas que podemos implementar en tu stand')}
-                  </p>
-                </motion.div>
+              <div className="grid gap-5 md:grid-cols-3">
+                {[
+                  { Icono: Gamepad2, t: tDem('d1_titulo', 'RULETA DE PREMIOS'), d: tDem('d1_texto', 'Ruleta interactiva totalmente personalizable.'), u: tDem('d1_url', 'https://ruleta-expo.inedito.digital/demo') },
+                  { Icono: Camera, t: tDem('d2_titulo', 'PHOTO OPPORTUNITY'), d: tDem('d2_texto', 'Photobooth con marcos personalizados de tu marca.'), u: tDem('d2_url', 'https://photo-oportunity.inedito.digital/demo') },
+                  { Icono: Grid3x3, t: tDem('d3_titulo', 'TIC TAC TOE'), d: tDem('d3_texto', 'Gato interactivo con premios. Juega contra la IA y gana.'), u: tDem('d3_url', 'https://tic-tac-toe.inedito.digital/demo') },
+                ].map(({ Icono, t, d, u }, i) => (
+                  <motion.div key={i} {...entra(i * 0.1)}>
+                    <GlassCard hover className="group flex h-full flex-col">
+                      <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-[#CC66FF]/30 bg-[#CC66FF]/12">
+                        <Icono size={22} className="text-[#CC66FF]" />
+                      </span>
+                      <h3 className="heading mb-2 text-xl leading-tight">{t}</h3>
+                      <p className="mb-5 text-sm leading-relaxed text-white/70">{d}</p>
+                      <span className="mb-4 inline-flex w-fit rounded-full bg-[#CC66FF]/12 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[.12em] text-[#CC66FF]">
+                        {tDem('etiqueta', '✓ DISPONIBLE')}
+                      </span>
+                      <a
+                        href={u}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#CC66FF]/30 bg-[#CC66FF]/12 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#CC66FF]/20"
+                      >
+                        {tDem('boton', 'VER DEMO')}
+                        <ExternalLink size={15} />
+                      </a>
+                    </GlassCard>
+                  </motion.div>
+                ))}
               </div>
 
-              {/* Grid de demos */}
-              <div className="grid md:grid-cols-3 gap-5 md:gap-6">
-                {/* Demo 1: Ruleta de Premios */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1, duration: 0.6 }}
-                >
-                  <GlassCard className="group h-full hover:border-[#7700CE]/60 transition-all duration-300 hover:scale-[1.02]">
-                    <div className="p-5 md:p-6 flex flex-col h-full">
-                      {/* Icono */}
-                      <div className="mb-4 relative">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center shadow-[0_0_30px_rgba(119,0,206,0.4)] group-hover:shadow-[0_0_50px_rgba(119,0,206,0.6)] transition-all">
-                          <Gamepad2 size={28} className="text-white" />
-                        </div>
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#0D0010] animate-pulse" />
-                      </div>
-
-                      {/* Título */}
-                      <h3 className="heading text-lg md:text-xl mb-2 text-white group-hover:text-[#CC66FF] transition-colors">
-                        {tDem('d1_titulo', 'RULETA DE PREMIOS')}
-                      </h3>
-
-                      {/* Descripción */}
-                      <p className="text-white/60 text-sm mb-4 flex-grow">
-                        {tDem('d1_texto', 'Ruleta interactiva totalmente personalizable. Perfecta para sorteos, rifas y dinámicas de gamificación en tu stand.')}
-                      </p>
-
-                      {/* Badge de estado */}
-                      <div className="mb-4">
-                        <span className="inline-block px-2.5 py-1 text-xs rounded-full bg-green-500/20 border border-green-500/40 text-green-400 font-bold">
-                          {tDem('etiqueta', '✓ DISPONIBLE')}
-                        </span>
-                      </div>
-
-                      {/* Botón */}
-                      <a
-                        href={tDem('d1_url', 'https://ruleta-expo.inedito.digital/demo')}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7700CE]/20 border border-[#7700CE]/40 hover:bg-[#7700CE]/30 hover:border-[#7700CE]/60 transition-all text-white text-sm font-bold group/btn"
-                      >
-                        <span>{tDem('boton', 'VER DEMO')}</span>
-                        <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform" />
-                      </a>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-
-                {/* Demo 2: Photo Opportunity */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2, duration: 0.6 }}
-                >
-                  <GlassCard className="group h-full hover:border-[#7700CE]/60 transition-all duration-300 hover:scale-[1.02]">
-                    <div className="p-5 md:p-6 flex flex-col h-full">
-                      {/* Icono */}
-                      <div className="mb-4 relative">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center shadow-[0_0_30px_rgba(119,0,206,0.4)] group-hover:shadow-[0_0_50px_rgba(119,0,206,0.6)] transition-all">
-                          <Camera size={28} className="text-white" />
-                        </div>
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#0D0010] animate-pulse" />
-                      </div>
-
-                      {/* Título */}
-                      <h3 className="heading text-lg md:text-xl mb-2 text-white group-hover:text-[#CC66FF] transition-colors">
-                        {tDem('d2_titulo', 'PHOTO OPPORTUNITY')}
-                      </h3>
-
-                      {/* Descripción */}
-                      <p className="text-white/60 text-sm mb-4 flex-grow">
-                        {tDem('d2_texto', 'Photobooth con marcos personalizados de tu marca. Captura fotos, compártelas y genera engagement viral en redes sociales.')}
-                      </p>
-
-                      {/* Badge de estado */}
-                      <div className="mb-4">
-                        <span className="inline-block px-2.5 py-1 text-xs rounded-full bg-green-500/20 border border-green-500/40 text-green-400 font-bold">
-                          {tDem('etiqueta', '✓ DISPONIBLE')}
-                        </span>
-                      </div>
-
-                      {/* Botón */}
-                      <a
-                        href={tDem('d2_url', 'https://photo-oportunity.inedito.digital/demo')}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7700CE]/20 border border-[#7700CE]/40 hover:bg-[#7700CE]/30 hover:border-[#7700CE]/60 transition-all text-white text-sm font-bold group/btn"
-                      >
-                        <span>{tDem('boton', 'VER DEMO')}</span>
-                        <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform" />
-                      </a>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-
-                {/* Demo 3: Tic Tac Toe (Próximamente) */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
-                >
-                  <GlassCard className="group h-full hover:border-[#7700CE]/60 transition-all duration-300 hover:scale-[1.02]">
-                    <div className="p-5 md:p-6 flex flex-col h-full">
-                      {/* Icono */}
-                      <div className="mb-4 relative">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center shadow-[0_0_30px_rgba(119,0,206,0.4)] group-hover:shadow-[0_0_50px_rgba(119,0,206,0.6)] transition-all">
-                          <Grid3x3 size={28} className="text-white" />
-                        </div>
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#0D0010] animate-pulse" />
-                      </div>
-
-                      {/* Título */}
-                      <h3 className="heading text-lg md:text-xl mb-2 text-white group-hover:text-[#CC66FF] transition-colors">
-                        {tDem('d3_titulo', 'TIC TAC TOE')}
-                      </h3>
-
-                      {/* Descripción */}
-                      <p className="text-white/60 text-sm mb-4 flex-grow">
-                        {tDem('d3_texto', 'Gato interactivo con premios. Juega contra la IA y gana. Diversión garantizada para atraer visitantes a tu stand.')}
-                      </p>
-
-                      {/* Badge de estado */}
-                      <div className="mb-4">
-                        <span className="inline-block px-2.5 py-1 text-xs rounded-full bg-green-500/20 border border-green-500/40 text-green-400 font-bold">
-                          {tDem('etiqueta', '✓ DISPONIBLE')}
-                        </span>
-                      </div>
-
-                      {/* Botón */}
-                      <a
-                        href={tDem('d3_url', 'https://tic-tac-toe.inedito.digital/demo')}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7700CE]/20 border border-[#7700CE]/40 hover:bg-[#7700CE]/30 hover:border-[#7700CE]/60 transition-all text-white text-sm font-bold group/btn"
-                      >
-                        <span>{tDem('boton', 'VER DEMO')}</span>
-                        <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform" />
-                      </a>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              </div>
-
-              {/* CTA adicional */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-center mt-8 md:mt-10"
-              >
-                <p className="text-white/60 text-sm md:text-base mb-4">
+              <motion.div {...entra(0.3)} className="mt-12 text-center">
+                <p className="mb-5 text-white/70">
                   {tDem('cta_texto', '¿Necesitas una activación personalizada para tu evento?')}
                 </p>
                 <button
-                  onClick={() => openAssistant('Activaciones para Expo', 'cotizar activación personalizada')}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] text-white hover:shadow-[0_0_30px_rgba(119,0,206,0.5)] transition-all hover:scale-105"
+                  onClick={() => openAssistant(service.title, 'activacion personalizada')}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-7 py-3.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
                 >
-                  <span className="heading text-sm tracking-[0.08em]">{tDem('cta_boton', 'COTIZAR ACTIVACIÓN PERSONALIZADA')}</span>
+                  {tDem('cta_boton', 'COTIZAR ACTIVACIÓN PERSONALIZADA')}
+                  <ArrowRight size={17} />
                 </button>
               </motion.div>
             </div>
           </section>
         )}
 
-        {/* IDEAL PARA - Layout: Imagen izquierda, Contenido derecha */}
-        <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
-          <div className="container mx-auto max-w-7xl">
-            <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
-              {/* Imagen */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative rounded-2xl overflow-hidden"
-              >
-                <div className="aspect-[5/3] relative">
-                  <img 
-                    src={tImg('ideal_2', 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201215_98546a2d1026.webp')}
-                    alt="Ideal para tu negocio"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </motion.div>
-
-              {/* Contenido */}
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
-                  {tEnc('ideal_1', 'IDEAL')} <span className="text-[#7700CE]">{tEnc('ideal_2', 'PARA')}</span>
-                </h2>
-                <div className="space-y-2.5 md:space-y-3">
-                  {service.ideal.map((item, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                      className="flex items-start gap-2.5 p-3 md:p-3.5 rounded-lg bg-white/5 border border-white/10 hover:border-[#7700CE]/40 transition-colors backdrop-blur-sm"
-                    >
-                      <div className="w-5 h-5 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-[#7700CE] text-xs font-bold">✓</span>
-                      </div>
-                      <span className="text-white/80 text-sm md:text-base">{item}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* NUESTRO PROCESO - Layout: Contenido + Grid con imagen de fondo */}
-        <section className="py-6 md:py-10 px-4 bg-white">
-          <div className="container mx-auto max-w-7xl">
-            <div className="text-center mb-6 md:mb-8">
-              <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
-                {tEnc('proceso_1', 'NUESTRO')} <span className="text-[#7700CE]">{tEnc('proceso_2', 'PROCESO')}</span>
-              </h2>
-              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
-                Metodología probada que garantiza resultados excepcionales
-              </p>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
-              {/* Imagen destacada */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative rounded-2xl overflow-hidden"
-              >
-                <div className="aspect-[5/3] relative">
-                  <img 
-                    src={tImg('proceso_2', 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_204956_2712116f44fd.webp')}
-                    alt="Nuestro proceso de trabajo"
-                    className="w-full h-full object-cover"
-                  />
-                  
-                  {/* Badge flotante */}
-                  <div className="absolute top-3 right-3">
-                    <div className="px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-lg">
-                      <span className="text-xs font-bold text-[#7700CE]">{tEnc('proceso_sello', 'Proceso comprobado')}</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Steps del proceso */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                {service.process.map((step, i) => (
+        {/* ---------- ZONA 5 · IDEAL PARA ---------- */}
+        {service.ideal.length > 0 && (
+          <section className="px-4 py-16 md:py-24">
+            <div className="container mx-auto max-w-5xl">
+              <motion.h2 {...entra()} className="heading mb-10 text-3xl md:text-5xl">
+                {tEnc('ideal_1', 'IDEAL')}{' '}
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                >
+                  {tEnc('ideal_2', 'PARA')}
+                </span>
+              </motion.h2>
+              <div className="flex flex-col gap-3">
+                {service.ideal.map((item, i) => (
                   <motion.div
-                    key={step.step}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
+                    key={i}
+                    {...entra(i * 0.07)}
+                    className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[.03] p-5 transition-colors hover:border-[#CC66FF]/30"
                   >
-                    <div className="h-full p-4 rounded-xl bg-white/80 border border-gray-200 hover:border-[#7700CE]/40 transition-colors backdrop-blur-sm">
-                      <div className="heading text-3xl md:text-4xl text-[#7700CE] mb-2">{step.step.toString().padStart(2, '0')}</div>
-                      <h3 className="heading text-base md:text-lg mb-1.5 text-black">{step.title}</h3>
-                      <p className="text-gray-600 text-xs md:text-sm">{step.description}</p>
-                    </div>
+                    <span className="heading mt-0.5 shrink-0 text-sm text-[#CC66FF]">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <p className="text-[15.5px] leading-relaxed text-white/80">{item}</p>
                   </motion.div>
                 ))}
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* FAQ - Layout centrado */}
-        <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
-          <div className="container mx-auto max-w-4xl">
-            <div className="text-center mb-6 md:mb-8">
-              <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2">
-                {tEnc('faq_1', 'PREGUNTAS')} <span className="text-[#7700CE]">{tEnc('faq_2', 'FRECUENTES')}</span>
-              </h2>
-            </div>
-            
-            <div className="space-y-3">
-              {service.faq.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <div className="p-4 md:p-5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#7700CE]/40 transition-colors">
-                    <h3 className="heading text-base md:text-lg mb-2 text-white">{item.question}</h3>
-                    <p className="text-white/70 text-sm md:text-base leading-relaxed">{item.answer}</p>
-                  </div>
-                </motion.div>
-              ))}\n            </div>
-          </div>
-        </section>
-
-        {/* CTA Final */}
-        <section className="py-6 md:py-10 px-4 bg-white">
-          <div className="container mx-auto max-w-5xl">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative rounded-2xl overflow-hidden"
-            >
-              {/* Imagen de fondo */}
-              <div className="absolute inset-0">
-                <img 
-                  src={sectionImages.results}
-                  alt="Comienza ahora"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/90 to-[#9933FF]/80" />
-              </div>
-
-              {/* Contenido */}
-              <div className="relative z-10 text-center p-6 md:p-10">
-                <h2 className="heading text-2xl md:text-3xl lg:text-4xl mb-3 text-white">
-                  {tCie('titulo_1', '¿LISTO PARA')} <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">{tCie('titulo_2', 'COMENZAR?')}</span>
-                </h2>
-                <p className="text-white/90 text-sm md:text-base mb-6 max-w-2xl mx-auto">
-                  Cotiza este servicio gratis y descubre cómo podemos ayudarte a alcanzar tus objetivos
-                </p>
-                <button
-                  onClick={() => openAssistant(service.title, `cotizar ${service.title}`)}
-                  className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-white text-[#7700CE] hover:bg-white/90 transition-all hover:scale-105 shadow-[0_10px_40px_rgba(0,0,0,0.3)] cursor-pointer"
-                >
-                  <span className="heading text-sm md:text-base tracking-[0.08em]">{tCie('boton', 'COTIZAR AHORA')}</span>
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        </section>
+          </section>
+        )}
       </div>
+
+      {/* ---------- ZONA 6 · FAQ Y CIERRE, SOBRE BLANCO ---------- */}
+      <section className="bg-white px-4 py-16 md:py-24">
+        <div className="container mx-auto max-w-4xl">
+          {service.faq.length > 0 && (
+            <>
+              <motion.h2 {...entra()} className="heading mb-10 text-center text-3xl text-[#0A0A0A] md:text-5xl">
+                {tEnc('faq_1', 'PREGUNTAS')} <span className="text-[#7700CE]">{tEnc('faq_2', 'FRECUENTES')}</span>
+              </motion.h2>
+
+              <div className="mb-20 divide-y divide-[#0A0A0A]/10 border-y border-[#0A0A0A]/10">
+                {service.faq.map((item, i) => (
+                  <motion.div key={i} {...entra(Math.min(i * 0.06, 0.35))} className="py-6">
+                    <h3 className="heading mb-2.5 text-lg leading-snug text-[#0A0A0A] md:text-xl">{item.question}</h3>
+                    <p className="max-w-3xl text-[15.5px] leading-relaxed text-[#0A0A0A]/70">{item.answer}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <motion.div
+            {...entra()}
+            className="relative overflow-hidden rounded-3xl p-10 text-center md:p-14"
+            style={{ background: 'linear-gradient(140deg,#7700CE,#9933FF)' }}
+          >
+            <h2 className="heading mb-4 text-3xl leading-tight text-white md:text-4xl">
+              {tCie('titulo_1', '¿LISTO PARA')} {tCie('titulo_2', 'COMENZAR?')}
+            </h2>
+            <p className="mx-auto mb-8 max-w-lg text-white/85">{service.shortDescription}</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => openAssistant(service.title, `cotizar ${service.title}`)}
+                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold text-[#7700CE] transition-transform hover:scale-[1.03]"
+              >
+                {tCie('boton', 'COTIZAR AHORA')}
+                <ArrowRight size={17} />
+              </button>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/40 px-8 py-3.5 text-sm font-bold text-white transition-colors hover:bg-white/10"
+              >
+                WHATSAPP
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
     </>
   );
 }

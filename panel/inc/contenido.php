@@ -852,6 +852,9 @@ function registro_paginas(): array {
                         'proceso_1'     => ['label' => 'Proceso · primera palabra', 'tipo' => 'texto', 'def' => 'NUESTRO'],
                         'proceso_2'     => ['label' => 'Proceso · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'PROCESO'],
                         'proceso_sello' => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Proceso comprobado'],
+                        'ben_1'   => ['label' => 'Beneficios · palabra 1', 'tipo' => 'texto', 'def' => 'LO QUE'],
+                        'ben_2'   => ['label' => 'Beneficios · palabra 2', 'tipo' => 'texto', 'def' => 'GANAS'],
+                        'ben_bajada' => ['label' => 'Beneficios · bajada', 'tipo' => 'texto', 'def' => 'Para qué sirve, en concreto.'],
                         'faq_1'         => ['label' => 'Preguntas · primera palabra', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
                         'faq_2'         => ['label' => 'Preguntas · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
                     ],
@@ -881,19 +884,6 @@ function registro_paginas(): array {
                     ],
                 ],
 
-                'imagenes' => [
-                    'nombre' => 'Fotos de la plantilla',
-                    'ayuda'  => 'Las fotos que acompañan cada sección en todas las páginas de servicio.',
-                    'campos' => [
-                        'features' => ['label' => 'Foto de “Qué incluye”', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201009_b8eb3ed100b2.webp'],
-                        'ideal'    => ['label' => 'Foto de “Ideal para”', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwc3RyYXRlZ3l8ZW58MXx8fHwxNzY1OTMwMzkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'process'  => ['label' => 'Foto de “Nuestro proceso”', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3NjU5Nzc4MzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'results'  => ['label' => 'Foto de resultados', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1730382624709-81e52dd294d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY1ODkwNDMyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'ideal_2'  => ['label' => 'Foto secundaria de “Ideal para”', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_201215_98546a2d1026.webp'],
-                        'proceso_2'=> ['label' => 'Foto secundaria del proceso', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO-WEB/20260112_204956_2712116f44fd.webp'],
-                        'respaldo' => ['label' => 'Foto de respaldo si una falla', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1557804506-669a67965ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'],
-                    ],
-                ],
 
                 'cierre' => [
                     'nombre' => 'Llamado final',
