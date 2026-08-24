@@ -88,6 +88,9 @@ fput api/hit.php         public_html/api/hit.php          >/dev/null 2>&1 && ok 
 fput tarjeta.php         public_html/tarjeta.php          >/dev/null 2>&1 && ok "tarjeta.php"
 fput panel/inc/vcard.php public_html/panel/inc/vcard.php  >/dev/null 2>&1 && ok "panel/inc/vcard.php"
 fput panel/bootstrap.php public_html/panel/bootstrap.php  >/dev/null 2>&1 && ok "panel/bootstrap.php"
+fput panel/inc/contenido.php public_html/panel/inc/contenido.php >/dev/null 2>&1 && ok "panel/inc/contenido.php"
+fput panel/pages/buscadores.php public_html/panel/pages/buscadores.php >/dev/null 2>&1 && ok "panel/pages/buscadores.php"
+fput panel/cron/gsc_sync.php public_html/panel/cron/gsc_sync.php >/dev/null 2>&1 && ok "panel/cron/gsc_sync.php"
 echo "  (api/config.php y panel/setup.php NO se suben, a proposito)"
 
 # ---------- 5. .htaccess ----------

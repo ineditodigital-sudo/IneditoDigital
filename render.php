@@ -87,12 +87,24 @@ if ($path === '/') {
   // 54 caracteres: entra completo en el resultado de Google (ONP-01)
   $title = 'Agencia de Marketing Digital con IA en Aguascalientes';
   $desc = $defaultDesc;
-  $bodyBuilder = function() use ($services,$settings,$P,$e) {
+  $bodyBuilder = function() use ($services,$settings,$P,$e,$blog) {
     $h = '<h1>Inédito Digital · Agencia de Marketing Digital en Aguascalientes</h1>';
     $h .= '<p>Impulsamos tu negocio con estrategias de marketing digital, diseño web e inteligencia artificial. Diseño y desarrollo web, branding, SEO, Google Ads, embudos de venta, chatbots con IA, WhatsApp y e-commerce.</p>';
     $h .= '<h2>Nuestros servicios</h2><ul>';
     foreach ($services as $s) $h .= '<li><a href="/servicios/'.e($s['slug']).'"><strong>'.e($s['title']).'</strong></a> — '.e($s['shortDescription'] ?? '').'</li>';
     $h .= '</ul>';
+    // La categoria que define direccion. Va debajo del H1, no en el:
+      // arriba se conserva la frase que ya trae trafico.
+    $h .= '<h2>Dirección comercial asistida por IA</h2>';
+    $h .= '<p>No vendemos marketing digital genérico. Dirección define los objetivos, todo queda conectado —Search Console, Analytics, campañas y, donde aplica, el ERP— y una IA audita periódicamente si la estrategia está funcionando. El servicio se adapta al punto en que esté cada empresa: <a href="/servicios">construir, mejorar o vender</a>.</p>';
+    // Enlazar lo ultimo publicado: es como Google lo descubre pronto.
+    if ($blog) {
+      $ult = array_slice(array_reverse($blog), 0, 4);
+      $h .= '<h2>Del blog</h2><ul>';
+      foreach ($ult as $b) $h .= '<li><a href="/blog/' . e($b['slug'] ?? '') . '">'
+        . e($b['title'] ?? '') . '</a></li>';
+      $h .= '</ul>';
+      }
     $h .= '<h2>Contacto</h2><p>WhatsApp: '.e($settings['whatsappNumber'] ?? '').' · Email: '.e($settings['businessEmail'] ?? '').' · '.e(($settings['businessCity'] ?? '').', '.($settings['businessState'] ?? '')).'</p>';
     return $h;
   };
@@ -119,9 +131,30 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
   } else { $is404 = true; }
 }
 elseif ($seg[0] === 'servicios') {
-  $title = 'Servicios de Marketing Digital | '.$siteName; $desc = 'Todos nuestros servicios: diseño web, branding, SEO, Google Ads, embudos, chatbots con IA y más.';
+  $title = 'Servicios · Agencia de marketing digital y publicidad en Aguascalientes | '.$siteName; $desc = 'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Tres niveles según en qué punto estés: construir, mejorar o vender.';
   $canonical=$BASE.'/servicios'; $crumbs[]=['Servicios','/servicios'];
-  $bodyBuilder = function() use ($services,$e){ $h='<h1>Servicios</h1><ul>'; foreach($services as $s) $h.='<li><a href="/servicios/'.e($s['slug']).'"><strong>'.e($s['title']).'</strong></a> — '.e($s['shortDescription'] ?? '').'</li>'; return $h.'</ul>'; };
+    $bodyBuilder = function() use ($services,$e,$paginas){
+    // Los tres niveles salen del panel, igual que en la version React.
+    $n = is_array($paginas['servicios']['contenido']['niveles'] ?? null)
+       ? $paginas['servicios']['contenido']['niveles'] : [];
+    $h = '<h1>Servicios · Agencia de marketing digital y publicidad en Aguascalientes</h1>';
+    $h .= '<p>Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. El servicio se adapta al grado de posicionamiento de cada empresa.</p>';
+    $tit = trim((string)($n['titulo'] ?? '')) ?: '¿En qué punto estás?';
+    $h .= '<h2>' . e($tit) . '</h2><ul>';
+    foreach ([1, 2, 3] as $k) {
+      $v = trim((string)($n["n{$k}_verbo"] ?? ''));
+      if ($v === '') continue;
+      $h .= '<li><strong>' . e($v) . '</strong>'
+          . (!empty($n["n{$k}_lema"]) ? ' · ' . e($n["n{$k}_lema"]) : '')
+          . ': ' . e((string)($n["n{$k}_texto"] ?? ''))
+          . (!empty($n["n{$k}_promesa"]) ? ' Promesa: ' . e($n["n{$k}_promesa"]) : '')
+          . '</li>';
+      }
+    $h .= '</ul><h2>Todo lo que hacemos</h2><ul>';
+    foreach ($services as $s) $h .= '<li><a href="/servicios/' . e($s['slug'] ?? '') . '">'
+      . e($s['title'] ?? '') . '</a>: ' . e($s['shortDescription'] ?? $s['short_desc'] ?? '') . '</li>';
+    return $h . '</ul>';
+  };
 }
 elseif ($seg[0] === 'portafolio' && isset($seg[1])) {
   $s = $findBySlug($portfolio, $seg[1]);
@@ -531,18 +564,52 @@ if ($is404) {
 }
 
 function md_html(string $md): string {
-  $out=[]; $inUl=false;
-  foreach (preg_split('/\r?\n/', $md) as $ln) {
-    $t=trim($ln);
-    if ($t==='') { if($inUl){$out[]='</ul>';$inUl=false;} continue; }
-    if (preg_match('/^###\s+(.*)/',$t,$m)) { if($inUl){$out[]='</ul>';$inUl=false;} $out[]='<h3>'.e($m[1]).'</h3>'; }
-    elseif (preg_match('/^##\s+(.*)/',$t,$m)) { if($inUl){$out[]='</ul>';$inUl=false;} $out[]='<h2>'.e($m[1]).'</h2>'; }
-    elseif (preg_match('/^#\s+(.*)/',$t,$m)) { if($inUl){$out[]='</ul>';$inUl=false;} $out[]='<h2>'.e($m[1]).'</h2>'; }
-    elseif (preg_match('/^[-*]\s+(.*)/',$t,$m)) { if(!$inUl){$out[]='<ul>';$inUl=true;} $out[]='<li>'.e($m[1]).'</li>'; }
-    else { if($inUl){$out[]='</ul>';$inUl=false;} $out[]='<p>'.e($t).'</p>'; }
+  /* Convierte lo que el panel guarda en Markdown al HTML que lee un bot.
+     Ademas de titulos y listas, ahora entiende negritas, codigo y tablas:
+     sin eso los articulos salian con los asteriscos a la vista y las tablas
+     comparativas se perdian, que son justo lo que una IA cita. */
+  $inline = function (string $t): string {
+    $t = e($t);                                    // primero se escapa
+    $t = preg_replace('/\*\*(.+?)\*\*/u', '<strong>$1</strong>', $t);
+    $t = preg_replace('/`([^`]+)`/u', '<code>$1</code>', $t);
+    // [texto](/ruta) -> enlace, solo rutas internas o https
+    $t = preg_replace('~\[([^\]]+)\]\((/[^)\s]*|https://[^)\s]+)\)~u', '<a href="$2">$1</a>', $t);
+    return $t;
+  };
+  $lineas = preg_split('/\r?\n/', $md);
+  $out = []; $inUl = false; $n = count($lineas);
+  for ($i = 0; $i < $n; $i++) {
+    $t = trim($lineas[$i]);
+    if ($t === '') { if ($inUl) { $out[] = '</ul>'; $inUl = false; } continue; }
+
+    // Tabla: una fila con barras seguida del separador |---|---|
+    if (strpos($t, '|') === 0 && isset($lineas[$i+1]) && preg_match('/^\s*\|[\s:|-]+\|\s*$/', $lineas[$i+1])) {
+      if ($inUl) { $out[] = '</ul>'; $inUl = false; }
+      $celdas = fn($f) => array_map('trim', explode('|', trim($f, " \t|")));
+      $out[] = '<table><thead><tr>';
+      foreach ($celdas($t) as $c) $out[] = '<th>' . $inline($c) . '</th>';
+      $out[] = '</tr></thead><tbody>';
+      $i += 2;
+      while ($i < $n && strpos(trim($lineas[$i]), '|') === 0) {
+        $out[] = '<tr>';
+        foreach ($celdas($lineas[$i]) as $c) $out[] = '<td>' . $inline($c) . '</td>';
+        $out[] = '</tr>';
+        $i++;
+      }
+      $i--;
+      $out[] = '</tbody></table>';
+      continue;
+    }
+
+    if (preg_match('/^###\s+(.*)/', $t, $m))       { if ($inUl) { $out[]='</ul>'; $inUl=false; } $out[]='<h3>'.$inline($m[1]).'</h3>'; }
+    elseif (preg_match('/^##\s+(.*)/', $t, $m))    { if ($inUl) { $out[]='</ul>'; $inUl=false; } $out[]='<h2>'.$inline($m[1]).'</h2>'; }
+    elseif (preg_match('/^#\s+(.*)/', $t, $m))     { if ($inUl) { $out[]='</ul>'; $inUl=false; } $out[]='<h2>'.$inline($m[1]).'</h2>'; }
+    elseif (preg_match('/^[-*]\s+(.*)/', $t, $m))  { if (!$inUl) { $out[]='<ul>'; $inUl=true; } $out[]='<li>'.$inline($m[1]).'</li>'; }
+    elseif (preg_match('/^\d+\.\s+(.*)/', $t, $m)) { if (!$inUl) { $out[]='<ul>'; $inUl=true; } $out[]='<li>'.$inline($m[1]).'</li>'; }
+    else { if ($inUl) { $out[]='</ul>'; $inUl=false; } $out[]='<p>'.$inline($t).'</p>'; }
   }
-  if($inUl)$out[]='</ul>';
-  return implode("\n",$out);
+  if ($inUl) $out[] = '</ul>';
+  return implode("\n", $out);
 }
 
 // JSON-LD organización (siempre)
