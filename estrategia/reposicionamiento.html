@@ -1,0 +1,1048 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>De Agencia a Dirección Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+/* ------------------------------------------------------------------ *
+ * Tokens. Vienen del sistema de Inedito (src/styles/theme.css): el
+ * fondo negro con sesgo violeta y la escala de morados son de la marca,
+ * no elegidos aqui. Los colores semanticos si son nuevos y estan
+ * separados del acento a proposito: el morado nunca significa estado.
+ * Diseno comprometido con un solo tema, como el sitio entero.
+ * ------------------------------------------------------------------ */
+:root{
+  --tinta:        #0A0A0A;
+  --tinta-2:      #0D0010;
+  --tinta-3:      #120018;
+  --morado:       #7700CE;
+  --morado-claro: #9933FF;
+  --morado-tenue: #AA66FF;
+  --hueso:        #F2F0F6;
+  --hueso-mudo:   rgba(242,240,246,.62);
+  --hueso-tenue:  rgba(242,240,246,.38);
+  --linea:        rgba(170,102,255,.16);
+  --linea-fuerte: rgba(170,102,255,.34);
+  --urge:         #FF5C7A;
+  --listo:        #4ADE80;
+  --ambar:        #FFB84D;
+
+  --display: 'Archivo', 'Arial Black', system-ui, sans-serif;
+  --texto:   'Inter', system-ui, -apple-system, sans-serif;
+  --mono:    'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  --col: 1080px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--tinta);
+  color:var(--hueso);
+  font-family:var(--texto);
+  font-size:17px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--morado);color:#fff}
+
+/* -------------------------------------------------- tipografia */
+h1,h2,h3,.et,.num{font-family:var(--display);text-wrap:balance}
+h1{
+  font-weight:900;
+  font-size:clamp(2.6rem,7vw,5.2rem);
+  line-height:.96;
+  letter-spacing:-.028em;
+  margin:0;
+  text-transform:uppercase;
+}
+h2{
+  font-weight:800;
+  font-size:clamp(1.9rem,4.2vw,3rem);
+  line-height:1.02;
+  letter-spacing:-.022em;
+  margin:0 0 .6em;
+  text-transform:uppercase;
+}
+h3{
+  font-weight:700;
+  font-size:1.12rem;
+  line-height:1.28;
+  letter-spacing:-.008em;
+  margin:0 0 .35em;
+}
+p{margin:0 0 1.05em;max-width:66ch}
+p:last-child{margin-bottom:0}
+strong{font-weight:700;color:#fff}
+em{font-style:normal;color:var(--morado-tenue)}
+code,.ruta{
+  font-family:var(--mono);
+  font-size:.86em;
+  color:var(--morado-tenue);
+  background:rgba(119,0,206,.14);
+  padding:.12em .42em;
+  border-radius:4px;
+  white-space:nowrap;
+}
+a{color:var(--morado-tenue)}
+:focus-visible{outline:2px solid var(--morado-claro);outline-offset:3px;border-radius:3px}
+
+.et{
+  font-size:.7rem;
+  font-weight:600;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+  color:var(--morado-tenue);
+  margin:0 0 1.1em;
+  display:flex;
+  align-items:center;
+  gap:.7em;
+}
+.et::after{content:"";flex:1;height:1px;background:var(--linea)}
+
+/* -------------------------------------------------- estructura */
+.env{width:min(100% - 44px,var(--col));margin-inline:auto}
+section{padding:104px 0;position:relative}
+section.alt{background:var(--tinta-2)}
+section.alt2{background:var(--tinta-3)}
+.hilo{display:flex;flex-direction:column;gap:22px}
+
+/* -------------------------------------------------- portada */
+#portada{
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  padding:80px 0;
+  overflow:hidden;
+}
+#topo{position:absolute;inset:0;width:100%;height:100%}
+#portada .env{position:relative;z-index:1}
+.sello{
+  font-family:var(--mono);
+  font-size:.74rem;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--morado-tenue);
+  margin-bottom:2.2rem;
+}
+h1 .baja{display:block;color:var(--morado-claro)}
+.entradilla{
+  font-size:clamp(1.05rem,2vw,1.3rem);
+  color:var(--hueso-mudo);
+  max-width:56ch;
+  margin-top:2rem;
+  line-height:1.6;
+}
+.meta-portada{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 30px;
+  margin-top:2.6rem;
+  font-family:var(--mono);
+  font-size:.76rem;
+  color:var(--hueso-tenue);
+  letter-spacing:.04em;
+}
+
+/* -------------------------------------------------- riel de fases */
+#riel{
+  position:fixed;
+  left:26px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:40;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+#riel a{
+  display:block;
+  width:9px;height:9px;
+  border-radius:50%;
+  border:1px solid var(--linea-fuerte);
+  background:transparent;
+  transition:background .3s,transform .3s,border-color .3s;
+  position:relative;
+}
+#riel a[data-activo]{background:var(--morado-claro);border-color:var(--morado-claro);transform:scale(1.45)}
+#riel a span{
+  position:absolute;left:20px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;
+  white-space:nowrap;color:var(--hueso-tenue);
+  opacity:0;transition:opacity .25s;pointer-events:none;
+}
+#riel a:hover span,#riel a[data-activo] span{opacity:1}
+@media (max-width:1320px){#riel{display:none}}
+
+/* -------------------------------------------------- la colision */
+.colision{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:0;
+  align-items:stretch;
+  border:1px solid var(--linea);
+  border-radius:16px;
+  overflow:hidden;
+  margin-top:8px;
+}
+.lado{padding:34px 30px;display:flex;flex-direction:column;gap:14px}
+.lado .fuente{
+  font-family:var(--mono);
+  font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--hueso-tenue);
+}
+.lado .frase{font-size:1.16rem;line-height:1.45;font-weight:600;color:#fff}
+.lado.sitio{background:rgba(255,92,122,.05)}
+.lado.sitio .frase{color:#fff}
+.lado.doc{background:rgba(153,51,255,.07)}
+.lado.doc .frase{color:var(--morado-tenue)}
+.choque{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 20px;
+  background:var(--linea);
+  width:1px;
+  background:linear-gradient(180deg,transparent,var(--linea-fuerte),transparent);
+}
+.veredicto{
+  margin-top:26px;
+  padding:22px 26px;
+  border-left:3px solid var(--urge);
+  background:rgba(255,92,122,.07);
+  border-radius:0 12px 12px 0;
+}
+@media (max-width:760px){
+  .colision{grid-template-columns:1fr}
+  .choque{width:auto;height:1px;background:linear-gradient(90deg,transparent,var(--linea-fuerte),transparent)}
+}
+
+/* -------------------------------------------------- vocabulario */
+.vocab{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(196px,1fr));
+  gap:10px;
+  margin-top:8px;
+}
+.pal{
+  border:1px solid var(--linea);
+  border-radius:11px;
+  padding:15px 17px;
+  background:rgba(255,255,255,.022);
+  display:flex;flex-direction:column;gap:5px;
+}
+.pal b{font-size:.95rem;font-weight:600;color:#fff;letter-spacing:-.01em}
+.pal .cero{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;
+  color:var(--urge);text-transform:uppercase;
+}
+.pal.parcial{border-color:rgba(255,184,77,.24)}
+.pal.parcial .cero{color:var(--ambar)}
+
+/* -------------------------------------------------- dos capas */
+.capas{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px}
+.capa{
+  border:1px solid var(--linea);
+  border-radius:16px;
+  padding:30px 28px;
+  background:rgba(255,255,255,.022);
+  display:flex;flex-direction:column;gap:12px;
+}
+.capa .tipo{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--morado-tenue);
+}
+.capa h3{font-size:1.35rem;font-family:var(--display);font-weight:800;letter-spacing:-.02em}
+.capa ul{margin:6px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.capa li{
+  font-size:.94rem;color:var(--hueso-mudo);line-height:1.55;
+  padding-left:18px;position:relative;
+}
+.capa li::before{
+  content:"";position:absolute;left:0;top:.6em;
+  width:6px;height:6px;border-radius:50%;background:var(--morado);
+}
+.capa.captura{border-color:rgba(74,222,128,.22)}
+.capa.captura .tipo{color:var(--listo)}
+.capa.captura li::before{background:var(--listo)}
+@media (max-width:760px){.capas{grid-template-columns:1fr}}
+
+/* -------------------------------------------------- niveles */
+.niveles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:10px}
+.nivel{
+  border:1px solid var(--linea);
+  border-radius:16px;
+  padding:28px 24px;
+  background:linear-gradient(170deg,rgba(119,0,206,.09),transparent 62%);
+  display:flex;flex-direction:column;gap:11px;
+  position:relative;overflow:hidden;
+}
+.nivel .num{
+  font-size:3.4rem;font-weight:900;line-height:.8;
+  color:transparent;-webkit-text-stroke:1px var(--linea-fuerte);
+  position:absolute;top:16px;right:18px;
+}
+.nivel .verbo{
+  font-family:var(--display);font-weight:800;font-size:1.5rem;
+  text-transform:uppercase;letter-spacing:-.02em;color:#fff;
+}
+.nivel .lema{font-size:.9rem;color:var(--morado-tenue);font-weight:600}
+.nivel p{font-size:.9rem;color:var(--hueso-mudo);line-height:1.55;margin:0}
+.nivel .promesa{
+  margin-top:auto;padding-top:14px;border-top:1px solid var(--linea);
+  font-size:.86rem;color:var(--hueso-mudo);font-style:italic;
+}
+@media (max-width:860px){.niveles{grid-template-columns:1fr}}
+
+/* -------------------------------------------------- tablas */
+.tabla-env{overflow-x:auto;margin-top:8px;border:1px solid var(--linea);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+th{
+  text-align:left;padding:14px 18px;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--morado-tenue);font-weight:600;
+  background:rgba(119,0,206,.11);
+  border-bottom:1px solid var(--linea);
+  white-space:nowrap;
+}
+td{padding:15px 18px;border-bottom:1px solid rgba(170,102,255,.08);color:var(--hueso-mudo);vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+td strong{color:#fff}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--hueso)}
+
+.chip{
+  display:inline-block;font-family:var(--mono);font-size:.66rem;
+  letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  padding:3px 9px;border-radius:20px;white-space:nowrap;
+}
+.chip.c1{background:rgba(255,92,122,.15);color:var(--urge)}
+.chip.c2{background:rgba(255,184,77,.14);color:var(--ambar)}
+.chip.c3{background:rgba(170,102,255,.15);color:var(--morado-tenue)}
+.chip.ok{background:rgba(74,222,128,.14);color:var(--listo)}
+
+/* -------------------------------------------------- aviso grande */
+.freno{
+  border:1px solid rgba(255,92,122,.3);
+  border-radius:18px;
+  padding:38px 34px;
+  background:linear-gradient(160deg,rgba(255,92,122,.09),transparent 70%);
+  margin-top:10px;
+}
+.freno .cifra{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(3rem,9vw,5.6rem);line-height:.86;
+  color:var(--urge);letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+}
+.freno .pie{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hueso-tenue);margin-top:6px}
+.freno p{margin-top:20px}
+
+.orden{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;margin-top:26px}
+.orden .caja{border:1px solid var(--linea);border-radius:13px;padding:20px 22px;background:rgba(255,255,255,.025)}
+.orden .caja .rot{font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:7px}
+.orden .caja.mal .rot{color:var(--urge)}
+.orden .caja.bien .rot{color:var(--listo)}
+.orden .caja p{font-size:.9rem;margin:0;color:var(--hueso-mudo)}
+.orden .flecha{padding:0 22px;color:var(--morado-tenue);font-family:var(--mono);font-size:1.3rem}
+@media (max-width:760px){
+  .orden{grid-template-columns:1fr}
+  .orden .flecha{padding:14px 0;text-align:center;transform:rotate(90deg)}
+}
+
+/* -------------------------------------------------- fases */
+.fases{display:flex;flex-direction:column;gap:0;margin-top:10px}
+.fase{
+  display:grid;
+  grid-template-columns:130px 1fr;
+  gap:30px;
+  padding:30px 0;
+  border-top:1px solid var(--linea);
+}
+.fase:last-child{border-bottom:1px solid var(--linea)}
+.fase .cuando{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--morado-tenue);
+  padding-top:4px;line-height:1.6;
+}
+.fase .cuando b{display:block;color:#fff;font-size:1.7rem;font-family:var(--display);font-weight:900;letter-spacing:-.02em;margin-bottom:2px}
+.fase ul{margin:12px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.fase li{position:relative;padding-left:26px;font-size:.94rem;color:var(--hueso-mudo);line-height:1.55}
+.fase li::before{
+  content:"";position:absolute;left:0;top:.42em;
+  width:12px;height:12px;border-radius:3px;
+  border:1px solid var(--linea-fuerte);
+}
+.fase li b{color:#fff;font-weight:600}
+@media (max-width:700px){.fase{grid-template-columns:1fr;gap:8px}}
+
+/* -------------------------------------------------- cierre */
+.medir{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:10px}
+.kpi{border:1px solid var(--linea);border-radius:14px;padding:22px 20px;background:rgba(255,255,255,.022)}
+.kpi .hoy{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hueso-tenue);margin-bottom:8px}
+.kpi .val{font-family:var(--display);font-weight:900;font-size:2.1rem;line-height:1;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .que{font-size:.86rem;color:var(--hueso-mudo);margin-top:9px;line-height:1.45}
+
+footer{padding:70px 0 90px;border-top:1px solid var(--linea);background:var(--tinta-2)}
+footer .env{display:flex;flex-wrap:wrap;gap:14px 40px;justify-content:space-between;align-items:baseline}
+footer p{font-size:.86rem;color:var(--hueso-tenue);margin:0;max-width:60ch}
+footer .marca{font-family:var(--display);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;font-size:1.1rem;color:var(--hueso-mudo)}
+
+/* -------------------------------------------------- entradas */
+.rev{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1)}
+.rev.dentro{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rev{opacity:1;transform:none;transition:none}
+  #topo{display:none}
+  *{animation:none !important}
+}
+</style>
+
+<nav id="riel" aria-label="Secciones"></nav>
+
+<!-- ============================================ PORTADA -->
+<section id="portada" data-fase="Portada">
+  <canvas id="topo" aria-hidden="true"></canvas>
+  <div class="env">
+    <p class="sello">Inédito Digital · Agosto 2026 · Plan de trabajo web</p>
+    <h1>De agencia a<span class="baja">dirección comercial</span></h1>
+    <p class="entradilla">
+      Dirección escribió qué quiere ser Inédito este año. El sitio todavía dice otra cosa —
+      literalmente en su primer renglón. Esto es lo que hay que cambiar en la web para que
+      coincidan, y cómo se traduce en Google y en las IA.
+    </p>
+    <div class="meta-portada">
+      <span>10 conceptos del documento con cero menciones en el sitio</span>
+      <span>8 componentes sin página</span>
+      <span>1 trampa que hay que evitar</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ LA CONTRADICCION -->
+<section data-fase="La contradicción">
+  <div class="env hilo rev">
+    <p class="et">Punto de partida</p>
+    <h2>La portada dice justo lo que el documento dice que no son</h2>
+    <p>
+      No es un matiz de redacción. Es la primera línea que lee una persona y la primera
+      que lee una IA cuando la consultan sobre Inédito.
+    </p>
+
+    <div class="colision">
+      <div class="lado sitio">
+        <span class="fuente">Lo que dice el sitio hoy · H1 de la portada</span>
+        <span class="frase">«Inédito Digital · Agencia de Marketing Digital en Aguascalientes»</span>
+        <span class="fuente" style="margin-top:auto">Medido en el HTML que ve Googlebot</span>
+      </div>
+      <div class="choque" aria-hidden="true"></div>
+      <div class="lado doc">
+        <span class="fuente">Lo que dice dirección</span>
+        <span class="frase">«No vendemos marketing digital genérico… eso nos convierte de agencia en dirección comercial asistida por IA»</span>
+        <span class="fuente" style="margin-top:auto">Documento interno, agosto 2026</span>
+      </div>
+    </div>
+
+    <div class="veredicto">
+      <p><strong>El sitio se presenta con la categoría que el documento rechaza.</strong>
+      Y no solo en la portada: el <code>title</code>, la <code>meta description</code> y el
+      <code>H1</code> repiten «agencia de marketing digital». Es la etiqueta que Google, ChatGPT
+      y Gemini usan hoy para describir a Inédito, porque es la única que el sitio les da.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ VOCABULARIO -->
+<section class="alt" data-fase="Vocabulario ausente">
+  <div class="env hilo rev">
+    <p class="et">Lo que medí</p>
+    <h2>Diez conceptos centrales del documento no aparecen ni una vez</h2>
+    <p>
+      Busqué cada término del documento en todo el código del sitio y en el registro de
+      contenidos del panel. No es que estén mal explicados: no existen.
+    </p>
+
+    <div class="vocab">
+      <div class="pal"><b>AEO</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>Answer Engine</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>Dirección comercial</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>ChatGPT Ads</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>Google Business Profile</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>Search Console</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>PageSpeed</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>ERP</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>Maindsoft</b><span class="cero">0 menciones</span></div>
+      <div class="pal"><b>Mercado Libre</b><span class="cero">0 menciones</span></div>
+      <div class="pal parcial"><b>LinkedIn</b><span class="cero">solo enlace de pie</span></div>
+      <div class="pal parcial"><b>Dashboard</b><span class="cero">solo una viñeta suelta</span></div>
+    </div>
+
+    <p style="margin-top:26px">
+      Las dos últimas son las que más engañan. <strong>LinkedIn</strong> aparece ocho veces,
+      pero siete son el icono del pie de página. <strong>Dashboard</strong> aparece cinco,
+      todas como una característica dentro de otra ficha —nunca como el producto que
+      describe el documento, conectado a Search Console, Analytics y medición de
+      recomendación por IA.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================ LA TRAMPA -->
+<section data-fase="La trampa">
+  <div class="env hilo rev">
+    <p class="et">Antes de tocar nada</p>
+    <h2>La trampa: nadie busca «dirección comercial asistida por IA»</h2>
+    <p>
+      El instinto es borrar «agencia de marketing digital» del sitio y poner la categoría
+      nueva. <strong>Sería un error caro.</strong> Esa frase es una categoría que Inédito
+      quiere crear, y una categoría nueva por definición tiene cero búsquedas. Mientras
+      tanto, la búsqueda principal del giro es de las pocas donde el sitio ya compite:
+      está en <strong>posición 7,2</strong>, medido en Search Console.
+    </p>
+    <p>
+      Cambiar una por otra cambia tráfico real por una frase que nadie teclea. La salida
+      no es sustituir: <strong>son dos capas que hacen trabajos distintos.</strong>
+    </p>
+
+    <div class="capas">
+      <div class="capa captura">
+        <span class="tipo">Capa 1 · Captura</span>
+        <h3>Las palabras que la gente sí escribe</h3>
+        <p style="font-size:.92rem;color:var(--hueso-mudo);margin:0">
+          Sigue viva. Es lo que trae visitas hoy y lo que Google entiende.
+        </p>
+        <ul>
+          <li>Se queda en el <code>title</code>, el <code>H1</code> y las fichas de servicio</li>
+          <li>«Agencia de marketing digital en Aguascalientes», «diseño web», «SEO local»</li>
+          <li>Se le suma «agencia de publicidad», que el sitio no usa y sí se busca</li>
+          <li>Sin esta capa, el sitio deja de existir para Google</li>
+        </ul>
+      </div>
+      <div class="capa">
+        <span class="tipo">Capa 2 · Posicionamiento</span>
+        <h3>La categoría que Inédito quiere ocupar</h3>
+        <p style="font-size:.92rem;color:var(--hueso-mudo);margin:0">
+          No trae búsquedas. Trae que te citen y te distingan.
+        </p>
+        <ul>
+          <li>Va en el subtítulo, en <span class="ruta">/nosotros</span> y en el schema</li>
+          <li>Va completa en <span class="ruta">llms.txt</span>, que ya existe y lee la IA</li>
+          <li>Es lo que ChatGPT repite cuando alguien pregunta en qué se diferencian</li>
+          <li>Se gana citándola siempre igual, no repitiéndola mucho</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="veredicto" style="border-left-color:var(--morado-claro);background:rgba(153,51,255,.07)">
+      <p><strong>En una línea:</strong> el <code>H1</code> conserva las palabras que se buscan;
+      el renglón de abajo declara la categoría nueva. Google indexa el primero, la IA cita
+      el segundo. Ninguna de las dos capas funciona sola.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ LOS TRES NIVELES -->
+<section class="alt" data-fase="Los tres niveles">
+  <div class="env hilo rev">
+    <p class="et">Estructura</p>
+    <h2>Los tres niveles no existen en ninguna parte de la web</h2>
+    <p>
+      Hoy <span class="ruta">/servicios</span> es una lista plana de doce fichas sueltas.
+      El documento describe un camino con tres puertas de entrada según en qué punto está
+      el cliente. Esa es la diferencia entre un catálogo y una consultoría —y es
+      exactamente el tipo de estructura que las IA citan cuando alguien pregunta cómo
+      trabaja una empresa.
+    </p>
+
+    <div class="niveles">
+      <div class="nivel">
+        <span class="num">1</span>
+        <span class="verbo">Construir</span>
+        <span class="lema">Presencia desde cero</span>
+        <p>Para quien no tiene nada. Web que pasa PageSpeed con SEO, AEO y GEO desde el día uno, ficha de Google, LinkedIn armado y dashboard base.</p>
+        <span class="promesa">«Cuando te busquen, existes y te ves formal.»</span>
+      </div>
+      <div class="nivel">
+        <span class="num">2</span>
+        <span class="verbo">Mejorar</span>
+        <span class="lema">Presencia que compite</span>
+        <p>Para quien ya tiene web y redes mal trabajadas. Entra por la auditoría con Claude, y del diagnóstico sale el plan.</p>
+        <span class="promesa">«Te decimos exactamente qué está mal y lo arreglamos.»</span>
+      </div>
+      <div class="nivel">
+        <span class="num">3</span>
+        <span class="verbo">Vender</span>
+        <span class="lema">Presencia que convierte</span>
+        <p>Para quien ya tiene todo. Canales, campañas con dashboard unificado y —con ERP de Maindsoft— cruce de prospectos contra ventas cerradas.</p>
+        <span class="promesa">«Cada peso invertido se mide contra ventas reales.»</span>
+      </div>
+    </div>
+
+    <p style="margin-top:30px">
+      <strong>Qué hay que hacer:</strong> tres páginas nuevas
+      (<span class="ruta">/construir</span>, <span class="ruta">/mejorar</span>,
+      <span class="ruta">/vender</span>) y convertir <span class="ruta">/servicios</span>
+      en la bifurcación que lleva a ellas. Las doce fichas actuales dejan de ser el menú y
+      pasan a colgar del nivel que les toca.
+    </p>
+    <p>
+      <strong>Por qué importa para GEO:</strong> la auditoría con Claude es la puerta del
+      nivel 2 y el diferenciador transversal de todo el documento. Hoy una IA no puede
+      recomendarla porque no hay ninguna página que la describa.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================ COMPONENTES SIN PAGINA -->
+<section data-fase="Ocho sin página">
+  <div class="env hilo rev">
+    <p class="et">El trabajo grueso</p>
+    <h2>Ocho componentes del servicio, cero páginas</h2>
+    <p>
+      Cada uno de estos es algo que Inédito vende según el documento y que hoy no se
+      puede encontrar, ni citar, ni comprar desde el sitio. El orden es mi
+      recomendación, no el del documento.
+    </p>
+
+    <div class="tabla-env">
+      <table>
+        <thead>
+          <tr><th>Componente</th><th>Prioridad</th><th>Por qué en ese lugar</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Ficha de Google</strong><br><span style="font-size:.84rem">Google Business Profile</span></td>
+            <td><span class="chip c1">Primero</span></td>
+            <td>Doble ganancia: es un servicio con búsqueda real <em>y</em> es la palanca que la auditoría ya señaló como raíz del problema de indexación. Arreglar la de Inédito es a la vez el arreglo y la demostración.</td>
+          </tr>
+          <tr>
+            <td><strong>Auditorías con Claude</strong></td>
+            <td><span class="chip c1">Primero</span></td>
+            <td>El diferenciador transversal del documento y la puerta del nivel 2. Nadie lo trabaja en Aguascalientes. Ojo: es una jugada de GEO, no de SEO — casi nadie lo busca por nombre, pero es lo que hace que una IA te distinga.</td>
+          </tr>
+          <tr>
+            <td><strong>ChatGPT Ads</strong></td>
+            <td><span class="chip c1">Primero</span></td>
+            <td>Recién lanzado. Ser de los primeros con una página que lo explique bien es una ventana que se cierra sola en meses. No tengo datos de búsqueda —es una apuesta a llegar temprano, y así hay que decirlo.</td>
+          </tr>
+          <tr>
+            <td><strong>Dashboard a la medida</strong></td>
+            <td><span class="chip c2">Después</span></td>
+            <td>Sostiene la tercera promesa del documento («medición hasta la venta»). Sin página, esa promesa no se puede verificar desde fuera. Inédito ya lo tiene funcionando en su propio panel: sirve de prueba.</td>
+          </tr>
+          <tr>
+            <td><strong>Estrategia de canales</strong><br><span style="font-size:.84rem">B2B directa vs. marketplaces</span></td>
+            <td><span class="chip c2">Después</span></td>
+            <td>«Mercado Libre» y «Amazon» son términos con búsqueda alta en contexto de venta. Es la ficha más comercial de las que faltan.</td>
+          </tr>
+          <tr>
+            <td><strong>Campañas de Meta</strong></td>
+            <td><span class="chip c2">Después</span></td>
+            <td>Competencia alta y servicio de escritorio: todas las agencias lo ofrecen. Va porque completa el trío de publicidad, no porque destaque.</td>
+          </tr>
+          <tr>
+            <td><strong>LinkedIn de empresa</strong></td>
+            <td><span class="chip c3">Al final</span></td>
+            <td>Poca búsqueda como servicio suelto. Cabe mejor como parte del nivel 1 que como ficha propia.</td>
+          </tr>
+          <tr>
+            <td><strong>Cruce campañas–ventas</strong><br><span style="font-size:.84rem">Clientes con ERP de Maindsoft</span></td>
+            <td><span class="chip c3">Al final</span></td>
+            <td>Público estrechísimo, pero es un foso: nadie más puede ofrecerlo. Va al final por volumen, no por valor. Merece caso de éxito antes que ficha.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ AEO -->
+<section class="alt" data-fase="El hueco AEO">
+  <div class="env hilo rev">
+    <p class="et">Lo que casi se pasa por alto</p>
+    <h2>El documento distingue SEO, AEO y GEO. El sitio solo trabaja dos</h2>
+    <p>
+      Hay página de GEO —<span class="ruta">/servicios/posicionamiento-en-ia</span>, se
+      publicó hace días— y hay página de SEO. <strong>AEO no aparece ni una vez en todo
+      el sitio.</strong> Y no es un sinónimo: GEO es aparecer dentro de la respuesta que
+      genera una IA; AEO es que un asistente conteste la pregunta usando tu contenido
+      como fuente. Se trabajan distinto.
+    </p>
+
+    <div class="tabla-env">
+      <table>
+        <thead><tr><th>Acción concreta</th><th>Dónde</th><th>Qué resuelve</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Responder en las primeras 40 palabras</strong></td>
+            <td>Todas las fichas de servicio</td>
+            <td>Un motor de respuestas toma el primer párrafo. Hoy las fichas abren con una frase de venta, no con la definición.</td>
+          </tr>
+          <tr>
+            <td><strong>Bloques de preguntas frecuentes con <code>FAQPage</code></strong></td>
+            <td>Cada ficha nueva y las 12 actuales</td>
+            <td>Es el formato que los asistentes citan literal. La página de GEO ya lo tiene: sirve de plantilla.</td>
+          </tr>
+          <tr>
+            <td><strong>Tablas comparativas de verdad</strong></td>
+            <td>Niveles, canales, SEO vs. AEO vs. GEO</td>
+            <td>Cuando alguien pregunta «¿cuál me conviene?», la IA busca una tabla. Si no existe, cita la de un competidor.</td>
+          </tr>
+          <tr>
+            <td><strong>Ampliar <span class="ruta">llms.txt</span></strong></td>
+            <td>Ya está construido y en línea</td>
+            <td>Añadir los tres niveles, los ocho componentes y la categoría nueva. Es la vía más directa y barata de todas.</td>
+          </tr>
+          <tr>
+            <td><strong>Glosario público</strong></td>
+            <td>Página nueva</td>
+            <td>El documento ya trae uno para el equipo. Publicado, se convierte en el tipo de contenido que las IA usan como fuente de definiciones.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ LA DECISION -->
+<section data-fase="Decisión de dirección">
+  <div class="env hilo rev">
+    <p class="et">Esto no lo puedo decidir yo</p>
+    <h2>Doce fichas que el documento no menciona</h2>
+    <p>
+      Si el documento define qué es Inédito, entonces hay doce páginas de servicio en el
+      sitio que se quedaron fuera de esa definición. No digo que haya que borrarlas
+      —algunas seguro se venden bien—, pero dirección tiene que decir cuáles siguen.
+      Cada ficha que se queda sin ser parte de la propuesta diluye el mensaje y consume
+      rastreo de Google que hoy escasea.
+    </p>
+
+    <div class="tabla-env">
+      <table>
+        <thead><tr><th>Fichas actuales fuera del documento</th><th>Situación</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="ruta">/servicios/branding</span> · <span class="ruta">/creacion-de-logo</span> · <span class="ruta">/email-marketing</span> · <span class="ruta">/funnels-de-venta</span> · <span class="ruta">/servicios-qr</span> · <span class="ruta">/tarjetas-de-presentacion-digital</span> · <span class="ruta">/activaciones-para-expo</span> · <span class="ruta">/chatbots-y-agentes</span></td>
+            <td>Ocho fichas tácticas. ¿Son servicios que se siguen vendiendo, o herencia del sitio anterior?</td>
+          </tr>
+          <tr>
+            <td><span class="ruta">/servicios-ia/ecommerce</span> · <span class="ruta">/marketing</span> · <span class="ruta">/ventas</span> · <span class="ruta">/whatsapp</span></td>
+            <td>Cuatro páginas de soluciones de IA. El documento habla de IA como método, no como estas cuatro líneas de producto.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:30px">
+      Y al revés: hay demanda medida para servicios que <strong>ni el sitio ni el documento
+      contemplan</strong>. Salió de los datos de Google al reparar las redirecciones.
+    </p>
+
+    <div class="tabla-env">
+      <table>
+        <thead><tr><th>Lo que la gente busca</th><th class="n">Impresiones</th><th class="n">Clics</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Espacios publicitarios / Feria de San Marcos</td><td class="n">1.452</td><td class="n">7</td><td><span class="chip c2">Sin página</span></td></tr>
+          <tr><td><strong>Producción audiovisual</strong></td><td class="n">813</td><td class="n">15</td><td><span class="chip c2">Sin página</span></td></tr>
+          <tr><td>Desarrollo de apps</td><td class="n">222</td><td class="n">3</td><td><span class="chip c2">Sin página</span></td></tr>
+          <tr><td>Gestión de redes sociales</td><td class="n">63</td><td class="n">0</td><td><span class="chip c2">Sin página</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:20px;font-size:.92rem;color:var(--hueso-mudo)">
+      Medido en Search Console, 16 meses. Producción audiovisual traía <strong>15 clics</strong>
+      a una página que ya no existe —casi tantos como los 17 que el sitio entero recibió
+      el mes pasado.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================ EL FRENO -->
+<section class="alt2" data-fase="El orden importa">
+  <div class="env hilo rev">
+    <p class="et">Lo más importante de todo el documento</p>
+    <h2>No publiques ninguna página nueva todavía</h2>
+
+    <div class="freno">
+      <div class="cifra" data-cuenta="21">21</div>
+      <div class="pie">de las 38 páginas del sitio están fuera del índice de Google</div>
+      <p>
+        Y <strong>18 de ellas Google nunca las ha visitado</strong>. No es problema del
+        contenido: es que al dominio le falta autoridad, Google le dedica poco tiempo de
+        rastreo y lo gasta en la portada. Está medido URL por URL, y se vuelve a medir
+        solo todos los días en el panel.
+      </p>
+      <p style="margin-top:14px">
+        Si publicas once páginas nuevas ahora, <strong>nacen invisibles.</strong> Se suman
+        a la cola de las que Google ya no alcanza a visitar, y el trabajo de escribirlas
+        no produce nada durante meses.
+      </p>
+    </div>
+
+    <div class="orden">
+      <div class="caja mal">
+        <div class="rot">El orden que no funciona</div>
+        <p>Escribir las once páginas → publicarlas → esperar → nada se indexa → concluir que el SEO no sirve.</p>
+      </div>
+      <div class="flecha" aria-hidden="true">→</div>
+      <div class="caja bien">
+        <div class="rot">El orden que sí</div>
+        <p>Abrir el presupuesto de rastreo primero (ficha de Google, reseñas, enlaces) → después publicar → cada página entra al índice en días, no en meses.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:30px">
+      Esto encaja con el documento mejor de lo que parece: la <strong>ficha de Google</strong>
+      es lo primero de la lista de componentes, y es también la palanca de autoridad más
+      rápida que existe. La misma acción sirve para las dos cosas.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================ EL PLAN -->
+<section data-fase="El plan">
+  <div class="env hilo rev">
+    <p class="et">Qué hacer y cuándo</p>
+    <h2>El plan, en el orden que importa</h2>
+
+    <div class="fases">
+      <div class="fase">
+        <div class="cuando"><b>0</b>Ahora<br>sin publicar</div>
+        <div>
+          <h3>Abrir la puerta antes de meter nada por ella</h3>
+          <p style="font-size:.93rem;color:var(--hueso-mudo);margin:0">Nada de esto es escribir páginas. Todo es conseguir que Google vuelva a visitar el sitio.</p>
+          <ul>
+            <li><b>Reclamar y completar la ficha de Google</b> de Inédito: categoría, horario, fotos reales, servicios. Corregir «Local 1» a «Local 2», que sigue mal.</li>
+            <li><b>Arrancar la rutina de reseñas</b> con clientes actuales. Es la señal de autoridad local más rápida que existe.</li>
+            <li><b>Exportar el informe de Enlaces</b> de Search Console —es lo único que no puedo sacar yo por API, y es la causa raíz de todo.</li>
+            <li><b>Reenviar el sitemap</b> y pedir indexación a mano de las diez páginas prioritarias, unas diez al día.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="fase">
+        <div class="cuando"><b>1</b>Semanas<br>1 y 2</div>
+        <div>
+          <h3>Declarar la categoría sin perder la que da tráfico</h3>
+          <ul>
+            <li><b>Reescribir la portada en dos capas:</b> el <code>H1</code> conserva «agencia de marketing digital en Aguascalientes»; el renglón siguiente declara «dirección comercial asistida por IA».</li>
+            <li><b>Reescribir <span class="ruta">/nosotros</span></b> con las tres promesas del documento. Es la página que más consulta una IA antes de recomendar, y hoy ni siquiera está indexada.</li>
+            <li><b>Ampliar <span class="ruta">llms.txt</span></b> con los tres niveles, los ocho componentes y la categoría. Barato, rápido y lo leen las IA directamente.</li>
+            <li><b>Añadir «agencia de publicidad»</b> al vocabulario del sitio: se busca y no aparece en ninguna parte.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="fase">
+        <div class="cuando"><b>2</b>Mes 1</div>
+        <div>
+          <h3>La estructura de tres niveles y las dos páginas que diferencian</h3>
+          <ul>
+            <li><b>Tres páginas de nivel</b> y <span class="ruta">/servicios</span> convertido en bifurcación.</li>
+            <li><b>Ficha de servicio «Ficha de Google»</b> — con el trabajo de la fase 0 como caso propio.</li>
+            <li><b>Ficha «Auditorías con Claude»</b> — el diferenciador. Usar la auditoría real de Inédito como demostración, con cifras.</li>
+            <li><b>Bloques de preguntas frecuentes</b> con <code>FAQPage</code> en cada ficha nueva.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="fase">
+        <div class="cuando"><b>3</b>Mes 2</div>
+        <div>
+          <h3>Llegar temprano donde nadie está</h3>
+          <ul>
+            <li><b>Ficha «ChatGPT Ads»</b> — la ventana de ser primero se cierra sola.</li>
+            <li><b>Ficha «Dashboard a la medida»</b> — con capturas del panel real, no maquetas.</li>
+            <li><b>AEO en las doce fichas actuales:</b> reabrir cada una respondiendo en las primeras 40 palabras.</li>
+            <li><b>Glosario público</b> a partir del que ya trae el documento.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="fase">
+        <div class="cuando"><b>4</b>Mes 3</div>
+        <div>
+          <h3>Cerrar el catálogo</h3>
+          <ul>
+            <li><b>Ficha «Estrategia de canales»</b> — B2B contra marketplaces.</li>
+            <li><b>Ficha «Campañas de Meta»</b>.</li>
+            <li><b>Caso de éxito del cruce campañas–ventas</b> con un cliente con ERP de Maindsoft. Caso antes que ficha: aquí la prueba vale más que la descripción.</li>
+            <li><b>Sustituir las fotos de banco</b>: 73 imágenes de Unsplash en el sitio, y cuatro de ellas son el 70% del peso de la portada. Una agencia que vende diseño no se presenta con catálogo.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="fase">
+        <div class="cuando"><b>5</b>Continuo</div>
+        <div>
+          <h3>Medir, que para eso está montado</h3>
+          <ul>
+            <li><b>El panel ya guarda una foto diaria</b> de Search Console: indexación URL por URL, posiciones y consultas. No hay que montar nada.</li>
+            <li><b>Preguntar a ChatGPT, Claude y Gemini</b> por «agencia de marketing digital en Aguascalientes» una vez al mes y anotar si aparece Inédito y con qué palabras la describen.</li>
+            <li><b>Revisar cada mes</b> si las páginas nuevas entraron al índice. Si no entran, el problema sigue siendo autoridad, no contenido.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ MEDIR -->
+<section class="alt" data-fase="Cómo se sabrá">
+  <div class="env hilo rev">
+    <p class="et">Punto de partida</p>
+    <h2>Contra qué números se compara dentro de seis meses</h2>
+    <p>
+      Todos están medidos hoy, no estimados. Sirven para saber si esto funcionó sin
+      discutirlo de memoria.
+    </p>
+
+    <div class="medir">
+      <div class="kpi">
+        <div class="hoy">Hoy</div>
+        <div class="val">17<span style="font-size:1rem;color:var(--hueso-tenue)"> / 38</span></div>
+        <div class="que">Páginas dentro del índice de Google. La meta de la fase 0 es que suban antes de crear ninguna nueva.</div>
+      </div>
+      <div class="kpi">
+        <div class="hoy">Hoy · 28 días</div>
+        <div class="val">17</div>
+        <div class="que">Clics desde Google a todo el sitio. Con 1.025 impresiones: la gente ve el sitio y no entra.</div>
+      </div>
+      <div class="kpi">
+        <div class="hoy">Hoy</div>
+        <div class="val">7,2</div>
+        <div class="que">Posición media en la búsqueda principal del giro. Ya se compite: el problema es el clic, no el ranking.</div>
+      </div>
+      <div class="kpi">
+        <div class="hoy">Hoy</div>
+        <div class="val">0</div>
+        <div class="que">Páginas que describen los tres niveles, la auditoría con Claude, ChatGPT Ads o el dashboard.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="env">
+    <span class="marca">Inédito Digital</span>
+    <p>
+      Preparado a partir del documento de dirección de agosto de 2026 y de los datos
+      medidos en Search Console entre el 20 y el 24 de agosto. Las prioridades dentro de
+      cada fase son recomendación propia; dónde no hay datos de búsqueda —ChatGPT Ads,
+      auditorías con Claude— está dicho explícitamente.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- Riel de fases: se arma desde las propias secciones --- */
+  var secs = [].slice.call(document.querySelectorAll('section[data-fase]'));
+  var riel = document.getElementById('riel');
+  secs.forEach(function (s, i) {
+    if (!s.id) s.id = 'sec-' + i;
+    var a = document.createElement('a');
+    a.href = '#' + s.id;
+    a.setAttribute('aria-label', s.dataset.fase);
+    a.innerHTML = '<span>' + s.dataset.fase + '</span>';
+    riel.appendChild(a);
+  });
+  var puntos = [].slice.call(riel.children);
+
+  var espia = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var i = secs.indexOf(e.target);
+      puntos.forEach(function (p, j) {
+        if (j === i) p.setAttribute('data-activo', ''); else p.removeAttribute('data-activo');
+      });
+    });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  secs.forEach(function (s) { espia.observe(s); });
+
+  /* --- Entradas al hacer scroll --- */
+  var entra = new IntersectionObserver(function (es, o) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('dentro');
+      o.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('.rev').forEach(function (n) { entra.observe(n); });
+
+  /* --- La cifra del freno cuenta hasta su valor una sola vez --- */
+  var cif = document.querySelector('[data-cuenta]');
+  if (cif && suave) {
+    var fin = parseInt(cif.dataset.cuenta, 10);
+    new IntersectionObserver(function (es, o) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        o.unobserve(e.target);
+        var t0 = null;
+        (function paso(t) {
+          if (t0 === null) t0 = t;
+          var p = Math.min((t - t0) / 900, 1);
+          cif.textContent = Math.round(fin * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(paso);
+        })(performance.now());
+      });
+    }, { rootMargin: '0px 0px -20% 0px' }).observe(cif);
+  }
+
+  /* --- Portada: lineas topograficas.
+         Es el mismo motivo que usan las tarjetas de contacto del equipo, asi
+         que la textura sale de la propia marca y no de un adorno cualquiera. --- */
+  var lienzo = document.getElementById('topo');
+  if (lienzo && suave) {
+    var ctx = lienzo.getContext('2d'), an = 0, w = 0, h = 0, dpr = 1;
+
+    function medir() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var r = lienzo.getBoundingClientRect();
+      w = r.width; h = r.height;
+      lienzo.width = Math.round(w * dpr);
+      lienzo.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function pintar(t) {
+      ctx.clearRect(0, 0, w, h);
+      var lineas = 30, paso = h / (lineas - 1), fase = t / 9000;
+      for (var i = 0; i < lineas; i++) {
+        var base = i * paso;
+        // Se apagan hacia el centro para que el texto siempre gane.
+        var lejos = Math.abs(i / (lineas - 1) - 0.5) * 2;
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(153, 51, 255, ' + (0.07 + lejos * 0.33).toFixed(3) + ')';
+        ctx.lineWidth = 1;
+        for (var x = 0; x <= w; x += 7) {
+          var u = x / Math.max(w, 1);
+          var y = base
+            + Math.sin(u * 5.1 + fase + i * 0.21) * 22
+            + Math.sin(u * 11.3 - fase * 1.6 + i * 0.13) * 9
+            + Math.sin(u * 2.2 + fase * 0.6) * 14;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      an = requestAnimationFrame(pintar);
+    }
+
+    medir();
+    an = requestAnimationFrame(pintar);
+    var espera;
+    window.addEventListener('resize', function () {
+      clearTimeout(espera);
+      espera = setTimeout(medir, 150);
+    });
+
+    // No gastar bateria cuando la portada no se ve.
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting && !an) an = requestAnimationFrame(pintar);
+        else if (!e.isIntersecting && an) { cancelAnimationFrame(an); an = 0; }
+      });
+    }).observe(lienzo);
+  }
+})();
+</script>
