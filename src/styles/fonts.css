@@ -1,19 +1,38 @@
-/* FUENTE HANSON - SOLO ESTA, SIN BACKUPS */
+/* ============================================================
+ * HANSON — la fuente de los títulos
+ * ============================================================
+ *
+ * Historial del fallo (24/08/2026): la fuente no se veía para casi nadie.
+ * Había dos declaraciones y las dos fallaban:
+ *
+ *   1. /fonts/Hanson-Bold.woff2 devolvía 404. El archivo nunca se subió;
+ *      ni siquiera estaba en el repositorio.
+ *   2. La copia de imagenes.inedito.digital sí existe, pero responde
+ *      Access-Control-Allow-Origin: https://nuevo.inedito.digital, el
+ *      subdominio de pruebas. Desde www el navegador la descarta.
+ *
+ * Como la segunda declaración no llevaba unicode-range, ganaba la cascada
+ * para todo el rango latino: la copia local quedaba muerta aunque hubiera
+ * existido. Ambas terminaban en status "error" y los títulos caían a
+ * system-ui.
+ *
+ * Quien sí la veía era porque tenía el archivo en caché de cuando el sitio
+ * vivía en nuevo.inedito.digital: se sirve con max-age de un año e
+ * immutable, así que esa copia sobrevive mucho después del cambio.
+ *
+ * Ahora: una sola declaración, el archivo servido desde el propio dominio
+ * (sin CORS de por medio) y el CDN como segunda fuente por si el primero
+ * falla. Sin unicode-range: el navegador ya recurre a la siguiente fuente
+ * carácter por carácter si a Hanson le falta un glifo.
+ *
+ * El archivo vive en public/fonts/, que Vite copia tal cual a dist/.
+ * Va precargado desde index.html para que llegue antes del primer pintado.
+ */
 
-/* Hanson Bold desde archivo local */
 @font-face {
   font-family: 'Hanson';
-  src: url('/fonts/Hanson-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-/* Fallback: Si también quieres cargar desde servidor remoto (opcional) */
-@font-face {
-  font-family: "Hanson";
-  src: url("https://imagenes.inedito.digital/INEDITO%20DIGITAL/Hanson-Bold.woff2") format("woff2");
+  src: url('/fonts/Hanson-Bold.woff2') format('woff2'),
+       url('https://imagenes.inedito.digital/INEDITO%20DIGITAL/Hanson-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

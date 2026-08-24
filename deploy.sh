@@ -63,6 +63,19 @@ for f in dist/*; do
   fput "$f" "public_html/$b" >/dev/null 2>&1 && ok "$b" || bad "$b"
 done
 
+# ---------- 3b. fuentes ----------
+# El bucle de arriba salta directorios, asi que dist/fonts/ se quedaba en tierra.
+# Es como Hanson estuvo dando 404 y los titulos salian en la fuente del sistema.
+if [ -d dist/fonts ]; then
+  step "3b/6 Subiendo fuentes"
+  $CURL -u "$FTP_USER:$FTP_PASS" "$BASE/" -Q "MKD /public_html/fonts" >/dev/null 2>&1 || true
+  for f in dist/fonts/*; do
+    [ -f "$f" ] || continue
+    b="$(basename "$f")"
+    fput "$f" "public_html/fonts/$b" >/dev/null 2>&1 && ok "fonts/$b" || bad "fonts/$b"
+  done
+fi
+
 # ---------- 4. PHP ----------
 # render.php va junto con el bundle: si se desfasan, se duplican o se pierden
 # los leads. Ver la tabla en docs/DESPLIEGUE.md.
