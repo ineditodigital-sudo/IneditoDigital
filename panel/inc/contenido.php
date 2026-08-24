@@ -280,6 +280,7 @@ function registro_paginas(): array {
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
                         'titulo'  => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿POR QUÉ ELEGIRNOS?'],
+                        'texto'   => ['label' => 'Párrafo', 'tipo' => 'area', 'def' => 'No vendemos campañas sueltas. Conectamos los objetivos de tu dirección con los datos reales del negocio, y una IA audita cada mes si la estrategia está funcionando. Si no funciona, lo dice.'],
                     ],
                 ],
 
@@ -290,8 +291,8 @@ function registro_paginas(): array {
                         'c1_texto' => ['label' => 'Cifra 1 · texto', 'tipo' => 'texto', 'def' => 'Proyectos exitosos'],
                         'c2_valor' => ['label' => 'Cifra 2 · número', 'tipo' => 'texto', 'def' => '5X'],
                         'c2_texto' => ['label' => 'Cifra 2 · texto', 'tipo' => 'texto', 'def' => 'ROI promedio'],
-                        'c3_valor' => ['label' => 'Cifra 3 · número', 'tipo' => 'texto', 'def' => '5.0'],
-                        'c3_texto' => ['label' => 'Cifra 3 · texto', 'tipo' => 'texto', 'def' => 'En Google, con 19 reseñas'],
+                        'c3_valor' => ['label' => 'Cifra 3 · número', 'tipo' => 'texto', 'def' => '3'],
+                        'c3_texto' => ['label' => 'Cifra 3 · texto', 'tipo' => 'texto', 'def' => 'Niveles de servicio: construir, mejorar y vender'],
                     ],
                 ],
             ],
