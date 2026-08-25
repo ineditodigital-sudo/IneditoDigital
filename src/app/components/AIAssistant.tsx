@@ -9,6 +9,7 @@ import { contenido } from '../cms';
 import { detectarGlobal, buscarServicios, buscarPregunta, buscarExtra } from './asistente/intenciones';
 import { enlaceWhatsApp, type Requerimiento } from './asistente/mensajeWhatsApp';
 import type { Service } from '../data/services';
+import { agruparServicios } from '../data/grupos';
 
 /*
  * ASISTENTE — reescrito el 24/08/2026.
@@ -193,6 +194,54 @@ export default function AIAssistant() {
     const coincidencias = buscarServicios(texto, services);
     const pregunta = buscarPregunta(texto, services);
     const extra = buscarExtra(texto);
+
+    /*
+     * "Que servicios tienen" es una pregunta de catalogo, no la busqueda de un
+     * servicio. Sin esto ganaba Servicios QR, por ser el unico cuyo titulo
+     * contiene la palabra "servicios".
+     */
+    if (global === 'catalogo') {
+      const grupos = agruparServicios(services);
+      bot(
+        tCon('r_catalogo', 'Trabajamos en tres frentes, más todo lo de inteligencia artificial. ¿Cuál te interesa?'),
+        {
+          enlace: { titulo: 'Todos los servicios', sub: 'Y los tres niveles según tu punto de partida', url: '/servicios' },
+          opciones: [
+            ...grupos.map((g) => ({ etiqueta: g.titulo, valor: `__grupo:${g.titulo}__` })),
+            { etiqueta: '🤖 Servicios de IA', valor: '__grupo:IA__' },
+          ],
+        }
+      );
+      return;
+    }
+
+    /* Al elegir un grupo, se listan sus servicios como botones. */
+    if (texto.startsWith('__grupo:')) {
+      const nombre = texto.slice(8, -2);
+      if (nombre === 'IA') {
+        bot(tCon('r_grupo_ia', 'Esto es lo que hacemos con inteligencia artificial:'), {
+          enlace: { titulo: 'Servicios de IA', sub: 'Ver todo el bloque', url: '/servicios-ia' },
+          opciones: [
+            { etiqueta: 'Posicionamiento en IA', valor: 'posicionamiento en ia' },
+            { etiqueta: 'IA para WhatsApp', valor: 'ia para whatsapp' },
+            { etiqueta: 'IA de Ventas', valor: 'ia de ventas' },
+            { etiqueta: 'IA para Marketing', valor: 'ia para marketing' },
+            { etiqueta: 'IA para E-commerce', valor: 'ia para ecommerce' },
+          ],
+        });
+        return;
+      }
+      const grupo = agruparServicios(services).find((g) => g.titulo === nombre);
+      if (grupo) {
+        bot(`*${grupo.titulo}*\n\nElige el que te interese y te cuento:`, {
+          opciones: [
+            ...grupo.items.map((s) => ({ etiqueta: s.title, valor: s.title })),
+            { etiqueta: '← Ver otros grupos', valor: 'que servicios tienen' },
+          ],
+        });
+        return;
+      }
+    }
 
     /* Una pagina que no esta en la tabla (posicionamiento en IA, servicios-ia)
        y que coincide con fuerza: gana a cualquier intencion generica. Sin esto,
