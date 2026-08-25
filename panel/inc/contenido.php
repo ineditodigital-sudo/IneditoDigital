@@ -1604,6 +1604,9 @@ En WhatsApp te lo aclaran de una vez y con la información correcta.'],
 Lo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes contra el punto de partida y te decimos si funciona o si no. Si no funciona, lo dice el reporte, no nosotros.'],
                         'r_catalogo' => ['label' => 'Respuesta · qué servicios tienen', 'tipo' => 'texto', 'def' => 'Trabajamos en tres frentes, más todo lo de inteligencia artificial. ¿Cuál te interesa?'],
                         'r_grupo_ia' => ['label' => 'Respuesta · bloque de IA', 'tipo' => 'texto', 'def' => 'Esto es lo que hacemos con inteligencia artificial:'],
+                        'r_listo' => ['label' => 'Mensaje final antes de WhatsApp', 'tipo' => 'area', 'def' => 'Listo. Te preparé el mensaje con todo lo que consultaste.
+
+Dale al botón de abajo y solo tienes que enviarlo.'],
                         'r_precio' => ['label' => 'Respuesta · precios', 'tipo' => 'area', 'def' => 'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.\n\nLo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.'],
                         'r_portafolio' => ['label' => 'Respuesta · portafolio', 'tipo' => 'area', 'def' => 'Tenemos los casos publicados con lo que hicimos en cada uno.'],
                         'r_quienes' => ['label' => 'Respuesta · quiénes somos', 'tipo' => 'area', 'def' => 'Somos una agencia de Aguascalientes que trabaja como dirección comercial asistida por IA: conectamos tus objetivos con datos reales y auditamos cada mes si la estrategia funciona.'],

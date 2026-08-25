@@ -41,6 +41,28 @@ interface Mensaje {
 
 type Fase = 'libre' | 'nombre' | 'contacto' | 'listo';
 
+/*
+ * Que se le respondio a cada tipo de pregunta, en una linea.
+ *
+ * Se deriva volviendo a pasar la pregunta por el detector al construir el
+ * mensaje, en vez de anotarlo en los catorce sitios donde el asistente
+ * contesta: una sola fuente y ningun sitio que se olvide de anotar.
+ */
+const RESUMEN: Partial<Record<string, string>> = {
+  precio: 'me explicaron que se cotiza por proyecto',
+  tiempo: 'me dijeron que depende del alcance',
+  garantia: 'me explicaron que miden cada mes',
+  ubicacion: 'ya vi la dirección',
+  horario: 'ya vi el horario',
+  catalogo: 'ya vi la lista de servicios',
+  quienes: 'ya leí a qué se dedican',
+  niveles: 'ya vi los tres niveles',
+  portafolio: 'ya vi el portafolio',
+  equipo: 'no estaba publicado, queda pendiente',
+  cobertura: 'queda pendiente confirmarlo',
+  administrativo: 'queda pendiente confirmarlo',
+};
+
 let contador = 0;
 const nuevoId = () => `m${++contador}`;
 
@@ -171,21 +193,20 @@ export default function AIAssistant() {
 
     if (fase === 'nombre') {
       const nombre = texto.trim().replace(/^(soy|me llamo|mi nombre es)\s+/i, '');
-      setReq((r) => ({ ...r, nombre }));
-      setFase('contacto');
-      bot(
-        `Mucho gusto, ${nombre.split(' ')[0]}. ¿Me dejas un correo o teléfono para darte seguimiento?\n\nSi prefieres, saltamos este paso y seguimos directo en WhatsApp.`,
-        { opciones: [{ etiqueta: 'Saltar e ir a WhatsApp', valor: '__saltar__' }] }
-      );
+      /* Con el nombre ya alcanza: pedir el correo antes de dar el boton
+         anadia dos pasos para llegar a WhatsApp. Queda como opcional. */
+      cerrar({ nombre });
       return;
     }
 
+    /* El correo es opcional y NO bloquea: el boton de WhatsApp ya esta
+       disponible mientras tanto. */
     if (fase === 'contacto') {
-      if (texto !== '__saltar__') {
-        const esCorreo = /\S+@\S+\.\S+/.test(texto);
-        setReq((r) => (esCorreo ? { ...r, email: texto.trim() } : { ...r, telefono: texto.trim() }));
-      }
-      cerrar(texto === '__saltar__' ? {} : { [/\S+@\S+\.\S+/.test(texto) ? 'email' : 'telefono']: texto.trim() });
+      const esCorreo = /\S+@\S+\.\S+/.test(texto);
+      const dato = esCorreo ? { email: texto.trim() } : { telefono: texto.trim() };
+      setReq((r) => ({ ...r, ...dato }));
+      setFase('listo');
+      bot('Anotado. El mensaje ya lo lleva.', {}, 400);
       return;
     }
 
@@ -534,14 +555,17 @@ ${extra.pagina.desc}`, {
       phone: final.telefono || '',
       company: final.empresa,
       service: final.servicio,
-      message: final.detalle,
+      message: final.detalle,   // el detalle; la consulta completa va en el mensaje de WhatsApp
       source: 'Asistente web',
     });
 
     bot(
-      `Listo${final.nombre ? `, ${final.nombre.split(' ')[0]}` : ''}. Te preparé el mensaje con todo lo que me contaste.\n\nDale al botón y solo tienes que enviarlo: nos llega completo y te contestamos en cuanto lo veamos.`,
-      {},
-      600
+      tCon(
+        'r_listo',
+        `Listo${final.nombre ? `, ${final.nombre.split(' ')[0]}` : ''}. Te preparé el mensaje con todo lo que consultaste.\n\nDale al botón de abajo y solo tienes que enviarlo.`
+      ),
+      { opciones: [{ etiqueta: '＋ Añadir mi correo', valor: '__correo__' }] },
+      450
     );
   };
 
@@ -551,6 +575,12 @@ ${extra.pagina.desc}`, {
     if (!t) return;
     if (!t.startsWith('__')) usuario(t);
     setEntrada('');
+
+    if (t === '__correo__') {
+      setFase('contacto');
+      bot('Claro, escríbelo aquí.', {}, 300);
+      return;
+    }
 
     if (t === '__otra__') {
       bot(tCon('r_otra', '¿Qué más quieres saber?'), { opciones: opcionesInicio() });
@@ -568,7 +598,31 @@ ${extra.pagina.desc}`, {
     setArrancado(false);
   };
 
-  const urlWhatsApp = enlaceWhatsApp(settings.whatsappNumber, req);
+  /*
+   * Lo que consulto la persona, para que el mensaje de WhatsApp lo lleve.
+   *
+   * Sale de sus propios mensajes en pantalla; la nota de que se le respondio se
+   * deriva pasando cada pregunta por el detector. Se descartan las que no son
+   * consultas de verdad (el nombre, el correo, un saludo suelto).
+   */
+  const consultas = mensajes
+    .filter((m) => m.emisor === 'user')
+    .map((m) => m.texto)
+    .filter((t) => t.length > 5 && !/\S+@\S+\.\S+/.test(t) && t !== req.nombre)
+    .map((pregunta) => {
+      const g = detectarGlobal(pregunta);
+      if (g === 'saludo' || g === 'identidad' || g === 'contacto') return null;
+      const svc = buscarServicios(pregunta, services)[0]?.servicio;
+      const extra = buscarExtra(pregunta);
+      const respondido =
+        (g && RESUMEN[g]) ||
+        (extra && extra.puntos >= 8 ? `me mostró ${extra.pagina.titulo}` : '') ||
+        (svc ? `me mostró la ficha de ${svc.title}` : '');
+      return { pregunta, respondido: respondido || undefined };
+    })
+    .filter((c) => c !== null) as { pregunta: string; respondido?: string }[];
+
+  const urlWhatsApp = enlaceWhatsApp(settings.whatsappNumber, { ...req, consultas });
 
   return (
     <AnimatePresence>
