@@ -74,7 +74,7 @@ function coincideFrase(tokens: string[], frase: string): boolean {
 export type Global =
   | 'precio' | 'tiempo' | 'contacto' | 'ubicacion' | 'horario'
   | 'garantia' | 'portafolio' | 'quienes' | 'niveles' | 'saludo'
-  | 'identidad' | 'equipo' | 'cobertura' | 'administrativo';
+  | 'identidad' | 'equipo' | 'cobertura' | 'administrativo' | 'catalogo';
 
 /*
  * Cada intencion tiene frases y palabras sueltas. Las frases pesan mas: son
@@ -87,6 +87,12 @@ export type Global =
 type Senal = { frases: string[]; sueltas: string[] };
 
 const senales: Record<Global, Senal> = {
+  catalogo: {
+    frases: ['que servicios', 'cuales servicios', 'que ofrecen', 'que hacen', 'lista de servicios',
+             'todos los servicios', 'catalogo de servicios', 'en que me pueden ayudar',
+             'que mas hacen', 'que tipo de servicios'],
+    sueltas: ['servicios', 'ofrecen', 'catalogo'],
+  },
   identidad: {
     frases: ['como te llamas', 'cual es tu nombre', 'quien eres', 'que eres', 'eres un bot', 'eres humano',
              'eres una persona', 'eres real', 'con quien hablo', 'eres una ia'],
