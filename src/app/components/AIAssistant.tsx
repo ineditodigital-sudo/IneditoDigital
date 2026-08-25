@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, MessageCircle, ArrowRight, RotateCcw } from 'lucide-react';
 import { Button } from './ui/button';
@@ -47,6 +47,7 @@ export default function AIAssistant() {
   const tVen = contenido('asistente', 'ventana');
   const tCon = contenido('asistente', 'conversacion');
   const { addLead, services, settings, isAssistantOpen, preselectedService, initialContext, closeAssistant } = useApp();
+  const location = useLocation();
 
   const [mensajes, setMensajes] = useState<Mensaje[]>([]);
   const [entrada, setEntrada] = useState('');
@@ -74,13 +75,34 @@ export default function AIAssistant() {
 
   /* ---------------- apertura ---------------- */
   useEffect(() => {
-    if (!isAssistantOpen || arrancado) return;
-    setArrancado(true);
-
-    const pagina = typeof window !== 'undefined' ? window.location.pathname : '';
-    setReq((r) => ({ ...r, paginaOrigen: pagina && pagina !== '/' ? `la página ${pagina}` : 'el sitio' }));
+    if (!isAssistantOpen) return;
 
     const svc = preselectedService ? services.find((s) => s.title === preselectedService) : null;
+
+    /*
+     * Si ya habia conversacion y vuelven a abrir desde OTRO servicio, no se
+     * reinicia: se retoma reconociendo el cambio. Reiniciar aqui borraria lo
+     * que la persona ya conto, que es justo lo que se quiso evitar.
+     */
+    if (arrancado) {
+      if (svc && svc.title !== req.servicio) {
+        setReq((r) => ({ ...r, servicio: svc.title }));
+        bot(
+          `Seguimos. Ahora estás viendo *${svc.title}*.\n\n${svc.shortDescription}`,
+          {
+            enlace: { titulo: svc.title, sub: 'Ver la página completa', url: `/servicios/${svc.slug}` },
+            opciones: [
+              { etiqueta: 'Cotizar esto', valor: '__cotizar__' },
+              { etiqueta: 'Tengo una duda', valor: '__otra__' },
+            ],
+          },
+          300
+        );
+      }
+      return;
+    }
+
+    setArrancado(true);
 
     if (svc) {
       setReq((r) => ({ ...r, servicio: svc.title }));
@@ -109,20 +131,24 @@ export default function AIAssistant() {
         300
       );
     }
-  }, [isAssistantOpen, arrancado, preselectedService, initialContext, services]);
+  }, [isAssistantOpen, arrancado, preselectedService, initialContext, services, req.servicio]);
 
-  /** Al cerrar, se olvida todo: la siguiente visita empieza limpia. */
+  /*
+   * La conversacion NO se borra al cerrar.
+   *
+   * El componente vive en RootLayout, fuera del <Outlet/>, asi que sobrevive a
+   * los cambios de ruta: quien va a la pagina de un servicio y vuelve encuentra
+   * lo que ya habia contado. Al recargar de verdad, el componente se monta de
+   * cero y el estado nace vacio.
+   *
+   * Para empezar de nuevo a proposito esta el boton de reiniciar.
+   */
+
+  /* Si cambia la pagina, cambia de donde dice que escribe. */
   useEffect(() => {
-    if (isAssistantOpen) return;
-    const t = setTimeout(() => {
-      setMensajes([]);
-      setFase('libre');
-      setReq({});
-      setEntrada('');
-      setArrancado(false);
-    }, 400);
-    return () => clearTimeout(t);
-  }, [isAssistantOpen]);
+    const ruta = location.pathname;
+    setReq((r) => ({ ...r, paginaOrigen: ruta && ruta !== '/' ? `la página ${ruta}` : 'el sitio' }));
+  }, [location.pathname]);
 
   function opcionesInicio() {
     return [
@@ -216,6 +242,50 @@ ${extra.pagina.desc}`, {
     }
 
     /* 2. intenciones globales que no dependen de un servicio */
+    /* Cuanto tarda: no hay plazos publicados, pero SI hay proceso. */
+    if (global === 'tiempo') {
+      const svc = coincidencias[0]?.servicio;
+      if (svc) setReq((r) => ({ ...r, servicio: r.servicio ?? svc.title }));
+      const pasos = svc?.process?.length
+        ? `\n\nEn ${svc.title} el trabajo va así:\n` +
+          svc.process.map((p) => `${p.step}. ${p.title}`).join('\n')
+        : '';
+      bot(
+        tCon(
+          'r_tiempo',
+          'Depende del alcance, y no quiero darte una fecha inventada: un sitio de cinco páginas y uno de cincuenta no tardan lo mismo.'
+        ) + pasos + '\n\nSi me cuentas de qué tamaño es lo tuyo, en WhatsApp te dan un plazo real.',
+        {
+          ...(svc
+            ? { enlace: { titulo: svc.title, sub: 'Ver el proceso completo', url: `/servicios/${svc.slug}` } }
+            : {}),
+          opciones: [
+            { etiqueta: 'Contarles mi caso', valor: '__cotizar__' },
+            { etiqueta: 'Tengo otra duda', valor: '__otra__' },
+          ],
+        }
+      );
+      return;
+    }
+
+    /* Garantias: la respuesta honesta ES el diferenciador. */
+    if (global === 'garantia') {
+      bot(
+        tCon(
+          'r_garantia',
+          'No prometemos posiciones ni cifras concretas: nadie que trabaje en serio puede garantizar eso, y quien lo promete te está vendiendo humo.\n\nLo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes contra el punto de partida y te decimos si funciona o si no. Si no funciona, lo dice el reporte, no nosotros.'
+        ),
+        {
+          enlace: { titulo: 'Auditoría con IA', sub: 'Cómo medimos y qué se entrega', url: '/servicios/auditoria-con-ia' },
+          opciones: [
+            { etiqueta: 'Me convence, hablemos', valor: '__cotizar__' },
+            { etiqueta: 'Tengo otra duda', valor: '__otra__' },
+          ],
+        }
+      );
+      return;
+    }
+
     /* Quien soy: honesto. Es un asistente, no una persona. */
     if (global === 'identidad') {
       bot(
@@ -440,9 +510,11 @@ ${extra.pagina.desc}`, {
     responder(t);
   };
 
+  /** Empezar de cero a proposito: es la unica via de borrar la conversacion. */
   const reiniciar = () => {
     setMensajes([]);
     setFase('libre');
+    setEntrada('');
     setReq((r) => ({ paginaOrigen: r.paginaOrigen }));
     setArrancado(false);
   };

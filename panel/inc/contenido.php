@@ -1598,6 +1598,10 @@ Lo que sí puedo contarte es cómo trabajamos.'],
                         'r_administrativo' => ['label' => 'Respuesta · facturación y pagos', 'tipo' => 'area', 'def' => 'Facturación, formas de pago y condiciones se ven caso por caso, y no quiero darte un dato equivocado.
 
 En WhatsApp te lo aclaran de una vez y con la información correcta.'],
+                        'r_tiempo' => ['label' => 'Respuesta · cuánto tarda', 'tipo' => 'area', 'def' => 'Depende del alcance, y no quiero darte una fecha inventada: un sitio de cinco páginas y uno de cincuenta no tardan lo mismo.'],
+                        'r_garantia' => ['label' => 'Respuesta · garantías', 'tipo' => 'area', 'def' => 'No prometemos posiciones ni cifras concretas: nadie que trabaje en serio puede garantizar eso, y quien lo promete te está vendiendo humo.
+
+Lo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes contra el punto de partida y te decimos si funciona o si no. Si no funciona, lo dice el reporte, no nosotros.'],
                         'r_precio' => ['label' => 'Respuesta · precios', 'tipo' => 'area', 'def' => 'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.\n\nLo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.'],
                         'r_portafolio' => ['label' => 'Respuesta · portafolio', 'tipo' => 'area', 'def' => 'Tenemos los casos publicados con lo que hicimos en cada uno.'],
                         'r_quienes' => ['label' => 'Respuesta · quiénes somos', 'tipo' => 'area', 'def' => 'Somos una agencia de Aguascalientes que trabaja como dirección comercial asistida por IA: conectamos tus objetivos con datos reales y auditamos cada mes si la estrategia funciona.'],
