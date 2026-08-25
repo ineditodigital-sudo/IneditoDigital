@@ -32,6 +32,41 @@ const vacias = new Set(
 
 const palabras = (s: string) => limpio(s).split(' ').filter((p) => p.length > 2 && !vacias.has(p));
 
+/**
+ * ¿Son la misma palabra en distinta forma? "encuentran" y "encuentro",
+ * "ubicados" y "ubicacion", "trabajan" y "trabajo".
+ *
+ * Sin diccionario ni stemmer: prefijo comun de 5 o mas y longitudes parecidas.
+ * La condicion de longitud es la que evita que "precio" empareje con
+ * "precisamente", que comparten los mismos cinco caracteres.
+ */
+export function mismaRaiz(a: string, b: string): boolean {
+  if (a === b) return true;
+  // Dos caracteres de diferencia como mucho. Con cuatro, "marca" emparejaba
+  // con "marcador", que no tienen nada que ver.
+  if (Math.abs(a.length - b.length) > 2) return false;
+  const n = Math.min(a.length, b.length);
+  if (n < 5) return false;
+  let i = 0;
+  while (i < n && a[i] === b[i]) i++;
+  return i >= 5;
+}
+
+/** ¿Alguna palabra del texto es la misma que `w`, en cualquier forma? */
+const contiene = (tokens: string[], w: string) => tokens.some((t) => mismaRaiz(t, w));
+
+/**
+ * Una frase coincide si coinciden sus palabras con contenido, no si aparece
+ * literal. Asi "donde se encuentran" empareja con "donde los encuentro": las
+ * dos se reducen a la raiz "encuentr".
+ */
+function coincideFrase(tokens: string[], frase: string): boolean {
+  const clave = palabras(frase);
+  if (!clave.length) return false;
+  const aciertos = clave.filter((c) => contiene(tokens, c)).length;
+  return aciertos === clave.length;
+}
+
 /* ------------------------------------------------------------------ */
 /* Intenciones globales                                                */
 /* ------------------------------------------------------------------ */
@@ -55,7 +90,7 @@ const senales: Record<Global, Senal> = {
   identidad: {
     frases: ['como te llamas', 'cual es tu nombre', 'quien eres', 'que eres', 'eres un bot', 'eres humano',
              'eres una persona', 'eres real', 'con quien hablo', 'eres una ia'],
-    sueltas: ['bot', 'robot', 'asistente', 'llamas'],
+    sueltas: ['bot', 'robot', 'asistente'],  // 'llamas' capturaba "me pueden llamar"
   },
   equipo: {
     frases: ['cuantos trabajan', 'cuantas personas', 'cuantos son', 'cuantos empleados', 'tamano del equipo',
@@ -74,13 +109,15 @@ const senales: Record<Global, Senal> = {
   },
   contacto: {
     frases: ['quiero hablar', 'hablar con alguien', 'con una persona', 'agendar una cita', 'quiero contactar',
-             'como los contacto', 'numero de telefono'],
+             'como los contacto', 'numero de telefono', 'pueden llamar', 'pueden llamarme',
+             'quiero que me llamen'],
     sueltas: ['contacto', 'contactar', 'telefono', 'whatsapp', 'correo', 'email', 'llamar', 'asesor',
               'agendar', 'cita', 'reunion', 'llamada'],
   },
   ubicacion: {
-    frases: ['donde estan', 'donde se ubican', 'cual es la direccion', 'como llego', 'donde los encuentro'],
-    sueltas: ['ubicacion', 'direccion', 'oficina', 'oficinas', 'domicilio', 'mapa', 'ubicados'],
+    frases: ['donde estan', 'donde se ubican', 'donde se encuentran', 'cual es la direccion',
+             'como llego', 'donde los encuentro', 'en que ciudad', 'tienen oficina'],
+    sueltas: ['ubicacion', 'direccion', 'oficina', 'domicilio', 'mapa', 'ubicados', 'encuentran', 'localizados'],
   },
   cobertura: {
     frases: ['trabajan fuera', 'atienden fuera', 'otras ciudades', 'otro estado', 'a distancia',
@@ -97,9 +134,9 @@ const senales: Record<Global, Senal> = {
     sueltas: ['factura', 'facturacion', 'iva', 'contrato', 'anticipo', 'mensualidades'],
   },
   garantia: {
-    frases: ['garantizan resultados', 'hay garantia', 'funciona de verdad', 'que tal si no funciona',
-             'puedo confiar'],
-    sueltas: ['garantia', 'garantizan', 'aseguran'],
+    frases: ['garantizan resultados', 'hay garantia', 'funciona de verdad', 'si no funciona',
+             'puedo confiar', 'y si no resulta'],
+    sueltas: ['garantia', 'garantizan', 'aseguran', 'funciona', 'resultados'],
   },
   portafolio: {
     frases: ['casos de exito', 'trabajos anteriores', 'que han hecho', 'con quien han trabajado',
@@ -108,13 +145,14 @@ const senales: Record<Global, Senal> = {
   },
   quienes: {
     frases: ['quienes son', 'que es inedito', 'sobre la empresa', 'cuanto tiempo llevan',
-             'cuantos anos', 'de que se trata'],
-    sueltas: ['nosotros', 'agencia', 'experiencia', 'trayectoria', 'historia'],
+             'cuantos anos', 'de que se trata', 'que empresa', 'a que se dedican', 'que hacen ustedes'],
+    sueltas: ['empresa', 'nosotros', 'agencia', 'experiencia', 'trayectoria', 'historia', 'dedican'],
   },
   niveles: {
     frases: ['por donde empiezo', 'por donde empezar', 'que me conviene', 'que necesito',
              'no se que necesito', 'como funciona'],
-    sueltas: ['niveles', 'nivel', 'etapas', 'proceso'],
+    sueltas: ['niveles', 'nivel', 'etapas', 'proceso', 'empiezo', 'empezar', 'conviene', 'recomiendan',
+              'aconsejan', 'orientar', 'orienten', 'asesoren'],
   },
   saludo: {
     frases: ['buenos dias', 'buenas tardes', 'buenas noches'],
@@ -127,11 +165,9 @@ const senales: Record<Global, Senal> = {
  * sueltas 1, asi que "cuanto cuesta" gana a un "cuesta" perdido en la frase.
  */
 export function detectarGlobal(texto: string): Global | null {
-  const crudo = limpio(texto);
-  // Se compara contra el texto crudo con espacios alrededor, no contra las
-  // palabras filtradas: "hola" y "buenas" viven en la lista de vacias y nunca
-  // llegarian a la comparacion.
-  const conBordes = ` ${crudo} `;
+  const tokens = palabras(texto);
+  const crudo = ` ${limpio(texto)} `;
+  if (!tokens.length && !crudo.trim()) return null;
 
   let mejor: Global | null = null;
   let mejorPuntos = 0;
@@ -139,15 +175,34 @@ export function detectarGlobal(texto: string): Global | null {
   for (const clave of Object.keys(senales) as Global[]) {
     const { frases, sueltas } = senales[clave];
     let puntos = 0;
-    for (const f of frases) if (conBordes.includes(` ${f} `) || crudo.startsWith(f) || crudo.endsWith(f)) puntos += 3;
-    for (const w of sueltas) if (conBordes.includes(` ${w} `)) puntos += 1;
+    // Cuanto mas larga la frase, mas especifica: "cuantos anos" tiene que
+    // ganarle a "cuantos son", que se reduce a una sola palabra util.
+    for (const f of frases) {
+      const util = palabras(f).length;
+      if (util && coincideFrase(tokens, f)) puntos += 2 + util;
+    }
+    for (const w of sueltas) {
+      // los saludos viven en la lista de vacias, asi que no llegan a tokens:
+      // esos se buscan en el texto crudo con bordes de palabra
+      if (contiene(tokens, w) || crudo.includes(` ${w} `)) puntos += 1;
+    }
     if (puntos > mejorPuntos) {
       mejorPuntos = puntos;
       mejor = clave;
     }
   }
-  return mejorPuntos > 0 ? mejor : null;
+  if (mejorPuntos > 0) return mejor;
+
+  /*
+   * Caso "no se que necesito": la frase entera son palabras de relleno y al
+   * filtrarlas no queda nada que emparejar. No es que no se entienda: es
+   * alguien pidiendo orientacion, que es exactamente para lo que estan los
+   * tres niveles.
+   */
+  if (!tokens.length && crudo.trim().split(' ').length >= 3) return 'niveles';
+  return null;
 }
+
 
 /* ------------------------------------------------------------------ */
 /* Emparejar con un servicio real                                      */
