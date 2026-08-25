@@ -1588,6 +1588,16 @@ function registro_paginas(): array {
                         'saludo' => ['label' => 'Saludo inicial', 'tipo' => 'area', 'def' => 'Hola 👋 Soy el asistente de Inédito.\n\nPregúntame lo que quieras sobre nuestros servicios, o dime qué necesitas para tu negocio.'],
                         'saludo_ctx' => ['label' => 'Saludo al pulsar Cotizar', 'tipo' => 'area', 'def' => 'Hola 👋 Con gusto te ayudo a cotizar.\n\n¿Qué necesitas? Escríbelo con tus palabras, o elige una opción.'],
                         'p_nombre_corto' => ['label' => 'Pedir el nombre', 'tipo' => 'texto', 'def' => 'Perfecto. ¿Cómo te llamas?'],
+                        'r_identidad' => ['label' => 'Respuesta · quién eres', 'tipo' => 'area', 'def' => 'Soy el asistente del sitio de Inédito Digital 🤖
+
+No soy una persona: contesto con la información publicada de los servicios. Para lo que necesite criterio —una cotización, tu caso concreto— te paso con el equipo por WhatsApp y te responden ellos.'],
+                        'r_equipo' => ['label' => 'Respuesta · tamaño del equipo', 'tipo' => 'area', 'def' => 'Esa no la tengo publicada, así que prefiero no darte un número inventado. Te lo responden en un momento por WhatsApp.
+
+Lo que sí puedo contarte es cómo trabajamos.'],
+                        'r_cobertura' => ['label' => 'Respuesta · trabajan fuera de Ags', 'tipo' => 'area', 'def' => 'Buena parte del trabajo se hace igual de bien a distancia. Cuéntame dónde estás y en WhatsApp te confirman cómo lo llevaríamos en tu caso.'],
+                        'r_administrativo' => ['label' => 'Respuesta · facturación y pagos', 'tipo' => 'area', 'def' => 'Facturación, formas de pago y condiciones se ven caso por caso, y no quiero darte un dato equivocado.
+
+En WhatsApp te lo aclaran de una vez y con la información correcta.'],
                         'r_precio' => ['label' => 'Respuesta · precios', 'tipo' => 'area', 'def' => 'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.\n\nLo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.'],
                         'r_portafolio' => ['label' => 'Respuesta · portafolio', 'tipo' => 'area', 'def' => 'Tenemos los casos publicados con lo que hicimos en cada uno.'],
                         'r_quienes' => ['label' => 'Respuesta · quiénes somos', 'tipo' => 'area', 'def' => 'Somos una agencia de Aguascalientes que trabaja como dirección comercial asistida por IA: conectamos tus objetivos con datos reales y auditamos cada mes si la estrategia funciona.'],
