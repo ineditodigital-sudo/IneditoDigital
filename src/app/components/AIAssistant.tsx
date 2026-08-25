@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
-import { detectarGlobal, buscarServicios, buscarPregunta } from './asistente/intenciones';
+import { detectarGlobal, buscarServicios, buscarPregunta, buscarExtra } from './asistente/intenciones';
 import { enlaceWhatsApp, type Requerimiento } from './asistente/mensajeWhatsApp';
 import type { Service } from '../data/services';
 
@@ -166,6 +166,32 @@ export default function AIAssistant() {
     const global = detectarGlobal(texto);
     const coincidencias = buscarServicios(texto, services);
     const pregunta = buscarPregunta(texto, services);
+    const extra = buscarExtra(texto);
+
+    /* Una pagina que no esta en la tabla (posicionamiento en IA, servicios-ia)
+       y que coincide con fuerza: gana a cualquier intencion generica. Sin esto,
+       "automatizar whatsapp" caia en la intencion de contacto por la palabra
+       whatsapp, y "aparecer en chatgpt" no encontraba nada. */
+    if (extra && extra.puntos >= 8 && global !== 'precio') {
+      setReq((r) => ({ ...r, servicio: r.servicio ?? extra.pagina.titulo }));
+      bot(`*${extra.pagina.titulo}*
+${extra.pagina.desc}`, {
+        enlace: { titulo: extra.pagina.titulo, sub: 'Ver la página completa', url: extra.pagina.url },
+        opciones: [
+          { etiqueta: 'Me interesa, cotizar', valor: '__cotizar__' },
+          { etiqueta: 'Ver otros servicios', valor: '__otra__' },
+        ],
+      });
+      return;
+    }
+
+    /* Un servicio que encaja con mucha fuerza tambien gana a las intenciones
+       genericas: "quiero automatizar whatsapp" es el servicio de chatbots, no
+       una peticion de contacto. */
+    if (coincidencias.length && coincidencias[0].puntos >= 10 && global !== 'precio' && global !== 'tiempo') {
+      responderServicio(coincidencias[0].servicio);
+      return;
+    }
 
     // guardar lo que escribio con sus palabras, para el mensaje de WhatsApp
     if (texto.length > 12 && !texto.startsWith('__')) {
@@ -190,6 +216,60 @@ export default function AIAssistant() {
     }
 
     /* 2. intenciones globales que no dependen de un servicio */
+    /* Quien soy: honesto. Es un asistente, no una persona. */
+    if (global === 'identidad') {
+      bot(
+        tCon(
+          'r_identidad',
+          'Soy el asistente del sitio de Inédito Digital 🤖\n\nNo soy una persona: contesto con la información publicada de los servicios. Para lo que necesite criterio —una cotización, tu caso concreto— te paso con el equipo por WhatsApp y te responden ellos.'
+        ),
+        {
+          opciones: [
+            { etiqueta: 'Hablar con una persona', valor: '__cotizar__' },
+            { etiqueta: 'Sigo contigo', valor: '__otra__' },
+          ],
+        }
+      );
+      return;
+    }
+
+    /* Cuantos son: no tengo el dato y no me lo invento. */
+    if (global === 'equipo') {
+      bot(
+        tCon(
+          'r_equipo',
+          'Esa no la tengo publicada, así que prefiero no darte un número inventado. Te lo responden en un momento por WhatsApp.\n\nLo que sí puedo contarte es cómo trabajamos.'
+        ),
+        {
+          enlace: { titulo: 'Nosotros', sub: 'Cómo trabajamos y qué prometemos', url: '/nosotros' },
+          opciones: [{ etiqueta: 'Preguntar por WhatsApp', valor: '__cotizar__' }],
+        }
+      );
+      return;
+    }
+
+    if (global === 'cobertura') {
+      bot(
+        tCon(
+          'r_cobertura',
+          `Nuestra oficina está en ${settings.businessCity}. Buena parte del trabajo —web, posicionamiento, campañas, tableros— se hace igual de bien a distancia.\n\nCuéntame dónde estás y en WhatsApp te confirman cómo lo llevaríamos en tu caso.`
+        ),
+        { opciones: [{ etiqueta: 'Preguntar por WhatsApp', valor: '__cotizar__' }] }
+      );
+      return;
+    }
+
+    if (global === 'administrativo') {
+      bot(
+        tCon(
+          'r_administrativo',
+          'Facturación, formas de pago y condiciones se ven caso por caso, y no quiero darte un dato equivocado.\n\nEn WhatsApp te lo aclaran de una vez y con la información correcta.'
+        ),
+        { opciones: [{ etiqueta: 'Preguntar por WhatsApp', valor: '__cotizar__' }] }
+      );
+      return;
+    }
+
     if (global === 'precio') {
       const svc = coincidencias[0]?.servicio;
       if (svc) setReq((r) => ({ ...r, servicio: svc.title }));
