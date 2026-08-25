@@ -30,6 +30,9 @@ export type Requerimiento = {
   email?: string;
   telefono?: string;
   paginaOrigen?: string; // desde donde abrio el asistente
+  /* Lo que consulto en el asistente y que se le respondio. Va en el mensaje
+     para que quien atiende no repita lo ya contestado. */
+  consultas?: { pregunta: string; respondido?: string }[];
 };
 
 const hay = (v?: string) => !!v && v.trim() !== '' && v.trim() !== '-';
@@ -63,8 +66,15 @@ export function construirMensaje(r: Requerimiento): string {
   ]);
   bloques.push(necesidad);
 
-  /* --- con mis palabras --- */
-  if (hay(r.detalle)) {
+  /* --- lo que ya consulte --- */
+  const consultas = (r.consultas ?? []).filter((c) => hay(c.pregunta));
+  if (consultas.length) {
+    const lineas = consultas
+      .slice(0, 6)
+      .map((c) => `• "${c.pregunta.trim()}"${c.respondido ? ` — ${c.respondido}` : ''}`)
+      .join('\n');
+    bloques.push(`Esto es lo que consulté en su asistente:\n${lineas}`);
+  } else if (hay(r.detalle)) {
     bloques.push(`Les cuento un poco más:\n"${r.detalle!.trim()}"`);
   }
 
