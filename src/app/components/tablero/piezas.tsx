@@ -40,7 +40,7 @@ export function Tarjeta({
       initial={{ opacity: 0, y: 16 }}
       {...entrada}
       transition={{ duration: 0.5, delay: retraso, ease: [0.22, 0.61, 0.36, 1] }}
-      className={`min-w-0 rounded-2xl border border-slate-200/80 bg-white shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_-12px_rgba(15,23,42,.10)] ${className}`}
+      className={`min-w-0 rounded-2xl border border-[var(--t-borde)] bg-[var(--t-tarjeta)] shadow-[var(--t-sombra)] ${className}`}
     >
       {children}
     </motion.section>
@@ -60,10 +60,10 @@ export function TituloBloque({
   alAmpliar?: () => void;
 }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--t-borde-suave)] px-5 py-4 sm:px-6">
       <div className="min-w-0">
-        <div className="text-[15px] font-semibold tracking-tight text-slate-900">{titulo}</div>
-        {sub && <p className="mt-0.5 text-[13px] leading-snug text-slate-500">{sub}</p>}
+        <div className="text-[15px] font-semibold tracking-tight text-[var(--t-txt)]">{titulo}</div>
+        {sub && <p className="mt-0.5 text-[13px] leading-snug text-[var(--t-txt-3)]">{sub}</p>}
       </div>
       <div className="flex items-center gap-2">
         {extra}
@@ -80,7 +80,7 @@ export function BotonAmpliar({ alPulsar }: { alPulsar: () => void }) {
       onClick={alPulsar}
       title="Ver en grande"
       aria-label="Ver en grande"
-      className="shrink-0 rounded-lg border border-slate-200 p-1.5 text-slate-400 transition-colors hover:border-[#7700CE]/40 hover:bg-[#7700CE]/[.06] hover:text-[#7700CE]"
+      className="shrink-0 rounded-lg border border-[var(--t-borde)] p-1.5 text-[var(--t-txt-3)] transition-colors hover:border-[#7700CE]/40 hover:bg-[#7700CE]/[.06] hover:text-[#7700CE]"
     >
       <Maximize2 size={14} strokeWidth={2} />
     </button>
@@ -149,10 +149,10 @@ export function Variacion({ pct, invertido = false }: { pct: number; invertido?:
    */
   const Icono = plano ? Minus : pct > 0 ? ArrowUpRight : ArrowDownRight;
   const tono = plano
-    ? 'bg-slate-100 text-slate-500'
+    ? 'bg-[var(--t-pista)] text-[var(--t-txt-3)]'
     : bueno
-    ? 'bg-emerald-50 text-emerald-700'
-    : 'bg-rose-50 text-rose-700';
+    ? 'bg-[var(--t-ok-bg)] text-[var(--t-ok-tx)]'
+    : 'bg-[var(--t-mal-bg)] text-[var(--t-mal-tx)]';
   return (
     <span className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[11px] font-semibold ${tono}`}>
       <Icono size={12} strokeWidth={2.4} />
@@ -229,14 +229,14 @@ export function Anillo({
   return (
     <div className="relative shrink-0" style={{ width: tamano, height: tamano }}>
       <svg width={tamano} height={tamano} className="-rotate-90">
-        <circle cx={tamano / 2} cy={tamano / 2} r={r} fill="none" stroke="#F1F5F9" strokeWidth="13" />
+        <circle cx={tamano / 2} cy={tamano / 2} r={r} fill="none" stroke="var(--t-pista)" strokeWidth="13" />
         {antes !== undefined && (
           <circle
             cx={tamano / 2}
             cy={tamano / 2}
             r={r - 12}
             fill="none"
-            stroke="#CBD5E1"
+            stroke="var(--t-antes)"
             strokeWidth="4"
             strokeLinecap="round"
             strokeDasharray={2 * Math.PI * (r - 12)}
@@ -259,8 +259,8 @@ export function Anillo({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <Contador valor={valor} duracion={1400} className="text-4xl font-bold tracking-tight text-slate-900" />
-        <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">de 100</span>
+        <Contador valor={valor} duracion={1400} className="text-4xl font-bold tracking-tight text-[var(--t-txt)]" />
+        <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--t-txt-3)]">de 100</span>
       </div>
     </div>
   );
@@ -280,14 +280,14 @@ export function BarraArea({
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <span className="text-[13px] font-medium text-slate-700">{nombre}</span>
-        <span className="text-[13px] font-semibold tabular-nums text-slate-900">
+        <span className="text-[13px] font-medium text-[var(--t-txt-2)]">{nombre}</span>
+        <span className="text-[13px] font-semibold tabular-nums text-[var(--t-txt)]">
           {valor}
-          <span className="ml-1.5 text-[11px] font-normal text-slate-400">antes {antes}</span>
+          <span className="ml-1.5 text-[11px] font-normal text-[var(--t-txt-3)]">antes {antes}</span>
         </span>
       </div>
-      <div className="relative h-2 overflow-hidden rounded-full bg-slate-100">
-        <div className="absolute inset-y-0 left-0 rounded-full bg-slate-300" style={{ width: `${antes}%` }} />
+      <div className="relative h-2 overflow-hidden rounded-full bg-[var(--t-pista)]">
+        <div className="absolute inset-y-0 left-0 rounded-full bg-[var(--t-antes)]" style={{ width: `${antes}%` }} />
         <motion.div
           className="absolute inset-y-0 left-0 rounded-full"
           style={{ background: `linear-gradient(90deg, ${MORADO}, #AA66FF)` }}
@@ -304,9 +304,9 @@ export function BarraArea({
 /* ------------------------------------------------------------- gravedad */
 
 export const GRAVEDAD = {
-  critico: { texto: 'Crítico', clase: 'bg-rose-50 text-rose-700 ring-rose-200' },
-  importante: { texto: 'Importante', clase: 'bg-amber-50 text-amber-700 ring-amber-200' },
-  menor: { texto: 'Menor', clase: 'bg-slate-100 text-slate-600 ring-slate-200' },
+  critico: { texto: 'Crítico', clase: 'bg-[var(--t-mal-bg)] text-[var(--t-mal-tx)] ring-[var(--t-mal-ring)]' },
+  importante: { texto: 'Importante', clase: 'bg-[var(--t-aviso-bg)] text-[var(--t-aviso-tx)] ring-[var(--t-aviso-ring)]' },
+  menor: { texto: 'Menor', clase: 'bg-[var(--t-pista)] text-[var(--t-txt-2)] ring-[var(--t-borde)]' },
 } as const;
 
 export function Etiqueta({ gravedad }: { gravedad: keyof typeof GRAVEDAD }) {
