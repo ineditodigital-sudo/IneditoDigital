@@ -63,18 +63,20 @@ for f in dist/*; do
   fput "$f" "public_html/$b" >/dev/null 2>&1 && ok "$b" || bad "$b"
 done
 
-# ---------- 3b. fuentes ----------
-# El bucle de arriba salta directorios, asi que dist/fonts/ se quedaba en tierra.
-# Es como Hanson estuvo dando 404 y los titulos salian en la fuente del sistema.
-if [ -d dist/fonts ]; then
-  step "3b/6 Subiendo fuentes"
-  $CURL -u "$FTP_USER:$FTP_PASS" "$BASE/" -Q "MKD /public_html/fonts" >/dev/null 2>&1 || true
-  for f in dist/fonts/*; do
+# ---------- 3b. carpetas de dist/ ----------
+# El bucle de arriba salta directorios. Asi es como dist/fonts/ se quedo en
+# tierra y Hanson dio 404 durante meses. Va generico a proposito: cualquier
+# carpeta nueva en public/ (fuentes, logos-ia, lo que venga) sube sola.
+step "3b/6 Subiendo carpetas de dist/"
+for d in dist/*/; do
+  b="$(basename "$d")"
+  [ "$b" = "assets" ] && continue          # ya subio en el paso 2
+  $CURL -u "$FTP_USER:$FTP_PASS" "$BASE/" -Q "MKD /public_html/$b" >/dev/null 2>&1 || true
+  for f in "$d"*; do
     [ -f "$f" ] || continue
-    b="$(basename "$f")"
-    fput "$f" "public_html/fonts/$b" >/dev/null 2>&1 && ok "fonts/$b" || bad "fonts/$b"
+    fput "$f" "public_html/$b/$(basename "$f")" >/dev/null 2>&1 && ok "$b/$(basename "$f")" || bad "$b/$(basename "$f")"
   done
-fi
+done
 
 # ---------- 4. PHP ----------
 # render.php va junto con el bundle: si se desfasan, se duplican o se pierden
