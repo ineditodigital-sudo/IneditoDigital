@@ -184,7 +184,14 @@ elseif ($seg[0] === 'blog' && isset($seg[1])) {
     $title=($b['title'] ?? '').' | Blog · '.$siteName; $desc=$b['excerpt'] ?? $defaultDesc; $ogType='article';
     $canonical=$BASE.'/blog/'.$b['slug']; $crumbs[]=['Blog','/blog']; $crumbs[]=[$b['title'],'/blog/'.$b['slug']];
     $schema[]=['@context'=>'https://schema.org','@type'=>'BlogPosting','headline'=>$b['title'] ?? '','description'=>$b['excerpt'] ?? '','image'=>$b['image'] ?? $GLOBALS['logo'],'author'=>$GLOBALS['autorArticulo']($b['author'] ?? $siteName, $miembros, $BASE),'publisher'=>['@type'=>'Organization','name'=>$siteName,'logo'=>['@type'=>'ImageObject','url'=>$GLOBALS['logo']]],'mainEntityOfPage'=>$canonical,'inLanguage'=>'es'] + $GLOBALS['fechasArticulo']($b);
-    $bodyBuilder=function() use ($b){ $md=(string)($b['content'] ?? ''); if(trim($md)==='') $md=$b['excerpt'] ?? ''; return md_html($md); };
+    $bodyBuilder=function() use ($b){
+      $md=(string)($b['content'] ?? ''); if(trim($md)==='') $md=$b['excerpt'] ?? '';
+      // El titulo va como h1 y se quita la linea "# " con la que abre el
+      // markdown: md_html convierte "#" en h2, asi que ningun articulo del
+      // sitio tenia h1 y ademas el titulo salia dos veces.
+      $md = preg_replace('/\A\s*#\s+[^\n]*\n+/u', '', $md, 1);
+      return '<h1>'.e($b['title'] ?? '').'</h1>'.md_html($md);
+    };
   } else { $is404 = true; }
 }
 elseif ($seg[0] === 'blog') {

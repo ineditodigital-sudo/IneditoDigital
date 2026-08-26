@@ -36,7 +36,7 @@ function ruta(t) {
   const e = buscarExtra(t);
   const encajaUno = c.length > 0 && c[0].puntos >= 10;
   if (g === 'catalogo' && !encajaUno) return 'CATALOGO';
-  if (e && e.puntos >= 8 && g !== 'precio') return 'PAGINA: ' + e.pagina.url;
+  if (e && e.puntos >= 8 && e.puntos >= (c[0]?.puntos ?? 0) && g !== 'precio') return 'PAGINA: ' + e.pagina.url;
   if (c.length && c[0].puntos >= 10 && g !== 'precio' && g !== 'tiempo') return 'SERVICIO: ' + c[0].servicio.slug;
   if (g) return 'INTENCION: ' + g;
   if (c.length) return 'SERVICIO: ' + c[0].servicio.slug;
@@ -73,6 +73,11 @@ console.log('\n== Rutas completas ==');
   ['necesito un logo',                  'SERVICIO: creacion-de-logo'],
   ['quiero hacer publicidad',           'SERVICIO: google-ads'],
   ['quiero una auditoria',              'SERVICIO: auditoria-con-ia'],
+  // lote 2
+  ['quiero anunciarme en chatgpt',      'SERVICIO: chatgpt-ads'],
+  ['necesito un dashboard',            'SERVICIO: tablero-de-resultados'],
+  ['me conviene vender en mercado libre', 'SERVICIO: estrategia-de-canales'],
+  ['quiero trabajar mi linkedin',      'SERVICIO: linkedin-de-empresa'],
   ['hacen email marketing',            'CATALOGO'],
   ['hacen paginas web',                'SERVICIO: diseno-y-desarrollo-web'],
   ['hacen chatbots',                   'SERVICIO: chatbots-y-agentes'],

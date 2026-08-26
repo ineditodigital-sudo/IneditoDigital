@@ -6,6 +6,21 @@ import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
 
+/**
+ * Quita el "# Título" con el que abre el markdown del artículo.
+ *
+ * La página ya pinta el título arriba como h1, así que dejarlo en el cuerpo lo
+ * mostraba dos veces seguidas. Pasaba en los doce artículos. Solo se quita si
+ * de verdad es el mismo título: si alguien abre un artículo con otro
+ * encabezado, se respeta.
+ */
+function sinTituloRepetido(cuerpo: string, titulo: string): string {
+  const m = /^\s*#\s+([^\n]*)\n+/.exec(cuerpo);
+  if (!m) return cuerpo;
+  const normal = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, '').trim();
+  return normal(m[1]) === normal(titulo) ? cuerpo.slice(m[0].length) : cuerpo;
+}
+
 export default function BlogPostPage() {
   const tNav = contenido('blog', 'navegacion');
   const { slug } = useParams();
@@ -64,7 +79,7 @@ export default function BlogPostPage() {
                 articulos mostraban "## Subtitulo", los asteriscos de las
                 negritas y las tablas como filas de barras verticales. */}
             <div className="text-[15.5px] md:text-base">
-              <Markdown texto={post.content} />
+              <Markdown texto={sinTituloRepetido(post.content, post.title)} />
             </div>
           </GlassCard>
 
