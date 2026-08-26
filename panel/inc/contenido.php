@@ -1602,7 +1602,7 @@ En WhatsApp te lo aclaran de una vez y con la información correcta.'],
                         'r_garantia' => ['label' => 'Respuesta · garantías', 'tipo' => 'area', 'def' => 'No prometemos posiciones ni cifras concretas: nadie que trabaje en serio puede garantizar eso, y quien lo promete te está vendiendo humo.
 
 Lo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes contra el punto de partida y te decimos si funciona o si no. Si no funciona, lo dice el reporte, no nosotros.'],
-                        'r_catalogo' => ['label' => 'Respuesta · qué servicios tienen', 'tipo' => 'texto', 'def' => 'Trabajamos en tres frentes, más todo lo de inteligencia artificial. ¿Cuál te interesa?'],
+                        'r_catalogo' => ['label' => 'Respuesta · qué servicios tienen', 'tipo' => 'texto', 'def' => 'Estos son los frentes en los que trabajamos, más todo lo de inteligencia artificial. ¿Cuál te interesa?'],
                         'r_grupo_ia' => ['label' => 'Respuesta · bloque de IA', 'tipo' => 'texto', 'def' => 'Esto es lo que hacemos con inteligencia artificial:'],
                         'r_listo' => ['label' => 'Mensaje final antes de WhatsApp', 'tipo' => 'area', 'def' => 'Listo. Te preparé el mensaje con todo lo que consultaste.
 

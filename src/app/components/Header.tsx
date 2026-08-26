@@ -5,6 +5,7 @@ import { Menu, X, ChevronDown, ArrowRight, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { cn } from './ui/utils';
 import { marca } from '../cms';
+import { agruparServicios } from '../data/grupos';
 import { IconoServicio } from './IconoServicio';
 
 /*
@@ -24,18 +25,17 @@ export default function Header() {
   const mIA = marca.menuIA();
   const mLogo = marca.logo();
 
-  /* ---- los grupos del mega menu, armados desde los datos ---- */
-  const grupos = [
-    { titulo: m('grupo_pos', 'Posicionamiento'), cats: ['SEO', 'SEO Local', 'Estrategia'] },
-    { titulo: m('grupo_mkt', 'Marketing y publicidad'), cats: ['Marketing', 'Publicidad', 'Eventos', 'Email'] },
-    { titulo: m('grupo_dis', 'Diseño y desarrollo'), cats: ['Diseño', 'Desarrollo', 'Innovación', 'IA'] },
-  ].map((g) => ({
+  /*
+   * Los grupos del mega menu.
+   *
+   * Salen de agruparServicios y no de una lista propia: el asistente usa la
+   * misma funcion, y si el chat y el menu contestan distinto a "que servicios
+   * tienen" la culpa siempre es de dos listas paralelas. Aqui habia una.
+   */
+  const grupos = agruparServicios(services).map((g, i) => ({
     ...g,
-    items: services.filter((s) => g.cats.includes(s.category)),
+    titulo: m(`grupo_${i + 1}`, g.titulo),
   }));
-  // lo que no cayo en ningun grupo, al ultimo: ningun servicio se queda fuera
-  const asignados = new Set(grupos.flatMap((g) => g.items.map((s) => s.slug)));
-  grupos[grupos.length - 1].items.push(...services.filter((s) => !asignados.has(s.slug)));
 
   const itemsIA = [
     { label: mIA('geo', 'Posicionamiento en IA'), path: '/servicios/posicionamiento-en-ia', description: mIA('geo_desc', 'Que ChatGPT te recomiende') },
@@ -236,9 +236,12 @@ export default function Header() {
             onMouseEnter={abrirMega}
             onMouseLeave={() => cerrarMega()}
           >
-            <div className="container mx-auto max-w-6xl px-6 pt-3 pb-6">
+            <div className="container mx-auto max-w-5xl px-6 pt-3 pb-6">
               <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl">
-                <div className="grid grid-cols-[1fr_1fr_1fr_1.15fr]">
+                <div
+                  className="grid"
+                  style={{ gridTemplateColumns: `repeat(${grupos.length}, 1fr) 1.15fr` }}
+                >
                   {/* Los tres grupos de servicios */}
                   {grupos.map((g) => (
                     <div key={g.titulo} className="border-r border-white/8 p-5">

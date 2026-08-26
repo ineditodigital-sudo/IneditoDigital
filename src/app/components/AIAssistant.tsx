@@ -220,11 +220,18 @@ export default function AIAssistant() {
      * "Que servicios tienen" es una pregunta de catalogo, no la busqueda de un
      * servicio. Sin esto ganaba Servicios QR, por ser el unico cuyo titulo
      * contiene la palabra "servicios".
+     *
+     * Pero la senal de catalogo incluye "que hacen", y al quitarle las palabras
+     * vacias eso se queda en "hacen" a secas: cualquier "hacen paginas web" o
+     * "hacen chatbots" caia aqui y contestaba con el menu completo en vez de
+     * con la ficha que estaban pidiendo. Si un servicio encaja claramente,
+     * gana el servicio.
      */
-    if (global === 'catalogo') {
+    const encajaUno = coincidencias.length > 0 && coincidencias[0].puntos >= 10;
+    if (global === 'catalogo' && !encajaUno) {
       const grupos = agruparServicios(services);
       bot(
-        tCon('r_catalogo', 'Trabajamos en tres frentes, más todo lo de inteligencia artificial. ¿Cuál te interesa?'),
+        tCon('r_catalogo', 'Estos son los frentes en los que trabajamos, más todo lo de inteligencia artificial. ¿Cuál te interesa?'),
         {
           enlace: { titulo: 'Todos los servicios', sub: 'Y los tres niveles según tu punto de partida', url: '/servicios' },
           opciones: [

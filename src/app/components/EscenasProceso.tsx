@@ -12,7 +12,6 @@ import { Check, MapPin, Star, TrendingUp, BadgeCheck, Trophy, ScanLine } from 'l
  *   mapa       ficha-de-google              el pin, la ficha y las resenas
  *   campana    google-ads                   las barras de la campana crecen
  *   chat       chatbots-y-agentes           una conversacion que cierra venta
- *   correo     email-marketing              la bandeja y la tasa de apertura
  *   embudo     funnels-de-venta             el embudo se llena nivel a nivel
  *   marca      branding / creacion-de-logo  el tablero de identidad
  *   qr         servicios-qr                 el codigo se dibuja y se escanea
@@ -242,57 +241,6 @@ function EscenaChat({ activo }: { activo: number }) {
         ))}
       </motion.div>
       <Distintivo activo={activo} texto="Venta cerrada 24/7" />
-    </>
-  );
-}
-
-/** La bandeja de correo: la campana llega, se abre y convierte. */
-function EscenaCorreo({ activo }: { activo: number }) {
-  return (
-    <>
-      {/* paso 1: llegan los correos */}
-      {[0, 1].map((i) => (
-        <motion.div
-          key={i}
-          {...pieza(activo, 0, i * 0.1)}
-          className="mb-2 flex items-center gap-2.5 rounded-lg border border-white/8 bg-white/[.03] p-2.5"
-        >
-          <span className="h-5 w-5 shrink-0 rounded-full bg-white/12" />
-          <div className="flex-1">
-            <span className="mb-1 block h-1.5 w-1/3 rounded-full bg-white/20" />
-            <span className="block h-1 w-3/4 rounded-full bg-white/10" />
-          </div>
-        </motion.div>
-      ))}
-      {/* paso 2: el tuyo, abierto y destacado */}
-      <motion.div
-        {...pieza(activo, 1)}
-        className="mb-3 rounded-lg border border-[#CC66FF]/35 bg-[#CC66FF]/10 p-3"
-      >
-        <div className="mb-2 flex items-center gap-2.5">
-          <span className="h-5 w-5 shrink-0 rounded-full bg-[#CC66FF]/50" />
-          <span className="h-1.5 w-2/5 rounded-full bg-[#CC66FF]/60" />
-          <span className="ml-auto rounded-full bg-[#CC66FF]/25 px-1.5 py-0.5 font-mono text-[8px] uppercase text-[#CC66FF]">Abierto</span>
-        </div>
-        <span className="mb-1 block h-1 w-full rounded-full bg-white/15" />
-        <span className="block h-1 w-2/3 rounded-full bg-white/15" />
-      </motion.div>
-      {/* paso 3: la tasa de apertura crece */}
-      <motion.div {...pieza(activo, 2)}>
-        <div className="mb-1 flex justify-between font-mono text-[9px] text-white/45">
-          <span>Tasa de apertura</span>
-          <span className="text-[#4ADE80]">42%</span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-white/10">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-[#9933FF] to-[#4ADE80]"
-            initial={{ width: '6%' }}
-            animate={activo >= 2 ? { width: '42%' } : { width: '6%' }}
-            transition={{ duration: 0.9, ease: suave }}
-          />
-        </div>
-      </motion.div>
-      <Distintivo activo={activo} texto="Suscriptor → cliente" />
     </>
   );
 }
@@ -595,7 +543,6 @@ const escenas: Record<string, (p: { activo: number }) => JSX.Element> = {
   'ficha-de-google': EscenaMapa,
   'google-ads': EscenaCampana,
   'chatbots-y-agentes': EscenaChat,
-  'email-marketing': EscenaCorreo,
   'funnels-de-venta': EscenaEmbudo,
   branding: EscenaMarca,
   'creacion-de-logo': EscenaMarca,
