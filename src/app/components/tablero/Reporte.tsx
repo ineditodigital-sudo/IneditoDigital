@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Check, Loader2, Mail, Printer, RotateCcw, X } from 'lucide-react';
+import { Check, Loader2, Mail, Printer, RotateCcw } from 'lucide-react';
 import {
   CONSULTAS, EMPRESA, HALLAZGOS, PUNTAJE, SECCIONES_REPORTE, VISIBILIDAD_IA,
   miles, pesosLargo, porSemana, resumen, type Periodo,
 } from './datos';
 import { Etiqueta, MORADO } from './piezas';
+import { Modal } from './Modal';
 import { LogoIA } from '../LogosIA';
 
 /*
@@ -44,18 +45,6 @@ export function Reporte({
   const [correo, setCorreo] = useState('direccion@tuempresa.mx');
   const [enviado, setEnviado] = useState(false);
 
-  /* Escape cierra, y mientras está abierto no se scrollea lo de atrás. */
-  useEffect(() => {
-    const alPulsar = (e: KeyboardEvent) => e.key === 'Escape' && alCerrar();
-    window.addEventListener('keydown', alPulsar);
-    const previo = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      window.removeEventListener('keydown', alPulsar);
-      document.body.style.overflow = previo;
-    };
-  }, [alCerrar]);
-
   useEffect(() => {
     if (fase !== 'armando') return;
     const t = window.setInterval(() => {
@@ -75,188 +64,165 @@ export function Reporte({
     setElegidas((e) => (e.includes(id) ? e.filter((x) => x !== id) : [...e, id]));
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-slate-900/45 backdrop-blur-sm no-imprimir-fondo">
-      <div className="min-h-full px-3 py-6 sm:px-6 sm:py-10">
-        <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
-          className="mx-auto w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl zona-imprimible"
-        >
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5 no-imprimir">
-            <div>
-              <div className="text-[15px] font-semibold text-slate-900">
-                {fase === 'listo' ? 'Tu reporte está listo' : 'Generar reporte'}
-              </div>
-              <p className="text-[12.5px] text-slate-500">
-                {fase === 'listo'
-                  ? 'Así llega cada mes a tu correo'
-                  : `Últimos ${periodo} días · ${EMPRESA.nombre}`}
-              </p>
+    <Modal
+      alCerrar={alCerrar}
+      titulo={fase === 'listo' ? 'Tu reporte está listo' : 'Generar reporte'}
+      sub={fase === 'listo' ? 'Así llega cada mes a tu correo' : `Últimos ${periodo} días · ${EMPRESA.nombre}`}
+      claseCaja="zona-imprimible"
+      claseFondo="no-imprimir-fondo"
+    >
+      <AnimatePresence mode="wait">
+        {fase === 'ajustes' && (
+          <motion.div
+            key="ajustes"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="px-5 py-5 sm:px-6"
+          >
+            <div className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+              Qué incluir
             </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {SECCIONES_REPORTE.map((s) => {
+                const activa = elegidas.includes(s.id);
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => alternar(s.id)}
+                    className={`flex items-start gap-2.5 rounded-xl border p-3 text-left transition-all ${
+                      activa
+                        ? 'border-[#7700CE]/35 bg-[#7700CE]/[.05]'
+                        : 'border-slate-200 bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <span
+                      className={`mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-md border transition-colors ${
+                        activa ? 'border-transparent text-white' : 'border-slate-300'
+                      }`}
+                      style={{ background: activa ? MORADO : 'transparent', width: 18, height: 18 }}
+                    >
+                      {activa && <Check size={12} strokeWidth={3} />}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[13.5px] font-medium leading-tight text-slate-900">
+                        {s.nombre}
+                      </span>
+                      <span className="mt-0.5 block text-[12px] leading-snug text-slate-500">{s.sub}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <label className="mt-5 block">
+              <span className="text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+                Enviar a
+              </span>
+              <input
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                className="mt-1.5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-[14px] text-slate-900 outline-none transition-colors focus:border-[#7700CE]"
+              />
+            </label>
+
             <button
-              onClick={alCerrar}
-              className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
-              aria-label="Cerrar"
+              onClick={() => { setPaso(0); setFase('armando'); }}
+              disabled={!elegidas.length}
+              className="mt-5 w-full rounded-xl px-5 py-3 text-[14px] font-semibold text-white transition-all disabled:opacity-40"
+              style={{ background: `linear-gradient(100deg, ${MORADO}, #9933FF)` }}
             >
-              <X size={18} />
+              Generar reporte
             </button>
-          </div>
+          </motion.div>
+        )}
 
-          <AnimatePresence mode="wait">
-            {fase === 'ajustes' && (
-              <motion.div
-                key="ajustes"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="px-5 py-5 sm:px-6"
-              >
-                <div className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-slate-400">
-                  Qué incluir
-                </div>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {SECCIONES_REPORTE.map((s) => {
-                    const activa = elegidas.includes(s.id);
-                    return (
-                      <button
-                        key={s.id}
-                        onClick={() => alternar(s.id)}
-                        className={`flex items-start gap-2.5 rounded-xl border p-3 text-left transition-all ${
-                          activa
-                            ? 'border-[#7700CE]/35 bg-[#7700CE]/[.05]'
-                            : 'border-slate-200 bg-white hover:border-slate-300'
-                        }`}
-                      >
-                        <span
-                          className={`mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-md border transition-colors ${
-                            activa ? 'border-transparent text-white' : 'border-slate-300'
-                          }`}
-                          style={{ background: activa ? MORADO : 'transparent', width: 18, height: 18 }}
+        {fase === 'armando' && (
+          <motion.div
+            key="armando"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="px-5 py-8 sm:px-6"
+          >
+            <div className="mx-auto max-w-md space-y-2.5">
+              {PASOS.map((p, i) => {
+                const hecho = i < paso;
+                const activo = i === paso;
+                return (
+                  <div
+                    key={p}
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors ${
+                      activo ? 'bg-[#7700CE]/[.06]' : ''
+                    }`}
+                  >
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                      {hecho ? (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white"
                         >
-                          {activa && <Check size={12} strokeWidth={3} />}
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block text-[13.5px] font-medium leading-tight text-slate-900">
-                            {s.nombre}
-                          </span>
-                          <span className="mt-0.5 block text-[12px] leading-snug text-slate-500">{s.sub}</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <label className="mt-5 block">
-                  <span className="text-[12px] font-semibold uppercase tracking-wider text-slate-400">
-                    Enviar a
-                  </span>
-                  <input
-                    value={correo}
-                    onChange={(e) => setCorreo(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-[14px] text-slate-900 outline-none transition-colors focus:border-[#7700CE]"
-                  />
-                </label>
-
-                <button
-                  onClick={() => { setPaso(0); setFase('armando'); }}
-                  disabled={!elegidas.length}
-                  className="mt-5 w-full rounded-xl px-5 py-3 text-[14px] font-semibold text-white transition-all disabled:opacity-40"
-                  style={{ background: `linear-gradient(100deg, ${MORADO}, #9933FF)` }}
-                >
-                  Generar reporte
-                </button>
-              </motion.div>
-            )}
-
-            {fase === 'armando' && (
+                          <Check size={12} strokeWidth={3} />
+                        </motion.span>
+                      ) : activo ? (
+                        <Loader2 size={16} className="animate-spin" style={{ color: MORADO }} />
+                      ) : (
+                        <span className="h-2 w-2 rounded-full bg-slate-200" />
+                      )}
+                    </span>
+                    <span
+                      className={`text-[13.5px] ${
+                        hecho ? 'text-slate-400' : activo ? 'font-medium text-slate-900' : 'text-slate-400'
+                      }`}
+                    >
+                      {p}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mx-auto mt-6 h-1.5 max-w-md overflow-hidden rounded-full bg-slate-100">
               <motion.div
-                key="armando"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="px-5 py-8 sm:px-6"
+                className="h-full rounded-full"
+                style={{ background: `linear-gradient(90deg, ${MORADO}, #CC66FF)` }}
+                animate={{ width: `${(paso / PASOS.length) * 100}%` }}
+                transition={{ duration: 0.45, ease: 'easeOut' }}
+              />
+            </div>
+          </motion.div>
+        )}
+
+        {fase === 'listo' && (
+          <motion.div key="listo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <Documento periodo={periodo} elegidas={elegidas} />
+
+            <div className="flex flex-wrap gap-2 border-t border-slate-100 px-5 py-4 sm:px-6 no-imprimir">
+              <button
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ background: `linear-gradient(100deg, ${MORADO}, #9933FF)` }}
               >
-                <div className="mx-auto max-w-md space-y-2.5">
-                  {PASOS.map((p, i) => {
-                    const hecho = i < paso;
-                    const activo = i === paso;
-                    return (
-                      <div
-                        key={p}
-                        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors ${
-                          activo ? 'bg-[#7700CE]/[.06]' : ''
-                        }`}
-                      >
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center">
-                          {hecho ? (
-                            <motion.span
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white"
-                            >
-                              <Check size={12} strokeWidth={3} />
-                            </motion.span>
-                          ) : activo ? (
-                            <Loader2 size={16} className="animate-spin" style={{ color: MORADO }} />
-                          ) : (
-                            <span className="h-2 w-2 rounded-full bg-slate-200" />
-                          )}
-                        </span>
-                        <span
-                          className={`text-[13.5px] ${
-                            hecho ? 'text-slate-400' : activo ? 'font-medium text-slate-900' : 'text-slate-400'
-                          }`}
-                        >
-                          {p}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="mx-auto mt-6 h-1.5 max-w-md overflow-hidden rounded-full bg-slate-100">
-                  <motion.div
-                    className="h-full rounded-full"
-                    style={{ background: `linear-gradient(90deg, ${MORADO}, #CC66FF)` }}
-                    animate={{ width: `${(paso / PASOS.length) * 100}%` }}
-                    transition={{ duration: 0.45, ease: 'easeOut' }}
-                  />
-                </div>
-              </motion.div>
-            )}
-
-            {fase === 'listo' && (
-              <motion.div key="listo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Documento periodo={periodo} elegidas={elegidas} />
-
-                <div className="flex flex-wrap gap-2 border-t border-slate-100 px-5 py-4 sm:px-6 no-imprimir">
-                  <button
-                    onClick={() => window.print()}
-                    className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90"
-                    style={{ background: `linear-gradient(100deg, ${MORADO}, #9933FF)` }}
-                  >
-                    <Printer size={15} /> Imprimir o guardar en PDF
-                  </button>
-                  <button
-                    onClick={() => setEnviado(true)}
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-[13.5px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                  >
-                    {enviado ? <Check size={15} className="text-emerald-600" /> : <Mail size={15} />}
-                    {enviado ? `Enviado a ${correo}` : 'Enviar por correo'}
-                  </button>
-                  <button
-                    onClick={() => { setEnviado(false); setFase('ajustes'); }}
-                    className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-slate-500 transition-colors hover:text-slate-800"
-                  >
-                    <RotateCcw size={15} /> Cambiar secciones
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-    </div>
+                <Printer size={15} /> Imprimir o guardar en PDF
+              </button>
+              <button
+                onClick={() => setEnviado(true)}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-[13.5px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                {enviado ? <Check size={15} className="text-emerald-600" /> : <Mail size={15} />}
+                {enviado ? `Enviado a ${correo}` : 'Enviar por correo'}
+              </button>
+              <button
+                onClick={() => { setEnviado(false); setFase('ajustes'); }}
+                className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-slate-500 transition-colors hover:text-slate-800"
+              >
+                <RotateCcw size={15} /> Cambiar secciones
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Modal>
   );
 }
 
