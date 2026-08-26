@@ -113,11 +113,21 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
   $s = $findBySlug($services, $seg[1]);
   if ($s) {
     $title = ($s['title'] ?? '').' | Servicios · '.$siteName;
-    $desc = $s['shortDescription'] ?? $defaultDesc;
+    $primera = '';
+    if (!empty($s['definicion'])) {
+      $p = preg_split('~(?<=[.!?])\s~u', (string)$s['definicion'], 2);
+      $primera = trim($p[0] ?? '');
+      if (mb_strlen($primera) > 165) $primera = '';
+    }
+    $desc = $primera ?: ($s['shortDescription'] ?? $defaultDesc);
     $canonical = $BASE.'/servicios/'.$s['slug']; $crumbs[]=['Servicios','/servicios']; $crumbs[]=[$s['title'],'/servicios/'.$s['slug']];
     $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical,'dateModified'=>date('Y-m-d', strtotime((string)($s['fecha'] ?: 'now')))];
     $bodyBuilder = function() use ($s,$e) {
-      $h='<h1>'.e($s['title'] ?? '').'</h1><p>'.e($s['shortDescription'] ?? '').'</p>';
+      // La DEFINICION va primero: un motor de respuestas toma el primer
+      // parrafo, y el gancho comercial no responde "que es".
+      $h='<h1>'.e($s['title'] ?? '').'</h1>';
+      if (!empty($s['definicion'])) $h .= '<p>'.e($s['definicion']).'</p>';
+      $h .= '<p>'.e($s['shortDescription'] ?? '').'</p>';
       foreach (['features'=>'Características','benefits'=>'Beneficios','ideal'=>'Ideal para'] as $k=>$lbl) if(!empty($s[$k]) && is_array($s[$k])){ $h.='<h2>'.$lbl.'</h2><ul>'; foreach($s[$k] as $it) $h.='<li>'.e($it).'</li>'; $h.='</ul>'; }
       if(!empty($s['process']) && is_array($s['process'])){ $h.='<h2>Proceso</h2><ol>'; foreach($s['process'] as $p) $h.='<li><strong>'.e($p['title'] ?? '').':</strong> '.e($p['description'] ?? '').'</li>'; $h.='</ol>'; }
       if(!empty($s['faq']) && is_array($s['faq'])){ $h.='<h2>Preguntas frecuentes</h2>'; foreach($s['faq'] as $f) $h.='<h3>'.e($f['question'] ?? '').'</h3><p>'.e($f['answer'] ?? '').'</p>'; }

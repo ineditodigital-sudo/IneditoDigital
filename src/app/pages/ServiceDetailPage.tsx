@@ -136,6 +136,20 @@ export default function ServiceDetailPage() {
                 {service.shortDescription}
               </motion.p>
 
+              {/* La definicion: responde "que es" en las primeras palabras.
+                  Sirve a quien llega sin saber que es el servicio, y es lo que
+                  un asistente de IA puede citar. */}
+              {service.definicion && (
+                <motion.p
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.18 }}
+                  className="mt-5 max-w-2xl border-l-2 border-[#CC66FF]/40 pl-4 text-[15px] leading-relaxed text-white/65"
+                >
+                  {service.definicion}
+                </motion.p>
+              )}
+
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}

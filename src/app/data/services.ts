@@ -3,6 +3,8 @@ export interface Service {
   slug: string;
   title: string;
   shortDescription: string;
+  /** Responde "que es" en las primeras palabras. Lo edita el panel. */
+  definicion?: string;
   icon: string;
   category: string;
   bannerImage?: string;
