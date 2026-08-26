@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router';
+import { Markdown } from '../components/Markdown';
 import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
 import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
@@ -58,9 +59,12 @@ export default function BlogPostPage() {
             <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
           </div>
 
-          <GlassCard className="prose prose-invert prose-lg max-w-none mb-12">
-            <div className="text-white/80 leading-relaxed whitespace-pre-line">
-              {post.content}
+          <GlassCard className="max-w-none mb-12">
+            {/* whitespace-pre-line pintaba el markdown en crudo: los ocho
+                articulos mostraban "## Subtitulo", los asteriscos de las
+                negritas y las tablas como filas de barras verticales. */}
+            <div className="text-[15.5px] md:text-base">
+              <Markdown texto={post.content} />
             </div>
           </GlassCard>
 
