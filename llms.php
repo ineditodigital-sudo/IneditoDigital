@@ -5,7 +5,7 @@ header('Content-Type: text/plain; charset=utf-8');
 $BASE='https://www.inedito.digital'; $ss=[]; $S=[]; $Bl=[];
 try { $pdo=db_connect($cfg);
   foreach($pdo->query("SELECT k,v FROM site_settings") as $r) $ss[$r['k']]=$r['v'];
-  foreach($pdo->query("SELECT slug,title,short_desc,data_json FROM services WHERE status='published' ORDER BY id") as $r){ $d=json_decode((string)$r['data_json'],true)?:[]; $S[]=['slug'=>$r['slug'],'title'=>$r['title'] ?: ($d['title']??''),'d'=>$r['short_desc'] ?: ($d['shortDescription']??'')]; }
+  foreach($pdo->query("SELECT slug,title,short_desc,data_json FROM services WHERE status='published' ORDER BY id") as $r){ $d=json_decode((string)$r['data_json'],true)?:[]; $S[]=['slug'=>$r['slug'],'title'=>$r['title'] ?: ($d['title']??''),'d'=>$r['short_desc'] ?: ($d['shortDescription']??''),'definicion'=>$d['definicion'] ?? '']; }
   foreach($pdo->query("SELECT slug,title,excerpt FROM blog_posts WHERE status='published' ORDER BY id") as $r) $Bl[]=$r;
 } catch (Throwable $e) {}
 $n=$ss['businessName']??'Inédito Digital';
@@ -70,7 +70,7 @@ echo "## Posicionamiento en inteligencia artificial (GEO)\n";
 echo "Inédito Digital ofrece posicionamiento GEO en Aguascalientes, México: el trabajo para que ChatGPT, Gemini, Perplexity, Claude, Copilot y los resúmenes de Google encuentren, entiendan y citen correctamente a un negocio. Incluye diagnóstico de lo que responden hoy los asistentes, marcado Schema.org, contenido citable, consistencia de datos entre fuentes y medición mensual. El diagnóstico inicial no tiene costo.\n";
 echo "- [Posicionamiento en IA (GEO)]($BASE/servicios/posicionamiento-en-ia)\n\n";
 echo "## Servicios\n";
-foreach($S as $s) echo "- [".$s['title']."]($BASE/servicios/".$s['slug']."): ".$s['d']."\n";
+foreach($S as $s) echo "- [".$s['title']."]($BASE/servicios/".$s['slug']."): ".($s['definicion'] ?: $s['d'])."\n";
 echo "\n## Artículos del blog\n";
 foreach($Bl as $b) echo "- [".$b['title']."]($BASE/blog/".$b['slug']."): ".$b['excerpt']."\n";
 echo "\n## Páginas principales\n- Servicios: $BASE/servicios\n- Servicios de IA: $BASE/servicios-ia\n- Portafolio: $BASE/portafolio\n- Blog: $BASE/blog\n- Nosotros: $BASE/nosotros\n- Contacto: $BASE/contacto\n";
