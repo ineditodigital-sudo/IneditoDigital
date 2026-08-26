@@ -22,7 +22,7 @@ try {
   $pdo = db_connect($cfg);
   foreach ($pdo->query("SELECT k,v FROM site_settings") as $r) $settings[$r['k']] = $r['v'];
   foreach ($pdo->query("SELECT k,v FROM seo_settings") as $r) $seo[$r['k']] = $r['v'];
-  foreach ($pdo->query("SELECT * FROM services WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); $o['shortDescription']=$r['short_desc']?:($o['shortDescription']??''); if($r['image'])$o['bannerImage']=$r['image']; $fl=lines($r['features']); if($fl)$o['features']=$fl; $bl=lines($r['benefits']); if($bl)$o['benefits']=$bl; $services[]=$o; }
+  foreach ($pdo->query("SELECT * FROM services WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['fecha']=$r['created_at'] ?? null; $o['title']=$r['title']?:($o['title']??''); $o['shortDescription']=$r['short_desc']?:($o['shortDescription']??''); if($r['image'])$o['bannerImage']=$r['image']; $fl=lines($r['features']); if($fl)$o['features']=$fl; $bl=lines($r['benefits']); if($bl)$o['benefits']=$bl; $services[]=$o; }
   foreach ($pdo->query("SELECT * FROM blog_posts WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['excerpt'])$o['excerpt']=$r['excerpt']; if($r['content'])$o['content']=$r['content']; if($r['image'])$o['image']=$r['image']; if($r['author'])$o['author']=$r['author']; if($r['category'])$o['category']=$r['category']; /* Las fechas viven en columnas propias y no en data_json: sin copiarlas aqui, el schema del articulo salia sin datePublished (CON-01). */ $o['publish_date']=$r['publish_date'] ?? ''; $o['created_at']=$r['created_at'] ?? ''; $o['updated_at']=$r['updated_at'] ?? ''; $portfolio_meta=null; $blog[]=$o; }
   foreach ($pdo->query("SELECT slug, nombre, tipo, contenido, seo_title, seo_desc, seo_image, ruta, en_menu FROM pages WHERE status='published'") as $r) {
     $c = json_decode((string)$r['contenido'], true);
@@ -115,7 +115,7 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
     $title = ($s['title'] ?? '').' | Servicios · '.$siteName;
     $desc = $s['shortDescription'] ?? $defaultDesc;
     $canonical = $BASE.'/servicios/'.$s['slug']; $crumbs[]=['Servicios','/servicios']; $crumbs[]=[$s['title'],'/servicios/'.$s['slug']];
-    $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical];
+    $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical,'dateModified'=>date('Y-m-d', strtotime((string)($s['fecha'] ?: 'now')))];
     $bodyBuilder = function() use ($s,$e) {
       $h='<h1>'.e($s['title'] ?? '').'</h1><p>'.e($s['shortDescription'] ?? '').'</p>';
       foreach (['features'=>'Características','benefits'=>'Beneficios','ideal'=>'Ideal para'] as $k=>$lbl) if(!empty($s[$k]) && is_array($s[$k])){ $h.='<h2>'.$lbl.'</h2><ul>'; foreach($s[$k] as $it) $h.='<li>'.e($it).'</li>'; $h.='</ul>'; }
