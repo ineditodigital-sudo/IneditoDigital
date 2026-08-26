@@ -64,7 +64,7 @@ export const SERVICES: Service[] = [
   {
     id: '2',
     slug: 'chatbots-y-agentes',
-    title: 'CHATBOTS y AGENTES',
+    title: 'Chatbots y Agentes',
     shortDescription: 'Automatiza tu atención al cliente 24/7 con inteligencia artificial que vende por ti.',
     icon: 'Bot',
     category: 'IA',
@@ -107,7 +107,7 @@ export const SERVICES: Service[] = [
   {
     id: '3',
     slug: 'funnels-de-venta',
-    title: 'FUNNELS de VENTA',
+    title: 'Funnels de Venta',
     shortDescription: 'Embudos de conversión optimizados que convierten tráfico en clientes pagando.',
     icon: 'TrendingUp',
     category: 'Marketing',
@@ -144,7 +144,7 @@ export const SERVICES: Service[] = [
       { question: '¿Incluye las secuencias de email?', answer: 'Sí, incluimos el diseño y configuración de toda la secuencia de emails automatizados.' },
       { question: '¿Puedo usar mi plataforma de email actual?', answer: 'Sí, trabajamos con las principales plataformas como Mailchimp, ActiveCampaign, ConvertKit, etc.' }
     ],
-    relatedServices: ['google-ads', 'email-marketing'],
+    relatedServices: ['google-ads', 'chatbots-y-agentes'],
     order: 3
   },
   {
@@ -193,7 +193,7 @@ export const SERVICES: Service[] = [
   {
     id: '5',
     slug: 'google-ads',
-    title: 'Google ADS',
+    title: 'Google Ads',
     shortDescription: 'Campañas publicitarias rentables que generan clientes desde el primer día.',
     icon: 'Target',
     category: 'Publicidad',
@@ -282,7 +282,7 @@ export const SERVICES: Service[] = [
     title: 'Servicios QR',
     shortDescription: 'Códigos QR inteligentes que conectan el mundo físico con tu estrategia digital.',
     icon: 'QrCode',
-    category: 'Marketing',
+    category: 'Innovación',
     bannerImage: 'https://images.unsplash.com/photo-1683721003111-070bcc053d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMG1hcmtldGluZ3xlbnwxfHx8fDE3NjU5NDkzMzN8MA&ixlib=rb-4.1.0&q=80&w=1080',
     features: [
       'QR dinámicos editables sin reimprimir',
@@ -320,52 +320,9 @@ export const SERVICES: Service[] = [
     order: 7
   },
   {
-    id: '8',
-    slug: 'email-marketing',
-    title: 'Email MKT',
-    shortDescription: 'Campañas de email que nutren leads y convierten suscriptores en clientes fieles.',
-    icon: 'Mail',
-    category: 'Marketing',
-    bannerImage: 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbWFpbCUyMG1hcmtldGluZyUyMGNhbXBhaWdufGVufDF8fHx8MTc2NTk2NDQ5NHww&ixlib=rb-4.1.0&q=80&w=1080',
-    features: [
-      'Diseño de templates responsive',
-      'Secuencias automatizadas inteligentes',
-      'Segmentación avanzada de audiencia',
-      'A/B testing de subject lines',
-      'Automatizaciones de carritos abandonados',
-      'Analítica detallada de aperturas y clics'
-    ],
-    benefits: [
-      'ROI de $42 por cada $1 invertido',
-      'Nutre leads automáticamente',
-      'Recupera ventas perdidas',
-      'Construye relación duradera con clientes'
-    ],
-    ideal: [
-      'Ecommerce y tiendas online',
-      'Negocios con base de suscriptores',
-      'Empresas con ciclos de venta largos',
-      'Marcas que venden productos recurrentes'
-    ],
-    process: [
-      { step: 1, title: 'Estrategia', description: 'Definimos objetivos, segmentos y customer journey' },
-      { step: 2, title: 'Creación', description: 'Diseñamos templates y redactamos copy persuasivo' },
-      { step: 3, title: 'Automatización', description: 'Configuramos secuencias y triggers inteligentes' },
-      { step: 4, title: 'Optimización', description: 'Analizamos métricas y mejoramos tasas de conversión' }
-    ],
-    faq: [
-      { question: '¿Qué tasa de apertura es buena?', answer: 'El promedio de la industria es 15-25%. Nuestras campañas bien segmentadas logran 25-40% de apertura.' },
-      { question: '¿Necesito tener una lista de emails?', answer: 'Idealmente sí. Si no tienes lista, podemos ayudarte a construirla con lead magnets y estrategias de captura.' },
-      { question: '¿Qué plataforma de email usan?', answer: 'Trabajamos con las principales: Mailchimp, ActiveCampaign, ConvertKit, etc. O la que tú prefieras.' },
-      { question: '¿Cuántos emails debo enviar al mes?', answer: 'Depende de tu industria. Generalmente 2-4 emails por mes funciona bien sin saturar a tu audiencia.' }
-    ],
-    relatedServices: ['funnels-de-venta', 'chatbots-y-agentes'],
-    order: 8
-  },
-  {
     id: '9',
     slug: 'creacion-de-logo',
-    title: 'Creación de logo',
+    title: 'Creación de Logo',
     shortDescription: 'Logos profesionales que representan la esencia de tu marca de forma memorable.',
     icon: 'Sparkles',
     category: 'Diseño',

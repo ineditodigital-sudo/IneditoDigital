@@ -15,15 +15,16 @@ import type { Service } from './services';
 export type Grupo = { titulo: string; cats: string[]; items: Service[] };
 
 const DEFINICION: { titulo: string; cats: string[] }[] = [
-  { titulo: 'Posicionamiento', cats: ['SEO', 'SEO Local', 'Estrategia'] },
-  { titulo: 'Marketing y publicidad', cats: ['Marketing', 'Publicidad', 'Eventos', 'Email'] },
-  { titulo: 'Diseño y desarrollo', cats: ['Diseño', 'Desarrollo', 'Innovación', 'IA'] },
+  { titulo: 'Marketing y presencia digital', cats: ['SEO', 'SEO Local', 'Estrategia', 'Marketing', 'Publicidad'] },
+  { titulo: 'Diseño y desarrollo', cats: ['Diseño', 'Desarrollo', 'Innovación', 'IA', 'Eventos'] },
 ];
 
 export function agruparServicios(servicios: Service[]): Grupo[] {
   const grupos: Grupo[] = DEFINICION.map((g) => ({
     ...g,
-    items: servicios.filter((s) => g.cats.includes(s.category)),
+    items: servicios
+      .filter((s) => g.cats.includes(s.category))
+      .sort((a, b) => g.cats.indexOf(a.category) - g.cats.indexOf(b.category)),
   }));
   const asignados = new Set(grupos.flatMap((g) => g.items.map((s) => s.slug)));
   grupos[grupos.length - 1].items.push(...servicios.filter((s) => !asignados.has(s.slug)));

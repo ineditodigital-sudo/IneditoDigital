@@ -34,7 +34,8 @@ function ruta(t) {
   const g = detectarGlobal(t);
   const c = buscarServicios(t, TODOS);
   const e = buscarExtra(t);
-  if (g === 'catalogo') return 'CATALOGO';
+  const encajaUno = c.length > 0 && c[0].puntos >= 10;
+  if (g === 'catalogo' && !encajaUno) return 'CATALOGO';
   if (e && e.puntos >= 8 && g !== 'precio') return 'PAGINA: ' + e.pagina.url;
   if (c.length && c[0].puntos >= 10 && g !== 'precio' && g !== 'tiempo') return 'SERVICIO: ' + c[0].servicio.slug;
   if (g) return 'INTENCION: ' + g;
@@ -72,6 +73,10 @@ console.log('\n== Rutas completas ==');
   ['necesito un logo',                  'SERVICIO: creacion-de-logo'],
   ['quiero hacer publicidad',           'SERVICIO: google-ads'],
   ['quiero una auditoria',              'SERVICIO: auditoria-con-ia'],
+  ['hacen email marketing',            'CATALOGO'],
+  ['hacen paginas web',                'SERVICIO: diseno-y-desarrollo-web'],
+  ['hacen chatbots',                   'SERVICIO: chatbots-y-agentes'],
+  ['mandan newsletters',               'SERVICIO: funnels-de-venta'],
   // intenciones globales
   ['cuanto cuesta una pagina web',      'INTENCION: precio'],
   ['dan factura',                       'INTENCION: administrativo'],
@@ -79,7 +84,7 @@ console.log('\n== Rutas completas ==');
   ['garantizan resultados',             'INTENCION: garantia'],
   ['hola',                              'INTENCION: saludo'],
   // los botones de grupo no deben interpretarse como texto libre
-  ['__grupo:Posicionamiento__',         'NO ENTENDIDO'],
+  ['__grupo:Marketing y presencia digital__', 'NO ENTENDIDO'],
 ].forEach(([t, esp]) => comprobar(t, ruta(t), esp));
 
 console.log('\n== Variantes de la misma pregunta ==');
