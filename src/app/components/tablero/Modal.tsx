@@ -55,7 +55,7 @@ export function Modal({
         className="fixed inset-0 h-full w-full cursor-default no-imprimir"
         tabIndex={-1}
       />
-      <div className="pointer-events-none relative min-h-full px-3 py-6 sm:px-6 sm:py-10">
+      <div className="pointer-events-none relative min-h-full px-0 py-0 sm:px-6 sm:py-10">
         <motion.div
           initial={{ opacity: 0, y: 24, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -63,7 +63,7 @@ export function Modal({
           role="dialog"
           aria-modal="true"
           aria-label={titulo}
-          className={`pointer-events-auto mx-auto w-full ${ancho} overflow-hidden rounded-2xl bg-[var(--t-tarjeta)] shadow-2xl ${claseCaja}`}
+          className={`pointer-events-auto mx-auto min-h-screen w-full ${ancho} overflow-hidden bg-[var(--t-tarjeta)] shadow-2xl sm:min-h-0 sm:rounded-2xl ${claseCaja}`}
         >
           <div className="flex items-start justify-between gap-3 border-b border-[var(--t-borde-suave)] px-5 py-3.5 no-imprimir">
             <div className="min-w-0">
@@ -99,7 +99,13 @@ export function TablaDatos({
   filas: (string | number)[][];
 }) {
   return (
-    <div className="max-h-64 overflow-auto rounded-xl border border-[var(--t-borde)]">
+    <>
+      {columnas.length > 3 && (
+        <p className="mb-1.5 text-[11px] text-[var(--t-txt-3)] sm:hidden">
+          Desliza la tabla para ver el resto de las columnas.
+        </p>
+      )}
+      <div className="max-h-64 overflow-auto rounded-xl border border-[var(--t-borde)]">
       <table className="w-full text-left text-[12.5px]">
         <thead className="sticky top-0 bg-[var(--t-suave)]">
           <tr className="text-[10.5px] uppercase tracking-wider text-[var(--t-txt-3)]">
@@ -125,6 +131,7 @@ export function TablaDatos({
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   );
 }
