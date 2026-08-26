@@ -23,6 +23,15 @@ CURL="curl -sS --ssl-reqd --ftp-ssl-control -k --connect-timeout 20 --max-time 1
 SITE="https://www.inedito.digital"
 
 fput() { $CURL -u "$FTP_USER:$FTP_PASS" -T "$1" "$BASE/$2"; }
+# Tamano del archivo tal como esta alla. Sirve para distinguir un fallo de
+# verdad de un 451: el host acepta el archivo entero y despues corta la sesion
+# con error en su propia comprobacion. Si los bytes coinciden, subio bien.
+fsize() { $CURL -u "$FTP_USER:$FTP_PASS" -I "$BASE/$1" 2>/dev/null | tr -d '' | awk -F': ' '/^Content-Length/{print $2}'; }
+subir() {
+  fput "$1" "$2" >/dev/null 2>&1 && return 0
+  fput "$1" "$2" >/dev/null 2>&1 && return 0
+  [ "$(fsize "$2")" = "$(wc -c < "$1")" ]
+}
 fget() { $CURL -u "$FTP_USER:$FTP_PASS" "$BASE/$1" -o "$2"; }
 
 ok()   { printf "  \033[32mok\033[0m   %s\n" "$1"; }
@@ -45,7 +54,7 @@ echo "  -> $BK"
 step "2/6  Subiendo assets"
 n=0; err=0
 for f in dist/assets/*; do
-  fput "$f" "public_html/assets/$(basename "$f")" >/dev/null 2>&1 && n=$((n+1)) || { err=$((err+1)); bad "$(basename "$f")"; }
+  subir "$f" "public_html/assets/$(basename "$f")" && n=$((n+1)) || { err=$((err+1)); bad "$(basename "$f")"; }
 done
 echo "  $n subidos, $err fallos"
 [ "$err" -gt 0 ] && { bad "abortando: hay assets sin subir"; exit 1; }

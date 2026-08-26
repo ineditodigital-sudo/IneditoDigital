@@ -80,7 +80,7 @@ export function Reporte({
             exit={{ opacity: 0 }}
             className="px-5 py-5 sm:px-6"
           >
-            <div className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+            <div className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-[var(--t-txt-3)]">
               Qué incluir
             </div>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -93,7 +93,7 @@ export function Reporte({
                     className={`flex items-start gap-2.5 rounded-xl border p-3 text-left transition-all ${
                       activa
                         ? 'border-[#7700CE]/35 bg-[#7700CE]/[.05]'
-                        : 'border-slate-200 bg-white hover:border-slate-300'
+                        : 'border-[var(--t-borde)] bg-[var(--t-tarjeta)] hover:border-[var(--t-borde)]'
                     }`}
                   >
                     <span
@@ -105,10 +105,10 @@ export function Reporte({
                       {activa && <Check size={12} strokeWidth={3} />}
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-[13.5px] font-medium leading-tight text-slate-900">
+                      <span className="block text-[13.5px] font-medium leading-tight text-[var(--t-txt)]">
                         {s.nombre}
                       </span>
-                      <span className="mt-0.5 block text-[12px] leading-snug text-slate-500">{s.sub}</span>
+                      <span className="mt-0.5 block text-[12px] leading-snug text-[var(--t-txt-3)]">{s.sub}</span>
                     </span>
                   </button>
                 );
@@ -116,13 +116,13 @@ export function Reporte({
             </div>
 
             <label className="mt-5 block">
-              <span className="text-[12px] font-semibold uppercase tracking-wider text-slate-400">
+              <span className="text-[12px] font-semibold uppercase tracking-wider text-[var(--t-txt-3)]">
                 Enviar a
               </span>
               <input
                 value={correo}
                 onChange={(e) => setCorreo(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-[14px] text-slate-900 outline-none transition-colors focus:border-[#7700CE]"
+                className="mt-1.5 w-full rounded-xl border border-[var(--t-borde)] px-3.5 py-2.5 text-[14px] text-[var(--t-txt)] outline-none transition-colors focus:border-[#7700CE]"
               />
             </label>
 
@@ -173,7 +173,7 @@ export function Reporte({
                     </span>
                     <span
                       className={`text-[13.5px] ${
-                        hecho ? 'text-slate-400' : activo ? 'font-medium text-slate-900' : 'text-slate-400'
+                        hecho ? 'text-[var(--t-txt-3)]' : activo ? 'font-medium text-[var(--t-txt)]' : 'text-[var(--t-txt-3)]'
                       }`}
                     >
                       {p}
@@ -182,7 +182,7 @@ export function Reporte({
                 );
               })}
             </div>
-            <div className="mx-auto mt-6 h-1.5 max-w-md overflow-hidden rounded-full bg-slate-100">
+            <div className="mx-auto mt-6 h-1.5 max-w-md overflow-hidden rounded-full bg-[var(--t-pista)]">
               <motion.div
                 className="h-full rounded-full"
                 style={{ background: `linear-gradient(90deg, ${MORADO}, #CC66FF)` }}
@@ -197,7 +197,7 @@ export function Reporte({
           <motion.div key="listo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Documento periodo={periodo} elegidas={elegidas} />
 
-            <div className="flex flex-wrap gap-2 border-t border-slate-100 px-5 py-4 sm:px-6 no-imprimir">
+            <div className="flex flex-wrap gap-2 border-t border-[var(--t-borde-suave)] px-5 py-4 sm:px-6 no-imprimir">
               <button
                 onClick={() => window.print()}
                 className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90"
@@ -207,14 +207,14 @@ export function Reporte({
               </button>
               <button
                 onClick={() => setEnviado(true)}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-[13.5px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--t-borde)] px-4 py-2.5 text-[13.5px] font-semibold text-[var(--t-txt-2)] transition-colors hover:bg-[var(--t-suave)]"
               >
                 {enviado ? <Check size={15} className="text-emerald-600" /> : <Mail size={15} />}
                 {enviado ? `Enviado a ${correo}` : 'Enviar por correo'}
               </button>
               <button
                 onClick={() => { setEnviado(false); setFase('ajustes'); }}
-                className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-slate-500 transition-colors hover:text-slate-800"
+                className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-[var(--t-txt-3)] transition-colors hover:text-[var(--t-txt)]"
               >
                 <RotateCcw size={15} /> Cambiar secciones
               </button>
@@ -245,7 +245,7 @@ function Documento({ periodo, elegidas }: { periodo: Periodo; elegidas: string[]
   const criticos = HALLAZGOS.filter((h) => h.gravedad === 'critico');
 
   return (
-    <div className="documento">
+    <div className="documento bg-white text-slate-900">
       {/* portada */}
       <div className="px-6 py-7 text-white" style={{ background: `linear-gradient(115deg, ${MORADO}, #4B0082)` }}>
         <div className="flex items-center gap-2.5">

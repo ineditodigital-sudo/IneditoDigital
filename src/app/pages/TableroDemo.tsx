@@ -5,7 +5,8 @@ import {
   ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import {
-  ArrowRight, ChevronDown, Clock, FileText, Flag, Maximize2, Menu, Sparkles, TrendingUp, X,
+  ArrowRight, ChevronDown, Clock, FileText, Flag, Maximize2, Menu, Moon, Sparkles, Sun,
+  TrendingUp, X,
 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { useApp } from '../context/AppContext';
@@ -66,6 +67,18 @@ export default function TableroDemo() {
   const [grano, setGrano] = useState<Grano>('semana');
   const [cajonAbierto, setCajonAbierto] = useState(false);
   const [activa, setActiva] = useState('resumen');
+  /*
+   * Claro u oscuro. Se recuerda en el navegador de quien lo abre: en un stand
+   * la pantalla se queda encendida todo el día y nadie quiere volver a
+   * elegirlo cada vez que alguien recarga.
+   */
+  const [oscuro, setOscuro] = useState(() => {
+    try {
+      return localStorage.getItem('inedito_tablero_tema') === 'oscuro';
+    } catch {
+      return false;
+    }
+  });
   /* Mientras dura el desplazamiento suave manda el clic, no el scroll: si no,
      la marca va saltando por las secciones intermedias hasta llegar. */
   const yendoA = useRef(0);
@@ -83,13 +96,18 @@ export default function TableroDemo() {
     return semanas[Math.floor(i / 7)]?.etiqueta ?? null;
   }, [periodo, semanas]);
 
-  /* El resto del sitio es negro; aquí el fondo tiene que ser claro también
-     detrás del rebote del scroll, no solo dentro del contenedor. */
+  /* El fondo va también en el body y no solo en el contenedor: si no, el
+     rebote del scroll enseña el negro del resto del sitio. */
   useEffect(() => {
     const previo = document.body.style.background;
-    document.body.style.background = '#F1F3F9';
+    document.body.style.background = oscuro ? '#0A0C12' : '#F1F3F9';
+    try {
+      localStorage.setItem('inedito_tablero_tema', oscuro ? 'oscuro' : 'claro');
+    } catch {
+      /* modo privado: se queda sin recordar, y ya */
+    }
     return () => { document.body.style.background = previo; };
-  }, []);
+  }, [oscuro]);
 
   /*
    * Qué sección se está viendo, para marcarla en la navegación.
@@ -171,9 +189,10 @@ export default function TableroDemo() {
   ];
 
   const seccionActiva = SECCIONES.find((s) => s.id === activa)?.nombre ?? 'Resumen';
+  const p = PALETAS[oscuro ? 'oscuro' : 'claro'];
 
   return (
-    <div className="tablero min-h-screen bg-[#F1F3F9] text-slate-900">
+    <div className={`tablero ${oscuro ? 'oscuro' : ''} min-h-screen bg-[var(--t-fondo)] text-[var(--t-txt)]`}>
       <SEO
         title="Tablero de demostración"
         description="Ejemplo del tablero que entregamos a cada cliente."
@@ -211,7 +230,7 @@ export default function TableroDemo() {
               />
               <button
                 onClick={() => setCajonAbierto(false)}
-                className="absolute right-3 top-4 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100"
+                className="absolute right-3 top-4 rounded-lg p-1.5 text-[var(--t-txt-3)] transition-colors hover:bg-[var(--t-pista)]"
                 aria-label="Cerrar menú"
               >
                 <X size={18} />
@@ -223,11 +242,11 @@ export default function TableroDemo() {
 
       <div className="lg:pl-60">
         {/* ============================== barra superior ============================== */}
-        <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl no-imprimir">
+        <header className="sticky top-0 z-30 border-b border-[var(--t-borde)] bg-[var(--t-cabecera)] backdrop-blur-xl no-imprimir">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 sm:px-6">
             <button
               onClick={() => setCajonAbierto(true)}
-              className="-ml-1 rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 lg:hidden"
+              className="-ml-1 rounded-lg p-1.5 text-[var(--t-txt-3)] transition-colors hover:bg-[var(--t-pista)] lg:hidden"
               aria-label="Abrir menú"
             >
               <Menu size={20} />
@@ -235,25 +254,25 @@ export default function TableroDemo() {
 
             <div className="min-w-0">
               <div className="truncate text-[14px] font-semibold leading-tight tracking-tight">{seccionActiva}</div>
-              <div className="truncate text-[11.5px] leading-tight text-slate-500 lg:hidden">
+              <div className="truncate text-[11.5px] leading-tight text-[var(--t-txt-3)] lg:hidden">
                 {EMPRESA.nombre} · demo
               </div>
             </div>
 
             <div className="ml-auto flex items-center gap-2">
-              <div className="flex rounded-xl bg-slate-100 p-0.5">
+              <div className="flex rounded-xl bg-[var(--t-pista)] p-0.5">
                 {PERIODOS.map((p) => (
                   <button
                     key={p.valor}
                     onClick={() => setPeriodo(p.valor)}
                     className={`relative rounded-[10px] px-2.5 py-1.5 text-[12.5px] font-medium transition-colors sm:px-3 ${
-                      periodo === p.valor ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'
+                      periodo === p.valor ? 'text-[var(--t-txt)]' : 'text-[var(--t-txt-3)] hover:text-[var(--t-txt-2)]'
                     }`}
                   >
                     {periodo === p.valor && (
                       <motion.span
                         layoutId="periodo"
-                        className="absolute inset-0 rounded-[10px] bg-white shadow-sm"
+                        className="absolute inset-0 rounded-[10px] bg-[var(--t-elevado)] shadow-sm"
                         transition={{ type: 'spring', stiffness: 400, damping: 32 }}
                       />
                     )}
@@ -261,6 +280,7 @@ export default function TableroDemo() {
                   </button>
                 ))}
               </div>
+              <BotonTema oscuro={oscuro} alCambiar={() => setOscuro((o) => !o)} />
               <button
                 onClick={() => setReporteAbierto(true)}
                 className="inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-[12.5px] font-semibold text-white transition-opacity hover:opacity-90 lg:hidden"
@@ -298,7 +318,7 @@ export default function TableroDemo() {
                 alAmpliar={() => setAmpliada('canales')}
               />
               <div className="h-64 px-1 py-4 sm:h-80 sm:px-3">
-                <GraficaCanales datos={semanas} visibles={visibles} marca={semanaArranque} />
+                <GraficaCanales datos={semanas} visibles={visibles} marca={semanaArranque} p={p} />
               </div>
             </Tarjeta>
           </div>
@@ -314,11 +334,11 @@ export default function TableroDemo() {
                 />
                 <div className="flex flex-1 flex-col gap-3 px-5 py-5 sm:px-6">
                   <Embudo pasos={pasosEmbudo(d)} />
-                  <div className="mt-auto rounded-xl bg-slate-50 p-3.5 text-[12.5px] leading-relaxed text-slate-600">
+                  <div className="mt-auto rounded-xl bg-[var(--t-suave)] p-3.5 text-[12.5px] leading-relaxed text-[var(--t-txt-2)]">
                     De cada 100 personas que entran,{' '}
-                    <strong className="text-slate-900">{((d.leads / d.sesiones) * 100).toFixed(1)}</strong> dejan
+                    <strong className="text-[var(--t-txt)]">{((d.leads / d.sesiones) * 100).toFixed(1)}</strong> dejan
                     sus datos y{' '}
-                    <strong className="text-slate-900">{((d.ventas / d.sesiones) * 100).toFixed(2)}</strong>{' '}
+                    <strong className="text-[var(--t-txt)]">{((d.ventas / d.sesiones) * 100).toFixed(2)}</strong>{' '}
                     terminan comprando. Cada punto que se gana aquí vale más que traer más tráfico.
                   </div>
                 </div>
@@ -334,10 +354,10 @@ export default function TableroDemo() {
                   alAmpliar={() => setAmpliada('buscadores')}
                 />
                 <div className="h-52 px-1 py-4 sm:px-3">
-                  <GraficaBuscadores datos={semanas} metrica={metrica} />
+                  <GraficaBuscadores datos={semanas} metrica={metrica} p={p} />
                 </div>
-                <div className="border-t border-slate-100 px-5 py-4 sm:px-6">
-                  <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <div className="border-t border-[var(--t-borde-suave)] px-5 py-4 sm:px-6">
+                  <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--t-txt-3)]">
                     Consultas que ya te traen gente
                   </div>
                   <TablaConsultas />
@@ -360,13 +380,13 @@ export default function TableroDemo() {
                     <TarjetaIA key={v.nombre} v={v} retraso={i * 0.08} />
                   ))}
                 </div>
-                <div className="rounded-xl border border-slate-200 p-4">
-                  <div className="mb-2.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <div className="rounded-xl border border-[var(--t-borde)] p-4">
+                  <div className="mb-2.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--t-txt-3)]">
                     <Sparkles size={12} /> Preguntas que se prueban
                   </div>
                   <ul className="space-y-2">
                     {PREGUNTAS_IA.map((p) => (
-                      <li key={p} className="rounded-lg bg-slate-50 px-3 py-2 text-[12.5px] leading-snug text-slate-600">
+                      <li key={p} className="rounded-lg bg-[var(--t-suave)] px-3 py-2 text-[12.5px] leading-snug text-[var(--t-txt-2)]">
                         “{p}”
                       </li>
                     ))}
@@ -384,8 +404,8 @@ export default function TableroDemo() {
                 sub="Qué está frenando el crecimiento, ordenado por lo que cuesta"
                 extra={
                   <div className="flex items-center gap-2 text-[11.5px] font-medium">
-                    <span className="rounded-full bg-rose-50 px-2 py-0.5 text-rose-700">{criticos} críticos</span>
-                    <span className="rounded-full bg-amber-50 px-2 py-0.5 text-amber-700">{importantes} importantes</span>
+                    <span className="rounded-full bg-[var(--t-mal-bg)] px-2 py-0.5 text-[var(--t-mal-tx)]">{criticos} críticos</span>
+                    <span className="rounded-full bg-[var(--t-aviso-bg)] px-2 py-0.5 text-[var(--t-aviso-tx)]">{importantes} importantes</span>
                   </div>
                 }
                 alAmpliar={() => setAmpliada('auditoria')}
@@ -394,11 +414,11 @@ export default function TableroDemo() {
                 <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
                   <Anillo valor={PUNTAJE.total} antes={PUNTAJE.antes} />
                   <div className="min-w-0">
-                    <div className="text-[13px] font-semibold text-slate-900">Calificación general</div>
-                    <p className="mt-1 text-[12.5px] leading-snug text-slate-500 sm:max-w-[16rem]">
+                    <div className="text-[13px] font-semibold text-[var(--t-txt)]">Calificación general</div>
+                    <p className="mt-1 text-[12.5px] leading-snug text-[var(--t-txt-3)] sm:max-w-[16rem]">
                       Empezamos en {PUNTAJE.antes}. El anillo gris de adentro es dónde estabas cuando llegamos.
                     </p>
-                    <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-semibold text-emerald-700">
+                    <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--t-ok-bg)] px-2.5 py-1 text-[12px] font-semibold text-[var(--t-ok-tx)]">
                       <TrendingUp size={13} /> +{PUNTAJE.total - PUNTAJE.antes} puntos
                     </div>
                   </div>
@@ -410,22 +430,22 @@ export default function TableroDemo() {
                 </div>
               </div>
 
-              <div className="border-t border-slate-100">
+              <div className="border-t border-[var(--t-borde-suave)]">
                 {HALLAZGOS.map((h) => {
                   const activo = abierto === h.id;
                   return (
-                    <div key={h.id} className="border-b border-slate-100 last:border-0">
+                    <div key={h.id} className="border-b border-[var(--t-borde-suave)] last:border-0">
                       <button
                         onClick={() => setAbierto(activo ? null : h.id)}
-                        className="flex w-full items-start gap-3 px-5 py-3.5 text-left transition-colors hover:bg-slate-50/70 sm:px-6"
+                        className="flex w-full items-start gap-3 px-5 py-3.5 text-left transition-colors hover:bg-[var(--t-suave)] sm:px-6"
                       >
                         <Etiqueta gravedad={h.gravedad} />
-                        <span className="min-w-0 flex-1 text-[13.5px] font-medium leading-snug text-slate-900">
+                        <span className="min-w-0 flex-1 text-[13.5px] font-medium leading-snug text-[var(--t-txt)]">
                           {h.titulo}
                         </span>
                         <ChevronDown
                           size={16}
-                          className={`mt-0.5 shrink-0 text-slate-400 transition-transform duration-200 ${
+                          className={`mt-0.5 shrink-0 text-[var(--t-txt-3)] transition-transform duration-200 ${
                             activo ? 'rotate-180' : ''
                           }`}
                         />
@@ -445,11 +465,11 @@ export default function TableroDemo() {
                                 ['Por qué importa', h.porque],
                                 ['Qué hay que hacer', h.hacer],
                               ].map(([t, c]) => (
-                                <div key={t} className="rounded-xl bg-slate-50 p-3.5">
-                                  <div className="mb-1 text-[10.5px] font-bold uppercase tracking-wider text-slate-400">
+                                <div key={t} className="rounded-xl bg-[var(--t-suave)] p-3.5">
+                                  <div className="mb-1 text-[10.5px] font-bold uppercase tracking-wider text-[var(--t-txt-3)]">
                                     {t}
                                   </div>
-                                  <p className="text-[12.5px] leading-relaxed text-slate-600">{c}</p>
+                                  <p className="text-[12.5px] leading-relaxed text-[var(--t-txt-2)]">{c}</p>
                                 </div>
                               ))}
                             </div>
@@ -484,7 +504,7 @@ export default function TableroDemo() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="relative overflow-hidden rounded-xl border border-slate-200 p-4"
+                    className="relative overflow-hidden rounded-xl border border-[var(--t-borde)] p-4"
                   >
                     <span
                       className="absolute inset-x-0 top-0 h-0.5"
@@ -497,12 +517,12 @@ export default function TableroDemo() {
                       >
                         {i + 1}
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[var(--t-txt-3)]">
                         <Clock size={11} /> semana {i + 1}
                       </span>
                     </div>
-                    <div className="mt-2.5 text-[13.5px] font-medium leading-snug text-slate-900">{h.hacer}</div>
-                    <div className="mt-2 inline-flex items-center gap-1 text-[11.5px] text-slate-500">
+                    <div className="mt-2.5 text-[13.5px] font-medium leading-snug text-[var(--t-txt)]">{h.hacer}</div>
+                    <div className="mt-2 inline-flex items-center gap-1 text-[11.5px] text-[var(--t-txt-3)]">
                       <Flag size={11} /> {h.servicio}
                     </div>
                   </motion.div>
@@ -532,7 +552,7 @@ export default function TableroDemo() {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-[13.5px] font-bold transition-transform hover:scale-[1.03]"
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[var(--t-tarjeta)] px-5 py-3 text-[13.5px] font-bold transition-transform hover:scale-[1.03]"
                 style={{ color: MORADO }}
               >
                 Quiero uno para mi empresa <ArrowRight size={15} />
@@ -540,7 +560,7 @@ export default function TableroDemo() {
             </div>
           </Tarjeta>
 
-          <p className="px-1 pb-6 text-center text-[11.5px] leading-relaxed text-slate-400">
+          <p className="px-1 pb-6 text-center text-[11.5px] leading-relaxed text-[var(--t-txt-3)]">
             Tablero de demostración de Inédito Digital. Las cifras son un ejemplo construido para enseñar el
             formato: no corresponden a ninguna empresa real.
           </p>
@@ -565,6 +585,7 @@ export default function TableroDemo() {
             alCambiarMetrica={setMetrica}
             marca={grano === 'semana' ? semanaArranque : null}
             periodo={periodo}
+            p={p}
           />
         )}
       </AnimatePresence>
@@ -606,9 +627,51 @@ const pasosEmbudo = (d: ReturnType<typeof resumen>) => [
   { nombre: 'Ventas', valor: d.ventas },
 ];
 
+/*
+ * Recharts pinta con atributos y no con clases, así que estos colores no
+ * pueden salir de las variables CSS: van aquí y se eligen con el tema.
+ */
+type Paleta = { rejilla: string; eje: string; cursor: string; antes: string };
+const PALETAS: Record<'claro' | 'oscuro', Paleta> = {
+  claro:  { rejilla: '#EEF1F6', eje: '#94A3B8', cursor: '#CBD5E1', antes: '#CBD5E1' },
+  oscuro: { rejilla: '#232838', eje: '#6E7891', cursor: '#3E465C', antes: '#3E465C' },
+};
+
 /** Ejes: 1200 -> "1.2k". Con el número completo no cabía y se cortaba. */
 const corto = (v: number) =>
   Math.abs(v) >= 1000 ? `${(v / 1000).toFixed(1).replace('.0', '')}k` : String(v);
+
+/* -------------------------------------------------------- tema claro/oscuro */
+
+function BotonTema({ oscuro, alCambiar }: { oscuro: boolean; alCambiar: () => void }) {
+  return (
+    <button
+      onClick={alCambiar}
+      title={oscuro ? 'Cambiar a claro' : 'Cambiar a oscuro'}
+      aria-label={oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+      aria-pressed={oscuro}
+      className="relative h-8 w-8 shrink-0 overflow-hidden rounded-xl border border-[var(--t-borde)] text-[var(--t-txt-2)] transition-colors hover:bg-[var(--t-pista)]"
+    >
+      {/* El icono anuncia a dónde vas, no dónde estás: en claro se ve la luna.
+          Los dos viven siempre montados y se cruzan girando; entrando y
+          saliendo del DOM, el botón parpadeaba en cada cambio. */}
+      <motion.span
+        className="absolute inset-0 flex items-center justify-center"
+        animate={{ opacity: oscuro ? 1 : 0, rotate: oscuro ? 0 : -90, scale: oscuro ? 1 : 0.6 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+      >
+        <Sun size={15} />
+      </motion.span>
+      <motion.span
+        className="absolute inset-0 flex items-center justify-center"
+        animate={{ opacity: oscuro ? 0 : 1, rotate: oscuro ? 90 : 0, scale: oscuro ? 0.6 : 1 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+      >
+        <Moon size={15} />
+      </motion.span>
+    </button>
+  );
+}
 
 /* ------------------------------------------------------------ indicador */
 
@@ -630,18 +693,18 @@ function TarjetaIndicador({
       <button onClick={alAmpliar} className="w-full cursor-pointer text-left">
         <div className="px-5 pt-4">
           <div className="flex items-center justify-between gap-2">
-            <span className="truncate text-[11px] font-medium uppercase tracking-wide text-slate-400">
+            <span className="truncate text-[11px] font-medium uppercase tracking-wide text-[var(--t-txt-3)]">
               {ind.titulo}
             </span>
             <span className="flex shrink-0 items-center gap-1.5">
               <Variacion pct={ind.cambio} invertido={ind.invertido} />
-              <Maximize2 size={13} className="text-slate-300 opacity-0 transition-opacity group-hover:opacity-100" />
+              <Maximize2 size={13} className="text-[var(--t-txt-3)] opacity-0 transition-opacity group-hover:opacity-100" />
             </span>
           </div>
-          <div className="mt-1.5 text-[28px] font-bold leading-none tracking-tight text-slate-900">
+          <div className="mt-1.5 text-[28px] font-bold leading-none tracking-tight text-[var(--t-txt)]">
             <Contador valor={ind.valor} formato={ind.formato} />
           </div>
-          <p className="mt-1.5 text-[12px] leading-snug text-slate-500">{ind.pie}</p>
+          <p className="mt-1.5 text-[12px] leading-snug text-[var(--t-txt-3)]">{ind.pie}</p>
         </div>
         <div className="mt-2">
           <Rayita datos={serie} color={ind.color} />
@@ -657,10 +720,12 @@ function GraficaCanales({
   datos,
   visibles,
   marca,
+  p,
 }: {
   datos: Cubo[];
   visibles: typeof CANALES;
   marca: string | null;
+  p: Paleta;
 }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -673,17 +738,17 @@ function GraficaCanales({
             </linearGradient>
           ))}
         </defs>
-        <CartesianGrid stroke="#EEF1F6" vertical={false} />
-        <XAxis dataKey="etiqueta" tick={{ fill: '#94A3B8', fontSize: 11 }} axisLine={false} tickLine={false} minTickGap={26} />
-        <YAxis tick={{ fill: '#94A3B8', fontSize: 11 }} axisLine={false} tickLine={false} width={46} tickFormatter={corto} />
-        <Tooltip content={<Globo />} cursor={{ stroke: '#CBD5E1', strokeDasharray: '4 4' }} />
+        <CartesianGrid stroke={p.rejilla} vertical={false} />
+        <XAxis dataKey="etiqueta" tick={{ fill: p.eje, fontSize: 11 }} axisLine={false} tickLine={false} minTickGap={26} />
+        <YAxis tick={{ fill: p.eje, fontSize: 11 }} axisLine={false} tickLine={false} width={46} tickFormatter={corto} />
+        <Tooltip content={<Globo />} cursor={{ stroke: p.cursor, strokeDasharray: '4 4' }} />
         {marca && (
           <ReferenceLine
             x={marca}
-            stroke="#0F172A"
+            stroke={p.eje}
             strokeDasharray="4 4"
-            strokeOpacity={0.35}
-            label={{ value: 'empezamos', position: 'insideTopLeft', fill: '#64748B', fontSize: 10 }}
+            strokeOpacity={0.7}
+            label={{ value: 'empezamos', position: 'insideTopLeft', fill: p.eje, fontSize: 10 }}
           />
         )}
         {visibles.map((c) => (
@@ -704,15 +769,15 @@ function GraficaCanales({
   );
 }
 
-function GraficaBuscadores({ datos, metrica }: { datos: Cubo[]; metrica: Metrica }) {
+function GraficaBuscadores({ datos, metrica, p }: { datos: Cubo[]; metrica: Metrica; p: Paleta }) {
   const nombre = metrica === 'posicion' ? 'Posición media' : metrica === 'clics' ? 'Clics' : 'Impresiones';
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={datos} margin={{ top: 6, right: 14, left: 0, bottom: 0 }}>
-        <CartesianGrid stroke="#EEF1F6" vertical={false} />
-        <XAxis dataKey="etiqueta" tick={{ fill: '#94A3B8', fontSize: 11 }} axisLine={false} tickLine={false} minTickGap={30} />
+        <CartesianGrid stroke={p.rejilla} vertical={false} />
+        <XAxis dataKey="etiqueta" tick={{ fill: p.eje, fontSize: 11 }} axisLine={false} tickLine={false} minTickGap={30} />
         <YAxis
-          tick={{ fill: '#94A3B8', fontSize: 11 }}
+          tick={{ fill: p.eje, fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           width={46}
@@ -720,7 +785,7 @@ function GraficaBuscadores({ datos, metrica }: { datos: Cubo[]; metrica: Metrica
           reversed={metrica === 'posicion'}
           domain={metrica === 'posicion' ? [1, 'dataMax'] : [0, 'auto']}
         />
-        <Tooltip content={<Globo />} cursor={{ stroke: '#CBD5E1', strokeDasharray: '4 4' }} />
+        <Tooltip content={<Globo />} cursor={{ stroke: p.cursor, strokeDasharray: '4 4' }} />
         <Line
           type="monotone"
           dataKey={metrica}
@@ -737,7 +802,7 @@ function GraficaBuscadores({ datos, metrica }: { datos: Cubo[]; metrica: Metrica
 }
 
 /** La serie de un solo indicador, para cuando se abre en grande. */
-function GraficaIndicador({ ind, datos }: { ind: Indicador; datos: Cubo[] }) {
+function GraficaIndicador({ ind, datos, p }: { ind: Indicador; datos: Cubo[]; p: Paleta }) {
   const puntos = datos.map((b) => ({ etiqueta: b.etiqueta, valor: ind.de(b) }));
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -748,10 +813,10 @@ function GraficaIndicador({ ind, datos }: { ind: Indicador; datos: Cubo[] }) {
             <stop offset="100%" stopColor={ind.color} stopOpacity={0.03} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="#EEF1F6" vertical={false} />
-        <XAxis dataKey="etiqueta" tick={{ fill: '#94A3B8', fontSize: 11 }} axisLine={false} tickLine={false} minTickGap={26} />
-        <YAxis tick={{ fill: '#94A3B8', fontSize: 11 }} axisLine={false} tickLine={false} width={52} tickFormatter={corto} />
-        <Tooltip content={<Globo />} cursor={{ stroke: '#CBD5E1', strokeDasharray: '4 4' }} />
+        <CartesianGrid stroke={p.rejilla} vertical={false} />
+        <XAxis dataKey="etiqueta" tick={{ fill: p.eje, fontSize: 11 }} axisLine={false} tickLine={false} minTickGap={26} />
+        <YAxis tick={{ fill: p.eje, fontSize: 11 }} axisLine={false} tickLine={false} width={52} tickFormatter={corto} />
+        <Tooltip content={<Globo />} cursor={{ stroke: p.cursor, strokeDasharray: '4 4' }} />
         <Area
           type="monotone"
           dataKey="valor"
@@ -772,7 +837,7 @@ function Embudo({ pasos, alto = 36 }: { pasos: { nombre: string; valor: number }
   const tope = pasos[0].valor;
   return (
     <div className="space-y-1">
-      <p className="pb-1 text-[11px] text-slate-400">
+      <p className="pb-1 text-[11px] text-[var(--t-txt-3)]">
         Las barras van a escala comprimida para que se vean los pasos chicos. Los números son los reales.
       </p>
       {pasos.map((p, i) => {
@@ -782,15 +847,15 @@ function Embudo({ pasos, alto = 36 }: { pasos: { nombre: string; valor: number }
           <div key={p.nombre}>
             {previo !== null && (
               <div className="flex items-center gap-2 py-1 pl-[6rem]">
-                <span className="h-3 w-px bg-slate-200" />
-                <span className="text-[11px] font-medium text-slate-400">
+                <span className="h-3 w-px bg-[var(--t-borde)]" />
+                <span className="text-[11px] font-medium text-[var(--t-txt-3)]">
                   {((p.valor / previo) * 100).toFixed(1)}% pasa al siguiente paso
                 </span>
               </div>
             )}
             <div className="flex items-center gap-3">
-              <span className="w-[5.5rem] shrink-0 text-[12.5px] font-medium text-slate-600">{p.nombre}</span>
-              <div className="relative flex-1 overflow-hidden rounded-lg bg-slate-100" style={{ height: alto }}>
+              <span className="w-[5.5rem] shrink-0 text-[12.5px] font-medium text-[var(--t-txt-2)]">{p.nombre}</span>
+              <div className="relative flex-1 overflow-hidden rounded-lg bg-[var(--t-pista)]" style={{ height: alto }}>
                 <motion.div
                   className="absolute inset-y-0 left-0 rounded-lg"
                   style={{ background: `linear-gradient(90deg, ${MORADO}, #CC66FF)`, opacity: 1 - i * 0.15 }}
@@ -800,7 +865,7 @@ function Embudo({ pasos, alto = 36 }: { pasos: { nombre: string; valor: number }
                   transition={{ duration: 0.9, delay: 0.1 + i * 0.12, ease: [0.22, 0.61, 0.36, 1] }}
                 />
               </div>
-              <span className="w-14 shrink-0 text-right text-[13px] font-bold tabular-nums text-slate-900">
+              <span className="w-14 shrink-0 text-right text-[13px] font-bold tabular-nums text-[var(--t-txt)]">
                 <Contador valor={p.valor} />
               </span>
             </div>
@@ -823,7 +888,7 @@ function Leyenda({ ocultos, alAlternar }: { ocultos: string[]; alAlternar: (c: s
             key={c.clave}
             onClick={() => alAlternar(c.clave)}
             className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11.5px] font-medium transition-all ${
-              activo ? 'border-slate-200 bg-white text-slate-700' : 'border-transparent bg-slate-100 text-slate-400'
+              activo ? 'border-[var(--t-borde)] bg-[var(--t-tarjeta)] text-[var(--t-txt-2)]' : 'border-transparent bg-[var(--t-pista)] text-[var(--t-txt-3)]'
             }`}
           >
             <span className="h-2 w-2 rounded-full transition-colors" style={{ background: activo ? c.color : '#CBD5E1' }} />
@@ -837,13 +902,13 @@ function Leyenda({ ocultos, alAlternar }: { ocultos: string[]; alAlternar: (c: s
 
 function Selector({ valor, alCambiar }: { valor: Metrica; alCambiar: (m: Metrica) => void }) {
   return (
-    <div className="flex rounded-lg bg-slate-100 p-0.5">
+    <div className="flex rounded-lg bg-[var(--t-pista)] p-0.5">
       {([['clics', 'Clics'], ['impresiones', 'Impresiones'], ['posicion', 'Posición']] as const).map(([k, t]) => (
         <button
           key={k}
           onClick={() => alCambiar(k)}
           className={`rounded-md px-2.5 py-1 text-[11.5px] font-medium transition-colors ${
-            valor === k ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
+            valor === k ? 'bg-[var(--t-elevado)] text-[var(--t-txt)] shadow-sm' : 'text-[var(--t-txt-3)]'
           }`}
         >
           {t}
@@ -855,13 +920,13 @@ function Selector({ valor, alCambiar }: { valor: Metrica; alCambiar: (m: Metrica
 
 function SelectorGrano({ valor, alCambiar }: { valor: Grano; alCambiar: (g: Grano) => void }) {
   return (
-    <div className="flex rounded-lg bg-slate-100 p-0.5">
+    <div className="flex rounded-lg bg-[var(--t-pista)] p-0.5">
       {([['semana', 'Por semana'], ['dia', 'Día por día']] as const).map(([k, t]) => (
         <button
           key={k}
           onClick={() => alCambiar(k)}
           className={`rounded-md px-2.5 py-1 text-[11.5px] font-medium transition-colors ${
-            valor === k ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
+            valor === k ? 'bg-[var(--t-elevado)] text-[var(--t-txt)] shadow-sm' : 'text-[var(--t-txt-3)]'
           }`}
         >
           {t}
@@ -876,7 +941,7 @@ function TablaConsultas() {
     <div className="-mx-1 overflow-x-auto">
       <table className="w-full min-w-[440px] text-left text-[12.5px]">
         <thead>
-          <tr className="text-[10.5px] uppercase tracking-wider text-slate-400">
+          <tr className="text-[10.5px] uppercase tracking-wider text-[var(--t-txt-3)]">
             <th className="px-1 pb-1.5 font-medium">Consulta</th>
             <th className="px-1 pb-1.5 text-right font-medium">Clics</th>
             <th className="px-1 pb-1.5 text-right font-medium">Impresiones</th>
@@ -891,14 +956,14 @@ function TablaConsultas() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.04 }}
-              className="border-t border-slate-100"
+              className="border-t border-[var(--t-borde-suave)]"
             >
-              <td className="px-1 py-2 text-slate-700">{c.texto}</td>
-              <td className="px-1 py-2 text-right tabular-nums text-slate-900">{c.clics}</td>
-              <td className="px-1 py-2 text-right tabular-nums text-slate-500">{miles(c.impresiones)}</td>
+              <td className="px-1 py-2 text-[var(--t-txt-2)]">{c.texto}</td>
+              <td className="px-1 py-2 text-right tabular-nums text-[var(--t-txt)]">{c.clics}</td>
+              <td className="px-1 py-2 text-right tabular-nums text-[var(--t-txt-3)]">{miles(c.impresiones)}</td>
               <td className="px-1 py-2 text-right tabular-nums">
-                <span className="font-semibold text-slate-900">{c.posicion}</span>
-                <span className="ml-1.5 rounded bg-emerald-50 px-1 text-[10.5px] font-semibold text-emerald-700">
+                <span className="font-semibold text-[var(--t-txt)]">{c.posicion}</span>
+                <span className="ml-1.5 rounded bg-[var(--t-ok-bg)] px-1 text-[10.5px] font-semibold text-[var(--t-ok-tx)]">
                   ↑ {(c.antes - c.posicion).toFixed(1)}
                 </span>
               </td>
@@ -917,7 +982,7 @@ function TarjetaIA({ v, retraso }: { v: (typeof VISIBILIDAD_IA)[number]; retraso
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: retraso }}
-      className="rounded-xl bg-slate-900 p-4"
+      className="rounded-xl bg-[var(--t-ia)] p-4 ring-1 ring-white/[.06]"
     >
       <div className="flex items-center justify-between gap-2">
         <LogoIA marca={v.marca} alto={16} />
@@ -960,6 +1025,7 @@ function VentanaGrafica({
   alCambiarMetrica,
   marca,
   periodo,
+  p,
 }: {
   cual: Ampliada;
   alCerrar: () => void;
@@ -975,6 +1041,7 @@ function VentanaGrafica({
   alCambiarMetrica: (m: Metrica) => void;
   marca: string | null;
   periodo: Periodo;
+  p: Paleta;
 }) {
   const desde = `Últimos ${periodo} días · ${EMPRESA.nombre}`;
   const columnaTiempo = grano === 'dia' ? 'Día' : 'Semana del';
@@ -986,7 +1053,7 @@ function VentanaGrafica({
       <Modal alCerrar={alCerrar} titulo={ind.titulo} sub={desde} ancho="max-w-4xl">
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-4 sm:px-6">
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold tabular-nums text-slate-900">
+            <span className="text-3xl font-bold tabular-nums text-[var(--t-txt)]">
               {ind.formato ? ind.formato(ind.valor) : miles(ind.valor)}
             </span>
             <Variacion pct={ind.cambio} invertido={ind.invertido} />
@@ -994,10 +1061,10 @@ function VentanaGrafica({
           <SelectorGrano valor={grano} alCambiar={alCambiarGrano} />
         </div>
         <div className="h-[42vh] min-h-[240px] px-1 py-4 sm:px-4">
-          <GraficaIndicador ind={ind} datos={serie} />
+          <GraficaIndicador ind={ind} datos={serie} p={p} />
         </div>
         <div className="space-y-3 px-5 pb-5 sm:px-6">
-          <p className="rounded-xl bg-slate-50 p-3.5 text-[12.5px] leading-relaxed text-slate-600">{ind.explica}</p>
+          <p className="rounded-xl bg-[var(--t-suave)] p-3.5 text-[12.5px] leading-relaxed text-[var(--t-txt-2)]">{ind.explica}</p>
           <TablaDatos
             columnas={[columnaTiempo, ind.titulo]}
             filas={serie.map((b) => [b.etiqueta, ind.formato ? ind.formato(ind.de(b)) : ind.de(b)])}
@@ -1015,7 +1082,7 @@ function VentanaGrafica({
           <SelectorGrano valor={grano} alCambiar={alCambiarGrano} />
         </div>
         <div className="h-[46vh] min-h-[260px] px-1 py-4 sm:px-4">
-          <GraficaCanales datos={serie} visibles={visibles} marca={marca} />
+          <GraficaCanales datos={serie} visibles={visibles} marca={marca} p={p} />
         </div>
         <div className="px-5 pb-5 sm:px-6">
           <TablaDatos
@@ -1039,20 +1106,20 @@ function VentanaGrafica({
           <Embudo pasos={pasos} alto={52} />
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             {pasos.slice(1).map((p, i) => (
-              <div key={p.nombre} className="rounded-xl bg-slate-50 p-3.5">
-                <div className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+              <div key={p.nombre} className="rounded-xl bg-[var(--t-suave)] p-3.5">
+                <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--t-txt-3)]">
                   {pasos[i].nombre} → {p.nombre}
                 </div>
-                <div className="mt-1 text-[19px] font-bold tabular-nums text-slate-900">
+                <div className="mt-1 text-[19px] font-bold tabular-nums text-[var(--t-txt)]">
                   {((p.valor / pasos[i].valor) * 100).toFixed(1)}%
                 </div>
-                <div className="text-[11.5px] text-slate-500">se quedan {miles(pasos[i].valor - p.valor)} en el camino</div>
+                <div className="text-[11.5px] text-[var(--t-txt-3)]">se quedan {miles(pasos[i].valor - p.valor)} en el camino</div>
               </div>
             ))}
           </div>
-          <p className="mt-4 rounded-xl bg-slate-50 p-3.5 text-[12.5px] leading-relaxed text-slate-600">
+          <p className="mt-4 rounded-xl bg-[var(--t-suave)] p-3.5 text-[12.5px] leading-relaxed text-[var(--t-txt-2)]">
             Subir un punto la conversión de sesiones a contactos daría{' '}
-            <strong className="text-slate-900">{Math.round(d.sesiones * 0.01)}</strong> contactos más en el mismo
+            <strong className="text-[var(--t-txt)]">{Math.round(d.sesiones * 0.01)}</strong> contactos más en el mismo
             periodo, sin gastar un peso más en traer gente. Por eso el trabajo empieza aquí y no en la pauta.
           </p>
         </div>
@@ -1068,10 +1135,10 @@ function VentanaGrafica({
           <SelectorGrano valor={grano} alCambiar={alCambiarGrano} />
         </div>
         <div className="h-[40vh] min-h-[240px] px-1 py-4 sm:px-4">
-          <GraficaBuscadores datos={serie} metrica={metrica} />
+          <GraficaBuscadores datos={serie} metrica={metrica} p={p} />
         </div>
         <div className="px-5 pb-5 sm:px-6">
-          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--t-txt-3)]">
             Consultas del periodo
           </div>
           <TablaDatos
@@ -1090,18 +1157,18 @@ function VentanaGrafica({
         <div className="h-[36vh] min-h-[220px] px-1 py-5 sm:px-4">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={datos} margin={{ top: 6, right: 14, left: 0, bottom: 0 }}>
-              <CartesianGrid stroke="#EEF1F6" vertical={false} />
-              <XAxis dataKey="nombre" tick={{ fill: '#64748B', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <CartesianGrid stroke={p.rejilla} vertical={false} />
+              <XAxis dataKey="nombre" tick={{ fill: p.eje, fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis
-                tick={{ fill: '#94A3B8', fontSize: 11 }}
+                tick={{ fill: p.eje, fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
                 width={46}
                 domain={[0, 100]}
                 tickFormatter={(v: number) => `${v}%`}
               />
-              <Tooltip content={<Globo sufijo="%" />} cursor={{ fill: '#F8FAFC' }} />
-              <Bar dataKey="antes" name="Cuando llegamos" fill="#CBD5E1" radius={[5, 5, 0, 0]} animationDuration={700} />
+              <Tooltip content={<Globo sufijo="%" />} cursor={{ fill: p.rejilla }} />
+              <Bar dataKey="antes" name="Cuando llegamos" fill={p.antes} radius={[5, 5, 0, 0]} animationDuration={700} />
               <Bar dataKey="hoy" name="Hoy" radius={[5, 5, 0, 0]} animationDuration={900}>
                 {datos.map((_, i) => (
                   <Cell key={i} fill={i % 2 ? '#9933FF' : MORADO} />
@@ -1111,7 +1178,7 @@ function VentanaGrafica({
           </ResponsiveContainer>
         </div>
         <div className="space-y-3 px-5 pb-5 sm:px-6">
-          <p className="rounded-xl bg-slate-50 p-3.5 text-[12.5px] leading-relaxed text-slate-600">
+          <p className="rounded-xl bg-[var(--t-suave)] p-3.5 text-[12.5px] leading-relaxed text-[var(--t-txt-2)]">
             Cada semana se les hacen a los cuatro modelos las mismas preguntas de compra y se registra si la
             marca aparece y en qué lugar de la respuesta. Es la única forma de medir algo que Search Console no
             reporta.
@@ -1135,26 +1202,26 @@ function VentanaGrafica({
             layout="vertical"
             margin={{ top: 6, right: 20, left: 8, bottom: 0 }}
           >
-            <CartesianGrid stroke="#EEF1F6" horizontal={false} />
-            <XAxis type="number" domain={[0, 100]} tick={{ fill: '#94A3B8', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <CartesianGrid stroke={p.rejilla} horizontal={false} />
+            <XAxis type="number" domain={[0, 100]} tick={{ fill: p.eje, fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis
               type="category"
               dataKey="nombre"
-              tick={{ fill: '#475569', fontSize: 11.5 }}
+              tick={{ fill: p.eje, fontSize: 11.5 }}
               axisLine={false}
               tickLine={false}
               width={148}
             />
-            <Tooltip content={<Globo />} cursor={{ fill: '#F8FAFC' }} />
-            <Bar dataKey="antes" name="Cuando llegamos" fill="#CBD5E1" radius={[0, 4, 4, 0]} animationDuration={700} />
+            <Tooltip content={<Globo />} cursor={{ fill: p.rejilla }} />
+            <Bar dataKey="antes" name="Cuando llegamos" fill={p.antes} radius={[0, 4, 4, 0]} animationDuration={700} />
             <Bar dataKey="hoy" name="Hoy" fill={MORADO} radius={[0, 4, 4, 0]} animationDuration={900} />
           </BarChart>
         </ResponsiveContainer>
       </div>
       <div className="space-y-3 px-5 pb-5 sm:px-6">
         <div className="flex items-baseline gap-2">
-          <span className="text-3xl font-bold tabular-nums text-slate-900">{PUNTAJE.total}</span>
-          <span className="text-[13px] text-slate-500">de 100 · empezamos en {PUNTAJE.antes}</span>
+          <span className="text-3xl font-bold tabular-nums text-[var(--t-txt)]">{PUNTAJE.total}</span>
+          <span className="text-[13px] text-[var(--t-txt-3)]">de 100 · empezamos en {PUNTAJE.antes}</span>
         </div>
         <TablaDatos
           columnas={['Área', 'Hoy', 'Cuando llegamos', 'Ganancia']}
@@ -1174,22 +1241,22 @@ function Globo({ active, payload, label, sufijo = '' }: any) {
   const apilado = payload.length > 1 && payload[0]?.dataKey !== 'antes';
   const total = payload.reduce((t: number, p: any) => t + (p.value || 0), 0);
   return (
-    <div className="rounded-xl border border-slate-200 bg-white/95 px-3 py-2.5 shadow-lg backdrop-blur">
-      <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">{label}</div>
+    <div className="rounded-xl border border-[var(--t-borde)] bg-[var(--t-tarjeta)] px-3 py-2.5 shadow-lg">
+      <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--t-txt-3)]">{label}</div>
       {payload.map((p: any) => (
         <div key={p.dataKey} className="flex items-center gap-2 text-[12.5px]">
           <span className="h-2 w-2 rounded-full" style={{ background: p.color || p.fill || p.stroke }} />
-          <span className="text-slate-600">{p.name}</span>
-          <span className="ml-auto font-semibold tabular-nums text-slate-900">
+          <span className="text-[var(--t-txt-2)]">{p.name}</span>
+          <span className="ml-auto font-semibold tabular-nums text-[var(--t-txt)]">
             {typeof p.value === 'number' ? p.value.toLocaleString('es-MX') : p.value}
             {sufijo}
           </span>
         </div>
       ))}
       {apilado && (
-        <div className="mt-1.5 flex items-center gap-2 border-t border-slate-100 pt-1.5 text-[12.5px]">
-          <span className="text-slate-500">Total</span>
-          <span className="ml-auto font-bold tabular-nums text-slate-900">{total.toLocaleString('es-MX')}</span>
+        <div className="mt-1.5 flex items-center gap-2 border-t border-[var(--t-borde-suave)] pt-1.5 text-[12.5px]">
+          <span className="text-[var(--t-txt-3)]">Total</span>
+          <span className="ml-auto font-bold tabular-nums text-[var(--t-txt)]">{total.toLocaleString('es-MX')}</span>
         </div>
       )}
     </div>
