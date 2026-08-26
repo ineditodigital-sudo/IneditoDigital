@@ -60,15 +60,18 @@ export function TituloBloque({
   alAmpliar?: () => void;
 }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--t-borde-suave)] px-5 py-4 sm:px-6">
-      <div className="min-w-0">
-        <div className="text-[15px] font-semibold tracking-tight text-[var(--t-txt)]">{titulo}</div>
-        {sub && <p className="mt-0.5 text-[13px] leading-snug text-[var(--t-txt-3)]">{sub}</p>}
+    <div className="border-b border-[var(--t-borde-suave)] px-5 py-4 sm:px-6">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[15px] font-semibold tracking-tight text-[var(--t-txt)]">{titulo}</div>
+          {sub && <p className="mt-0.5 text-[13px] leading-snug text-[var(--t-txt-3)]">{sub}</p>}
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          {extra && <div className="hidden items-center gap-2 sm:flex">{extra}</div>}
+          {alAmpliar && <BotonAmpliar alPulsar={alAmpliar} />}
+        </div>
       </div>
-      <div className="flex items-center gap-2">
-        {extra}
-        {alAmpliar && <BotonAmpliar alPulsar={alAmpliar} />}
-      </div>
+      {extra && <div className="mt-3 sm:hidden">{extra}</div>}
     </div>
   );
 }
@@ -227,8 +230,8 @@ export function Anillo({
   const color = valor >= 70 ? '#16A34A' : valor >= 45 ? '#D97706' : '#E11D48';
 
   return (
-    <div className="relative shrink-0" style={{ width: tamano, height: tamano }}>
-      <svg width={tamano} height={tamano} className="-rotate-90">
+    <div className="relative aspect-square w-[8.25rem] shrink-0 sm:w-[10.5rem]">
+      <svg viewBox={`0 0 ${tamano} ${tamano}`} className="h-full w-full -rotate-90">
         <circle cx={tamano / 2} cy={tamano / 2} r={r} fill="none" stroke="var(--t-pista)" strokeWidth="13" />
         {antes !== undefined && (
           <circle
@@ -259,8 +262,8 @@ export function Anillo({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <Contador valor={valor} duracion={1400} className="text-4xl font-bold tracking-tight text-[var(--t-txt)]" />
-        <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--t-txt-3)]">de 100</span>
+        <Contador valor={valor} duracion={1400} className="text-3xl font-bold tracking-tight text-[var(--t-txt)] sm:text-4xl" />
+        <span className="text-[10.5px] font-medium uppercase tracking-wider text-[var(--t-txt-3)] sm:text-[11px]">de 100</span>
       </div>
     </div>
   );
