@@ -275,7 +275,10 @@ export default function AIAssistant() {
        y que coincide con fuerza: gana a cualquier intencion generica. Sin esto,
        "automatizar whatsapp" caia en la intencion de contacto por la palabra
        whatsapp, y "aparecer en chatgpt" no encontraba nada. */
-    if (extra && extra.puntos >= 8 && global !== 'precio') {
+    /* La pagina suelta ganaba con 8 puntos aunque un servicio hubiera
+       sacado mas. "Quiero anunciarme en chatgpt" terminaba en la ficha de
+       posicionamiento organico en IA en vez de en la de ChatGPT Ads. */
+    if (extra && extra.puntos >= 8 && extra.puntos >= (coincidencias[0]?.puntos ?? 0) && global !== 'precio') {
       setReq((r) => ({ ...r, servicio: r.servicio ?? extra.pagina.titulo }));
       bot(`*${extra.pagina.titulo}*
 ${extra.pagina.desc}`, {
