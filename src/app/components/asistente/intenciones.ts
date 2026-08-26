@@ -30,7 +30,7 @@ const vacias = new Set(
     'hola buenas dias tardes noches gracias favor ayuda info informacion sobre acerca').split(' ')
 );
 
-const palabras = (s: string) => limpio(s).split(' ').filter((p) => p.length > 2 && !vacias.has(p));
+export const palabras = (s: string) => limpio(s).split(' ').filter((p) => p.length > 2 && !vacias.has(p));
 
 /**
  * ¿Son la misma palabra en distinta forma? "encuentran" y "encuentro",

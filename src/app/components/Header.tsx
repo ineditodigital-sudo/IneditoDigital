@@ -48,6 +48,7 @@ export default function Header() {
     { label: m('inicio', 'Inicio'), path: '/' },
     { label: m('portafolio', 'Portafolio'), path: '/portafolio' },
     { label: m('blog', 'Blog'), path: '/blog' },
+    { label: m('glosario', 'Glosario'), path: '/glosario' },
     { label: m('nosotros', 'Nosotros'), path: '/nosotros' },
     { label: m('contacto', 'Contacto'), path: '/contacto' },
   ];

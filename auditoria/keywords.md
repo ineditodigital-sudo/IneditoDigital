@@ -316,8 +316,10 @@ No sale de ninguna herramienta de keywords: sale de preguntarle a Search Console
 
 `/produccion-audiovisual/` merece atención aparte: con 15 clics era la URL rota que más tráfico traía, casi tantos como los 17 clics que el sitio entero registró en los últimos 28 días.
 
-### Qué hacer con esto
+### Qué se decidió (26/08/2026)
 
-1. **Decidir primero si el servicio se ofrece.** Crear una página para algo que no se vende es peor que no tenerla.
-2. Para los que sí: ficha propia bajo `/servicios/`, siguiendo el patrón de las que ya existen.
-3. Redirigir la URL vieja a la ficha nueva en cuanto exista. Hoy van a `/servicios`, que es lo más honesto sin prometer algo que no está.
+**Dirección resolvió no ofrecer ninguno de estos servicios.** Producción audiovisual, espacios publicitarios, desarrollo de apps y gestión de redes sociales quedan fuera del catálogo.
+
+Eso convierte estas 2.734 impresiones en demanda que el sitio **no va a capturar**, y es una decisión legítima: crear una página para algo que no se vende es peor que no tenerla. Las URLs antiguas siguen redirigiendo a `/servicios`.
+
+Queda registrado aquí porque si dentro de un año alguien se pregunta por qué el sitio no cubre «producción audiovisual» teniendo 15 clics medidos, la respuesta es que se decidió, no que se pasó por alto.

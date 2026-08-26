@@ -191,6 +191,53 @@ elseif ($seg[0] === 'blog') {
   $title='Blog de Marketing Digital | '.$siteName; $desc='Artículos y guías de marketing digital, SEO, IA y ventas.'; $canonical=$BASE.'/blog'; $crumbs[]=['Blog','/blog'];
   $bodyBuilder=function() use ($blog,$e){ $h='<h1>Blog</h1><ul>'; foreach($blog as $b) $h.='<li><a href="/blog/'.e($b['slug']).'"><strong>'.e($b['title']).'</strong></a> — '.e($b['excerpt'] ?? '').'</li>'; return $h.'</ul>'; };
 }
+elseif (($seg[0] ?? '') === 'glosario') {
+  /* Contenido definicional: es lo que un asistente de IA cita cuando le
+     preguntan "que es AEO". El schema DefinedTermSet es el que corresponde a
+     un glosario y lo entienden tanto Google como los modelos. */
+  $title = 'Glosario de marketing digital, SEO y posicionamiento en IA | ' . $siteName;
+  $desc  = 'Que significan SEO, AEO, GEO, indexacion, CTR, NAP y el resto de terminos que salen al hablar de posicionamiento. En lenguaje normal.';
+  $canonical = $BASE . '/glosario';
+  $crumbs[] = ['Glosario', '/glosario'];
+
+  /* Los terminos salen de glosario.json, que genera `npm run prebuild` desde
+     src/app/data/glosario.ts. No se lee el .ts directamente porque src/ NO se
+     despliega al servidor: solo suben dist/ y los PHP. Una sola fuente, y el
+     bot ve exactamente lo mismo que la persona. */
+  $terminos = [];
+  $crudo = @file_get_contents(__DIR__ . '/glosario.json');
+  if ($crudo) {
+    foreach ((json_decode($crudo, true) ?: []) as $t) {
+      if (empty($t['termino']) || empty($t['definicion'])) continue;
+      $terminos[] = ['n' => $t['termino'], 'd' => $t['definicion'],
+                     'm' => $t['matiz'] ?? '', 's' => $t['siglas'] ?? ''];
+    }
+  }
+
+  if ($terminos) {
+    $schema[] = [
+      '@context' => 'https://schema.org',
+      '@type' => 'DefinedTermSet',
+      'name' => 'Glosario de marketing digital e inteligencia artificial',
+      'url' => $BASE . '/glosario',
+      'hasDefinedTerm' => array_map(function ($t) use ($BASE) {
+        return ['@type' => 'DefinedTerm', 'name' => $t['n'], 'description' => $t['d'],
+                'inDefinedTermSet' => $BASE . '/glosario'];
+      }, $terminos),
+    ];
+  }
+
+  $bodyBuilder = function () use ($terminos, $e) {
+    $h = '<h1>Glosario sin jerga</h1>';
+    $h .= '<p>Los terminos que aparecen cuando alguien habla de posicionamiento, explicados como se los explicariamos a un cliente. Sin adornos y diciendo tambien lo que no son.</p>';
+    foreach ($terminos as $t) {
+      $h .= '<h2>' . e($t['n']) . ($t['s'] ? ' (' . e($t['s']) . ')' : '') . '</h2>';
+      $h .= '<p>' . e($t['d']) . '</p>';
+      if ($t['m']) $h .= '<p>' . e($t['m']) . '</p>';
+    }
+    return $h;
+  };
+}
 elseif (($seg[0] ?? '') === 'contacto') {
   $title = 'Contacto | ' . $siteName;
   $desc = 'Contactanos para una consulta gratuita de marketing digital en Aguascalientes.';
