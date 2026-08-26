@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { motion } from 'motion/react';
-import { ArrowDownRight, ArrowUpRight, Minus } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Maximize2, Minus } from 'lucide-react';
 
 /**
  * Las piezas sueltas del tablero.
@@ -51,10 +51,13 @@ export function TituloBloque({
   titulo,
   sub,
   extra,
+  alAmpliar,
 }: {
   titulo: string;
   sub?: string;
   extra?: ReactNode;
+  /** Si viene, aparece el botón de abrir la gráfica en grande. */
+  alAmpliar?: () => void;
 }) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
@@ -62,8 +65,25 @@ export function TituloBloque({
         <div className="text-[15px] font-semibold tracking-tight text-slate-900">{titulo}</div>
         {sub && <p className="mt-0.5 text-[13px] leading-snug text-slate-500">{sub}</p>}
       </div>
-      {extra}
+      <div className="flex items-center gap-2">
+        {extra}
+        {alAmpliar && <BotonAmpliar alPulsar={alAmpliar} />}
+      </div>
     </div>
+  );
+}
+
+/** Abre la gráfica en grande, con sus controles y los números de atrás. */
+export function BotonAmpliar({ alPulsar }: { alPulsar: () => void }) {
+  return (
+    <button
+      onClick={alPulsar}
+      title="Ver en grande"
+      aria-label="Ver en grande"
+      className="shrink-0 rounded-lg border border-slate-200 p-1.5 text-slate-400 transition-colors hover:border-[#7700CE]/40 hover:bg-[#7700CE]/[.06] hover:text-[#7700CE]"
+    >
+      <Maximize2 size={14} strokeWidth={2} />
+    </button>
   );
 }
 
