@@ -561,6 +561,22 @@ if ($slugNueva !== null && isset($nuevas[$slugNueva])) {
   };
 }
 
+/*
+ * Rutas privadas: existen y responden 200, pero no se indexan ni se enlazan
+ * desde ningun lado. Aqui vive el tablero de demostracion de la expo. Se
+ * llega por el enlace y nada mas: sin canonical, sin schema, sin sitemap y
+ * con X-Robots-Tag ademas del meta, por si algun rastreador ignora robots.txt.
+ */
+$privada = strpos($path, '/demo/') === 0;
+if ($privada) {
+  $is404 = false;
+  $title = 'Tablero de demostración | ' . $siteName;
+  $desc  = 'Ejemplo del tablero que entregamos a cada cliente.';
+  $schema = [];
+  $crumbs = [['Inicio','/']];
+  $bodyBuilder = null;
+}
+
 // --- 404 real: nada que indexar, y sin canonical propio ---
 if ($is404) {
   http_response_code(404);
@@ -664,6 +680,7 @@ header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
 header('Strict-Transport-Security: max-age=31536000');
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-cache');
+if ($privada) header('X-Robots-Tag: noindex, nofollow');
 ?><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -672,7 +689,7 @@ header('Cache-Control: no-cache');
 <title><?= e($title) ?></title>
 <meta name="description" content="<?= e($desc) ?>" />
 <meta name="author" content="<?= e($siteName) ?>" />
-<meta name="robots" content="<?= $is404 ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' ?>" />
+<meta name="robots" content="<?= ($is404 || $privada) ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' ?>" />
 <meta name="theme-color" content="#7700CE" />
 <?php
 // Iconos. Si el cliente subio uno propio en el panel, manda ese; si no, el
@@ -691,7 +708,7 @@ if ($propio): ?>
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <?php endif; ?>
-<?php if (!$is404): ?><link rel="canonical" href="<?= e($canonical) ?>" /><?php endif; ?>
+<?php if (!$is404 && !$privada): ?><link rel="canonical" href="<?= e($canonical) ?>" /><?php endif; ?>
 <?php if($gsv): ?><meta name="google-site-verification" content="<?= e($gsv) ?>" /><?php endif; ?>
 <meta property="og:type" content="<?= e($ogType) ?>" />
 <meta property="og:site_name" content="<?= e($siteName) ?>" />

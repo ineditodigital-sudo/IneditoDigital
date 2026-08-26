@@ -3,37 +3,57 @@ User-agent: *
 Allow: /
 Disallow: /panel/
 Disallow: /api/
+# /demo/ son enlaces privados (el tablero de demostracion de la expo).
+# No se indexan: llevan noindex y X-Robots-Tag, y no hay ningun enlace hacia
+# ellos. Se cierran tambien para los rastreadores de IA, que si no citarian
+# como reales unas cifras que son de ejemplo.
+Disallow: /demo/
 
 # Crawlers de IA (bienvenidos — GEO)
 User-agent: GPTBot
 Allow: /
+Disallow: /demo/
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /demo/
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /demo/
 User-agent: ClaudeBot
 Allow: /
+Disallow: /demo/
 User-agent: anthropic-ai
 Allow: /
+Disallow: /demo/
 User-agent: PerplexityBot
 Allow: /
+Disallow: /demo/
 User-agent: Google-Extended
 Allow: /
+Disallow: /demo/
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /demo/
 User-agent: Claude-User
 Allow: /
+Disallow: /demo/
 User-agent: Claude-SearchBot
 Allow: /
+Disallow: /demo/
 User-agent: Perplexity-User
 Allow: /
+Disallow: /demo/
 User-agent: Amazonbot
 Allow: /
+Disallow: /demo/
 User-agent: meta-externalagent
 Allow: /
+Disallow: /demo/
 User-agent: Bytespider
 Allow: /
+Disallow: /demo/
 User-agent: CCBot
 Allow: /
+Disallow: /demo/
 
 Sitemap: https://www.inedito.digital/sitemap.xml

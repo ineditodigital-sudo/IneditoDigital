@@ -434,3 +434,82 @@
     background: rgba(0, 0, 0, 0.4) !important;
   }
 }
+/* ============================================================
+   TABLERO DE DEMOSTRACIÓN  (/demo/tablero)
+   ============================================================
+   El sitio entero es negro y con la display en mayúsculas. El tablero es lo
+   contrario a propósito: fondo claro y tipografía de interfaz, porque es una
+   pantalla de trabajo y no una página de venta. Estas reglas solo aplican
+   dentro de .tablero, así que no tocan nada más. */
+
+.tablero h1,
+.tablero h2,
+.tablero h3,
+.tablero h4,
+.tablero h5,
+.tablero h6 {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  text-transform: none;
+  letter-spacing: -0.011em;
+}
+
+/* Las gráficas de recharts traen su propio foco punteado del navegador. */
+.tablero .recharts-wrapper:focus,
+.tablero .recharts-surface:focus {
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   IMPRESIÓN
+   ------------------------------------------------------------
+   "Guardar en PDF" es imprimir. Se esconde el tablero y queda solo el
+   documento del reporte, sin la caja del modal ni sus botones. */
+
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  .no-imprimir {
+    display: none !important;
+  }
+
+  /* El modal es fixed y con fondo oscuro: en papel eso sería una plancha
+     gris y una sola hoja recortada. */
+  .no-imprimir-fondo {
+    position: static !important;
+    overflow: visible !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .no-imprimir-fondo > div {
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+
+  /* Del tablero de atrás no se imprime nada: el reporte ya lo resume. */
+  .tablero > header,
+  .tablero > main {
+    display: none !important;
+  }
+
+  .zona-imprimible {
+    max-width: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Sin esto los fondos de color se imprimen en blanco y la portada
+     morada del reporte sale vacía. */
+  .documento,
+  .documento * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .evitar-corte {
+    break-inside: avoid;
+  }
+}
