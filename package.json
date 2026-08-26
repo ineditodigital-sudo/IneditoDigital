@@ -4,8 +4,6 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "glosario": "node scripts/glosario-json.mjs",
-    "prebuild": "node scripts/glosario-json.mjs",
     "build": "vite build",
     "dev": "vite",
     "preview": "vite preview"

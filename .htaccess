@@ -48,6 +48,10 @@ Options -Indexes
   RewriteRule ^espacios-publicitarios(-[a-z0-9-]*)?/?$ /servicios [R=301,L]
   RewriteRule ^creacion-de-logo/?$ /servicios/creacion-de-logo [R=301,L]
 
+  # /glosario existio unas horas el 26/08 y llego a estar en el sitemap.
+  # Se retiro por falta de demanda medida; la URL no puede quedar en 404.
+  RewriteRule ^glosario/?$ /servicios [R=301,L]
+
   # ---- 301 medidas con datos de Google (21/08/2026, IDX-08) ----
   # Salen de pedirle a Search Console las URLs que aun muestra en resultados y
   # comprobar el codigo real de cada una: 44 daban 404, con 4.696 impresiones y
