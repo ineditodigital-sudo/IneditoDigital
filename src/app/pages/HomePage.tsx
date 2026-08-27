@@ -247,136 +247,135 @@ export default function HomePage() {
            rastreo: la portada es la unica pagina que Google visita siempre, y
            un enlace desde aqui es la via mas rapida para que descubra lo nuevo. */}
       {tEnf.visible() && (
-        <section className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
-          <div className="container mx-auto max-w-6xl">
+        <section className="relative overflow-hidden border-y border-[#AA66FF]/15 bg-[#0D0010] px-4 py-16 md:px-6 md:py-24 lg:px-8">
+          {/* la seccion ES la banda: la reticula, la aurora y el filo van a
+              todo lo ancho, sin panel de por medio */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[.12]"
+            style={{
+              backgroundImage: 'radial-gradient(rgba(255,255,255,.65) 1px, transparent 1px)',
+              backgroundSize: '26px 26px',
+              maskImage: 'radial-gradient(70% 80% at 60% 45%, black, transparent)',
+              WebkitMaskImage: 'radial-gradient(70% 80% at 60% 45%, black, transparent)',
+            }}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute right-[-10%] top-1/2 h-[720px] w-[720px] -translate-y-1/2 rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.38), transparent 70%)' }}
+          />
+          <span
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-px"
+            style={{ background: 'linear-gradient(90deg, transparent, #9933FF, transparent)' }}
+          />
+
+          <div className="container relative mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 22 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.55 }}
-              className="relative overflow-hidden rounded-3xl border border-[#9933FF]/25"
-              style={{ background: 'linear-gradient(155deg, rgba(119,0,206,.16), rgba(13,0,16,.62) 55%, rgba(10,10,10,.92))' }}
+              className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16"
             >
-              {/* la retícula de puntos y la aurora del fondo */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-[.13]"
-                style={{
-                  backgroundImage: 'radial-gradient(rgba(255,255,255,.65) 1px, transparent 1px)',
-                  backgroundSize: '24px 24px',
-                  maskImage: 'radial-gradient(75% 75% at 62% 40%, black, transparent)',
-                  WebkitMaskImage: 'radial-gradient(75% 75% at 62% 40%, black, transparent)',
-                }}
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-28 top-1/2 h-[560px] w-[560px] -translate-y-1/2 rounded-full blur-3xl"
-                style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.4), transparent 70%)' }}
-              />
-              <span
-                aria-hidden
-                className="absolute inset-x-0 top-0 h-px"
-                style={{ background: 'linear-gradient(90deg, transparent, #9933FF, transparent)' }}
-              />
-
-              <div className="relative grid items-stretch gap-8 p-7 md:p-10 lg:grid-cols-[1.02fr_1fr] lg:gap-10">
-                {/* ---- el texto y el índice ---- */}
-                <div>
-                  <span className="mb-4 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-[#AA66FF]">
-                    <span aria-hidden className="h-px w-8 bg-[#AA66FF]/60" />
-                    {tEnf('etiqueta', 'NUESTRO ENFOQUE')}
+              {/* ---- el texto y el índice ---- */}
+              <div>
+                <span className="mb-4 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-[#AA66FF]">
+                  <span aria-hidden className="h-px w-8 bg-[#AA66FF]/60" />
+                  {tEnf('etiqueta', 'NUESTRO ENFOQUE')}
+                </span>
+                <h2 className="heading mb-5 text-3xl leading-[1.05] [text-wrap:balance] md:text-5xl">
+                  {tEnf('titulo_1', 'DIRECCIÓN COMERCIAL')}{' '}
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                  >
+                    {tEnf('titulo_2', 'ASISTIDA POR IA')}
                   </span>
-                  <h2 className="heading mb-4 text-3xl leading-[1.05] [text-wrap:balance] md:text-[2.6rem]">
-                    {tEnf('titulo_1', 'DIRECCIÓN COMERCIAL')}{' '}
-                    <span
-                      className="bg-clip-text text-transparent"
-                      style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
-                    >
-                      {tEnf('titulo_2', 'ASISTIDA POR IA')}
-                    </span>
-                  </h2>
-                  <p className="mb-7 text-[15.5px] leading-relaxed text-white/75">
-                    {tEnf('texto', 'Somos una agencia de marketing digital y de inteligencia artificial: estrategia, publicidad y soluciones de IA con todo conectado a datos reales. Dirección define los objetivos y una IA audita cada mes si la estrategia está funcionando. Casi nadie en Aguascalientes trabaja así.')}
-                  </p>
+                </h2>
+                <p className="mb-8 max-w-2xl text-[15.5px] leading-relaxed text-white/75 md:text-base">
+                  {tEnf('texto', 'Somos una agencia de marketing digital y de inteligencia artificial: estrategia, publicidad y soluciones de IA con todo conectado a datos reales. Dirección define los objetivos y una IA audita cada mes si la estrategia está funcionando. Casi nadie en Aguascalientes trabaja así.')}
+                </p>
 
-                  {/* el puente: estas filas SON el enfoque del título */}
-                  <div className="mb-1 font-mono text-[10px] uppercase tracking-[.2em] text-white/45">
-                    {tEnf('indice_titulo', 'Las cuatro piezas que lo hacen posible')}
-                  </div>
-                  <div className="border-t border-white/10">
-                    {[1, 2, 3, 4].map((i) => {
-                      const url = tEnf(`e${i}_url`, '');
-                      if (!url) return null;
-                      return (
-                        <Link
-                          key={i}
-                          to={url}
-                          className="group relative flex items-center gap-4 border-b border-white/10 py-3.5 pl-1 pr-2 transition-colors duration-300 hover:border-[#AA66FF]/40 md:gap-5"
-                        >
-                          <span
-                            aria-hidden
-                            className="absolute inset-y-0 left-0 w-0 bg-gradient-to-r from-[#7700CE]/25 to-transparent transition-all duration-300 group-hover:w-full"
-                          />
-                          {/* min-w y no un ancho fijo: con bg-clip-text, el
-                              degradado solo pinta dentro de la caja y un ancho
-                              corto dejaba los dígitos cortados a la mitad */}
-                          <span
-                            className="heading relative min-w-[3.4rem] shrink-0 bg-clip-text pr-1 text-2xl leading-none text-transparent md:text-3xl"
-                            style={{ backgroundImage: 'linear-gradient(120deg,#9933FF,#CC66FF)' }}
-                          >
-                            0{i}
-                          </span>
-                          <span className="relative min-w-0 flex-1">
-                            <span className="block font-semibold text-white transition-colors group-hover:text-[#DDBBFF]">
-                              {tEnf(`e${i}_titulo`, '')}
-                            </span>
-                            <span className="mt-0.5 block text-[13px] leading-snug text-white/55">
-                              {tEnf(`e${i}_texto`, '')}
-                            </span>
-                          </span>
-                          <ArrowRight
-                            size={18}
-                            className="relative shrink-0 text-[#AA66FF] transition-transform duration-300 group-hover:translate-x-1.5"
-                          />
-                        </Link>
-                      );
-                    })}
-                  </div>
+                {/* el puente: estas filas SON el enfoque del título */}
+                <div className="mb-1 font-mono text-[10px] uppercase tracking-[.2em] text-white/45">
+                  {tEnf('indice_titulo', 'Las cuatro piezas que lo hacen posible')}
                 </div>
-
-                {/* ---- la esfera con sus órbitas y las IAs como satélites ---- */}
-                <div className="relative flex flex-col items-center justify-center">
-                  <div className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[470px]">
-                    <div aria-hidden className="pointer-events-none absolute inset-[-6%]" style={{ transform: 'rotateX(68deg)' }}>
-                      <div className="animate-orbita h-full w-full rounded-full border border-dashed border-[#AA66FF]/35" />
-                    </div>
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-[-12%] rounded-full border border-white/[.07]"
-                      style={{ transform: 'rotateX(68deg) rotateZ(24deg)' }}
-                    />
-                    <EsferaIA className="aspect-square w-full" />
-
-                    {/* las IAs donde medimos presencia, orbitando la esfera */}
-                    {([
-                      ['openai', 'left-0 top-[10%] -translate-x-1/4', '0s'],
-                      ['claude', 'right-0 top-[26%] translate-x-1/4', '1.1s'],
-                      ['gemini', 'left-[4%] bottom-[18%]', '2s'],
-                      ['perplexity', 'right-[6%] bottom-[6%]', '0.6s'],
-                    ] as const).map(([marca, pos, retraso]) => (
-                      <span
-                        key={marca}
-                        className={`animate-flotar absolute ${pos} flex items-center rounded-full border border-white/12 bg-black/50 px-3 py-1.5 shadow-lg backdrop-blur`}
-                        style={{ animationDelay: retraso }}
+                <div className="border-t border-white/10">
+                  {[1, 2, 3, 4].map((i) => {
+                    const url = tEnf(`e${i}_url`, '');
+                    if (!url) return null;
+                    return (
+                      <Link
+                        key={i}
+                        to={url}
+                        className="group relative flex items-center gap-4 border-b border-white/10 py-4 pl-1 pr-2 transition-colors duration-300 hover:border-[#AA66FF]/40 md:gap-6"
                       >
-                        <LogoIA marca={marca} alto={12} />
-                      </span>
-                    ))}
-                  </div>
-                  <span className="mt-1 font-mono text-[10px] uppercase tracking-[.18em] text-white/40">
-                    {tEnf('logos_texto', 'Presencia medida en')}
-                  </span>
+                        <span
+                          aria-hidden
+                          className="absolute inset-y-0 left-0 w-0 bg-gradient-to-r from-[#7700CE]/25 to-transparent transition-all duration-300 group-hover:w-full"
+                        />
+                        {/* min-w y no un ancho fijo: con bg-clip-text el
+                            degradado solo pinta dentro de la caja y un ancho
+                            corto dejaba los dígitos cortados a la mitad */}
+                        <span
+                          className="heading relative min-w-[3.4rem] shrink-0 bg-clip-text pr-1 text-2xl leading-none text-transparent md:min-w-[4rem] md:text-4xl"
+                          style={{ backgroundImage: 'linear-gradient(120deg,#9933FF,#CC66FF)' }}
+                        >
+                          0{i}
+                        </span>
+                        <span className="relative min-w-0 flex-1">
+                          <span className="block text-[15px] font-semibold text-white transition-colors group-hover:text-[#DDBBFF] md:text-base">
+                            {tEnf(`e${i}_titulo`, '')}
+                          </span>
+                          <span className="mt-0.5 block text-[13px] leading-snug text-white/55">
+                            {tEnf(`e${i}_texto`, '')}
+                          </span>
+                        </span>
+                        <ArrowRight
+                          size={19}
+                          className="relative shrink-0 text-[#AA66FF] transition-transform duration-300 group-hover:translate-x-1.5"
+                        />
+                      </Link>
+                    );
+                  })}
                 </div>
+              </div>
+
+              {/* ---- la esfera con sus órbitas y las IAs como satélites ---- */}
+              <div className="relative flex flex-col items-center justify-center">
+                <div className="relative w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[560px]">
+                  <div aria-hidden className="pointer-events-none absolute inset-[-6%]" style={{ transform: 'rotateX(68deg)' }}>
+                    <div className="animate-orbita h-full w-full rounded-full border border-dashed border-[#AA66FF]/35" />
+                  </div>
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-[-12%] rounded-full border border-white/[.07]"
+                    style={{ transform: 'rotateX(68deg) rotateZ(24deg)' }}
+                  />
+                  <EsferaIA className="aspect-square w-full" />
+
+                  {/* las IAs donde medimos presencia, orbitando la esfera */}
+                  {([
+                    ['openai', 'left-0 top-[8%] -translate-x-1/4', '0s'],
+                    ['claude', 'right-0 top-[24%] translate-x-1/4', '1.1s'],
+                    ['gemini', 'left-[2%] bottom-[16%]', '2s'],
+                    ['perplexity', 'right-[4%] bottom-[4%]', '0.6s'],
+                  ] as const).map(([marca, pos, retraso]) => (
+                    <span
+                      key={marca}
+                      className={`animate-flotar absolute ${pos} flex items-center rounded-full border border-white/12 bg-black/55 px-4 py-2.5 shadow-[0_10px_30px_-8px_rgba(119,0,206,.5)] backdrop-blur md:px-5 md:py-3`}
+                      style={{ animationDelay: retraso }}
+                    >
+                      <LogoIA marca={marca} alto={17} className="md:hidden" />
+                      <LogoIA marca={marca} alto={21} className="hidden md:block" />
+                    </span>
+                  ))}
+                </div>
+                <span className="mt-2 font-mono text-[10.5px] uppercase tracking-[.18em] text-white/40">
+                  {tEnf('logos_texto', 'Presencia medida en')}
+                </span>
               </div>
             </motion.div>
           </div>
