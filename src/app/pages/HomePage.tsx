@@ -5,6 +5,7 @@ import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'rea
 import { GlassCard } from '../components/GlassCard';
 import HeroBento from '../components/HeroBento';
 import EsferaIA from '../components/EsferaIA';
+import { FranjaLogosIA } from '../components/LogosIA';
 import SectionDivider from '../components/SectionDivider';
 import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
@@ -247,57 +248,117 @@ export default function HomePage() {
            un enlace desde aqui es la via mas rapida para que descubra lo nuevo. */}
       {tEnf.visible() && (
         <section className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
-          <div className="container mx-auto max-w-5xl">
+          <div className="container mx-auto max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 22 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.55 }}
-              className="relative overflow-hidden rounded-3xl border border-[#9933FF]/25 p-8 md:p-12"
-              style={{ background: 'linear-gradient(155deg, rgba(119,0,206,.20), rgba(13,0,16,.55) 62%)' }}
+              className="relative overflow-hidden rounded-3xl border border-[#9933FF]/25"
+              style={{ background: 'linear-gradient(155deg, rgba(119,0,206,.16), rgba(13,0,16,.62) 55%, rgba(10,10,10,.92))' }}
             >
-              <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-12">
-                <div>
-              <span className="mb-4 inline-block rounded-full bg-[#9933FF]/20 px-3 py-1 font-mono text-[11px] uppercase tracking-[.18em] text-[#AA66FF]">
-                {tEnf('etiqueta', 'NUEVO')}
-              </span>
-              <h2 className="heading mb-4 text-2xl leading-tight md:text-4xl">
-                {tEnf('titulo', 'DIRECCIÓN COMERCIAL ASISTIDA POR IA')}
-              </h2>
-              <p className="mb-10 max-w-2xl text-[15.5px] leading-relaxed text-white/80 md:text-lg">
-                {tEnf('texto', 'Marketing digital, publicidad y contenido con todo conectado a datos reales: dirección define los objetivos, y una IA audita cada mes si la estrategia está funcionando.')}
-              </p>
+              {/* la retícula de puntos y la aurora del fondo */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-[.13]"
+                style={{
+                  backgroundImage: 'radial-gradient(rgba(255,255,255,.65) 1px, transparent 1px)',
+                  backgroundSize: '24px 24px',
+                  maskImage: 'radial-gradient(75% 75% at 62% 40%, black, transparent)',
+                  WebkitMaskImage: 'radial-gradient(75% 75% at 62% 40%, black, transparent)',
+                }}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-28 top-1/2 h-[560px] w-[560px] -translate-y-1/2 rounded-full blur-3xl"
+                style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.4), transparent 70%)' }}
+              />
+              <span
+                aria-hidden
+                className="absolute inset-x-0 top-0 h-px"
+                style={{ background: 'linear-gradient(90deg, transparent, #9933FF, transparent)' }}
+              />
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[1, 2, 3, 4].map((i) => {
-                  const url = tEnf(`e${i}_url`, '');
-                  if (!url) return null;
-                  return (
-                    <Link
-                      key={i}
-                      to={url}
-                      className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[.04] p-4
-                                 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#AA66FF]/40 hover:bg-white/[.07]"
+              <div className="relative grid items-center gap-10 p-7 md:p-12 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
+                {/* ---- el texto y el índice ---- */}
+                <div>
+                  <span className="mb-5 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-[#AA66FF]">
+                    <span aria-hidden className="h-px w-8 bg-[#AA66FF]/60" />
+                    {tEnf('etiqueta', 'NUESTRO ENFOQUE')}
+                  </span>
+                  <h2 className="heading mb-5 text-3xl leading-[1.05] [text-wrap:balance] md:text-[2.9rem]">
+                    {tEnf('titulo_1', 'DIRECCIÓN COMERCIAL')}{' '}
+                    <span
+                      className="bg-clip-text text-transparent"
+                      style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
                     >
-                      <ArrowRight
-                        size={17}
-                        className="mt-1 shrink-0 text-[#AA66FF] transition-transform group-hover:translate-x-1"
-                      />
-                      <span>
-                        <span className="block font-semibold text-white">{tEnf(`e${i}_titulo`, '')}</span>
-                        <span className="mt-0.5 block text-[13.5px] leading-snug text-white/65">
-                          {tEnf(`e${i}_texto`, '')}
-                        </span>
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
+                      {tEnf('titulo_2', 'ASISTIDA POR IA')}
+                    </span>
+                  </h2>
+                  <p className="mb-8 max-w-xl text-[15.5px] leading-relaxed text-white/75">
+                    {tEnf('texto', 'Somos una agencia de marketing digital y de inteligencia artificial: estrategia, publicidad y soluciones de IA con todo conectado a datos reales. Dirección define los objetivos y una IA audita cada mes si la estrategia está funcionando. Casi nadie en Aguascalientes trabaja así.')}
+                  </p>
+
+                  {/* el índice de capacidades: filas editoriales, no cajitas */}
+                  <div className="border-t border-white/10">
+                    {[1, 2, 3, 4].map((i) => {
+                      const url = tEnf(`e${i}_url`, '');
+                      if (!url) return null;
+                      return (
+                        <Link
+                          key={i}
+                          to={url}
+                          className="group relative flex items-center gap-4 border-b border-white/10 py-4 pl-1 pr-2 transition-colors duration-300 hover:border-[#AA66FF]/40 md:gap-6"
+                        >
+                          <span
+                            aria-hidden
+                            className="absolute inset-y-0 left-0 w-0 bg-gradient-to-r from-[#7700CE]/25 to-transparent transition-all duration-300 group-hover:w-full"
+                          />
+                          <span
+                            className="heading relative w-10 shrink-0 bg-clip-text text-2xl leading-none text-transparent md:text-3xl"
+                            style={{ backgroundImage: 'linear-gradient(120deg,#9933FF,#CC66FF)' }}
+                          >
+                            0{i}
+                          </span>
+                          <span className="relative min-w-0 flex-1">
+                            <span className="block font-semibold text-white transition-colors group-hover:text-[#DDBBFF]">
+                              {tEnf(`e${i}_titulo`, '')}
+                            </span>
+                            <span className="mt-0.5 block text-[13px] leading-snug text-white/55">
+                              {tEnf(`e${i}_texto`, '')}
+                            </span>
+                          </span>
+                          <ArrowRight
+                            size={18}
+                            className="relative shrink-0 text-[#AA66FF] transition-transform duration-300 group-hover:translate-x-1.5"
+                          />
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                {/* La esfera de red: 3D proyectado a mano, gira sola y se
-                    arrastra. Es la pieza visual de la banda de IA. */}
-                <EsferaIA className="mx-auto aspect-square w-full max-w-[300px] lg:max-w-[360px]" />
+                {/* ---- la esfera, ahora con sus órbitas ---- */}
+                <div className="relative mx-auto w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[430px]">
+                  <div aria-hidden className="pointer-events-none absolute inset-[-7%]" style={{ transform: 'rotateX(68deg)' }}>
+                    <div className="animate-orbita h-full w-full rounded-full border border-dashed border-[#AA66FF]/35" />
+                  </div>
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-[-14%] rounded-full border border-white/[.07]"
+                    style={{ transform: 'rotateX(68deg) rotateZ(24deg)' }}
+                  />
+                  <EsferaIA className="aspect-square w-full" />
+                  {/* dónde medimos la presencia: las marcas, con sus logos */}
+                  <div className="relative mt-3 text-center">
+                    <span className="font-mono text-[10px] uppercase tracking-[.18em] text-white/40">
+                      {tEnf('logos_texto', 'Presencia medida en')}
+                    </span>
+                    <div className="mt-2.5 flex justify-center">
+                      <FranjaLogosIA alto={15} />
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>

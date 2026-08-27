@@ -680,7 +680,16 @@
 }
 
 /* Sin movimiento: todo queda en su estado final, visible y quieto. */
+/* El anillo orbital de la esfera: los guiones giran despacio. */
+@keyframes orbita {
+  to { transform: rotate(360deg); }
+}
+.animate-orbita {
+  animation: orbita 46s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .animate-orbita,
   .marco-traza,
   .marco-hormigas,
   .marco-asa,
