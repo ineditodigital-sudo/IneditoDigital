@@ -69,6 +69,7 @@ function registro_paginas(): array {
                         'img_4_alt' => ['label' => 'Foto 4 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Equipo Colaborativo'],
                         'chip_1' => ['label' => 'Chip flotante 1', 'tipo' => 'texto', 'def' => 'IA auditando'],
                         'chip_2' => ['label' => 'Chip flotante 2', 'tipo' => 'texto', 'def' => 'Medido hasta la venta'],
+                        'chip_3' => ['label' => 'Chip flotante 3', 'tipo' => 'texto', 'def' => 'Visible ante la IA'],
                         'etiqueta_1' => ['label' => 'Etiqueta sobre la primera foto', 'tipo' => 'texto', 'def' => 'Estrategia Digital'],
                         'etiqueta_2' => ['label' => 'Etiqueta sobre la última foto', 'tipo' => 'texto', 'def' => 'Equipo Experto'],
                     ],

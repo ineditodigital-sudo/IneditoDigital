@@ -617,3 +617,78 @@
     animation: none;
   }
 }
+
+/* ============================================================
+   HERO "EN DISEÑO": el marco se traza, los cursores llegan
+   ============================================================
+   La idea: la portada se ve como si alguien la estuviera diseñando en este
+   momento. El texto NUNCA se anima —la lectura es sagrada—; lo que vive es
+   el marco de selección alrededor y los cursores de colaboradores. */
+
+/* El trazo del marco se dibuja una vez al entrar. */
+@keyframes marco-dibuja {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+.marco-traza {
+  stroke-dasharray: 1;
+  animation: marco-dibuja 1.5s cubic-bezier(0.6, 0, 0.2, 1) 0.35s both;
+}
+
+@keyframes marco-aparece {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Las hormigas marchantes de la selección, en bucle infinito. */
+@keyframes marco-hormigas {
+  to { stroke-dashoffset: -0.09; }
+}
+.marco-hormigas {
+  stroke-dasharray: 5 7;
+  animation: marco-aparece 0.6s ease 1.9s both, marco-hormigas 2.8s linear 1.9s infinite;
+}
+
+/* Asas de las esquinas y nombre del marco: aparecen al terminar el trazo. */
+.marco-asa {
+  animation: marco-aparece 0.35s ease 1.8s both;
+}
+
+/* Cada cursor llega desde su rumbo (variables --desde-x/y) y luego deriva. */
+@keyframes chip-llega {
+  from { opacity: 0; transform: translate(var(--desde-x, 40px), var(--desde-y, 26px)) scale(0.7); }
+  to   { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+.chip-llega {
+  animation: chip-llega 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes chip-deriva {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(7px, -9px); }
+}
+.chip-deriva {
+  animation: chip-deriva 4.5s ease-in-out infinite alternate;
+}
+
+/* El horizonte morado del pie del hero respira despacio. */
+@keyframes horizonte-late {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+.animate-horizonte {
+  animation: horizonte-late 5s ease-in-out infinite alternate;
+}
+
+/* Sin movimiento: todo queda en su estado final, visible y quieto. */
+@media (prefers-reduced-motion: reduce) {
+  .marco-traza,
+  .marco-hormigas,
+  .marco-asa,
+  .chip-llega,
+  .chip-deriva,
+  .animate-horizonte {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
