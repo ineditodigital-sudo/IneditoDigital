@@ -1,22 +1,44 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Check, CheckCircle, Sparkles, TrendingUp, Zap, Target, Star, Bot, MessageCircle, ShoppingCart, Users } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle, Sparkles, TrendingUp, Target, Bot, MessageCircle, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router';
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
-import { GlassCard } from '../components/GlassCard';
 import HeroBento from '../components/HeroBento';
 import EsferaIA from '../components/EsferaIA';
 import { LogoIA } from '../components/LogosIA';
-import SectionDivider from '../components/SectionDivider';
 import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-
-const Floating3DElements = lazy(() => import('../components/Floating3DElements'));
 
 const ProcesoCiclo = lazy(() => import('../components/ProcesoCiclo'));
+
+/* Los adornos que la portada repite en varias secciones, en un solo lugar. */
+
+/** La retícula de puntos con su máscara radial. */
+function Reticula({ foco = '60% 45%' }: { foco?: string }) {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 opacity-[.12]"
+      style={{
+        backgroundImage: 'radial-gradient(rgba(255,255,255,.65) 1px, transparent 1px)',
+        backgroundSize: '26px 26px',
+        maskImage: `radial-gradient(70% 80% at ${foco}, black, transparent)`,
+        WebkitMaskImage: `radial-gradient(70% 80% at ${foco}, black, transparent)`,
+      }}
+    />
+  );
+}
+
+/** El kicker de la casa: línea corta y rótulo en mono. */
+function Kicker({ children, centrado = false }: { children: ReactNode; centrado?: boolean }) {
+  return (
+    <span className={`mb-4 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-[#AA66FF] ${centrado ? 'justify-center' : ''}`}>
+      <span aria-hidden className="h-px w-8 bg-[#AA66FF]/60" />
+      {children}
+      {centrado && <span aria-hidden className="h-px w-8 bg-[#AA66FF]/60" />}
+    </span>
+  );
+}
 
 /**
  * Monta a sus hijos hasta que el lector se acerca.
@@ -64,20 +86,12 @@ export default function HomePage() {
   const tProc   = contenido('home', 'proceso');
   const tCasos  = contenido('home', 'casos');
   const tCierre = contenido('home', 'cierre');
-  const tTar    = contenido('home', 'tarjetas');
   const tTarIA  = contenido('home', 'tarjetas_ia');
   const tVal    = contenido('home', 'valores');
   const tEnf    = contenido('home', 'enfoque');
   const tCin    = contenido('home', 'cinta');
   const tNiv    = contenido('home', 'niveles');
   const tTab    = contenido('home', 'tablero');
-
-  const features = [
-    { icon: Sparkles,   title: tTar('t1_titulo', 'IA'),          description: tTar('t1_texto', 'Automatización y chatbots 24/7'),  image: tTar('t1_imagen', 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
-    { icon: TrendingUp, title: tTar('t2_titulo', 'Estrategia'),  description: tTar('t2_texto', 'Diseños que convierten'),          image: tTar('t2_imagen', 'https://images.unsplash.com/photo-1683721003111-070bcc053d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
-    { icon: Zap,        title: tTar('t3_titulo', 'Analítica'),   description: tTar('t3_texto', 'Decisiones basadas en datos'),     image: tTar('t3_imagen', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
-  ];
-
 
   const process = [
     { step: '01', title: tProc('paso_1_titulo', 'OBJETIVOS'), description: tProc('paso_1_texto', 'Dirección define qué quiere lograr y en qué plazo') },
@@ -165,81 +179,59 @@ export default function HomePage() {
         </div>
       )}
 
-      <SectionDivider variant="gradient" color="purple" />
-
-      {/* Bento Grid - Value Proposition */}
+      {/* ---- El problema ----
+           Antes era la franja blanca de "transformación digital" con fotos de
+           stock. Ahora es el interludio que plantea el problema que la banda
+           de abajo resuelve: se invierte en digital sin saber qué regresa. */}
       {tTrans.visible() && (
-      <section className="py-8 md:py-12 px-4 md:px-6 lg:px-8 relative overflow-hidden bg-white">
-        {/* Elementos 3D Flotantes */}
-        <Suspense fallback={<div className="w-full h-full bg-gray-100 animate-pulse" />}>
-          <Floating3DElements variant="mixed" count={10} />
-        </Suspense>
-        
-        <div className="container mx-auto relative z-10 max-w-7xl">
-          <div className="text-center mb-8 md:mb-10">
-            <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              {tTrans('titulo_1', 'EL PODER DE LA')} <span className="text-[#7700CE]">{tTrans('titulo_2', 'TRANSFORMACIÓN DIGITAL')}</span>
-            </h2>
-            <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              {tTrans('bajada', 'Combinamos lo mejor del marketing tradicional con IA y automatización de vanguardia')}
-            </p>
-          </div>
+        <section className="relative overflow-hidden px-4 py-16 md:px-6 md:py-24 lg:px-8">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-[-14%] top-1/2 h-[560px] w-[560px] -translate-y-1/2 rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.30), transparent 70%)' }}
+          />
+          <Reticula foco="50% 40%" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {features.map((feature, index) => {
-              return (
-                <div
-                  key={feature.title}
-                  className="animate-fadeIn"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <GlassCard hover glow className="h-full overflow-hidden group bg-white/80 backdrop-blur-sm border-gray-200">
-                    {/* Imagen de fondo */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
-                      <img 
-                        src={feature.image} 
-                        alt={feature.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    {/* Contenido */}
-                    <div className="relative z-10">
-                      <feature.icon className="text-[#7700CE] mb-3" size={28} />
-                      <h3 className="heading text-base md:text-lg mb-2 text-black">{feature.title}</h3>
-                      <p className="text-gray-600 text-xs md:text-sm">{feature.description}</p>
-                    </div>
-                  </GlassCard>
-                </div>
-              );
-            })}
-            
-            {/* Resultados Card */}
-            <div
-              className="animate-fadeIn"
-              style={{ animationDelay: `${features.length * 0.1}s` }}
-            >
-              <GlassCard hover glow className="h-full overflow-hidden group bg-white/80 backdrop-blur-sm border-gray-200">
-                {/* Imagen de fondo */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
-                  <img 
-                    src={tTar('t4_imagen', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080')}
-                    alt="Resultados"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                {/* Contenido */}
-                <div className="relative z-10">
-                  <Target className="text-[#7700CE] mb-3" size={28} />
-                  <h3 className="heading text-base md:text-lg mb-2 text-black">{tTar('t4_titulo', 'Resultados')}</h3>
-                  <p className="text-gray-600 text-xs md:text-sm">{tTar('t4_texto', 'ROI comprobado y crecimiento sostenible')}</p>
-                </div>
-              </GlassCard>
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.55 }}
+            className="container relative mx-auto max-w-4xl text-center"
+          >
+            <Kicker centrado>{tTrans('etiqueta', 'EL PUNTO DE PARTIDA')}</Kicker>
+            <h2 className="heading mb-6 text-3xl leading-[1.06] [text-wrap:balance] md:text-6xl">
+              {tTrans('postura_1', 'EL MARKETING QUE NO SE MIDE')}{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+              >
+                {tTrans('postura_2', 'ES UN GASTO')}
+              </span>
+            </h2>
+            <p className="mx-auto mb-8 max-w-3xl text-[15.5px] leading-relaxed text-white/75 md:text-lg">
+              {tTrans('texto', 'Página, redes, campañas: muchas empresas ya invierten en digital sin poder decir qué les regresa cada peso. La transformación digital de verdad empieza cuando todo lo que haces se mide contra ventas.')}
+            </p>
+
+            {/* las tres negativas, como sellos */}
+            <div className="mb-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5">
+              {[1, 2, 3].map((i) => (
+                <span key={i} className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.16em] text-white/55 md:text-[12px]">
+                  <span aria-hidden className="h-1 w-1 rounded-full bg-[#AA66FF]" />
+                  {tTrans(`s${i}`, ['Sin reportes maquillados', 'Sin promesas de humo', 'Sin gastar por gastar'][i - 1])}
+                </span>
+              ))}
             </div>
-          </div>
-        </div>
-      </section>
+
+            <a
+              href="#enfoque"
+              className="group inline-flex items-center gap-2 font-mono text-[11.5px] uppercase tracking-[.2em] text-[#CC66FF] transition-colors hover:text-white"
+            >
+              {tTrans('enlace', 'ASÍ LO RESOLVEMOS')}
+              <ArrowRight size={14} className="rotate-90 transition-transform group-hover:translate-y-0.5" />
+            </a>
+          </motion.div>
+        </section>
       )}
 
       {/* ---- Banda del nuevo enfoque ----
@@ -247,7 +239,7 @@ export default function HomePage() {
            rastreo: la portada es la unica pagina que Google visita siempre, y
            un enlace desde aqui es la via mas rapida para que descubra lo nuevo. */}
       {tEnf.visible() && (
-        <section className="relative overflow-hidden border-y border-[#AA66FF]/15 bg-[#0D0010] px-4 py-16 md:px-6 md:py-24 lg:px-8">
+        <section id="enfoque" className="relative scroll-mt-16 overflow-hidden border-y border-[#AA66FF]/15 bg-[#0D0010] px-4 py-16 md:px-6 md:py-24 lg:px-8">
           {/* la seccion ES la banda: la reticula, la aurora y el filo van a
               todo lo ancho, sin panel de por medio */}
           <div
@@ -544,19 +536,27 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Services Grid */}
-      <section id="servicios" className="py-8 md:py-12 px-4 md:px-6 lg:px-8 bg-white relative overflow-hidden">
-        {/* Elementos 3D Flotantes */}
-        <Suspense fallback={null}>
-          <Floating3DElements variant="cubes" count={8} />
-        </Suspense>
-        
-        <div className="container mx-auto max-w-7xl relative z-10">
-          <div className="text-center mb-8 md:mb-10">
-            <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              {tServ('titulo_1', 'NUESTROS')} <span className="text-[#7700CE]">{tServ('titulo_2', 'SERVICIOS')}</span>
+      {/* ---- Los servicios, en el idioma nuevo de la casa ---- */}
+      <section id="servicios" className="relative scroll-mt-16 overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.22), transparent 70%)' }}
+        />
+
+        <div className="container relative mx-auto max-w-7xl">
+          <div className="mb-8 text-center md:mb-10">
+            <Kicker centrado>{tServ('etiqueta', 'LO QUE HACEMOS')}</Kicker>
+            <h2 className="heading mb-4 text-2xl md:text-4xl">
+              {tServ('titulo_1', 'NUESTROS')}{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+              >
+                {tServ('titulo_2', 'SERVICIOS')}
+              </span>
             </h2>
-            <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-[14.5px] leading-relaxed text-white/70 md:text-base">
               {tServ('bajada', 'Soluciones digitales que generan resultados reales y medibles')}
             </p>
           </div>
@@ -568,15 +568,15 @@ export default function HomePage() {
               e.preventDefault();
               openAssistant(undefined, busqueda.trim() || 'ayúdame a elegir el servicio correcto para mi empresa');
             }}
-            className="mx-auto mb-8 flex max-w-xl items-center gap-2 rounded-full border border-gray-200 bg-white p-1.5 pl-5 shadow-[0_14px_44px_-20px_rgba(119,0,206,.45)]"
+            className="mx-auto mb-9 flex max-w-xl items-center gap-2 rounded-full border border-white/15 bg-white/[.05] p-1.5 pl-5 backdrop-blur transition-colors focus-within:border-[#AA66FF]/50"
           >
-            <Sparkles size={16} className="shrink-0 text-[#7700CE]" />
+            <Sparkles size={16} className="shrink-0 text-[#CC66FF]" />
             <input
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder={tServ('buscador', 'Escribe qué necesita tu empresa…')}
               aria-label="Cuéntale al asistente qué necesita tu empresa"
-              className="w-full bg-transparent text-sm text-black outline-none placeholder:text-gray-400"
+              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/40"
             />
             <button
               type="submit"
@@ -586,33 +586,38 @@ export default function HomePage() {
             </button>
           </form>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
+          <div className="mb-6 grid grid-cols-1 gap-4 md:mb-8 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
             {services.slice(0, 9).map((service, index) => (
               <div
                 key={service.id}
                 className="animate-fadeIn"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <Link to={`/servicios/${service.slug}`}>
-                  <GlassCard hover className="h-full group bg-white/80 backdrop-blur-sm border-gray-200 hover:border-[#7700CE]/40">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#7700CE]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#7700CE]/20 transition-colors">
-                        <Sparkles className="text-[#7700CE]" size={20} />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="heading text-base md:text-lg mb-1 md:mb-2 text-black group-hover:text-[#7700CE] transition-colors">
-                          {service.title}
-                        </h3>
-                      </div>
+                <Link
+                  to={`/servicios/${service.slug}`}
+                  className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-5
+                             transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40 hover:bg-white/[.06] md:p-6"
+                >
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{ background: 'linear-gradient(90deg,transparent,#9933FF,transparent)' }}
+                  />
+                  <div className="mb-3 flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#7700CE]/15 transition-colors group-hover:bg-[#7700CE]/30">
+                      <Sparkles className="text-[#CC66FF]" size={18} />
                     </div>
-                    <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">
-                      {service.shortDescription}
-                    </p>
-                    <div className="flex items-center text-[#7700CE] text-xs md:text-sm group-hover:gap-2 transition-all font-semibold">
-                      <span>{tServ('ver_mas', 'Ver más')}</span>
-                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </GlassCard>
+                    <h3 className="heading flex-1 text-base leading-snug transition-colors group-hover:text-[#DDBBFF] md:text-lg">
+                      {service.title}
+                    </h3>
+                  </div>
+                  <p className="mb-4 flex-1 text-[13px] leading-relaxed text-white/60 md:text-sm">
+                    {service.shortDescription}
+                  </p>
+                  <div className="flex items-center gap-1 text-xs font-semibold text-[#AA66FF] transition-all group-hover:gap-2 md:text-sm">
+                    <span>{tServ('ver_mas', 'Ver más')}</span>
+                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                  </div>
                 </Link>
               </div>
             ))}
@@ -621,335 +626,136 @@ export default function HomePage() {
           <div className="text-center">
             <Link
               to="/servicios"
-              className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-[#7700CE] hover:bg-[#9933FF] text-white transition-all hover:scale-105 shadow-[0_0_30px_rgba(119,0,206,0.3)]"
+              className="inline-flex items-center justify-center rounded-full bg-[#7700CE] px-6 py-3 text-white shadow-[0_0_30px_rgba(119,0,206,0.3)] transition-all hover:scale-105 hover:bg-[#9933FF] md:px-8 md:py-3.5"
             >
-              <span className="heading text-sm md:text-base tracking-[0.08em]">{tServ('boton', 'VER TODOS LOS SERVICIOS')}</span>
+              <span className="heading text-sm tracking-[0.08em] md:text-base">{tServ('boton', 'VER TODOS LOS SERVICIOS')}</span>
             </Link>
           </div>
         </div>
       </section>
 
-      <SectionDivider variant="gradient" color="purple" />
-
-      {/* AI Services Section */}
+      {/* ---- Soluciones de IA: mismas cuatro cartas, idioma de la casa ---- */}
       {tIA.visible() && (
-      <section className="py-8 md:py-12 px-4 md:px-6 lg:px-8 relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0014] via-[#1a0033] to-black" />
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#7700CE]/20 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#9933FF]/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-        </div>
-        
-        {/* Elementos 3D Flotantes */}
-        <Suspense fallback={null}>
-          <Floating3DElements variant="mixed" count={12} />
-        </Suspense>
+      <section className="relative overflow-hidden border-y border-[#AA66FF]/12 bg-[#0D0010] px-4 py-14 md:px-6 md:py-20 lg:px-8">
+        <Reticula foco="50% 25%" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-[-30%] left-[-10%] h-[560px] w-[560px] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.28), transparent 70%)' }}
+        />
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, #9933FF, transparent)' }}
+        />
 
-        <div className="container mx-auto max-w-7xl relative z-10">
-          <div className="text-center mb-8 md:mb-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7700CE]/20 border border-[#7700CE]/40 backdrop-blur-xl mb-4 md:mb-6"
-            >
-              <Bot className="text-[#7700CE]" size={20} />
-              <span className="text-sm text-white font-semibold tracking-wide">{tIA('etiqueta', 'POTENCIA TU NEGOCIO CON IA')}</span>
-            </motion.div>
-            
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="heading text-2xl md:text-4xl lg:text-5xl mb-4 md:mb-6"
-            >
-              {tIA('titulo_1', 'SERVICIOS DE')} <span className="bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">{tIA('titulo_2', 'INTELIGENCIA ARTIFICIAL')}</span>
-            </motion.h2>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-white/70 text-sm md:text-base lg:text-lg max-w-3xl mx-auto"
-            >
-              {tIA('bajada', 'Automatiza, optimiza y escala tu negocio 24/7 con nuestras soluciones de IA personalizadas')}
-            </motion.p>
-          </div>
-
-          {/* Grid de Servicios IA */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-8 md:mb-10">
-            {/* IA para WhatsApp */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <Link to="/servicios-ia/whatsapp">
-                <GlassCard 
-                  hover 
-                  glow 
-                  className="h-full group relative overflow-hidden"
-                >
-                  {/* Gradiente de fondo animado */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <div className="relative z-10">
-                    {/* Icono y Badge */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <MessageCircle className="text-white" size={28} />
-                      </div>
-                      <div className="px-3 py-1 rounded-full bg-green-500/20 border border-green-500/40">
-                        <span className="text-xs text-green-400 font-bold">{tTarIA('etiqueta_top', 'BESTSELLER')}</span>
-                      </div>
-                    </div>
-
-                    <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      {tTarIA('w_titulo', 'IA PARA WHATSAPP')}
-                    </h3>
-                    
-                    <p className="text-white/70 text-sm md:text-base mb-4">
-                      {tTarIA('w_texto', 'Agente inteligente que atiende, califica y cierra ventas 24/7. Nunca pierdas otro cliente.')}
-                    </p>
-
-                    {/* Features */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('w_p1', 'Respuestas instantáneas 24/7')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('w_p2', 'Calificación automática de leads')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('w_p3', 'Integración con tu CRM')}</span>
-                      </div>
-                    </div>
-
-                    {/* CTA */}
-                    <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
-                      <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                    </div>
-                  </div>
-                </GlassCard>
-              </Link>
-            </motion.div>
-
-            {/* IA de Ventas */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <Link to="/servicios-ia/ventas">
-                <GlassCard 
-                  hover 
-                  glow 
-                  className="h-full group relative overflow-hidden"
-                >
-                  {/* Gradiente de fondo animado */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <div className="relative z-10">
-                    {/* Icono */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <Target className="text-white" size={28} />
-                      </div>
-                    </div>
-
-                    <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      {tTarIA('v_titulo', 'IA DE VENTAS')}
-                    </h3>
-                    
-                    <p className="text-white/70 text-sm md:text-base mb-4">
-                      {tTarIA('v_texto', 'Encuentra clientes perfectos y cierra más ventas con prospección inteligente automatizada.')}
-                    </p>
-
-                    {/* Features */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('v_p1', 'Prospección automática LinkedIn')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('v_p2', 'Emails personalizados con IA')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('v_p3', 'Seguimiento predictivo')}</span>
-                      </div>
-                    </div>
-
-                    {/* CTA */}
-                    <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
-                      <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                    </div>
-                  </div>
-                </GlassCard>
-              </Link>
-            </motion.div>
-
-            {/* IA para Marketing */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <Link to="/servicios-ia/marketing">
-                <GlassCard 
-                  hover 
-                  glow 
-                  className="h-full group relative overflow-hidden"
-                >
-                  {/* Gradiente de fondo animado */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <div className="relative z-10">
-                    {/* Icono */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <TrendingUp className="text-white" size={28} />
-                      </div>
-                    </div>
-
-                    <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      {tTarIA('m_titulo', 'IA PARA MARKETING')}
-                    </h3>
-                    
-                    <p className="text-white/70 text-sm md:text-base mb-4">
-                      {tTarIA('m_texto', 'Campañas que se optimizan solas. Contenido generado por IA. Resultados exponenciales.')}
-                    </p>
-
-                    {/* Features */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('m_p1', 'Optimización automática de ads')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('m_p2', 'Contenido generado por IA')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('m_p3', 'Análisis predictivo de tendencias')}</span>
-                      </div>
-                    </div>
-
-                    {/* CTA */}
-                    <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
-                      <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                    </div>
-                  </div>
-                </GlassCard>
-              </Link>
-            </motion.div>
-
-            {/* IA para E-commerce */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <Link to="/servicios-ia/ecommerce">
-                <GlassCard 
-                  hover 
-                  glow 
-                  className="h-full group relative overflow-hidden"
-                >
-                  {/* Gradiente de fondo animado */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <div className="relative z-10">
-                    {/* Icono */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <ShoppingCart className="text-white" size={28} />
-                      </div>
-                    </div>
-
-                    <h3 className="heading text-xl md:text-2xl mb-3 group-hover:text-[#7700CE] transition-colors">
-                      {tTarIA('e_titulo', 'IA PARA E-COMMERCE')}
-                    </h3>
-                    
-                    <p className="text-white/70 text-sm md:text-base mb-4">
-                      {tTarIA('e_texto', 'Convierte más visitas en ventas. Recomendaciones inteligentes y checkout optimizado.')}
-                    </p>
-
-                    {/* Features */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('e_p1', 'Recomendaciones personalizadas')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('e_p2', 'Recuperación carritos abandonados')}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-white/80">
-                        <CheckCircle size={16} className="text-[#7700CE] flex-shrink-0" />
-                        <span>{tTarIA('e_p3', 'Optimización de precios dinámica')}</span>
-                      </div>
-                    </div>
-
-                    {/* CTA */}
-                    <div className="flex items-center text-[#7700CE] text-sm md:text-base font-bold group-hover:gap-2 transition-all">
-                      <span>{tTarIA('ver_mas', 'Conocer más')}</span>
-                      <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                    </div>
-                  </div>
-                </GlassCard>
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* CTA Final de Servicios IA */}
+        <div className="container relative mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-center"
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.55 }}
+            className="mb-9 text-center md:mb-12"
           >
+            <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#7700CE]/40 bg-[#7700CE]/15 px-4 py-1.5 font-mono text-[10.5px] uppercase tracking-[.18em] text-[#CC99FF]">
+              <Bot size={14} />
+              {tIA('etiqueta', 'POTENCIA TU NEGOCIO CON IA')}
+            </span>
+            <h2 className="heading mb-4 text-2xl md:text-4xl lg:text-5xl">
+              {tIA('titulo_1', 'SERVICIOS DE')}{' '}
+              <span className="bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
+                {tIA('titulo_2', 'INTELIGENCIA ARTIFICIAL')}
+              </span>
+            </h2>
+            <p className="mx-auto max-w-3xl text-[14.5px] leading-relaxed text-white/70 md:text-base">
+              {tIA('bajada', 'Automatiza, optimiza y escala tu negocio 24/7 con nuestras soluciones de IA personalizadas')}
+            </p>
+          </motion.div>
+
+          <div className="mb-8 grid grid-cols-1 gap-4 md:mb-10 md:grid-cols-2 md:gap-5">
+            {[
+              { p: 'w', ruta: '/servicios-ia/whatsapp', Icono: MessageCircle, titulo: 'IA PARA WHATSAPP', texto: 'Agente inteligente que atiende, califica y cierra ventas 24/7. Nunca pierdas otro cliente.', puntos: ['Respuestas instantáneas 24/7', 'Calificación automática de leads', 'Integración con tu CRM'] },
+              { p: 'v', ruta: '/servicios-ia/ventas', Icono: Target, titulo: 'IA DE VENTAS', texto: 'Encuentra clientes perfectos y cierra más ventas con prospección inteligente automatizada.', puntos: ['Prospección automática LinkedIn', 'Emails personalizados con IA', 'Seguimiento predictivo'] },
+              { p: 'm', ruta: '/servicios-ia/marketing', Icono: TrendingUp, titulo: 'IA PARA MARKETING', texto: 'Campañas que se optimizan solas. Contenido generado por IA. Resultados exponenciales.', puntos: ['Optimización automática de ads', 'Contenido generado por IA', 'Análisis predictivo de tendencias'] },
+              { p: 'e', ruta: '/servicios-ia/ecommerce', Icono: ShoppingCart, titulo: 'IA PARA E-COMMERCE', texto: 'Convierte más visitas en ventas. Recomendaciones inteligentes y checkout optimizado.', puntos: ['Recomendaciones personalizadas', 'Recuperación carritos abandonados', 'Optimización de precios dinámica'] },
+            ].map(({ p, ruta, Icono, titulo, texto, puntos }, idx) => (
+              <motion.div
+                key={p}
+                initial={{ opacity: 0, y: 26 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+              >
+                <Link
+                  to={ruta}
+                  className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-6
+                             transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40 hover:bg-white/[.06] md:p-7"
+                >
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{ background: 'linear-gradient(90deg,transparent,#9933FF,transparent)' }}
+                  />
+                  <div className="mb-4 flex items-start justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#7700CE] to-[#9933FF] transition-transform duration-300 group-hover:scale-110">
+                      <Icono className="text-white" size={24} />
+                    </div>
+                    {p === 'w' && (
+                      <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-xs font-bold text-emerald-400">
+                        {tTarIA('etiqueta_top', 'BESTSELLER')}
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="heading mb-2.5 text-xl transition-colors group-hover:text-[#DDBBFF] md:text-2xl">
+                    {tTarIA(`${p}_titulo`, titulo)}
+                  </h3>
+                  <p className="mb-4 text-sm leading-relaxed text-white/65 md:text-[15px]">
+                    {tTarIA(`${p}_texto`, texto)}
+                  </p>
+
+                  <div className="mb-5 flex-1 space-y-2">
+                    {puntos.map((punto, n) => (
+                      <div key={punto} className="flex items-center gap-2 text-[13px] text-white/75 md:text-sm">
+                        <CheckCircle size={15} className="shrink-0 text-[#AA66FF]" />
+                        <span>{tTarIA(`${p}_p${n + 1}`, punto)}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-1 text-sm font-bold text-[#AA66FF] transition-all group-hover:gap-2.5">
+                    <span>{tTarIA('ver_mas', 'Conocer más')}</span>
+                    <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center">
             <Link
               to="/servicios-ia"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all hover:scale-105 shadow-[0_0_40px_rgba(119,0,206,0.4)] hover:shadow-[0_0_60px_rgba(119,0,206,0.6)] group"
+              className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-8 py-4 text-white shadow-[0_0_40px_rgba(119,0,206,0.4)] transition-all hover:scale-105 hover:from-[#9933FF] hover:to-[#7700CE] hover:shadow-[0_0_60px_rgba(119,0,206,0.6)]"
             >
               <Bot className="mr-2" size={20} />
-              <span className="heading text-sm md:text-base tracking-[0.08em]">{tTarIA('boton', 'VER TODOS LOS SERVICIOS IA')}</span>
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+              <span className="heading text-sm tracking-[0.08em] md:text-base">{tTarIA('boton', 'VER TODOS LOS SERVICIOS IA')}</span>
+              <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" size={20} />
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
       )}
 
-      <SectionDivider variant="gradient" color="purple" />
-
-      {/* Process */}
+      {/* ---- El proceso, con el monitor sobre fondo oscuro ---- */}
       {tProc.visible() && (
-      <section className="py-8 md:py-12 px-4 md:px-6 lg:px-8 bg-white">
+      <section className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
         <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-8 md:mb-10">
-            <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
+          <div className="mb-8 text-center md:mb-10">
+            <Kicker centrado>{tProc('etiqueta', 'EL CICLO COMPLETO')}</Kicker>
+            <h2 className="heading mb-4 text-2xl md:text-4xl">
               {tProc('titulo', 'CÓMO TRABAJAMOS')}
             </h2>
-            <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-[14.5px] leading-relaxed text-white/70 md:text-base">
               {tProc('bajada', 'Dirección define, todo se conecta, la IA audita y se ajusta. Así se ve el ciclo completo.')}
             </p>
           </div>
@@ -966,192 +772,155 @@ export default function HomePage() {
       </section>
       )}
 
-      {/* Portfolio Preview */}
+      {/* ---- Casos: los logos corren con la misma cinta CSS de arriba;
+           la portada ya no monta el carrusel de react-slick ---- */}
       {tCasos.visible() && (
-      <section className="py-8 md:py-12 px-4 bg-black">
+      <section className="relative overflow-hidden border-y border-[#AA66FF]/12 bg-[#0D0010] px-4 py-14 md:py-20">
         <div className="container mx-auto">
-          <div className="text-center mb-8 md:mb-10">
-            <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-white">
+          <div className="mb-8 text-center md:mb-10">
+            <Kicker centrado>{tCasos('etiqueta', 'PORTAFOLIO')}</Kicker>
+            <h2 className="heading mb-4 text-2xl md:text-4xl">
               {tCasos('titulo', 'CASOS DE ÉXITO')}
             </h2>
-            <p className="text-white/60 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-[14.5px] leading-relaxed text-white/70 md:text-base">
               {tCasos('bajada', 'Marcas que confían en INÉDITO DIGITAL')}
             </p>
           </div>
 
-          {/* Carrusel de logos */}
-          <div className="max-w-6xl mx-auto mb-6 md:mb-8 logos-carousel">
-            <style>{`
-              .logos-carousel .slick-slide {
-                display: flex !important;
-                justify-content: center;
-                align-items: center;
-                height: 120px;
-              }
-              .logos-carousel .slick-track {
-                display: flex !important;
-                align-items: center;
-              }
-              .logos-carousel .logo-container {
-                width: 180px;
-                height: 80px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 1rem;
-              }
-              .logos-carousel .logo-container img {
-                max-width: 100%;
-                max-height: 100%;
-                width: auto;
-                height: auto;
-                object-fit: contain;
-                filter: brightness(0) invert(1);
-                transition: filter 0.3s ease;
-              }
-              .logos-carousel .logo-container:hover img {
-                filter: none;
-              }
-            `}</style>
-            <Slider
-              dots={false}
-              infinite={true}
-              speed={3000}
-              slidesToShow={4}
-              slidesToScroll={1}
-              autoplay={true}
-              autoplaySpeed={0}
-              cssEase="linear"
-              pauseOnHover={true}
-              arrows={false}
-              responsive={[
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    slidesToShow: 3,
-                  }
-                },
-                {
-                  breakpoint: 768,
-                  settings: {
-                    slidesToShow: 2,
-                  }
-                }
-              ]}
+          <div
+            className="relative mx-auto mb-8 max-w-6xl overflow-hidden md:mb-10"
+            style={{
+              maskImage: 'linear-gradient(90deg, transparent, black 12%, black 88%, transparent)',
+              WebkitMaskImage: 'linear-gradient(90deg, transparent, black 12%, black 88%, transparent)',
+            }}
+          >
+            <div
+              className="animate-cinta flex w-max items-center hover:[animation-play-state:paused]"
+              style={{ animationDuration: '46s' }}
             >
-              {portfolioItems.filter(item => item.logo).map((item) => (
-                <div key={item.id}>
-                  <div className="logo-container opacity-60 hover:opacity-100 transition-all duration-300">
-                    <img 
-                      src={item.logo} 
-                      alt={`${item.client} logo`}
+              {[0, 1].map((vuelta) => (
+                <div key={vuelta} aria-hidden={vuelta === 1} className="flex items-center">
+                  {portfolioItems.filter((item) => item.logo).map((item) => (
+                    <img
+                      key={`${vuelta}-${item.id}`}
+                      src={item.logo}
+                      alt={vuelta === 0 ? `${item.client} logo` : ''}
+                      loading="lazy"
+                      decoding="async"
+                      className="mx-8 h-10 w-auto max-w-[150px] object-contain opacity-55 brightness-0 invert transition-opacity duration-300 hover:opacity-100 md:mx-10 md:h-12"
                     />
-                  </div>
+                  ))}
                 </div>
               ))}
-            </Slider>
+            </div>
           </div>
 
           <div className="text-center">
             <Link
               to="/portafolio"
-              className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 text-white transition-all"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-6 py-3 text-white transition-all hover:border-[#AA66FF]/50 hover:bg-white/10 md:px-8 md:py-3.5"
             >
-              <span className="heading text-sm md:text-base tracking-[0.08em]">{tCasos('boton', 'VER MÁS CASOS')}</span>
+              <span className="heading text-sm tracking-[0.08em] md:text-base">{tCasos('boton', 'VER MÁS CASOS')}</span>
             </Link>
           </div>
         </div>
       </section>
       )}
 
-      <SectionDivider variant="gradient" color="purple" />
-
-      {/* Team & Workspace Visual Section */}
-      <section className="py-8 md:py-12 px-4 relative overflow-hidden bg-white">
-        {/* Elementos 3D flotantes */}
-        <Suspense fallback={null}>
-          <Floating3DElements variant="spheres" count={6} />
-        </Suspense>
-        
-        <div className="container mx-auto relative z-10">
-          <div className="text-center mb-8 md:mb-10">
-            <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              {tVal('titulo_1', 'TRABAJAMOS CON')} <span className="text-[#7700CE]">{tVal('titulo_2', 'PASIÓN')}</span>
+      {/* ---- La casa: de dónde somos y cómo se siente trabajar aquí ----
+           Antes era "TRABAJAMOS CON PASIÓN" con tres tarjetas genéricas. */}
+      {tVal.visible() && (
+      <section className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute right-[-12%] top-0 h-[480px] w-[480px] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.24), transparent 70%)' }}
+        />
+        <div className="container relative mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.55 }}
+            className="mb-10 max-w-3xl"
+          >
+            <Kicker>{tVal('etiqueta', 'QUIÉN ESTÁ DETRÁS')}</Kicker>
+            <h2 className="heading mb-5 text-3xl leading-[1.05] [text-wrap:balance] md:text-5xl">
+              {tVal('postura_1', 'DE AGUASCALIENTES,')}{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+              >
+                {tVal('postura_2', 'PARA EMPRESAS QUE VAN EN SERIO')}
+              </span>
             </h2>
-            <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              {tVal('bajada', 'Un equipo dedicado a transformar tu negocio con tecnología de vanguardia')}
+            <p className="max-w-2xl text-[15.5px] leading-relaxed text-white/75 md:text-base">
+              {tVal('texto', 'Estamos en Aguascalientes y trabajamos con empresas de todo México. Lo que se promete queda por escrito, lo que se hace queda medido, y siempre hay una persona que da la cara.')}
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <GlassCard className="text-center p-4 md:p-5 bg-white/80 backdrop-blur-sm border-gray-200">
-                <Sparkles className="text-[#7700CE] mx-auto mb-3" size={32} />
-                <h3 className="heading text-lg md:text-xl mb-2 text-black">{tVal('v1_titulo', 'INNOVACIÓN')}</h3>
-                <p className="text-gray-600 text-xs md:text-sm">
-                  {tVal('v1_texto', 'Utilizamos las últimas tecnologías en IA y automatización')}
+          <div className="grid md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: (i - 1) * 0.1 }}
+                className="border-t border-white/10 py-6 transition-colors hover:border-[#AA66FF]/40 md:border-l md:border-t-0 md:px-6 md:first:border-l-0 md:first:pl-0"
+              >
+                <span className="font-mono text-[10.5px] uppercase tracking-[.2em] text-[#AA66FF]">0{i}</span>
+                <h3 className="heading mb-2 mt-2 text-lg md:text-xl">
+                  {tVal(`c${i}_titulo`, ['FORMALIDAD', 'CLARIDAD', 'ACOMPAÑAMIENTO'][i - 1])}
+                </h3>
+                <p className="text-[14px] leading-relaxed text-white/65">
+                  {tVal(`c${i}_texto`, [
+                    'Contrato, factura y fechas claras. La relación empieza formal y se queda así.',
+                    'Siempre sabes qué se está haciendo, por qué, y qué resultado se espera de cada acción.',
+                    'Una dirección comercial que se sienta contigo cada mes, no un proveedor que desaparece.',
+                  ][i - 1])}
                 </p>
-              </GlassCard>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              <GlassCard className="text-center p-4 md:p-5 bg-white/80 backdrop-blur-sm border-gray-200">
-                <Target className="text-[#7700CE] mx-auto mb-3" size={32} />
-                <h3 className="heading text-lg md:text-xl mb-2 text-black">{tVal('v2_titulo', 'RESULTADOS')}</h3>
-                <p className="text-gray-600 text-xs md:text-sm">
-                  {tVal('v2_texto', 'Nos enfocamos en métricas que realmente importan')}
-                </p>
-              </GlassCard>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-            >
-              <GlassCard className="text-center p-4 md:p-5 bg-white/80 backdrop-blur-sm border-gray-200">
-                <TrendingUp className="text-[#7700CE] mx-auto mb-3" size={32} />
-                <h3 className="heading text-lg md:text-xl mb-2 text-black">{tVal('v3_titulo', 'CRECIMIENTO')}</h3>
-                <p className="text-gray-600 text-xs md:text-sm">
-                  {tVal('v3_texto', 'Tu éxito es nuestra máxima prioridad')}
-                </p>
-              </GlassCard>
-            </motion.div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
+      )}
 
-      <SectionDivider variant="gradient" color="purple" />
-
-      {/* CTA Final */}
-      <section className="py-8 md:py-12 px-4 bg-white/[0.02]">
-        <div className="container mx-auto">
-          <GlassCard glow className="max-w-4xl mx-auto text-center p-6 md:p-10">
-            <h2 className="heading text-2xl md:text-4xl lg:text-5xl mb-4 md:mb-6">
-              {tCierre('titulo', '¿LISTO PARA CRECER?')}
-            </h2>
-            <p className="text-base md:text-lg lg:text-xl text-white/80 mb-6 md:mb-8 max-w-2xl mx-auto">
-              {tCierre('bajada', 'Agenda una consulta gratuita y descubre cómo podemos llevar tu negocio al siguiente nivel')}
-            </p>
+      {/* ---- El cierre ---- */}
+      <section className="relative overflow-hidden border-t border-[#AA66FF]/12 bg-[#0D0010] px-4 py-16 md:px-6 md:py-24 lg:px-8">
+        <Reticula foco="50% 55%" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(119,0,206,.30), transparent 70%)' }}
+        />
+        <div className="container relative mx-auto max-w-3xl text-center">
+          <Kicker centrado>{tCierre('etiqueta', 'EL SIGUIENTE PASO')}</Kicker>
+          <h2 className="heading mb-5 text-3xl [text-wrap:balance] md:text-6xl">
+            {tCierre('titulo', '¿LISTO PARA CRECER?')}
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-[15.5px] leading-relaxed text-white/75 md:text-lg">
+            {tCierre('bajada', 'Agenda una consulta gratuita y descubre cómo podemos llevar tu negocio al siguiente nivel')}
+          </p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
               onClick={() => openAssistant(undefined, 'agendar una consulta gratuita')}
-              className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 rounded-full bg-[#7700CE] hover:bg-[#9933FF] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(119,0,206,0.5)] group cursor-pointer"
+              className="group inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-8 py-4 text-white shadow-[0_0_30px_rgba(119,0,206,0.5)] transition-all duration-300 hover:from-[#9933FF] hover:to-[#7700CE] hover:shadow-[0_0_50px_rgba(119,0,206,0.8)] active:scale-95 sm:w-auto"
             >
-              <span className="heading text-sm md:text-base tracking-[0.08em]">{tCierre('boton', 'AGENDAR CONSULTA GRATIS')}</span>
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+              <span className="heading text-sm tracking-[0.08em] md:text-base">{tCierre('boton', 'AGENDAR CONSULTA GRATIS')}</span>
+              <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" size={18} />
             </button>
-          </GlassCard>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-white backdrop-blur-sm transition-all duration-300 hover:border-[#25D366]/50 hover:bg-white/10 active:scale-95 sm:w-auto"
+            >
+              <MessageCircle size={17} className="text-[#25D366]" />
+              <span className="heading text-sm tracking-[0.08em] md:text-base">{tCierre('boton_wa', 'ESCRÍBENOS POR WHATSAPP')}</span>
+            </a>
+          </div>
         </div>
       </section>
     </>
