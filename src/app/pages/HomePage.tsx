@@ -5,7 +5,7 @@ import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'rea
 import { GlassCard } from '../components/GlassCard';
 import HeroBento from '../components/HeroBento';
 import EsferaIA from '../components/EsferaIA';
-import { FranjaLogosIA } from '../components/LogosIA';
+import { LogoIA } from '../components/LogosIA';
 import SectionDivider from '../components/SectionDivider';
 import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
@@ -279,14 +279,14 @@ export default function HomePage() {
                 style={{ background: 'linear-gradient(90deg, transparent, #9933FF, transparent)' }}
               />
 
-              <div className="relative grid items-center gap-10 p-7 md:p-12 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
+              <div className="relative grid items-stretch gap-8 p-7 md:p-10 lg:grid-cols-[1.02fr_1fr] lg:gap-10">
                 {/* ---- el texto y el índice ---- */}
                 <div>
-                  <span className="mb-5 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-[#AA66FF]">
+                  <span className="mb-4 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[.2em] text-[#AA66FF]">
                     <span aria-hidden className="h-px w-8 bg-[#AA66FF]/60" />
                     {tEnf('etiqueta', 'NUESTRO ENFOQUE')}
                   </span>
-                  <h2 className="heading mb-5 text-3xl leading-[1.05] [text-wrap:balance] md:text-[2.9rem]">
+                  <h2 className="heading mb-4 text-3xl leading-[1.05] [text-wrap:balance] md:text-[2.6rem]">
                     {tEnf('titulo_1', 'DIRECCIÓN COMERCIAL')}{' '}
                     <span
                       className="bg-clip-text text-transparent"
@@ -295,11 +295,14 @@ export default function HomePage() {
                       {tEnf('titulo_2', 'ASISTIDA POR IA')}
                     </span>
                   </h2>
-                  <p className="mb-8 max-w-xl text-[15.5px] leading-relaxed text-white/75">
+                  <p className="mb-7 text-[15.5px] leading-relaxed text-white/75">
                     {tEnf('texto', 'Somos una agencia de marketing digital y de inteligencia artificial: estrategia, publicidad y soluciones de IA con todo conectado a datos reales. Dirección define los objetivos y una IA audita cada mes si la estrategia está funcionando. Casi nadie en Aguascalientes trabaja así.')}
                   </p>
 
-                  {/* el índice de capacidades: filas editoriales, no cajitas */}
+                  {/* el puente: estas filas SON el enfoque del título */}
+                  <div className="mb-1 font-mono text-[10px] uppercase tracking-[.2em] text-white/45">
+                    {tEnf('indice_titulo', 'Las cuatro piezas que lo hacen posible')}
+                  </div>
                   <div className="border-t border-white/10">
                     {[1, 2, 3, 4].map((i) => {
                       const url = tEnf(`e${i}_url`, '');
@@ -308,14 +311,17 @@ export default function HomePage() {
                         <Link
                           key={i}
                           to={url}
-                          className="group relative flex items-center gap-4 border-b border-white/10 py-4 pl-1 pr-2 transition-colors duration-300 hover:border-[#AA66FF]/40 md:gap-6"
+                          className="group relative flex items-center gap-4 border-b border-white/10 py-3.5 pl-1 pr-2 transition-colors duration-300 hover:border-[#AA66FF]/40 md:gap-5"
                         >
                           <span
                             aria-hidden
                             className="absolute inset-y-0 left-0 w-0 bg-gradient-to-r from-[#7700CE]/25 to-transparent transition-all duration-300 group-hover:w-full"
                           />
+                          {/* min-w y no un ancho fijo: con bg-clip-text, el
+                              degradado solo pinta dentro de la caja y un ancho
+                              corto dejaba los dígitos cortados a la mitad */}
                           <span
-                            className="heading relative w-10 shrink-0 bg-clip-text text-2xl leading-none text-transparent md:text-3xl"
+                            className="heading relative min-w-[3.4rem] shrink-0 bg-clip-text pr-1 text-2xl leading-none text-transparent md:text-3xl"
                             style={{ backgroundImage: 'linear-gradient(120deg,#9933FF,#CC66FF)' }}
                           >
                             0{i}
@@ -338,26 +344,38 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* ---- la esfera, ahora con sus órbitas ---- */}
-                <div className="relative mx-auto w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[430px]">
-                  <div aria-hidden className="pointer-events-none absolute inset-[-7%]" style={{ transform: 'rotateX(68deg)' }}>
-                    <div className="animate-orbita h-full w-full rounded-full border border-dashed border-[#AA66FF]/35" />
-                  </div>
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-[-14%] rounded-full border border-white/[.07]"
-                    style={{ transform: 'rotateX(68deg) rotateZ(24deg)' }}
-                  />
-                  <EsferaIA className="aspect-square w-full" />
-                  {/* dónde medimos la presencia: las marcas, con sus logos */}
-                  <div className="relative mt-3 text-center">
-                    <span className="font-mono text-[10px] uppercase tracking-[.18em] text-white/40">
-                      {tEnf('logos_texto', 'Presencia medida en')}
-                    </span>
-                    <div className="mt-2.5 flex justify-center">
-                      <FranjaLogosIA alto={15} />
+                {/* ---- la esfera con sus órbitas y las IAs como satélites ---- */}
+                <div className="relative flex flex-col items-center justify-center">
+                  <div className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[470px]">
+                    <div aria-hidden className="pointer-events-none absolute inset-[-6%]" style={{ transform: 'rotateX(68deg)' }}>
+                      <div className="animate-orbita h-full w-full rounded-full border border-dashed border-[#AA66FF]/35" />
                     </div>
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-[-12%] rounded-full border border-white/[.07]"
+                      style={{ transform: 'rotateX(68deg) rotateZ(24deg)' }}
+                    />
+                    <EsferaIA className="aspect-square w-full" />
+
+                    {/* las IAs donde medimos presencia, orbitando la esfera */}
+                    {([
+                      ['openai', 'left-0 top-[10%] -translate-x-1/4', '0s'],
+                      ['claude', 'right-0 top-[26%] translate-x-1/4', '1.1s'],
+                      ['gemini', 'left-[4%] bottom-[18%]', '2s'],
+                      ['perplexity', 'right-[6%] bottom-[6%]', '0.6s'],
+                    ] as const).map(([marca, pos, retraso]) => (
+                      <span
+                        key={marca}
+                        className={`animate-flotar absolute ${pos} flex items-center rounded-full border border-white/12 bg-black/50 px-3 py-1.5 shadow-lg backdrop-blur`}
+                        style={{ animationDelay: retraso }}
+                      >
+                        <LogoIA marca={marca} alto={12} />
+                      </span>
+                    ))}
                   </div>
+                  <span className="mt-1 font-mono text-[10px] uppercase tracking-[.18em] text-white/40">
+                    {tEnf('logos_texto', 'Presencia medida en')}
+                  </span>
                 </div>
               </div>
             </motion.div>
