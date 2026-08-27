@@ -159,7 +159,9 @@ function registro_paginas(): array {
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
                         'etiqueta' => ['label' => 'Etiqueta', 'tipo' => 'texto', 'def' => 'NUEVO'],
-                        'titulo'   => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'DIRECCIÓN COMERCIAL ASISTIDA POR IA'],
+                        'titulo_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'DIRECCIÓN COMERCIAL'],
+                        'titulo_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'ASISTIDA POR IA'],
+                        'logos_texto' => ['label' => 'Texto sobre los logos de IA', 'tipo' => 'texto', 'def' => 'Presencia medida en'],
                         'texto'    => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Marketing digital, publicidad y contenido con todo conectado a datos reales: dirección define los objetivos, y una IA audita cada mes si la estrategia está funcionando.'],
                         'e1_titulo'=> ['label' => 'Enlace 1 · título', 'tipo' => 'texto', 'def' => 'Los tres niveles de servicio'],
                         'e1_texto' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Construir, mejorar o vender: según en qué punto estés'],
