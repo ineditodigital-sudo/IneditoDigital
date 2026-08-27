@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { Check, ScanSearch, SlidersHorizontal, Target } from 'lucide-react';
+import { Bell, Check, ScanSearch, SlidersHorizontal, Target } from 'lucide-react';
 
 /*
- * El ciclo de trabajo, contado en una escena que se explica sola.
+ * El ciclo de trabajo contado dentro de una pantalla.
  *
- * Es la misma idea de las escenas de las fichas de servicio, pero para la
- * portada: cuatro pasos —objetivos, conectar, auditar, ajustar— y una escena
- * que avanza sola mientras está a la vista. Tocar un paso la lleva ahí y
- * pausa el avance un momento.
+ * Versión 2, pedida así: en lugar de un lienzo abstracto, un monitor donde el
+ * tablero del cliente se arma paso a paso, y un teléfono que recibe el aviso.
+ * Cuatro pasos —objetivos, conectar, auditar, ajustar—, avance automático
+ * mientras está a la vista y cada paso tocable.
  *
  * Va en su propio chunk (la portada lo importa con lazy) y no arranca ningún
  * temporizador hasta estar en pantalla: el índice no paga nada por tenerla.
+ * Sin nombres de herramientas a propósito: el sistema se ve, no se enumera.
  */
 
 const suave = [0.22, 1, 0.36, 1] as const;
@@ -23,110 +24,106 @@ const pieza = (activo: number, n: number, delay = 0) => ({
   transition: { duration: 0.45, delay: activo >= n ? delay : 0, ease: suave },
 });
 
-const FUENTES = ['Search Console', 'Analytics', 'Campañas', 'ERP / ventas'];
+const KPIS = [
+  { rotulo: 'Contactos', valor: '330' },
+  { rotulo: 'Costo por contacto', valor: '$143' },
+  { rotulo: 'Ventas', valor: '39' },
+  { rotulo: 'Retorno', valor: '3.2x' },
+];
 
-/* Las barras del panel. En el paso de ajuste el presupuesto se reacomoda:
-   una baja y las de la derecha suben. Ese movimiento ES el mensaje. */
-const BARRAS = [40, 55, 48, 66, 78, 62];
-const BARRAS_AJUSTADAS = [40, 55, 30, 66, 92, 88];
+/* En el paso de ajuste el presupuesto se reacomoda: una barra baja y las de
+   la derecha suben. Ese movimiento ES el mensaje. */
+const BARRAS = [42, 56, 50, 66, 78, 62];
+const BARRAS_AJUSTADAS = [42, 56, 30, 66, 92, 88];
 
-function Escena({ activo }: { activo: number }) {
+/** La pantalla del monitor: el tablero armándose por pasos. */
+function PantallaTablero({ activo }: { activo: number }) {
   const barras = activo >= 3 ? BARRAS_AJUSTADAS : BARRAS;
   return (
-    <div className="absolute inset-0 flex flex-col p-5 sm:p-7">
+    <div className="relative flex h-full flex-col gap-2.5 bg-[#F3F4F9] p-3.5 sm:p-4">
       {/* paso 1: el objetivo que pone dirección */}
-      <motion.div
-        {...pieza(activo, 0)}
-        className="self-start rounded-xl border border-[#CC66FF]/35 px-3.5 py-2.5"
-        style={{ background: 'linear-gradient(120deg, rgba(119,0,206,.30), rgba(119,0,206,.08))' }}
-      >
-        <div className="flex items-center gap-1.5">
-          <Target size={11} className="text-[#CC66FF]" />
-          <span className="font-mono text-[8.5px] uppercase tracking-[.16em] text-[#CC66FF]">
-            Objetivo · Dirección
+      <div className="flex items-center justify-between gap-2">
+        <motion.div
+          {...pieza(activo, 0)}
+          className="flex items-center gap-2 rounded-lg border border-[#7700CE]/25 bg-white px-2.5 py-1.5 shadow-sm"
+        >
+          <Target size={11} className="shrink-0 text-[#7700CE]" />
+          <span className="text-[9.5px] font-semibold text-slate-800 sm:text-[10.5px]">
+            Objetivo de dirección: +20% de ventas
           </span>
-        </div>
-        <div className="mt-1 text-[12.5px] font-semibold text-white/90">+20% de ventas este año</div>
-      </motion.div>
-
-      <div className="flex min-h-0 flex-1 items-center justify-center gap-3 sm:gap-4">
-        {/* paso 2: las fuentes */}
-        <div className="space-y-1.5">
-          {FUENTES.map((f, i) => (
-            <motion.div
-              key={f}
-              {...pieza(activo, 1, i * 0.08)}
-              className="rounded-lg border border-white/12 bg-white/[.05] px-2.5 py-1.5 text-[9px] text-white/60"
-            >
-              {f}
-            </motion.div>
-          ))}
-        </div>
-
-        {/* los cables hacia el tablero */}
-        <svg width="38" height="104" className="shrink-0 overflow-visible">
-          {FUENTES.map((_, i) => (
-            <motion.path
-              key={i}
-              d={`M0,${13 + i * 26} C20,${13 + i * 26} 20,52 38,52`}
-              fill="none"
-              stroke="#9933FF"
-              strokeWidth="1.5"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={activo >= 1 ? { pathLength: 1, opacity: 0.8 } : { pathLength: 0, opacity: 0 }}
-              transition={{ duration: 0.55, delay: i * 0.1, ease: suave }}
-            />
-          ))}
-        </svg>
-
-        {/* paso 3: el tablero que la IA revisa */}
-        <motion.div {...pieza(activo, 1, 0.3)} className="relative w-40 rounded-xl border border-white/12 bg-white/[.05] p-3 sm:w-44">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="font-mono text-[8px] uppercase tracking-[.14em] text-white/40">Tablero</span>
-            <motion.span
-              {...pieza(activo, 2)}
-              className="flex items-center gap-1 rounded-full bg-[#CC66FF]/15 px-1.5 py-0.5"
-            >
-              <ScanSearch size={9} className="text-[#CC66FF]" />
-              <span className="font-mono text-[7.5px] uppercase tracking-[.12em] text-[#CC66FF]">IA audita</span>
-            </motion.span>
-          </div>
-          <div className="flex h-12 items-end gap-1">
-            {barras.map((a, i) => (
-              <motion.span
-                key={i}
-                className="flex-1 rounded-sm bg-gradient-to-t from-[#7700CE] to-[#CC66FF]"
-                initial={{ height: 0 }}
-                animate={activo >= 2 ? { height: `${a}%` } : { height: 0 }}
-                transition={{ duration: 0.5, delay: activo >= 3 ? 0.1 : 0.15 + i * 0.06, ease: suave }}
-              />
-            ))}
-          </div>
-          {/* la línea de barrido de la revisión */}
-          <motion.div
-            className="pointer-events-none absolute inset-x-2 top-8 h-px bg-gradient-to-r from-transparent via-[#CC66FF] to-transparent"
-            animate={activo === 2 ? { opacity: [0, 0.9, 0], y: [0, 26, 0] } : { opacity: 0 }}
-            transition={activo === 2 ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.2 }}
-          />
+        </motion.div>
+        {/* paso 3: la IA revisando */}
+        <motion.div
+          {...pieza(activo, 2)}
+          className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#7700CE]/10 px-2 py-1"
+        >
+          <ScanSearch size={10} className="text-[#7700CE]" />
+          <span className="font-mono text-[7.5px] uppercase tracking-[.14em] text-[#7700CE]">IA auditando</span>
         </motion.div>
       </div>
+
+      {/* paso 2: los indicadores se conectan */}
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+        {KPIS.map((k, i) => (
+          <motion.div key={k.rotulo} {...pieza(activo, 1, i * 0.09)} className="rounded-lg bg-white p-1.5 shadow-sm sm:p-2">
+            <div className="truncate text-[7px] font-medium uppercase tracking-wide text-slate-400 sm:text-[7.5px]">
+              {k.rotulo}
+            </div>
+            <div className="mt-0.5 flex items-center gap-1 text-[11px] font-bold text-slate-900 sm:text-[13px]">
+              {k.valor}
+              {/* paso 3: la palomita de la revisión */}
+              {i === 3 && (
+                <motion.span {...pieza(activo, 2, 0.25)} className="flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500">
+                  <Check size={7} strokeWidth={4} className="text-white" />
+                </motion.span>
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* paso 2: la curva se dibuja; paso 4: las barras se reacomodan */}
+      <motion.div {...pieza(activo, 1, 0.25)} className="relative flex-1 rounded-lg bg-white p-2 shadow-sm">
+        <svg viewBox="0 0 200 54" preserveAspectRatio="none" className="absolute inset-x-2 top-2 h-[46%] w-[calc(100%-1rem)]">
+          <motion.path
+            d="M2,46 C30,44 44,36 66,34 C92,31 108,22 132,18 C158,13 178,10 198,6"
+            fill="none"
+            stroke="#7700CE"
+            strokeWidth="2"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={activo >= 1 ? { pathLength: 1 } : { pathLength: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: suave }}
+          />
+        </svg>
+        <div className="absolute inset-x-2 bottom-2 flex h-[38%] items-end gap-1">
+          {barras.map((a, i) => (
+            <motion.span
+              key={i}
+              className="flex-1 rounded-sm bg-gradient-to-t from-[#7700CE] to-[#CC66FF]"
+              initial={{ height: 0 }}
+              animate={activo >= 1 ? { height: `${a}%` } : { height: 0 }}
+              transition={{ duration: 0.5, delay: activo >= 3 ? 0.1 : 0.35 + i * 0.05, ease: suave }}
+            />
+          ))}
+        </div>
+        {/* la línea de barrido de la auditoría */}
+        <motion.div
+          className="pointer-events-none absolute inset-x-1 top-3 h-px bg-gradient-to-r from-transparent via-[#7700CE] to-transparent"
+          animate={activo === 2 ? { opacity: [0, 0.85, 0], y: [0, 58, 0] } : { opacity: 0 }}
+          transition={activo === 2 ? { duration: 2.1, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.2 }}
+        />
+      </motion.div>
 
       {/* paso 4: el ajuste que sale de la revisión */}
       <motion.div
         {...pieza(activo, 3)}
-        className="flex items-center gap-2 self-start rounded-full border border-white/12 bg-white/[.06] px-3 py-1.5"
+        className="flex items-center gap-1.5 self-start rounded-full border border-[#7700CE]/25 bg-white px-2.5 py-1 shadow-sm"
       >
-        <SlidersHorizontal size={11} className="text-[#CC66FF]" />
-        <span className="text-[10px] text-white/75">Presupuesto movido a lo que sí convierte</span>
-      </motion.div>
-
-      {/* el distintivo, como en las escenas de servicios */}
-      <motion.div
-        {...pieza(activo, 3, 0.15)}
-        className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full border border-[#CC66FF]/40 bg-[#CC66FF]/15 px-3 py-1.5 backdrop-blur"
-      >
-        <Check size={12} className="text-[#CC66FF]" strokeWidth={3} />
-        <span className="font-mono text-[9.5px] uppercase tracking-[.14em] text-[#CC66FF]">Medido contra ventas</span>
+        <SlidersHorizontal size={10} className="text-[#7700CE]" />
+        <span className="text-[8.5px] font-medium text-slate-700 sm:text-[9.5px]">
+          Presupuesto movido a lo que sí convierte
+        </span>
       </motion.div>
     </div>
   );
@@ -174,26 +171,66 @@ export default function ProcesoCiclo({
 
   return (
     <div ref={raiz} className="grid items-center gap-8 lg:grid-cols-2 md:gap-12">
-      {/* la escena */}
-      <div className="relative overflow-hidden rounded-3xl border border-black/10 shadow-xl">
-        <div
-          className="relative aspect-[4/3]"
-          style={{ background: 'radial-gradient(90% 90% at 30% 0%, #1C0629 0%, #0D0010 60%)' }}
-        >
-          <Escena activo={activo} />
-        </div>
-        {/* el progreso de los cuatro pasos */}
-        <div className="absolute inset-x-0 bottom-0 flex gap-1 bg-black/30 p-2">
-          {pasos.map((p, i) => (
-            <span key={p.step} className="h-0.5 flex-1 overflow-hidden rounded-full bg-white/15">
-              <motion.span
-                className="block h-full rounded-full bg-[#CC66FF]"
-                animate={{ width: activo >= i ? '100%' : '0%' }}
-                transition={{ duration: 0.4, ease: suave }}
-              />
+      {/* el monitor, con el teléfono recibiendo el aviso */}
+      <div className="relative pb-10 pr-4 sm:pr-10">
+        <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#16101d] shadow-2xl">
+          <div className="flex items-center gap-2 border-b border-white/8 px-4 py-2.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]/80" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]/80" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]/80" />
+            <span className="ml-3 flex-1 truncate rounded-md bg-white/[.06] px-3 py-1 text-center font-mono text-[9.5px] tracking-wide text-white/45">
+              inedito.digital · tu tablero
             </span>
-          ))}
+          </div>
+          <div className="aspect-[16/10]">
+            <PantallaTablero activo={activo} />
+          </div>
+          {/* el progreso de los cuatro pasos */}
+          <div className="flex gap-1 bg-[#16101d] p-2">
+            {pasos.map((p, i) => (
+              <span key={p.step} className="h-0.5 flex-1 overflow-hidden rounded-full bg-white/15">
+                <motion.span
+                  className="block h-full rounded-full bg-[#CC66FF]"
+                  animate={{ width: activo >= i ? '100%' : '0%' }}
+                  transition={{ duration: 0.4, ease: suave }}
+                />
+              </span>
+            ))}
+          </div>
         </div>
+
+        {/* el teléfono: el aviso de la auditoría llega a dirección */}
+        <motion.div
+          {...pieza(activo, 2, 0.2)}
+          className="absolute -bottom-2 right-0 w-[34%] max-w-[170px] sm:w-[32%]"
+        >
+          <div className="overflow-hidden rounded-[1.4rem] border-[5px] border-[#16101d] bg-[#16101d] shadow-2xl ring-1 ring-black/10">
+            <div className="relative">
+              <span className="absolute left-1/2 top-1.5 z-10 h-1.5 w-10 -translate-x-1/2 rounded-full bg-black/70" />
+              <img
+                src="/tablero-movil.webp"
+                alt="El tablero en un teléfono"
+                width={390}
+                height={800}
+                loading="lazy"
+                decoding="async"
+                className="block w-full rounded-[1.05rem]"
+              />
+              {/* la notificación del reporte */}
+              <motion.div
+                {...pieza(activo, 3, 0.15)}
+                className="absolute inset-x-1.5 top-7 flex items-center gap-1.5 rounded-xl bg-white/95 px-2 py-1.5 shadow-lg"
+              >
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-[#7700CE]">
+                  <Bell size={10} className="text-white" />
+                </span>
+                <span className="text-[7.5px] font-semibold leading-tight text-slate-800">
+                  Tu reporte del mes está listo
+                </span>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* los pasos, tocables */}
