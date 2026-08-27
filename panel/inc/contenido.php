@@ -162,6 +162,7 @@ function registro_paginas(): array {
                         'titulo_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'DIRECCIÓN COMERCIAL'],
                         'titulo_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'ASISTIDA POR IA'],
                         'logos_texto' => ['label' => 'Texto sobre los logos de IA', 'tipo' => 'texto', 'def' => 'Presencia medida en'],
+                        'indice_titulo' => ['label' => 'Rótulo sobre la lista de piezas', 'tipo' => 'texto', 'def' => 'Las cuatro piezas que lo hacen posible'],
                         'texto'    => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Marketing digital, publicidad y contenido con todo conectado a datos reales: dirección define los objetivos, y una IA audita cada mes si la estrategia está funcionando.'],
                         'e1_titulo'=> ['label' => 'Enlace 1 · título', 'tipo' => 'texto', 'def' => 'Los tres niveles de servicio'],
                         'e1_texto' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Construir, mejorar o vender: según en qué punto estés'],
