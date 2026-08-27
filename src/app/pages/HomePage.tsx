@@ -150,7 +150,7 @@ export default function HomePage() {
             {[0, 1].map((vuelta) => (
               <span key={vuelta} className="flex items-center">
                 {[
-                  tCin('f1', 'Dirección comercial asistida por IA'),
+                  tCin('f1', 'Estrategia dirigida por objetivos'),
                   tCin('f2', 'Medimos hasta la venta'),
                   tCin('f3', 'Formalidad y confianza'),
                   tCin('f4', 'Visibilidad completa, también ante la IA'),
@@ -286,21 +286,21 @@ export default function HomePage() {
                   {tEnf('etiqueta', 'NUESTRO ENFOQUE')}
                 </span>
                 <h2 className="heading mb-5 text-3xl leading-[1.05] [text-wrap:balance] md:text-5xl">
-                  {tEnf('titulo_1', 'DIRECCIÓN COMERCIAL')}{' '}
+                  {tEnf('titulo_1', 'NO ES UNA PROMESA,')}{' '}
                   <span
                     className="bg-clip-text text-transparent"
                     style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
                   >
-                    {tEnf('titulo_2', 'ASISTIDA POR IA')}
+                    {tEnf('titulo_2', 'ES UN SISTEMA')}
                   </span>
                 </h2>
                 <p className="mb-8 max-w-2xl text-[15.5px] leading-relaxed text-white/75 md:text-base">
-                  {tEnf('texto', 'Somos una agencia de marketing digital y de inteligencia artificial: estrategia, publicidad y soluciones de IA con todo conectado a datos reales. Dirección define los objetivos y una IA audita cada mes si la estrategia está funcionando. Casi nadie en Aguascalientes trabaja así.')}
+                  {tEnf('texto', 'Somos una agencia de marketing digital y de inteligencia artificial, y nuestra forma de trabajar es un sistema: dirección pone el objetivo, todo lo que tu negocio hace en digital queda conectado, y una IA lo revisa cada mes contra ese objetivo. Casi nadie en Aguascalientes trabaja así.')}
                 </p>
 
                 {/* el puente: estas filas SON el enfoque del título */}
                 <div className="mb-1 font-mono text-[10px] uppercase tracking-[.2em] text-white/45">
-                  {tEnf('indice_titulo', 'Las cuatro piezas que lo hacen posible')}
+                  {tEnf('indice_titulo', 'Las cuatro piezas del sistema')}
                 </div>
                 <div className="border-t border-white/10">
                   {[1, 2, 3, 4].map((i) => {

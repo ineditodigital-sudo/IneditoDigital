@@ -159,10 +159,10 @@ function registro_paginas(): array {
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
                         'etiqueta' => ['label' => 'Etiqueta', 'tipo' => 'texto', 'def' => 'NUEVO'],
-                        'titulo_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'DIRECCIÓN COMERCIAL'],
-                        'titulo_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'ASISTIDA POR IA'],
+                        'titulo_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'NO ES UNA PROMESA,'],
+                        'titulo_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'ES UN SISTEMA'],
                         'logos_texto' => ['label' => 'Texto sobre los logos de IA', 'tipo' => 'texto', 'def' => 'Presencia medida en'],
-                        'indice_titulo' => ['label' => 'Rótulo sobre la lista de piezas', 'tipo' => 'texto', 'def' => 'Las cuatro piezas que lo hacen posible'],
+                        'indice_titulo' => ['label' => 'Rótulo sobre la lista de piezas', 'tipo' => 'texto', 'def' => 'Las cuatro piezas del sistema'],
                         'texto'    => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Marketing digital, publicidad y contenido con todo conectado a datos reales: dirección define los objetivos, y una IA audita cada mes si la estrategia está funcionando.'],
                         'e1_titulo'=> ['label' => 'Enlace 1 · título', 'tipo' => 'texto', 'def' => 'Los tres niveles de servicio'],
                         'e1_texto' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Construir, mejorar o vender: según en qué punto estés'],
@@ -183,7 +183,7 @@ function registro_paginas(): array {
                     'nombre' => 'Cinta corrediza',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar la cinta', 'tipo' => 'switch', 'def' => '1'],
-                        'f1' => ['label' => 'Frase 1', 'tipo' => 'texto', 'def' => 'Dirección comercial asistida por IA'],
+                        'f1' => ['label' => 'Frase 1', 'tipo' => 'texto', 'def' => 'Estrategia dirigida por objetivos'],
                         'f2' => ['label' => 'Frase 2', 'tipo' => 'texto', 'def' => 'Medimos hasta la venta'],
                         'f3' => ['label' => 'Frase 3', 'tipo' => 'texto', 'def' => 'Formalidad y confianza'],
                         'f4' => ['label' => 'Frase 4', 'tipo' => 'texto', 'def' => 'Visibilidad completa, también ante la IA'],
