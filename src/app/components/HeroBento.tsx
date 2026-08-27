@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { GlassCard } from './GlassCard';
-import { MarcoNavegador, MarcoTelefono } from './MockupTablero';
+import EsferaIA from './EsferaIA';
 import Floating3DElements from './Floating3DElements';
 import TopographyCanvas from './TopographyCanvas';
 import { useState, useEffect, memo } from 'react';
@@ -103,14 +103,9 @@ function HeroBento() {
             </a>
           </div>
 
-          {/* El producto en un teléfono, también aquí. CSS puro. */}
-          <div className="animate-fadeIn relative mx-auto mt-1 w-52" style={{ animationDelay: '0.45s' }}>
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -inset-8 rounded-full opacity-60 blur-2xl"
-              style={{ background: 'radial-gradient(60% 60% at 50% 40%, rgba(119,0,206,.45), transparent 72%)' }}
-            />
-            <MarcoTelefono src="/tablero-movil.webp" alt="El tablero de resultados en un teléfono" className="relative" />
+          {/* La esfera, compacta. El canvas cuida solo su rendimiento. */}
+          <div className="animate-fadeIn relative mx-auto mt-2 w-full max-w-[300px]" style={{ animationDelay: '0.45s' }}>
+            <EsferaIA className="aspect-square w-full" />
           </div>
 
         </div>
@@ -175,41 +170,26 @@ function HeroBento() {
 
           </motion.div>
 
-          {/* Columna derecha: el producto en pantalla, no fotos de banco.
-              Todo CSS: el hero no carga un solo byte de JS por esto. */}
+          {/* Columna derecha: la esfera de red, abstracta e interactiva.
+              3D proyectado a mano en canvas: gira sola, se arrastra con el
+              cursor y tocar un nodo dispara pulsos por las conexiones. */}
           <div className="relative animate-fadeIn-lcp" style={{ animationDelay: '0.25s' }}>
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -inset-8 rounded-[2.5rem] opacity-70 blur-3xl"
-              style={{ background: 'radial-gradient(55% 45% at 55% 40%, rgba(119,0,206,.38), transparent 72%)' }}
-            />
-            <div className="relative pb-12 pr-6 md:pr-12">
-              <MarcoNavegador
-                src="/tablero-vista.webp"
-                alt="El tablero de resultados de Inédito Digital en un monitor"
-                eager
-              />
-              <MarcoTelefono
-                src="/tablero-movil.webp"
-                alt="El tablero de resultados en un teléfono"
-                className="animate-flotar absolute -bottom-1 right-0 w-[30%] max-w-[168px]"
-              />
-              <div className="animate-flotar absolute -left-3 top-14" style={{ animationDelay: '1.2s' }}>
-                <GlassCard className="px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-[#00ff88]" />
-                    <span className="text-xs font-medium text-white">{b('chip_1', 'IA auditando')}</span>
-                  </div>
-                </GlassCard>
-              </div>
-              <div className="animate-flotar absolute bottom-4 left-4" style={{ animationDelay: '0.6s' }}>
-                <GlassCard className="px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="text-[#CC66FF]" size={14} />
-                    <span className="text-xs font-medium text-white">{b('chip_2', 'Medido hasta la venta')}</span>
-                  </div>
-                </GlassCard>
-              </div>
+            <EsferaIA className="mx-auto aspect-square w-full max-w-[520px]" />
+            <div className="animate-flotar absolute left-2 top-12" style={{ animationDelay: '1.2s' }}>
+              <GlassCard className="px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-[#00ff88]" />
+                  <span className="text-xs font-medium text-white">{b('chip_1', 'IA auditando')}</span>
+                </div>
+              </GlassCard>
+            </div>
+            <div className="animate-flotar absolute bottom-10 right-2" style={{ animationDelay: '0.6s' }}>
+              <GlassCard className="px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="text-[#CC66FF]" size={14} />
+                  <span className="text-xs font-medium text-white">{b('chip_2', 'Medido hasta la venta')}</span>
+                </div>
+              </GlassCard>
             </div>
           </div>
 
