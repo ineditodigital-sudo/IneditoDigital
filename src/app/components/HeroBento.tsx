@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Sparkles, Users, Award, TrendingUp } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import Floating3DElements from './Floating3DElements';
 import TopographyCanvas from './TopographyCanvas';
@@ -13,7 +13,6 @@ function HeroBento() {
   /* Textos editables desde el panel. El segundo argumento es lo que hay hoy:
      si el campo queda vacío se usa eso, así la portada nunca se ve rota. */
   const t = contenido('home', 'portada');
-  const c = contenido('home', 'cifras');
   const b = contenido('home', 'bento');
   
   // Inicializar con detección más rápida para evitar layout shift
@@ -46,6 +45,18 @@ function HeroBento() {
       <section className="relative min-h-screen flex flex-col justify-center items-center px-4 py-16 overflow-hidden">
         {/* Fondo topográfico animado */}
         <TopographyCanvas />
+      {/* El resplandor superior del refresh: un gradiente, cero JS */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-[75%]"
+        style={{ background: 'radial-gradient(60% 58% at 50% -14%, rgba(153,51,255,.30), rgba(119,0,206,.10) 55%, transparent 78%)' }}
+      />
+        {/* El resplandor superior del refresh: un gradiente, cero JS */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-[75%]"
+        style={{ background: 'radial-gradient(60% 58% at 50% -14%, rgba(153,51,255,.30), rgba(119,0,206,.10) 55%, transparent 78%)' }}
+      />
         
         {/* Elementos 3D flotantes - reducidos para móvil */}
         <div className="absolute inset-0 z-10 pointer-events-none">
@@ -64,7 +75,7 @@ function HeroBento() {
           <h1 className="heading mb-4">
             {/* La linea que posiciona va dentro del h1 y no como texto suelto:
                 es la frase por la que el sitio sale entre la 4 y la 8. */}
-            <span className="mb-2 block text-[13px] font-medium normal-case leading-snug tracking-[.01em] text-white/65">
+            <span className="mb-3 block font-mono text-[10.5px] font-semibold tracking-[.22em] text-[#AA66FF]">
               {t('titulo_0', 'Agencia de marketing digital en Aguascalientes')}
             </span>
             <span className="block text-white mb-2 text-[28px] leading-tight">
@@ -98,33 +109,6 @@ function HeroBento() {
             </a>
           </div>
 
-          {/* Estadísticas - Diseño compacto horizontal centrado */}
-          <div className="grid grid-cols-3 gap-4 mb-8 animate-fadeIn" style={{ animationDelay: '0.5s' }}>
-            <div className="text-center">
-              <GlassCard className="py-4 px-2">
-                <Users className="text-[#7700CE] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">{c('cifra_1', '100+')}</div>
-                <div className="text-[10px] text-white/70 leading-tight">{c('texto_1', 'Clientes Activos')}</div>
-              </GlassCard>
-            </div>
-
-            <div className="text-center">
-              <GlassCard className="py-4 px-2">
-                <Award className="text-[#9933FF] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">{c('cifra_2', '5X')}</div>
-                <div className="text-[10px] text-white/70 leading-tight">{c('texto_2', 'ROI Promedio')}</div>
-              </GlassCard>
-            </div>
-
-            <div className="text-center">
-              <GlassCard className="py-4 px-2">
-                <TrendingUp className="text-[#CC66FF] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">{c('cifra_3', '200%')}</div>
-                <div className="text-[10px] text-white/70 leading-tight">{c('texto_3', 'Crecimiento')}</div>
-              </GlassCard>
-            </div>
-          </div>
-
         </div>
       </section>
     );
@@ -153,7 +137,7 @@ function HeroBento() {
           >
             {/* Título Principal - Limitado al 50% en desktop - CRÍTICO PARA LCP */}
             <h1 className="heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight lg:max-w-[90%]">
-              <span className="mb-2 block text-[13px] font-medium normal-case leading-snug tracking-[.01em] text-white/65 md:text-[14.5px]">
+              <span className="mb-3 block font-mono text-[10.5px] font-semibold tracking-[.22em] text-[#AA66FF] md:text-[11.5px]">
                 {t('titulo_0', 'Agencia de marketing digital en Aguascalientes')}
               </span>
               <span className="block text-white mb-1 md:mb-2">{t('titulo_1', 'DIRECCIÓN COMERCIAL')}</span>
@@ -185,42 +169,6 @@ function HeroBento() {
               </a>
             </div>
 
-            {/* Estadísticas */}
-            <div className="flex flex-wrap gap-4 md:gap-6 pt-2 md:pt-3">
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0">
-                  <Users className="text-[#7700CE]" size={20} />
-                </div>
-                <div>
-                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_1', '100+')}</div>
-                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_1', 'Clientes Activos')}</div>
-                </div>
-              </div>
-
-              <div className="h-10 md:h-12 w-px bg-white/10" />
-
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0">
-                  <Award className="text-[#7700CE]" size={20} />
-                </div>
-                <div>
-                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_2', '5X')}</div>
-                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_2', 'ROI Promedio')}</div>
-                </div>
-              </div>
-
-              <div className="h-10 md:h-12 w-px bg-white/10" />
-
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="text-[#7700CE]" size={20} />
-                </div>
-                <div>
-                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_3', '200%')}</div>
-                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_3', 'Crecimiento')}</div>
-                </div>
-              </div>
-            </div>
           </motion.div>
 
           {/* Columna Derecha - Bento Grid con Imágenes */}

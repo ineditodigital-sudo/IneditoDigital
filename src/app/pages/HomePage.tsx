@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowRight, Check, CheckCircle, Sparkles, TrendingUp, Zap, Target, Star, Bot, MessageCircle, ShoppingCart, Users } from 'lucide-react';
 import { Link } from 'react-router';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { GlassCard } from '../components/GlassCard';
 import HeroBento from '../components/HeroBento';
 import SectionDivider from '../components/SectionDivider';
@@ -13,6 +13,42 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const Floating3DElements = lazy(() => import('../components/Floating3DElements'));
+
+const ProcesoCiclo = lazy(() => import('../components/ProcesoCiclo'));
+
+/**
+ * Monta a sus hijos hasta que el lector se acerca.
+ *
+ * El chunk de la escena ni siquiera se descarga si nadie baja hasta ahi:
+ * es la condicion de "sin sacrificar rendimiento del index".
+ */
+function Diferido({ children, alto }: { children: ReactNode; alto: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [listo, setListo] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ojo = new IntersectionObserver(
+      (es, o) => {
+        if (es.some((e) => e.isIntersecting)) {
+          setListo(true);
+          o.disconnect();
+        }
+      },
+      { rootMargin: '600px 0px' }
+    );
+    ojo.observe(el);
+    /* Respaldo: si el observador no dispara —hay contextos donde no corre—,
+       el chunk (5.6 KB) se trae solo unos segundos después de cargar. La
+       sección nunca se queda hueca. */
+    const respaldo = window.setTimeout(() => setListo(true), 4000);
+    return () => {
+      ojo.disconnect();
+      window.clearTimeout(respaldo);
+    };
+  }, []);
+  return <div ref={ref}>{listo ? children : <div style={{ minHeight: alto }} />}</div>;
+}
 
 export default function HomePage() {
   const { services, portfolioItems, blogPosts, settings, openAssistant } = useApp();
@@ -246,7 +282,13 @@ export default function HomePage() {
               className="mb-10 text-center"
             >
               <h2 className="heading mb-3 text-2xl md:text-4xl">
-                {tNiv('titulo', 'EL SERVICIO SE ADAPTA A DÓNDE ESTÁS')}
+                {tNiv('titulo_1', 'EL SERVICIO SE ADAPTA')}{' '}
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                >
+                  {tNiv('titulo_2', 'A DÓNDE ESTÁS')}
+                </span>
               </h2>
               <p className="mx-auto max-w-2xl text-[15.5px] leading-relaxed text-white/70">
                 {tNiv('bajada', 'No es el mismo trabajo para una empresa que no tiene nada que para una que ya invierte y quiere vender más. Estos son los tres puntos de partida.')}
@@ -268,8 +310,14 @@ export default function HomePage() {
                     className="absolute inset-x-0 top-0 h-px opacity-60 transition-opacity duration-300 group-hover:opacity-100"
                     style={{ background: 'linear-gradient(90deg,transparent,#9933FF,transparent)' }}
                   />
-                  <div className="mb-4 flex items-baseline gap-2">
-                    <span className="font-mono text-[11px] uppercase tracking-[.18em] text-[#AA66FF]">
+                  <div className="mb-3 flex items-end justify-between">
+                    <span
+                      className="heading text-[2.6rem] leading-none bg-clip-text text-transparent"
+                      style={{ backgroundImage: 'linear-gradient(120deg,#9933FF,#CC66FF)' }}
+                    >
+                      0{i}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-[.18em] text-white/40">
                       Nivel {i}
                     </span>
                   </div>
@@ -325,7 +373,13 @@ export default function HomePage() {
                   {tTab('etiqueta', 'Lo que recibes')}
                 </span>
                 <h2 className="heading mb-4 text-2xl leading-tight md:text-4xl">
-                  {tTab('titulo', 'UN TABLERO, NO UN REPORTE EN PDF')}
+                  {tTab('titulo_1', 'UN TABLERO,')}{' '}
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                  >
+                    {tTab('titulo_2', 'NO UN REPORTE EN PDF')}
+                  </span>
                 </h2>
                 <p className="mb-6 text-[15.5px] leading-relaxed text-white/75">
                   {tTab('texto', 'Cada cliente tiene una pantalla conectada a Search Console, Analytics y sus campañas, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.')}
@@ -759,57 +813,18 @@ export default function HomePage() {
               {tProc('titulo', 'CÓMO TRABAJAMOS')}
             </h2>
             <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
-              {tProc('bajada', 'Metodología probada que garantiza resultados excepcionales')}
+              {tProc('bajada', 'Dirección define, todo se conecta, la IA audita y se ajusta. Así se ve el ciclo completo.')}
             </p>
           </div>
 
-          {/* Grid con Imagen y Steps */}
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center mb-8">
-            {/* Imagen destacada */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="relative rounded-3xl overflow-hidden"
-            >
-              <div className="aspect-[4/3] relative">
-                <img 
-                  src="https://imagenes.inedito.digital/INEDITO%20DIGITAL/NUESTRO%20PROCESO.webp" 
-                  alt="Nuestro proceso de trabajo en INÉDITO DIGITAL"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/30 to-[#9933FF]/20" />
-                
-                {/* Badge flotante */}
-                <div className="absolute top-4 left-4">
-                  <div className="px-4 py-2 rounded-full bg-white/95 backdrop-blur-sm shadow-lg flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-sm font-bold text-black">{tCasos('etiqueta', 'En acción')}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Steps del proceso */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
-              {process.map((item, index) => (
-                <motion.div
-                  key={item.step}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <GlassCard className="h-full bg-white/80 backdrop-blur-sm border-gray-200 hover:border-[#7700CE]/30 transition-colors">
-                    <div className="heading text-3xl md:text-4xl text-[#7700CE] mb-3">{item.step}</div>
-                    <h3 className="heading text-lg md:text-xl mb-2 text-black">{item.title}</h3>
-                    <p className="text-gray-600 text-xs md:text-sm">{item.description}</p>
-                  </GlassCard>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          {/* La escena del ciclo: se explica sola y se puede tocar.
+              Va en su propio chunk y no arranca hasta estar en pantalla,
+              asi que el indice no paga nada por tenerla. */}
+          <Suspense fallback={<div className="min-h-[440px]" />}>
+            <Diferido alto={440}>
+              <ProcesoCiclo pasos={process} />
+            </Diferido>
+          </Suspense>
         </div>
       </section>
       )}
