@@ -173,7 +173,7 @@ export default function ProcesoCiclo({
     <div ref={raiz} className="grid items-center gap-8 lg:grid-cols-2 md:gap-12">
       {/* el monitor, con el teléfono recibiendo el aviso */}
       <div className="relative pb-10 pr-4 sm:pr-10">
-        <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#16101d] shadow-2xl">
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#16101d] shadow-2xl">
           <div className="flex items-center gap-2 border-b border-white/8 px-4 py-2.5">
             <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]/80" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]/80" />
@@ -204,7 +204,7 @@ export default function ProcesoCiclo({
           {...pieza(activo, 2, 0.2)}
           className="absolute -bottom-2 right-0 w-[34%] max-w-[170px] sm:w-[32%]"
         >
-          <div className="overflow-hidden rounded-[1.4rem] border-[5px] border-[#16101d] bg-[#16101d] shadow-2xl ring-1 ring-black/10">
+          <div className="overflow-hidden rounded-[1.4rem] border-[5px] border-[#16101d] bg-[#16101d] shadow-2xl ring-1 ring-white/10">
             <div className="relative">
               <span className="absolute left-1/2 top-1.5 z-10 h-1.5 w-10 -translate-x-1/2 rounded-full bg-black/70" />
               <img
@@ -244,17 +244,17 @@ export default function ProcesoCiclo({
               className={`rounded-2xl border p-5 text-left transition-all duration-300 ${
                 este
                   ? 'border-[#7700CE]/50 bg-[#7700CE]/[.05] shadow-[0_10px_30px_-14px_rgba(119,0,206,.45)]'
-                  : 'border-gray-200 bg-white/80 hover:border-[#7700CE]/25'
+                  : 'border-white/10 bg-white/[.04] hover:border-[#7700CE]/40'
               }`}
             >
               <div
-                className={`heading mb-3 text-3xl md:text-4xl ${este ? 'bg-clip-text text-transparent' : 'text-gray-300'}`}
+                className={`heading mb-3 text-3xl md:text-4xl ${este ? 'bg-clip-text text-transparent' : 'text-white/15'}`}
                 style={este ? { backgroundImage: 'linear-gradient(120deg,#7700CE,#CC66FF)' } : undefined}
               >
                 {p.step}
               </div>
-              <h3 className="heading mb-2 text-lg text-black md:text-xl">{p.title}</h3>
-              <p className="text-xs text-gray-600 md:text-sm">{p.description}</p>
+              <h3 className="heading mb-2 text-lg text-white md:text-xl">{p.title}</h3>
+              <p className="text-xs text-white/65 md:text-sm">{p.description}</p>
             </button>
           );
         })}
