@@ -97,6 +97,17 @@ if ($path === '/') {
       // arriba se conserva la frase que ya trae trafico.
     $h .= '<h2>Dirección comercial asistida por IA</h2>';
     $h .= '<p>No vendemos marketing digital genérico. Dirección define los objetivos, todo queda conectado —Search Console, Analytics, campañas y, donde aplica, el ERP— y una IA audita periódicamente si la estrategia está funcionando. El servicio se adapta al punto en que esté cada empresa: <a href="/servicios">construir, mejorar o vender</a>.</p>';
+    // La identidad de IA con todas sus letras: es el posicionamiento que se
+    // quiere ganar en SEO y GEO sin soltar el de agencia de marketing.
+    $h .= '<h2>Soluciones de inteligencia artificial</h2>';
+    $h .= '<p>Somos una agencia de marketing digital y de inteligencia artificial en Aguascalientes. Además de las campañas, construimos soluciones de IA aplicadas a la operación comercial:</p><ul>';
+    $h .= '<li><a href="/servicios/posicionamiento-en-ia">Posicionamiento en IA (GEO)</a> — que ChatGPT, Claude, Gemini y Perplexity te recomienden cuando alguien pregunta por tu categoría.</li>';
+    $h .= '<li><a href="/servicios/chatbots-y-agentes">Chatbots y agentes</a> — atienden, califican y pasan la conversación a tu equipo cuando hace falta.</li>';
+    $h .= '<li><a href="/servicios-ia/whatsapp">IA para WhatsApp</a> — ventas y soporte 24/7 sin dejar a nadie esperando.</li>';
+    $h .= '<li><a href="/servicios-ia/ventas">IA de ventas</a> — prospección y seguimiento con criterio, no en frío.</li>';
+    $h .= '<li><a href="/servicios-ia/marketing">IA para marketing</a> — optimización de campañas sobre datos reales.</li>';
+    $h .= '<li><a href="/servicios-ia/ecommerce">IA para e-commerce</a> — convertir más de las visitas que ya tienes.</li>';
+    $h .= '</ul>';
     // Los tres niveles y el tablero: la capa nueva. Para un bot esto no
     // existia, y es justo lo que distingue el servicio de una agencia mas.
     $h .= '<h2>El servicio se adapta a dónde estás</h2>';
