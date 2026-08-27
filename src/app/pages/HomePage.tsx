@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { GlassCard } from '../components/GlassCard';
 import HeroBento from '../components/HeroBento';
+import EsferaIA from '../components/EsferaIA';
 import SectionDivider from '../components/SectionDivider';
 import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
@@ -255,6 +256,8 @@ export default function HomePage() {
               className="relative overflow-hidden rounded-3xl border border-[#9933FF]/25 p-8 md:p-12"
               style={{ background: 'linear-gradient(155deg, rgba(119,0,206,.20), rgba(13,0,16,.55) 62%)' }}
             >
+              <div className="grid items-center gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-12">
+                <div>
               <span className="mb-4 inline-block rounded-full bg-[#9933FF]/20 px-3 py-1 font-mono text-[11px] uppercase tracking-[.18em] text-[#AA66FF]">
                 {tEnf('etiqueta', 'NUEVO')}
               </span>
@@ -289,6 +292,12 @@ export default function HomePage() {
                     </Link>
                   );
                 })}
+              </div>
+                </div>
+
+                {/* La esfera de red: 3D proyectado a mano, gira sola y se
+                    arrastra. Es la pieza visual de la banda de IA. */}
+                <EsferaIA className="mx-auto aspect-square w-full max-w-[300px] lg:max-w-[360px]" />
               </div>
             </motion.div>
           </div>
