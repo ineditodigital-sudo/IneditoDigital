@@ -96,7 +96,7 @@ if ($path === '/') {
     // La categoria que define direccion. Va debajo del H1, no en el:
       // arriba se conserva la frase que ya trae trafico.
     $h .= '<h2>Dirección comercial asistida por IA</h2>';
-    $h .= '<p>No vendemos marketing digital genérico. Dirección define los objetivos, todo queda conectado —Search Console, Analytics, campañas y, donde aplica, el ERP— y una IA audita periódicamente si la estrategia está funcionando. El servicio se adapta al punto en que esté cada empresa: <a href="/servicios">construir, mejorar o vender</a>.</p>';
+    $h .= '<p>No vendemos marketing digital genérico. Dirección define los objetivos, todo queda conectado —búsquedas, tráfico, campañas y, donde aplica, la facturación— y una IA audita periódicamente si la estrategia está funcionando. El servicio se adapta al punto en que esté cada empresa: <a href="/servicios">construir, mejorar o vender</a>.</p>';
     // La identidad de IA con todas sus letras: es el posicionamiento que se
     // quiere ganar en SEO y GEO sin soltar el de agencia de marketing.
     $h .= '<h2>Soluciones de inteligencia artificial</h2>';
@@ -111,7 +111,7 @@ if ($path === '/') {
     // Los tres niveles y el tablero: la capa nueva. Para un bot esto no
     // existia, y es justo lo que distingue el servicio de una agencia mas.
     $h .= '<h2>El servicio se adapta a dónde estás</h2>';
-    $h .= '<h3>Nivel 1 · Construir</h3><p>Para empresas sin presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base conectado a Search Console y Analytics. La promesa: cuando te busquen, existes y te ves formal.</p>';
+    $h .= '<h3>Nivel 1 · Construir</h3><p>Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base conectado a tus datos reales. La promesa: cuando te busquen, existes y te ves formal.</p>';
     $h .= '<h3>Nivel 2 · Mejorar</h3><p>Para empresas con web y redes mal trabajadas. La puerta de entrada es una <a href="/servicios/auditoria-con-ia">auditoría con IA</a> que revisa velocidad, indexación, ficha de Google, LinkedIn y visibilidad ante los asistentes, con la evidencia de cada hallazgo. La promesa: te decimos exactamente qué está mal y lo arreglamos.</p>';
     $h .= '<h3>Nivel 3 · Vender</h3><p>Para empresas que ya tienen todo y quieren resultados. <a href="/servicios/estrategia-de-canales">Estrategia de canales</a> entre venta B2B directa y marketplaces, campañas en Google Ads, <a href="/servicios/chatgpt-ads">ChatGPT Ads</a> y Meta con tablero unificado, y —cuando hay ERP— el cruce de prospectos contra ventas cerradas. La promesa: cada peso invertido se mide contra ventas reales.</p>';
     $h .= '<h2>Un tablero, no un reporte en PDF</h2>';

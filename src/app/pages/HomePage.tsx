@@ -52,6 +52,8 @@ function Diferido({ children, alto }: { children: ReactNode; alto: number }) {
 
 export default function HomePage() {
   const { services, portfolioItems, blogPosts, settings, openAssistant } = useApp();
+  /* Lo que la persona escribe en el buscador que conversa. */
+  const [busqueda, setBusqueda] = useState('');
   /* Textos editables desde el panel. El segundo argumento de cada llamada es
      lo que hay hoy: si el campo se vacía, se usa eso y la página no se rompe. */
   const tTrans  = contenido('home', 'transformacion');
@@ -64,6 +66,7 @@ export default function HomePage() {
   const tTarIA  = contenido('home', 'tarjetas_ia');
   const tVal    = contenido('home', 'valores');
   const tEnf    = contenido('home', 'enfoque');
+  const tCin    = contenido('home', 'cinta');
   const tNiv    = contenido('home', 'niveles');
   const tTab    = contenido('home', 'tablero');
 
@@ -76,7 +79,7 @@ export default function HomePage() {
 
   const process = [
     { step: '01', title: tProc('paso_1_titulo', 'OBJETIVOS'), description: tProc('paso_1_texto', 'Dirección define qué quiere lograr y en qué plazo') },
-    { step: '02', title: tProc('paso_2_titulo', 'CONECTAR'),  description: tProc('paso_2_texto', 'Search Console, Analytics, campañas y el ERP en un tablero') },
+    { step: '02', title: tProc('paso_2_titulo', 'CONECTAR'),  description: tProc('paso_2_texto', 'Tu presencia, tus campañas y tus ventas quedan en un solo tablero') },
     { step: '03', title: tProc('paso_3_titulo', 'AUDITAR'),   description: tProc('paso_3_texto', 'Cada mes una IA revisa el desempeño contra esos objetivos') },
     { step: '04', title: tProc('paso_4_titulo', 'AJUSTAR'),   description: tProc('paso_4_texto', 'Se corrige con lo que dice el dato, no con la corazonada') }
   ];
@@ -137,6 +140,28 @@ export default function HomePage() {
 
       {/* Hero Section - Bento Grid Style */}
       <HeroBento />
+
+      {/* La cinta de posicionamiento: la postura, corriendo en bucle */}
+      {tCin.visible() && (
+        <div aria-hidden className="relative overflow-hidden border-y border-white/8 bg-black/40 py-3">
+          <div className="animate-cinta flex w-max items-center whitespace-nowrap">
+            {[0, 1].map((vuelta) => (
+              <span key={vuelta} className="flex items-center">
+                {[
+                  tCin('f1', 'Dirección comercial asistida por IA'),
+                  tCin('f2', 'Medimos hasta la venta'),
+                  tCin('f3', 'Formalidad y confianza'),
+                  tCin('f4', 'Visibilidad completa, también ante la IA'),
+                ].map((f) => (
+                  <span key={f} className="heading mx-5 flex items-center gap-5 text-sm text-white/50 md:mx-6 md:text-base">
+                    {f} <span aria-hidden className="text-[#AA66FF]">·</span>
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <SectionDivider variant="gradient" color="purple" />
 
@@ -326,7 +351,7 @@ export default function HomePage() {
                   </h3>
                   <p className="mb-4 text-[14.5px] leading-relaxed text-white/70">
                     {tNiv(`n${i}_texto`, [
-                      'Para empresas sin presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.',
+                      'Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.',
                       'Para empresas con web y redes mal trabajadas. Empieza con una auditoría que dice exactamente qué está mal, con la evidencia de cada hallazgo.',
                       'Para empresas que ya tienen todo. Estrategia de canales, campañas medidas en un solo tablero y —con ERP— el cruce de prospectos contra ventas cerradas.',
                     ][i - 1])}
@@ -382,7 +407,7 @@ export default function HomePage() {
                   </span>
                 </h2>
                 <p className="mb-6 text-[15.5px] leading-relaxed text-white/75">
-                  {tTab('texto', 'Cada cliente tiene una pantalla conectada a Search Console, Analytics y sus campañas, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.')}
+                  {tTab('texto', 'Cada cliente tiene una pantalla conectada a sus datos reales, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.')}
                 </p>
                 <ul className="space-y-2.5">
                   {[1, 2, 3, 4].map((i) => (
@@ -448,6 +473,31 @@ export default function HomePage() {
               {tServ('bajada', 'Soluciones digitales que generan resultados reales y medibles')}
             </p>
           </div>
+
+          {/* El buscador que conversa: escribes lo que necesitas y contesta
+              el asistente, no una lista de resultados. */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              openAssistant(undefined, busqueda.trim() || 'ayúdame a elegir el servicio correcto para mi empresa');
+            }}
+            className="mx-auto mb-8 flex max-w-xl items-center gap-2 rounded-full border border-gray-200 bg-white p-1.5 pl-5 shadow-[0_14px_44px_-20px_rgba(119,0,206,.45)]"
+          >
+            <Sparkles size={16} className="shrink-0 text-[#7700CE]" />
+            <input
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder={tServ('buscador', 'Escribe qué necesita tu empresa…')}
+              aria-label="Cuéntale al asistente qué necesita tu empresa"
+              className="w-full bg-transparent text-sm text-black outline-none placeholder:text-gray-400"
+            />
+            <button
+              type="submit"
+              className="shrink-0 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-5 py-2.5 text-xs font-bold tracking-wider text-white transition-transform hover:scale-[1.03]"
+            >
+              PREGUNTAR
+            </button>
+          </form>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-6 md:mb-8">
             {services.slice(0, 9).map((service, index) => (

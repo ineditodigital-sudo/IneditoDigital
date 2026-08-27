@@ -67,6 +67,8 @@ function registro_paginas(): array {
                         'img_3_alt' => ['label' => 'Foto 3 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Tecnología y IA'],
                         'img_4'     => ['label' => 'Foto 4', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/imagen_2024-11-20_172844415.webp'],
                         'img_4_alt' => ['label' => 'Foto 4 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Equipo Colaborativo'],
+                        'chip_1' => ['label' => 'Chip flotante 1', 'tipo' => 'texto', 'def' => 'IA auditando'],
+                        'chip_2' => ['label' => 'Chip flotante 2', 'tipo' => 'texto', 'def' => 'Medido hasta la venta'],
                         'etiqueta_1' => ['label' => 'Etiqueta sobre la primera foto', 'tipo' => 'texto', 'def' => 'Estrategia Digital'],
                         'etiqueta_2' => ['label' => 'Etiqueta sobre la última foto', 'tipo' => 'texto', 'def' => 'Equipo Experto'],
                     ],
@@ -173,6 +175,17 @@ function registro_paginas(): array {
                     ],
                 ],
 
+                'cinta' => [
+                    'nombre' => 'Cinta corrediza',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar la cinta', 'tipo' => 'switch', 'def' => '1'],
+                        'f1' => ['label' => 'Frase 1', 'tipo' => 'texto', 'def' => 'Dirección comercial asistida por IA'],
+                        'f2' => ['label' => 'Frase 2', 'tipo' => 'texto', 'def' => 'Medimos hasta la venta'],
+                        'f3' => ['label' => 'Frase 3', 'tipo' => 'texto', 'def' => 'Formalidad y confianza'],
+                        'f4' => ['label' => 'Frase 4', 'tipo' => 'texto', 'def' => 'Visibilidad completa, también ante la IA'],
+                    ],
+                ],
+
                 'niveles' => [
                     'nombre' => 'Los tres niveles',
                     'campos' => [
@@ -181,7 +194,7 @@ function registro_paginas(): array {
                         'titulo_2'   => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'A DÓNDE ESTÁS'],
                         'bajada'     => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'No es el mismo trabajo para una empresa que no tiene nada que para una que ya invierte y quiere vender más. Estos son los tres puntos de partida.'],
                         'n1_titulo'  => ['label' => 'Nivel 1 · título', 'tipo' => 'texto', 'def' => 'CONSTRUIR'],
-                        'n1_texto'   => ['label' => 'Nivel 1 · texto', 'tipo' => 'area', 'def' => 'Para empresas sin presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.'],
+                        'n1_texto'   => ['label' => 'Nivel 1 · texto', 'tipo' => 'area', 'def' => 'Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.'],
                         'n1_promesa' => ['label' => 'Nivel 1 · promesa', 'tipo' => 'texto', 'def' => 'Cuando te busquen, existes y te ves formal.'],
                         'n2_titulo'  => ['label' => 'Nivel 2 · título', 'tipo' => 'texto', 'def' => 'MEJORAR'],
                         'n2_texto'   => ['label' => 'Nivel 2 · texto', 'tipo' => 'area', 'def' => 'Para empresas con web y redes mal trabajadas. Empieza con una auditoría que dice exactamente qué está mal, con la evidencia de cada hallazgo.'],
@@ -200,7 +213,7 @@ function registro_paginas(): array {
                         'etiqueta'   => ['label' => 'Etiqueta', 'tipo' => 'texto', 'def' => 'Lo que recibes'],
                         'titulo_1'   => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'UN TABLERO,'],
                         'titulo_2'   => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'NO UN REPORTE EN PDF'],
-                        'texto'      => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Cada cliente tiene una pantalla conectada a Search Console, Analytics y sus campañas, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.'],
+                        'texto'      => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Cada cliente tiene una pantalla conectada a sus datos reales, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.'],
                         'p1'         => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Cuántos contactos llegaron y a qué costo cada uno'],
                         'p2'         => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'De dónde llegan: buscador, campañas, redes y respuestas de IA'],
                         'p3'         => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Dónde se cae la gente entre la visita y la venta'],
