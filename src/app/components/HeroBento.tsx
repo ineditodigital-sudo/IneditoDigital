@@ -57,22 +57,27 @@ function HeroBento() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7700CE]/20 border border-[#7700CE]/40 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(119,0,206,0.3)] animate-fadeIn-lcp" style={{ animationDelay: '0.1s' }}>
             <Sparkles className="text-[#7700CE]" size={16} />
-            <span className="text-xs text-white font-semibold tracking-wide">{t('etiqueta', 'Agencia #1 en Aguascalientes')}</span>
+            <span className="text-xs text-white font-semibold tracking-wide">{t('etiqueta', 'Aguascalientes · Medimos hasta la venta')}</span>
           </div>
 
           {/* Título Principal - Centrado - CRÍTICO PARA LCP */}
           <h1 className="heading mb-4">
+            {/* La linea que posiciona va dentro del h1 y no como texto suelto:
+                es la frase por la que el sitio sale entre la 4 y la 8. */}
+            <span className="mb-2 block text-[13px] font-medium normal-case leading-snug tracking-[.01em] text-white/65">
+              {t('titulo_0', 'Agencia de marketing digital en Aguascalientes')}
+            </span>
             <span className="block text-white mb-2 text-[28px] leading-tight">
-              {t('titulo_1', 'MARKETING DIGITAL +')}
+              {t('titulo_1', 'DIRECCIÓN COMERCIAL')}
             </span>
             <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent text-[32px] leading-tight">
-              {t('titulo_2', 'INTELIGENCIA ARTIFICIAL')}
+              {t('titulo_2', 'ASISTIDA POR IA')}
             </span>
           </h1>
 
           {/* Descripción */}
           <p className="text-sm text-white/80 leading-relaxed mb-8 max-w-md mx-auto px-2 animate-fadeIn-lcp" style={{ animationDelay: '0.2s' }}>
-            {t('descripcion', 'Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.')}
+            {t('descripcion', 'No vendemos campañas sueltas. Conectamos los objetivos de tu dirección con Search Console, Analytics y tus campañas en un solo tablero, y cada mes una IA audita si la estrategia está funcionando.')}
           </p>
 
           {/* CTAs - Centrados y apilados */}
@@ -148,15 +153,18 @@ function HeroBento() {
           >
             {/* Título Principal - Limitado al 50% en desktop - CRÍTICO PARA LCP */}
             <h1 className="heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight lg:max-w-[90%]">
-              <span className="block text-white mb-1 md:mb-2">{t('titulo_1', 'MARKETING DIGITAL +')}</span>
+              <span className="mb-2 block text-[13px] font-medium normal-case leading-snug tracking-[.01em] text-white/65 md:text-[14.5px]">
+                {t('titulo_0', 'Agencia de marketing digital en Aguascalientes')}
+              </span>
+              <span className="block text-white mb-1 md:mb-2">{t('titulo_1', 'DIRECCIÓN COMERCIAL')}</span>
               <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
-                {t('titulo_2', 'INTELIGENCIA ARTIFICIAL')}
+                {t('titulo_2', 'ASISTIDA POR IA')}
               </span>
             </h1>
 
             {/* Descripción */}
             <p className="text-xs sm:text-sm md:text-base text-white/70 max-w-xl leading-relaxed">
-              {t('descripcion', 'Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.')}
+              {t('descripcion', 'No vendemos campañas sueltas. Conectamos los objetivos de tu dirección con Search Console, Analytics y tus campañas en un solo tablero, y cada mes una IA audita si la estrategia está funcionando.')}
             </p>
 
             {/* Botones CTA */}

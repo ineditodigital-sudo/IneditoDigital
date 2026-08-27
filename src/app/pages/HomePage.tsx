@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { ArrowRight, CheckCircle, Sparkles, TrendingUp, Zap, Target, Star, Bot, MessageCircle, ShoppingCart, Users } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle, Sparkles, TrendingUp, Zap, Target, Star, Bot, MessageCircle, ShoppingCart, Users } from 'lucide-react';
 import { Link } from 'react-router';
 import { lazy, Suspense } from 'react';
 import { GlassCard } from '../components/GlassCard';
@@ -28,6 +28,8 @@ export default function HomePage() {
   const tTarIA  = contenido('home', 'tarjetas_ia');
   const tVal    = contenido('home', 'valores');
   const tEnf    = contenido('home', 'enfoque');
+  const tNiv    = contenido('home', 'niveles');
+  const tTab    = contenido('home', 'tablero');
 
   const features = [
     { icon: Sparkles,   title: tTar('t1_titulo', 'IA'),          description: tTar('t1_texto', 'Automatización y chatbots 24/7'),  image: tTar('t1_imagen', 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080') },
@@ -37,32 +39,12 @@ export default function HomePage() {
 
 
   const process = [
-    { step: '01', title: tProc('paso_1_titulo', 'DESCUBRIMIENTO'), description: tProc('paso_1_texto', 'Analizamos tu negocio y competencia') },
-    { step: '02', title: tProc('paso_2_titulo', 'ESTRATEGIA'),     description: tProc('paso_2_texto', 'Diseñamos el plan de acción ganador') },
-    { step: '03', title: tProc('paso_3_titulo', 'EJECUCIÓN'),      description: tProc('paso_3_texto', 'Implementamos con excelencia') },
-    { step: '04', title: tProc('paso_4_titulo', 'OPTIMIZACIÓN'),   description: tProc('paso_4_texto', 'Mejoramos continuamente resultados') }
+    { step: '01', title: tProc('paso_1_titulo', 'OBJETIVOS'), description: tProc('paso_1_texto', 'Dirección define qué quiere lograr y en qué plazo') },
+    { step: '02', title: tProc('paso_2_titulo', 'CONECTAR'),  description: tProc('paso_2_texto', 'Search Console, Analytics, campañas y el ERP en un tablero') },
+    { step: '03', title: tProc('paso_3_titulo', 'AUDITAR'),   description: tProc('paso_3_texto', 'Cada mes una IA revisa el desempeño contra esos objetivos') },
+    { step: '04', title: tProc('paso_4_titulo', 'AJUSTAR'),   description: tProc('paso_4_texto', 'Se corrige con lo que dice el dato, no con la corazonada') }
   ];
 
-  const testimonials = [
-    {
-      name: 'Laura Martínez',
-      company: 'La Terraza Gourmet',
-      text: 'Triplicamos nuestras reservaciones en 3 meses. El equipo de Inédito entendió perfectamente nuestras necesidades.',
-      rating: 5
-    },
-    {
-      name: 'Carlos Ramírez',
-      company: 'Despacho Jurídico',
-      text: 'Ahora generamos 40+ leads calificados al mes. El chatbot y las campañas de Google Ads funcionan increíble.',
-      rating: 5
-    },
-    {
-      name: 'Ana Gutiérrez',
-      company: 'Boutique Luna',
-      text: 'Vendimos $150k en 3 meses con su estrategia de ecommerce. Superó nuestras expectativas.',
-      rating: 5
-    }
-  ];
 
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent('Hola, quiero información sobre sus servicios de marketing digital')}`;
 
@@ -105,7 +87,7 @@ export default function HomePage() {
     <>
       <DynamicSEO
         title="Agencia de Marketing Digital en Aguascalientes que impulsa tus ventas con IA"
-        description="Agencia de Marketing Digital en Aguascalientes especializada en SEO, Google Ads, Chatbots IA y Desarrollo Web. Aumenta tus ventas con estrategias digitales comprobadas."
+        description="Agencia de marketing digital en Aguascalientes. Conectamos tus campañas con tus ventas reales y cada mes una IA audita si la estrategia está funcionando."
         keywords={[
           'agencia de marketing digital en aguascalientes',
           'marketing digital aguascalientes',
@@ -248,6 +230,150 @@ export default function HomePage() {
                 })}
               </div>
             </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* ============ Los tres niveles ============ */}
+      {tNiv.visible() && (
+        <section className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
+          <div className="container mx-auto max-w-5xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5 }}
+              className="mb-10 text-center"
+            >
+              <h2 className="heading mb-3 text-2xl md:text-4xl">
+                {tNiv('titulo', 'EL SERVICIO SE ADAPTA A DÓNDE ESTÁS')}
+              </h2>
+              <p className="mx-auto max-w-2xl text-[15.5px] leading-relaxed text-white/70">
+                {tNiv('bajada', 'No es el mismo trabajo para una empresa que no tiene nada que para una que ya invierte y quiere vender más. Estos son los tres puntos de partida.')}
+              </p>
+            </motion.div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <motion.article
+                  key={i}
+                  initial={{ opacity: 0, y: 22 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5, delay: (i - 1) * 0.1 }}
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-6
+                             transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40 hover:bg-white/[.06]"
+                >
+                  <span
+                    className="absolute inset-x-0 top-0 h-px opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+                    style={{ background: 'linear-gradient(90deg,transparent,#9933FF,transparent)' }}
+                  />
+                  <div className="mb-4 flex items-baseline gap-2">
+                    <span className="font-mono text-[11px] uppercase tracking-[.18em] text-[#AA66FF]">
+                      Nivel {i}
+                    </span>
+                  </div>
+                  <h3 className="heading mb-2 text-lg leading-tight">
+                    {tNiv(`n${i}_titulo`, ['CONSTRUIR', 'MEJORAR', 'VENDER'][i - 1])}
+                  </h3>
+                  <p className="mb-4 text-[14.5px] leading-relaxed text-white/70">
+                    {tNiv(`n${i}_texto`, [
+                      'Para empresas sin presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.',
+                      'Para empresas con web y redes mal trabajadas. Empieza con una auditoría que dice exactamente qué está mal, con la evidencia de cada hallazgo.',
+                      'Para empresas que ya tienen todo. Estrategia de canales, campañas medidas en un solo tablero y —con ERP— el cruce de prospectos contra ventas cerradas.',
+                    ][i - 1])}
+                  </p>
+                  <div className="rounded-xl bg-[#7700CE]/10 px-3.5 py-2.5">
+                    <span className="font-mono text-[10px] uppercase tracking-[.16em] text-[#AA66FF]">Promesa</span>
+                    <p className="mt-1 text-[13.5px] leading-snug text-white/85">
+                      {tNiv(`n${i}_promesa`, [
+                        'Cuando te busquen, existes y te ves formal.',
+                        'Te decimos exactamente qué está mal y lo arreglamos.',
+                        'Cada peso invertido se mide contra ventas reales.',
+                      ][i - 1])}
+                    </p>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <Link
+                to="/servicios"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-bold tracking-wider text-white transition-all duration-300 hover:border-[#AA66FF]/50 hover:bg-white/5"
+              >
+                {tNiv('boton', 'VER LOS SERVICIOS')}
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ============ El tablero ============ */}
+      {tTab.visible() && (
+        <section className="relative overflow-hidden border-y border-[#AA66FF]/12 bg-[#0D0010] px-4 py-14 md:px-6 md:py-20 lg:px-8">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.25fr]">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.55 }}
+              >
+                <span className="mb-4 inline-block rounded-full bg-[#9933FF]/20 px-3 py-1 font-mono text-[11px] uppercase tracking-[.18em] text-[#AA66FF]">
+                  {tTab('etiqueta', 'Lo que recibes')}
+                </span>
+                <h2 className="heading mb-4 text-2xl leading-tight md:text-4xl">
+                  {tTab('titulo', 'UN TABLERO, NO UN REPORTE EN PDF')}
+                </h2>
+                <p className="mb-6 text-[15.5px] leading-relaxed text-white/75">
+                  {tTab('texto', 'Cada cliente tiene una pantalla conectada a Search Console, Analytics y sus campañas, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.')}
+                </p>
+                <ul className="space-y-2.5">
+                  {[1, 2, 3, 4].map((i) => (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <Check size={15} className="mt-1 shrink-0 text-[#AA66FF]" strokeWidth={2.6} />
+                      <span className="text-[14.5px] leading-snug text-white/80">
+                        {tTab(`p${i}`, [
+                          'Cuántos contactos llegaron y a qué costo cada uno',
+                          'De dónde llegan: buscador, campañas, redes y respuestas de IA',
+                          'Dónde se cae la gente entre la visita y la venta',
+                          'Una auditoría con IA cada mes contra los objetivos de dirección',
+                        ][i - 1])}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 26 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="relative"
+              >
+                <div
+                  className="pointer-events-none absolute -inset-6 rounded-[2rem] opacity-60 blur-2xl"
+                  style={{ background: 'radial-gradient(60% 50% at 50% 40%, rgba(119,0,206,.45), transparent 70%)' }}
+                />
+                <div className="relative overflow-hidden rounded-2xl border border-white/12 shadow-2xl">
+                  <img
+                    src="/tablero-vista.webp"
+                    alt={tTab('imagen_alt', 'Tablero de resultados de Inédito Digital con contactos, costo por contacto, ventas y el embudo hasta la venta')}
+                    width={1440}
+                    height={930}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full"
+                  />
+                </div>
+                <p className="mt-3 text-center text-[12px] text-white/40">
+                  {tTab('pie', 'Vista del tablero con datos de demostración')}
+                </p>
+              </motion.div>
+            </div>
           </div>
         </section>
       )}
@@ -630,7 +756,7 @@ export default function HomePage() {
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-10">
             <h2 className="heading text-xl md:text-3xl lg:text-4xl mb-3 md:mb-4 text-black">
-              {tProc('titulo', 'NUESTRO PROCESO')}
+              {tProc('titulo', 'CÓMO TRABAJAMOS')}
             </h2>
             <p className="text-gray-600 text-xs md:text-sm lg:text-base max-w-2xl mx-auto">
               {tProc('bajada', 'Metodología probada que garantiza resultados excepcionales')}

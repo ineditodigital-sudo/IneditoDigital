@@ -86,7 +86,7 @@ $P = function($t){ return '<p>'.e($t).'</p>'; };
 if ($path === '/') {
   // 54 caracteres: entra completo en el resultado de Google (ONP-01)
   $title = 'Agencia de Marketing Digital con IA en Aguascalientes';
-  $desc = $defaultDesc;
+  $desc = 'Agencia de marketing digital en Aguascalientes. Conectamos tus campañas con tus ventas reales y cada mes una IA audita si la estrategia está funcionando.';
   $bodyBuilder = function() use ($services,$settings,$P,$e,$blog) {
     $h = '<h1>Inédito Digital · Agencia de Marketing Digital en Aguascalientes</h1>';
     $h .= '<p>Impulsamos tu negocio con estrategias de marketing digital, diseño web e inteligencia artificial. Diseño y desarrollo web, branding, SEO, Google Ads, embudos de venta, chatbots con IA, WhatsApp y e-commerce.</p>';
@@ -97,6 +97,14 @@ if ($path === '/') {
       // arriba se conserva la frase que ya trae trafico.
     $h .= '<h2>Dirección comercial asistida por IA</h2>';
     $h .= '<p>No vendemos marketing digital genérico. Dirección define los objetivos, todo queda conectado —Search Console, Analytics, campañas y, donde aplica, el ERP— y una IA audita periódicamente si la estrategia está funcionando. El servicio se adapta al punto en que esté cada empresa: <a href="/servicios">construir, mejorar o vender</a>.</p>';
+    // Los tres niveles y el tablero: la capa nueva. Para un bot esto no
+    // existia, y es justo lo que distingue el servicio de una agencia mas.
+    $h .= '<h2>El servicio se adapta a dónde estás</h2>';
+    $h .= '<h3>Nivel 1 · Construir</h3><p>Para empresas sin presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base conectado a Search Console y Analytics. La promesa: cuando te busquen, existes y te ves formal.</p>';
+    $h .= '<h3>Nivel 2 · Mejorar</h3><p>Para empresas con web y redes mal trabajadas. La puerta de entrada es una <a href="/servicios/auditoria-con-ia">auditoría con IA</a> que revisa velocidad, indexación, ficha de Google, LinkedIn y visibilidad ante los asistentes, con la evidencia de cada hallazgo. La promesa: te decimos exactamente qué está mal y lo arreglamos.</p>';
+    $h .= '<h3>Nivel 3 · Vender</h3><p>Para empresas que ya tienen todo y quieren resultados. <a href="/servicios/estrategia-de-canales">Estrategia de canales</a> entre venta B2B directa y marketplaces, campañas en Google Ads, <a href="/servicios/chatgpt-ads">ChatGPT Ads</a> y Meta con tablero unificado, y —cuando hay ERP— el cruce de prospectos contra ventas cerradas. La promesa: cada peso invertido se mide contra ventas reales.</p>';
+    $h .= '<h2>Un tablero, no un reporte en PDF</h2>';
+    $h .= '<p>Cada cliente recibe un <a href="/servicios/tablero-de-resultados">tablero de resultados</a> conectado a datos reales: cuántos contactos llegaron y a qué costo, de dónde vienen —buscador, campañas, redes y respuestas de IA—, dónde se cae la gente entre la visita y la venta, y en cuántas respuestas de ChatGPT, Claude, Gemini o Perplexity aparece la marca. Encima corre la auditoría mensual contra los objetivos que puso dirección. No es un PDF armado a mano con capturas: es una conexión directa que cualquiera puede entrar a comprobar.</p>';
     // Enlazar lo ultimo publicado: es como Google lo descubre pronto.
     if ($blog) {
       $ult = array_slice(array_reverse($blog), 0, 4);
