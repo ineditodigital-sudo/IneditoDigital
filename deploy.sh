@@ -103,6 +103,8 @@ fput panel/bootstrap.php public_html/panel/bootstrap.php  >/dev/null 2>&1 && ok 
 fput panel/inc/contenido.php public_html/panel/inc/contenido.php >/dev/null 2>&1 && ok "panel/inc/contenido.php"
 fput panel/pages/buscadores.php public_html/panel/pages/buscadores.php >/dev/null 2>&1 && ok "panel/pages/buscadores.php"
 fput panel/pages/analiticas.php public_html/panel/pages/analiticas.php >/dev/null 2>&1 && ok "panel/pages/analiticas.php"
+fput panel/pages/dashboard.php  public_html/panel/pages/dashboard.php  >/dev/null 2>&1 && ok "panel/pages/dashboard.php"
+fput panel/pages/paginas.php    public_html/panel/pages/paginas.php    >/dev/null 2>&1 && ok "panel/pages/paginas.php"
 fput panel/inc/header.php    public_html/panel/inc/header.php    >/dev/null 2>&1 && ok "panel/inc/header.php"
 fput panel/inc/gsc.php       public_html/panel/inc/gsc.php       >/dev/null 2>&1 && ok "panel/inc/gsc.php"
 fput panel/login.php         public_html/panel/login.php         >/dev/null 2>&1 && ok "panel/login.php"
