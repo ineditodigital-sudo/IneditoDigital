@@ -8,6 +8,8 @@ $gif = base64_decode('R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
 $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
 // excluir bots
 if (preg_match('/bot|crawl|spider|slurp|preview|monitor|facebookexternalhit|whatsapp|telegram|gptbot|claudebot|perplexity|google-extended|bingpreview|headless|lighthouse/i', $ua)) { echo $gif; exit; }
+// excluir al equipo: la cookie la planta el login del panel
+if (!empty($_COOKIE['_nc'])) { echo $gif; exit; }
 
 // cookies de visitante y sesión
 $vis = $_COOKIE['_iv'] ?? '';
@@ -24,6 +26,8 @@ $host = $ref !== '' ? (parse_url($ref, PHP_URL_HOST) ?: '') : '';
 $src = 'direct';
 if ($host !== '') {
     if (strpos($host, 'inedito.digital') !== false)                              $src = 'internal';
+    // las IAs van ANTES que organic: gemini.google.com caería en el patrón de google
+    elseif (preg_match('/chatgpt\.|openai\.|perplexity\.|gemini\.google|bard\.google|claude\.ai|copilot\.microsoft|you\.com|phind\.com|poe\.com|grok\.com|x\.ai|deepseek/i', $host)) $src = 'ia';
     elseif (preg_match('/google|bing|yahoo|duckduckgo|ecosia|yandex/i', $host))   $src = 'organic';
     elseif (preg_match('/facebook|fb\.com|instagram|t\.co|twitter|x\.com|linkedin|youtube|tiktok|whatsapp|wa\.me|pinterest/i', $host)) $src = 'social';
     else                                                                          $src = 'referral';
