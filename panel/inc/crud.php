@@ -41,7 +41,7 @@ function crud(string $page, array $c): void {
         $row = $editId ? (db()->query("SELECT * FROM `$table` WHERE id=".$editId)->fetch() ?: []) : [];
         ?>
         <div class="topbar"><div><div class="kicker">Contenido del sitio</div><h1 class="title"><?= $editId?'Editar':'Nuevo' ?> · <?= e($c['single']) ?></h1>
-        <p class="subt"><a href="/panel/?p=<?= $page ?>" style="color:#b58bff">← Volver a la lista</a></p></div></div>
+        <p class="subt"><a href="/panel/?p=contenido&t=<?= $page ?>" style="color:#b58bff">← Volver a Contenido</a></p></div></div>
         <form method="post" class="card">
           <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="save">
           <?php if ($editId): ?><input type="hidden" name="id" value="<?= $editId ?>"><?php endif; ?>
@@ -84,28 +84,27 @@ function crud(string $page, array $c): void {
     <?php if (!empty($c['note'])): ?><div class="card" style="border-color:#3a2f12;background:#191305"><div class="mini" style="color:#e0c07a"><?= e($c['note']) ?></div></div><?php endif; ?>
     <?php if (!$rows): ?><div class="card"><p class="muted" style="text-align:center;padding:30px 0">Aún no hay registros. Crea el primero con "+ Nuevo".</p></div>
     <?php else: ?>
-    <div class="crud-grid">
-    <?php foreach ($rows as $r):
-        $img = trim((string)($r['image'] ?? ''));
-        $fondo = $img !== '' ? 'background-image:url(' . e($img) . ')' : 'background:' . grad_casa($page . (string)$r['id']);
+    <div class="pgrid">
+    <?php
+      $rutas = ['blog' => '/blog/', 'portafolio' => '/portafolio/', 'servicios' => '/servicios/'];
+      foreach ($rows as $r):
         $pub = ($r['status'] ?? 'draft') === 'published';
+        $slug = trim((string)($r['slug'] ?? ''));
+        $ruta = ($slug !== '' && isset($rutas[$page])) ? $rutas[$page] . $slug : '';
+        echo pcard([
+          'nombre'  => $r[$tf] ?? '—',
+          'sub'     => $ruta ?: '—',
+          'href'    => "/panel/?p=$page&edit=" . (int)$r['id'],
+          'ver'     => $pub ? $ruta : '',
+          'ayuda'   => (string)($r['short_desc'] ?? $r['excerpt'] ?? ''),
+          'pie'     => (!empty($c['sub_field']) && !empty($r[$c['sub_field']]) ? $r[$c['sub_field']] : $c['single'])
+                       . ' · ' . ($pub ? 'en línea' : 'sin publicar'),
+          'foto'    => $r['image'] ?? '',
+          'semilla' => $page . $r['id'],
+          'badge'   => '<span class="badge b-' . ($pub ? 'published' : 'draft') . '">' . ($pub ? 'Publicado' : 'Borrador') . '</span>',
+        ]);
+      endforeach;
     ?>
-      <div class="crud-card">
-        <a class="crud-thumb" href="/panel/?p=<?= $page ?>&edit=<?= (int)$r['id'] ?>" style="<?= $fondo ?>">
-          <span class="estado badge b-<?= $pub ? 'published' : 'draft' ?>"><?= $pub ? 'Publicado' : 'Borrador' ?></span>
-        </a>
-        <a class="crud-cuerpo" href="/panel/?p=<?= $page ?>&edit=<?= (int)$r['id'] ?>">
-          <div class="crud-t"><?= e($r[$tf] ?? '—') ?></div>
-          <?php if(!empty($c['sub_field']) && !empty($r[$c['sub_field']])): ?><div class="crud-s"><?= e($r[$c['sub_field']]) ?></div><?php endif; ?>
-        </a>
-        <div class="crud-pie">
-          <a class="btn small ghost" href="/panel/?p=<?= $page ?>&edit=<?= (int)$r['id'] ?>">Editar</a>
-          <form method="post" onsubmit="return confirm('¿Borrar este elemento?')" style="display:inline">
-            <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-            <button class="btn small danger" type="submit">Borrar</button></form>
-        </div>
-      </div>
-    <?php endforeach; ?>
     </div>
     <?php endif;
 }

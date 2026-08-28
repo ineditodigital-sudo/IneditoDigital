@@ -132,28 +132,23 @@ if (!$id) {
         Todavía no has creado ninguna página. Empieza arriba.
       </p></div>
     <?php else: ?>
-      <div class="pag-grid">
+      <div class="pgrid">
         <?php foreach ($rows as $r):
           $nb = count(json_decode((string)$r['borrador'], true) ?: []);
+          $pub = ($r['status'] ?? '') === 'published';
           $pendiente = ($r['borrador'] ?? '') !== ($r['contenido'] ?? '');
-        ?>
-          <a class="pag-card" href="/panel/?p=nueva&id=<?= (int)$r['id'] ?>">
-            <div class="pag-mini" aria-hidden style="background:<?= grad_casa('nueva' . (string)$r['slug']) ?>">
-              <i class="pag-ruta-pill"><?= e($r['ruta']) ?></i>
-            </div>
-            <div class="pag-info">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-                <div class="n" style="text-transform:none;font-family:inherit;font-size:14.5px;font-weight:700"><?= e($r['nombre']) ?></div>
-                <span class="badge b-<?= $r['status'] === 'published' ? 'published' : 'draft' ?>"><?= $r['status'] === 'published' ? 'En línea' : 'Borrador' ?></span>
-              </div>
-              <div class="r"><?= $nb ?> bloque(s)<?= $pendiente && $r['status'] === 'published' ? ' · cambios pendientes' : '' ?></div>
-              <div class="pag-pie" style="margin-top:11px">
-                <span class="f"></span>
-                <span class="e">Editar →</span>
-              </div>
-            </div>
-          </a>
-        <?php endforeach; ?>
+          echo pcard([
+            'nombre'  => $r['nombre'],
+            'sub'     => $r['ruta'],
+            'href'    => '/panel/?p=nueva&id=' . (int)$r['id'],
+            'ver'     => $pub ? $r['ruta'] : '',
+            'ayuda'   => $pendiente && $pub ? 'Tiene cambios guardados que todavía no se ven en el sitio.' : '',
+            'pie'     => $nb . ' bloque(s) · ' . ($pub ? 'en línea' : 'sin publicar'),
+            'foto'    => (string)($r['seo_image'] ?? ''),
+            'semilla' => 'nueva' . (string)$r['slug'],
+            'badge'   => '<span class="badge b-' . ($pub ? 'published' : 'draft') . '">' . ($pub ? 'En línea' : 'Borrador') . '</span>',
+          ]);
+        endforeach; ?>
       </div>
     <?php endif;
     return;
