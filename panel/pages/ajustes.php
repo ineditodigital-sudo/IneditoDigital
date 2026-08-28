@@ -16,7 +16,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '')==='POST') {
 }
 $v = settings_all('site_settings'); $ct=csrf();
 ?>
-<h1 class="title">Ajustes</h1><p class="subt">Datos del negocio y cuenta</p>
+<div class="kicker">Configuración</div><h1 class="title">Ajustes</h1><p class="subt">Datos del negocio y cuenta</p>
 <form method="post" class="card">
   <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="biz">
   <h3 style="margin:0 0 6px">Información del negocio</h3>

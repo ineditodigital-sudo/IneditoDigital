@@ -48,7 +48,7 @@ foreach ($STATUSES as $s) $counts[$s]=(int)db()->query("SELECT COUNT(*) c FROM l
 $ct = csrf();
 ?>
 <div class="topbar">
-  <div><h1 class="title">Leads</h1><p class="subt"><?= count($rows) ?> mostrados · <?= $counts['all'] ?> en total</p></div>
+  <div><div class="kicker">Ventas</div><h1 class="title">Leads</h1><p class="subt"><?= count($rows) ?> mostrados · <?= $counts['all'] ?> en total</p></div>
   <a class="btn" href="/panel/?p=leads&export=csv">Exportar CSV</a>
 </div>
 

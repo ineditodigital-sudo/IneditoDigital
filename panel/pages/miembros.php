@@ -103,7 +103,7 @@ if (!$id) {
     ?>
     <div class="topbar">
       <div>
-        <h1 class="title">Equipo</h1>
+        <div class="kicker">La casa</div><h1 class="title">Equipo</h1>
         <p class="subt">La página de contacto de cada integrante. Es la que se abre al acercar su tarjeta NFC.</p>
       </div>
     </div>
@@ -241,7 +241,7 @@ foreach ($grupos as $gk => $g) {
 <div class="topbar">
   <div>
     <a class="mini" href="/panel/?p=miembros">&larr; Equipo</a>
-    <h1 class="title"><?= e($m['nombre']) ?></h1>
+    <div class="kicker">La casa</div><h1 class="title"><?= e($m['nombre']) ?></h1>
     <p class="subt">Su dirección es <code><?= e($m['ruta']) ?></code> &mdash; esa es la que se graba en su tarjeta NFC.</p>
   </div>
   <?php if ($m['status'] === 'published'): ?>

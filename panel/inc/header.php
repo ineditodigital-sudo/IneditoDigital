@@ -123,19 +123,19 @@ th{color:var(--mut2);font-size:10.5px;text-transform:uppercase;letter-spacing:.7
 .pag-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
   transition:transform .25s,border-color .25s,box-shadow .25s}
 .pag-card:hover{transform:translateY(-4px);border-color:rgba(153,51,255,.45);box-shadow:0 22px 44px -22px rgba(119,0,206,.55)}
-.pag-mini{aspect-ratio:16/10;background:linear-gradient(150deg,#150022,#0b0b13 62%);border-bottom:1px solid var(--line);position:relative;overflow:hidden;padding:10px 12px}
+.pag-mini{aspect-ratio:16/9;background:linear-gradient(150deg,#170026,#0b0b13 66%);border-bottom:1px solid var(--line);position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
 .pag-mini::after{content:'';position:absolute;right:-30%;top:-45%;width:75%;height:110%;border-radius:50%;
-  background:radial-gradient(circle,rgba(153,51,255,.30),transparent 70%);transition:opacity .3s;opacity:.6}
+  background:radial-gradient(circle,rgba(153,51,255,.28),transparent 70%);transition:opacity .3s;opacity:.55}
 .pag-card:hover .pag-mini::after{opacity:1}
-.pag-mini-bar{display:flex;align-items:center;gap:4px;margin-bottom:12px}
-.pag-mini-bar span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.16)}
-.pag-mini-bar i{flex:1;font-style:normal;font-family:var(--f-mono);font-size:8.5px;color:var(--mut2);background:rgba(255,255,255,.05);
-  border-radius:5px;padding:2.5px 8px;margin-left:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pag-mini-w{position:relative;z-index:1}
-.pag-mini-w .t{height:9px;width:62%;border-radius:4px;background:linear-gradient(90deg,var(--pur2),var(--pur3));opacity:.85;margin-bottom:6px}
-.pag-mini-w .s{height:5px;width:44%;border-radius:4px;background:rgba(255,255,255,.20);margin-bottom:12px}
-.pag-mini-w .b{display:flex;gap:6px}
-.pag-mini-w .b span{flex:1;height:26px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07)}
+.pag-letra{font-family:var(--f-display);font-size:52px;line-height:1;background:linear-gradient(130deg,var(--pur2),var(--pur3));
+  -webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9;transform:translateY(-6px);transition:transform .3s}
+.pag-card:hover .pag-letra{transform:translateY(-6px) scale(1.06)}
+.pag-ruta-pill{position:absolute;bottom:9px;left:10px;right:10px;font-style:normal;font-family:var(--f-mono);font-size:9px;color:var(--mut);
+  background:rgba(7,7,11,.72);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(4px);border-radius:6px;padding:3.5px 9px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:max-content;max-width:calc(100% - 20px)}
+.pag-mini.con-foto .pag-letra{display:none}
+.pag-mini.con-foto::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,11,.10),rgba(7,7,11,.55))}
 .pag-info{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1}
 .pag-info .n{font-family:var(--f-display);text-transform:uppercase;font-size:12.5px;letter-spacing:.03em;line-height:1.3}
 .pag-info .r{font-family:var(--f-mono);font-size:11px;color:var(--mut2);margin-top:5px}
@@ -185,6 +185,47 @@ details.sec .cuerpo{padding:2px 20px 20px;border-top:1px solid var(--line)}
   .side a.item span,.side .logout span{display:none}
   .main{padding:22px 16px}.rowf{grid-template-columns:1fr}
   .banner{padding:24px 20px}
+}
+
+/* ---------------- teléfono: el panel como app ----------------
+   La sidebar se vuelve barra inferior con iconos y rótulos chicos,
+   las tablas ruedan de lado y las cuadrículas anchas se apilan. */
+@media(max-width:640px){
+  body{flex-direction:column}
+  .side{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;height:auto;z-index:40;
+    flex-direction:row;align-items:center;padding:4px 6px calc(4px + env(safe-area-inset-bottom));
+    border-right:0;border-top:1px solid var(--line);background:rgba(8,8,13,.92)}
+  .side .logo,.side .rotulo{display:none}
+  .side nav{flex-direction:row;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;flex:1;scrollbar-width:none}
+  .side nav::-webkit-scrollbar{display:none}
+  .side a.item{flex-direction:column;gap:4px;padding:8px 11px;font-size:8.5px;flex:0 0 auto;border-radius:10px}
+  .side a.item span{display:block;font-family:var(--f-mono);letter-spacing:.04em;text-transform:uppercase}
+  .side a.item svg{width:19px;height:19px}
+  .side a.item.active::before{left:22%;right:22%;top:auto;bottom:1px;width:auto;height:2.5px;
+    background:linear-gradient(90deg,var(--pur2),var(--pur3))}
+  .side .logout{border-top:0;margin:0;padding:8px 11px;flex-direction:column;gap:4px}
+  .side .logout span{display:none}
+  .main{padding:18px 14px calc(88px + env(safe-area-inset-bottom))}
+  h1.title{font-size:19px}
+  .banner{padding:22px 18px}
+  .banner .acciones .btn{padding:10px 15px;font-size:12px}
+  .grid-kpi{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi{padding:14px 15px}.kpi .v{font-size:23px}
+  .card{padding:16px;border-radius:14px}
+  .topbar input[type=search]{width:100% !important}
+  /* tablas: ruedan de lado en vez de aplastarse */
+  .card table{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  /* las cuadrículas anchas declaradas en línea se apilan */
+  .main div[style*="grid-template-columns:2fr 1fr"],
+  .main div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+  /* el editor: vista arriba, acciones flotando sobre la barra inferior */
+  .edt-vista{height:44vh}
+  .edt-marco.movil iframe{width:100%}
+  .edt-vista-top{flex-wrap:wrap;row-gap:6px}
+  .edt-acciones{bottom:calc(64px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--bg) 40%)}
+  .pag-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:11px}
+  .pag-letra{font-size:38px}
+  .pag-info{padding:12px 13px 13px}
 }
 @media(prefers-reduced-motion:reduce){
   .banner-fondo,.banner-orbe,.edt-vivo-pill::before{animation:none}

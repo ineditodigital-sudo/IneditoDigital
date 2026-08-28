@@ -109,7 +109,7 @@ if (!$id) {
     ?>
     <div class="topbar">
       <div>
-        <h1 class="title">Páginas que tú creaste</h1>
+        <div class="kicker">Contenido libre</div><h1 class="title">Páginas que tú creaste</h1>
         <p class="subt">Arma páginas nuevas combinando bloques. Sin tocar código.</p>
       </div>
     </div>
@@ -175,7 +175,7 @@ $pendiente = ($pag['borrador'] ?? '') !== ($pag['contenido'] ?? '');
 ?>
 <div class="topbar">
   <div>
-    <h1 class="title"><?= e($pag['nombre']) ?></h1>
+    <div class="kicker">Contenido libre</div><h1 class="title"><?= e($pag['nombre']) ?></h1>
     <p class="subt">
       <a href="/panel/?p=nueva" style="color:#b58bff">&larr; Mis páginas</a>
       &nbsp;·&nbsp; Dirección: <strong><?= e($pag['ruta']) ?></strong>

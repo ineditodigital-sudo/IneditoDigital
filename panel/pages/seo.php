@@ -8,7 +8,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '')==='POST') {
 }
 $v = settings_all('seo_settings'); $ct=csrf();
 ?>
-<h1 class="title">SEO</h1><p class="subt">Configuración de posicionamiento y datos estructurados</p>
+<div class="kicker">Posicionamiento</div><h1 class="title">SEO</h1><p class="subt">Configuración de posicionamiento y datos estructurados</p>
 <div class="card" style="border-color:#3a2f12;background:#191305"><div class="mini" style="color:#e0c07a">Se guarda en la base de datos. Aplicar estos valores al sitio público (meta, Analytics, sitemap) es la siguiente fase; los datos ya quedan listos para conectarse.</div></div>
 <form method="post" class="card">
   <input type="hidden" name="csrf" value="<?= $ct ?>">

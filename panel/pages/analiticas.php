@@ -152,7 +152,7 @@ $asistentePide = q("SELECT detalle, COUNT(*) c FROM events WHERE $D AND evento='
 $ct=csrf(); $ruri=g_redirect_uri();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<div class="topbar"><div><h1 class="title">Analíticas</h1><p class="subt">Últimos 30 días · Fuente: <strong style="color:<?= $source[0]==='G'?'#5fe0a0':'#b58bff' ?>"><?= e($source) ?></strong></p></div>
+<div class="topbar"><div><div class="kicker">Datos para decidir</div><h1 class="title">Analíticas</h1><p class="subt">Últimos 30 días · Fuente: <strong style="color:<?= $source[0]==='G'?'#5fe0a0':'#b58bff' ?>"><?= e($source) ?></strong></p></div>
 <?php if(!$connected): ?><span class="badge b-draft" style="align-self:center">Google sin conectar</span><?php else: ?><span class="badge b-published" style="align-self:center">Google conectado</span><?php endif; ?></div>
 
 <div class="grid-kpi">
@@ -384,7 +384,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
 <div class="card">
   <h3 style="margin:0 0 6px">Conexión con Google</h3>
   <?php if($connected): ?>
-    <p class="muted" style="margin:0 0 12px">Google conectado <?= $g['ga4_property']?('· propiedad GA4: <code>'.e($g['ga4_property']).'</code>'):'' ?>.</p>
+    <p class="muted" style="margin:0 0 12px">Google conectado <?= ($g['ga4_property'] ?? '') !== '' ? ('· propiedad GA4: <code>'.e($g['ga4_property']).'</code>') : '' ?>.</p>
     <?php if(empty($g['ga4_property']) && $ga4props): ?>
       <form method="post" style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="ga4save">
         <label style="margin:0">Elige tu propiedad de GA4:</label>
