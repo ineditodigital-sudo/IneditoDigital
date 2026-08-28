@@ -33,10 +33,12 @@ export default function BlogPostPage() {
 
   return (
     <>
+      {/* un artículo puede venir del panel sin el bloque seo: la página
+          cae al título y extracto reales en lugar de tronar */}
       <SEO
-        title={post.seo.metaTitle}
-        description={post.seo.metaDescription}
-        keywords={post.seo.keywords}
+        title={post.seo?.metaTitle ?? post.title}
+        description={post.seo?.metaDescription ?? post.excerpt}
+        keywords={post.seo?.keywords ?? post.tags}
         type="article"
         author={post.author}
         publishedTime={post.date}

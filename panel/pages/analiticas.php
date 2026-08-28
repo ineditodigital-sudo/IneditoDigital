@@ -126,6 +126,29 @@ if (gsc_tabla_existe('ia_bots')) {
     $iaUrlsLeidas = q("SELECT url, SUM(hits) c, COUNT(DISTINCT bot) motores FROM ia_bots WHERE fecha >= (CURDATE() - INTERVAL 29 DAY) GROUP BY 1 ORDER BY 2 DESC LIMIT 12");
     $iaLect30 = array_sum(array_map(fn($r) => (int)$r['c'], $iaBotsMotor));
 }
+// ---- El embudo: visitantes → acciones → leads ----
+// Las acciones las manda el sitio a api/evento.php (asistente, WhatsApp,
+// teléfono); los leads son los del formulario, sin las pruebas.
+if (!gsc_tabla_existe('events')) {
+    try {
+        db()->exec("CREATE TABLE IF NOT EXISTS events (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          evento VARCHAR(40) NOT NULL,
+          detalle VARCHAR(160) NOT NULL DEFAULT '',
+          path VARCHAR(255) NOT NULL DEFAULT '',
+          visitor CHAR(32) NOT NULL DEFAULT '',
+          session CHAR(32) NOT NULL DEFAULT '',
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          KEY idx_ev (evento, created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    } catch (Throwable $e) {}
+}
+$EVL = ['asistente' => 'Asistente abierto', 'whatsapp' => 'Clic a WhatsApp', 'llamada' => 'Toque al teléfono'];
+$accPorTipo = q("SELECT evento, COUNT(*) c, COUNT(DISTINCT NULLIF(visitor,'')) u FROM events WHERE $D GROUP BY 1 ORDER BY 2 DESC");
+$accTotal = array_sum(array_map(fn($r) => (int)$r['c'], $accPorTipo));
+$accPersonas = (int)q1("SELECT COUNT(DISTINCT NULLIF(visitor,'')) FROM events WHERE $D");
+$leads30 = (int)q1("SELECT COUNT(*) FROM leads WHERE $D AND source <> 'Prueba de integracion'");
+$asistentePide = q("SELECT detalle, COUNT(*) c FROM events WHERE $D AND evento='asistente' AND detalle <> '' GROUP BY 1 ORDER BY 2 DESC LIMIT 8");
 $ct=csrf(); $ruri=g_redirect_uri();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -139,6 +162,53 @@ $ct=csrf(); $ruri=g_redirect_uri();
   <div class="kpi"><div class="l">Páginas / sesión</div><div class="v"><?= $pps ?></div></div>
   <?php if($bounce!==null): ?><div class="kpi"><div class="l">Rebote</div><div class="v" style="color:#ffcf7a"><?= $bounce ?>%</div></div>
   <?php else: ?><div class="kpi"><div class="l">Hoy</div><div class="v" style="color:#5fe0a0"><?= number_format($visitsToday) ?></div></div><?php endif; ?>
+</div>
+
+<!-- El embudo: lo primero que hay que mirar para decidir -->
+<div class="card" style="border-color:#2a2140">
+  <h3 style="margin:0 0 4px">El embudo · visitar → actuar → dejar datos</h3>
+  <p class="muted" style="margin:0 0 18px">Últimos 30 días. Las acciones (asistente, WhatsApp, teléfono) se miden desde el <strong>28 de agosto de 2026</strong>; antes de esa fecha solo existían las vistas.</p>
+
+  <?php
+    $base = max($uniq30, 1);
+    $filasEmbudo = [
+      ['Visitantes', $uniq30, '#7700CE', '#9933FF'],
+      ['Hicieron algo (asistente, WhatsApp o teléfono)', $accPersonas, '#8ea6ff', '#59c1ff'],
+      ['Dejaron sus datos (lead)', $leads30, '#2f7d4f', '#5fe0a0'],
+    ];
+  ?>
+  <?php foreach ($filasEmbudo as [$rot, $n, $c1, $c2]): $pct = min(100, round(100 * $n / $base, 1)); ?>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px">
+        <span><?= e($rot) ?></span>
+        <span><strong><?= number_format($n) ?></strong> <span class="mini">(<?= $pct ?>%)</span></span>
+      </div>
+      <div style="height:14px;background:#17171f;border-radius:7px;overflow:hidden">
+        <div style="height:100%;width:<?= max($pct, $n > 0 ? 2 : 0) ?>%;background:linear-gradient(90deg,<?= $c1 ?>,<?= $c2 ?>)"></div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+
+  <div class="grid-kpi" style="margin:18px 0 0">
+    <?php foreach ($EVL as $ev => $rot):
+      $fila = null; foreach ($accPorTipo as $r) if ($r['evento'] === $ev) { $fila = $r; break; } ?>
+      <div class="kpi"><div class="l"><?= e($rot) ?> (30d)</div>
+        <div class="v"><?= (int)($fila['c'] ?? 0) ?></div>
+        <div class="mini" style="margin-top:5px"><?= (int)($fila['u'] ?? 0) ?> personas distintas</div></div>
+    <?php endforeach; ?>
+    <div class="kpi"><div class="l">Leads del formulario (30d)</div>
+      <div class="v" style="color:#5fe0a0"><?= $leads30 ?></div>
+      <div class="mini" style="margin-top:5px">sin contar pruebas</div></div>
+  </div>
+
+  <?php if ($asistentePide): ?>
+    <h4 style="margin:18px 0 8px;font-size:14px">Qué le piden al asistente</h4>
+    <table><thead><tr><th>Petición</th><th>Veces</th></tr></thead><tbody>
+      <?php foreach ($asistentePide as $r): ?>
+        <tr><td><?= e($r['detalle']) ?></td><td><?= (int)$r['c'] ?></td></tr>
+      <?php endforeach; ?>
+    </tbody></table>
+  <?php endif; ?>
 </div>
 
 <div class="card"><h3 style="margin:0 0 16px">Visitas por día</h3>

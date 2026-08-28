@@ -96,6 +96,7 @@ for f in render.php sitemap.php llms.php llms-full.php; do
 done
 fput api/.htaccess       public_html/api/.htaccess        >/dev/null 2>&1 && ok "api/.htaccess"
 fput api/hit.php         public_html/api/hit.php          >/dev/null 2>&1 && ok "api/hit.php"
+fput api/evento.php      public_html/api/evento.php       >/dev/null 2>&1 && ok "api/evento.php"
 fput tarjeta.php         public_html/tarjeta.php          >/dev/null 2>&1 && ok "tarjeta.php"
 fput panel/inc/vcard.php public_html/panel/inc/vcard.php  >/dev/null 2>&1 && ok "panel/inc/vcard.php"
 fput panel/bootstrap.php public_html/panel/bootstrap.php  >/dev/null 2>&1 && ok "panel/bootstrap.php"
