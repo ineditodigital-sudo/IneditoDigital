@@ -100,7 +100,7 @@ if ($path === '/') {
   // 54 caracteres: entra completo en el resultado de Google (ONP-01)
   $title = 'Agencia de Marketing Digital con IA en Aguascalientes';
   $desc = 'Agencia de marketing digital en Aguascalientes. Conectamos tus campañas con tus ventas reales y cada mes una IA audita si la estrategia está funcionando.';
-  $bodyBuilder = function() use ($services,$settings,$P,$e,$blog) {
+  $bodyBuilder = function() use ($services,$settings,$P,$blog) {
     $h = '<h1>Inédito Digital · Agencia de Marketing Digital en Aguascalientes</h1>';
     $h .= '<p>Impulsamos tu negocio con estrategias de marketing digital, diseño web e inteligencia artificial. Diseño y desarrollo web, branding, SEO, Google Ads, embudos de venta, chatbots con IA, WhatsApp y e-commerce. Y como agencia de publicidad en Aguascalientes llevamos campañas en Google Ads, Meta y ChatGPT Ads, siempre conectadas a un tablero de resultados.</p>';
     $h .= '<h2>Nuestros servicios</h2><ul>';
@@ -154,7 +154,7 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
     $desc = $primera ?: ($s['shortDescription'] ?? $defaultDesc);
     $canonical = $BASE.'/servicios/'.$s['slug']; $crumbs[]=['Servicios','/servicios']; $crumbs[]=[$s['title'],'/servicios/'.$s['slug']];
     $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical,'dateModified'=>date('Y-m-d', strtotime((string)($s['fecha'] ?: 'now')))];
-    $bodyBuilder = function() use ($s,$e) {
+    $bodyBuilder = function() use ($s) {
       // La DEFINICION va primero: un motor de respuestas toma el primer
       // parrafo, y el gancho comercial no responde "que es".
       $h='<h1>'.e($s['title'] ?? '').'</h1>';
@@ -175,7 +175,7 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
 elseif ($seg[0] === 'servicios') {
   $title = 'Servicios · Agencia de marketing digital y publicidad en Aguascalientes | '.$siteName; $desc = 'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Tres niveles según en qué punto estés: construir, mejorar o vender.';
   $canonical=$BASE.'/servicios'; $crumbs[]=['Servicios','/servicios'];
-    $bodyBuilder = function() use ($services,$e,$paginas){
+    $bodyBuilder = function() use ($services,$paginas){
     // Los tres niveles salen del panel, igual que en la version React.
     $n = is_array($paginas['servicios']['contenido']['niveles'] ?? null)
        ? $paginas['servicios']['contenido']['niveles'] : [];
@@ -203,12 +203,12 @@ elseif ($seg[0] === 'portafolio' && isset($seg[1])) {
   if ($s) {
     $title = ($s['title'] ?? '').' | Portafolio · '.$siteName; $desc = $s['description'] ?? $defaultDesc;
     $canonical=$BASE.'/portafolio/'.$s['slug']; $crumbs[]=['Portafolio','/portafolio']; $crumbs[]=[$s['title'],'/portafolio/'.$s['slug']];
-    $bodyBuilder = function() use ($s,$e){ $h='<h1>'.e($s['title'] ?? '').'</h1>'; if(!empty($s['client']))$h.='<p><strong>Cliente:</strong> '.e($s['client']).'</p>'; $h.='<p>'.e($s['description'] ?? '').'</p>'; foreach(['challenge'=>'Reto','solution'=>'Solución'] as $k=>$l) if(!empty($s[$k]))$h.='<h2>'.$l.'</h2><p>'.e($s[$k]).'</p>'; if(!empty($s['results'])&&is_array($s['results'])){ $h.='<h2>Resultados</h2><ul>'; foreach($s['results'] as $r) $h.='<li>'.e(($r['metric'] ?? '').': '.($r['value'] ?? '')).'</li>'; $h.='</ul>'; } return $h; };
+    $bodyBuilder = function() use ($s){ $h='<h1>'.e($s['title'] ?? '').'</h1>'; if(!empty($s['client']))$h.='<p><strong>Cliente:</strong> '.e($s['client']).'</p>'; $h.='<p>'.e($s['description'] ?? '').'</p>'; foreach(['challenge'=>'Reto','solution'=>'Solución'] as $k=>$l) if(!empty($s[$k]))$h.='<h2>'.$l.'</h2><p>'.e($s[$k]).'</p>'; if(!empty($s['results'])&&is_array($s['results'])){ $h.='<h2>Resultados</h2><ul>'; foreach($s['results'] as $r) $h.='<li>'.e(($r['metric'] ?? '').': '.($r['value'] ?? '')).'</li>'; $h.='</ul>'; } return $h; };
   } else { $is404 = true; }
 }
 elseif ($seg[0] === 'portafolio') {
   $title='Portafolio · Casos de éxito | '.$siteName; $desc='Proyectos y casos de éxito de marketing digital, diseño web y e-commerce.'; $canonical=$BASE.'/portafolio'; $crumbs[]=['Portafolio','/portafolio'];
-  $bodyBuilder=function() use ($portfolio,$e){ $h='<h1>Portafolio</h1><ul>'; foreach($portfolio as $p) $h.='<li><a href="/portafolio/'.e($p['slug']).'"><strong>'.e($p['title']).'</strong></a> — '.e($p['description'] ?? '').'</li>'; return $h.'</ul>'; };
+  $bodyBuilder=function() use ($portfolio){ $h='<h1>Portafolio</h1><ul>'; foreach($portfolio as $p) $h.='<li><a href="/portafolio/'.e($p['slug']).'"><strong>'.e($p['title']).'</strong></a> — '.e($p['description'] ?? '').'</li>'; return $h.'</ul>'; };
 }
 elseif ($seg[0] === 'blog' && isset($seg[1])) {
   $b = $findBySlug($blog, $seg[1]);
@@ -228,7 +228,7 @@ elseif ($seg[0] === 'blog' && isset($seg[1])) {
 }
 elseif ($seg[0] === 'blog') {
   $title='Blog de Marketing Digital | '.$siteName; $desc='Artículos y guías de marketing digital, SEO, IA y ventas.'; $canonical=$BASE.'/blog'; $crumbs[]=['Blog','/blog'];
-  $bodyBuilder=function() use ($blog,$e){ $h='<h1>Blog</h1><ul>'; foreach($blog as $b) $h.='<li><a href="/blog/'.e($b['slug']).'"><strong>'.e($b['title']).'</strong></a> — '.e($b['excerpt'] ?? '').'</li>'; return $h.'</ul>'; };
+  $bodyBuilder=function() use ($blog){ $h='<h1>Blog</h1><ul>'; foreach($blog as $b) $h.='<li><a href="/blog/'.e($b['slug']).'"><strong>'.e($b['title']).'</strong></a> — '.e($b['excerpt'] ?? '').'</li>'; return $h.'</ul>'; };
 }
 elseif (($seg[0] ?? '') === 'contacto') {
   $title = 'Contacto | ' . $siteName;
@@ -705,7 +705,7 @@ $assetJs='/assets/index-CR3aYFRn.js'; $assetCss='/assets/index-BbJMuNT-.css';
 $idx=@file_get_contents(__DIR__.'/index.html');
 if ($idx) { if(preg_match('/src="(\/assets\/index-[^"]+\.js)"/',$idx,$m))$assetJs=$m[1]; if(preg_match('/href="(\/assets\/index-[^"]+\.css)"/',$idx,$m))$assetCss=$m[1]; }
 
-$ogImg = $GLOBALS['seoImagenPagina'] ?? ($seo['defaultImage'] ?: $logo);
+$ogImg = $GLOBALS['seoImagenPagina'] ?? (($seo['defaultImage'] ?? '') ?: $logo);
 $gaId = $seo['googleAnalytics'] ?? ''; $pixel = $seo['facebookPixel'] ?? ''; $gsv = $seo['googleSiteVerification'] ?? '';
 
 $seo_global = ['siteName'=>$seo['siteName']??'','author'=>$seo['author']??'','defaultImage'=>$seo['defaultImage']??'','twitterHandle'=>$seo['twitterHandle']??'','googleAnalytics'=>$seo['googleAnalytics']??'','facebookPixel'=>$seo['facebookPixel']??'','googleSiteVerification'=>$seo['googleSiteVerification']??'','bingVerification'=>$seo['bingVerification']??''];

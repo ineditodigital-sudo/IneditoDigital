@@ -60,13 +60,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     }
 
     if ($accion === 'publicar') {
-        // Antes de publicar se guarda lo que había, para poder volver atrás
+        // Antes de publicar se guarda lo que había, para poder volver atrás.
+        // Si el historial falla, publicar sigue: la versión es un lujo, no
+        // una condición.
         if (!empty($fila['contenido'])) {
-            db()->prepare('INSERT INTO page_versions (page_id, contenido, autor) VALUES (:p,:c,:a)')
-                ->execute([':p' => (int)$fila['id'], ':c' => $fila['contenido'], ':a' => $_SESSION['admin_user'] ?? '']);
+            try {
+                db()->prepare('INSERT INTO page_versions (page_id, contenido, autor) VALUES (:p,:c,:a)')
+                    ->execute([':p' => (int)$fila['id'], ':c' => $fila['contenido'], ':a' => $_SESSION['admin_user'] ?? '']);
+            } catch (Throwable $e) { /* sin historial esta vez */ }
         }
-        db()->prepare('UPDATE pages SET contenido=:c, borrador=:c, seo_title=:st, seo_desc=:sd, seo_image=:si, updated_at=NOW() WHERE id=:id')
-            ->execute([':c' => $json, ':id' => (int)$fila['id']] + $seo);
+        // contenido y borrador llevan el mismo texto pero CADA UNO su
+        // placeholder: con prepares nativos, repetir :c truena con HY093
+        // (así se rompía el botón de publicar).
+        db()->prepare('UPDATE pages SET contenido=:c1, borrador=:c2, seo_title=:st, seo_desc=:sd, seo_image=:si, updated_at=NOW() WHERE id=:id')
+            ->execute([':c1' => $json, ':c2' => $json, ':id' => (int)$fila['id']] + $seo);
         set_flash('¡Listo! Los cambios ya están publicados en el sitio.');
     } else {
         db()->prepare('UPDATE pages SET borrador=:b, seo_title=:st, seo_desc=:sd, seo_image=:si, updated_at=NOW() WHERE id=:id')
@@ -107,7 +114,7 @@ function hace(?string $fecha): string {
 /* ---------------------------------------------------------------- */
 if (!$slug || !isset($registro[$slug])) {
     $estado = [];
-    foreach (db()->query('SELECT slug, contenido, borrador, updated_at FROM pages') as $r) $estado[$r['slug']] = $r;
+    foreach (db()->query('SELECT slug, contenido, borrador, seo_image, updated_at FROM pages') as $r) $estado[$r['slug']] = $r;
     ?>
     <div class="topbar">
       <div>
@@ -126,13 +133,10 @@ if (!$slug || !isset($registro[$slug])) {
       ?>
         <a class="pag-card" href="/panel/?p=paginas&pagina=<?= e($sk) ?>"
            data-busca="<?= e(mb_strtolower($reg['nombre'] . ' ' . $reg['ruta'])) ?>">
-          <div class="pag-mini" aria-hidden>
-            <div class="pag-mini-bar"><span></span><span></span><span></span><i>inedito.digital<?= e($reg['ruta'] === '/' ? '' : $reg['ruta']) ?></i></div>
-            <div class="pag-mini-w">
-              <div class="t"></div>
-              <div class="s"></div>
-              <div class="b"><span></span><span></span><span></span></div>
-            </div>
+          <?php $foto = trim((string)($e['seo_image'] ?? '')); ?>
+          <div class="pag-mini<?= $foto !== '' ? ' con-foto' : '' ?>" aria-hidden<?= $foto !== '' ? ' style="background-image:url(' . e($foto) . ')"' : '' ?>>
+            <span class="pag-letra"><?= e(mb_strtoupper(mb_substr($reg['nombre'], 0, 1))) ?></span>
+            <i class="pag-ruta-pill"><?= e($reg['ruta']) ?></i>
           </div>
           <div class="pag-info">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
@@ -189,9 +193,11 @@ $pub = contenido_con_respaldo($slug, $fila['contenido'] ?? null);
 
 $versiones = [];
 if (!empty($fila['id'])) {
-    $vq = db()->prepare('SELECT id, autor, created_at FROM page_versions WHERE page_id = :p ORDER BY id DESC LIMIT 8');
-    $vq->execute([':p' => (int)$fila['id']]);
-    $versiones = $vq->fetchAll();
+    try {
+        $vq = db()->prepare('SELECT id, autor, created_at FROM page_versions WHERE page_id = :p ORDER BY id DESC LIMIT 8');
+        $vq->execute([':p' => (int)$fila['id']]);
+        $versiones = $vq->fetchAll();
+    } catch (Throwable $e) { /* sin historial, el editor sigue */ }
 }
 $hayBorrador = !empty($fila['borrador']) && ($fila['borrador'] !== ($fila['contenido'] ?? null));
 $rutaVista = $reg['ruta'] . (strpos($reg['ruta'], '?') === false ? '?' : '&') . 'editorVivo=1';

@@ -40,7 +40,7 @@ function crud(string $page, array $c): void {
     if ($isForm) {
         $row = $editId ? (db()->query("SELECT * FROM `$table` WHERE id=".$editId)->fetch() ?: []) : [];
         ?>
-        <div class="topbar"><div><h1 class="title"><?= $editId?'Editar':'Nuevo' ?> · <?= e($c['single']) ?></h1>
+        <div class="topbar"><div><div class="kicker">Contenido del sitio</div><h1 class="title"><?= $editId?'Editar':'Nuevo' ?> · <?= e($c['single']) ?></h1>
         <p class="subt"><a href="/panel/?p=<?= $page ?>" style="color:#b58bff">← Volver a la lista</a></p></div></div>
         <form method="post" class="card">
           <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="save">
@@ -73,7 +73,7 @@ function crud(string $page, array $c): void {
     $rows = db()->query("SELECT * FROM `$table` ORDER BY id DESC")->fetchAll();
     $tf = $c['title_field'] ?? 'title';
     ?>
-    <div class="topbar"><div><h1 class="title"><?= e($c['plural']) ?></h1><p class="subt"><?= count($rows) ?> registrados · se guardan en la base de datos</p></div>
+    <div class="topbar"><div><div class="kicker">Contenido del sitio</div><h1 class="title"><?= e($c['plural']) ?></h1><p class="subt"><?= count($rows) ?> registrados · se guardan en la base de datos</p></div>
     <a class="btn" href="/panel/?p=<?= $page ?>&new=1">+ Nuevo</a></div>
     <?php if (!empty($c['note'])): ?><div class="card" style="border-color:#3a2f12;background:#191305"><div class="mini" style="color:#e0c07a"><?= e($c['note']) ?></div></div><?php endif; ?>
     <?php if (!$rows): ?><div class="card"><p class="muted" style="text-align:center;padding:30px 0">Aún no hay registros. Crea el primero con "+ Nuevo".</p></div>

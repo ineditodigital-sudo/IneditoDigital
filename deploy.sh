@@ -98,18 +98,14 @@ fput api/.htaccess       public_html/api/.htaccess        >/dev/null 2>&1 && ok 
 fput api/hit.php         public_html/api/hit.php          >/dev/null 2>&1 && ok "api/hit.php"
 fput api/evento.php      public_html/api/evento.php       >/dev/null 2>&1 && ok "api/evento.php"
 fput tarjeta.php         public_html/tarjeta.php          >/dev/null 2>&1 && ok "tarjeta.php"
-fput panel/inc/vcard.php public_html/panel/inc/vcard.php  >/dev/null 2>&1 && ok "panel/inc/vcard.php"
-fput panel/bootstrap.php public_html/panel/bootstrap.php  >/dev/null 2>&1 && ok "panel/bootstrap.php"
-fput panel/inc/contenido.php public_html/panel/inc/contenido.php >/dev/null 2>&1 && ok "panel/inc/contenido.php"
-fput panel/pages/buscadores.php public_html/panel/pages/buscadores.php >/dev/null 2>&1 && ok "panel/pages/buscadores.php"
-fput panel/pages/analiticas.php public_html/panel/pages/analiticas.php >/dev/null 2>&1 && ok "panel/pages/analiticas.php"
-fput panel/pages/dashboard.php  public_html/panel/pages/dashboard.php  >/dev/null 2>&1 && ok "panel/pages/dashboard.php"
-fput panel/pages/paginas.php    public_html/panel/pages/paginas.php    >/dev/null 2>&1 && ok "panel/pages/paginas.php"
-fput panel/inc/header.php    public_html/panel/inc/header.php    >/dev/null 2>&1 && ok "panel/inc/header.php"
-fput panel/inc/gsc.php       public_html/panel/inc/gsc.php       >/dev/null 2>&1 && ok "panel/inc/gsc.php"
-fput panel/login.php         public_html/panel/login.php         >/dev/null 2>&1 && ok "panel/login.php"
-fput panel/gsc_paso.php      public_html/panel/gsc_paso.php      >/dev/null 2>&1 && ok "panel/gsc_paso.php"
-fput panel/cron/gsc_sync.php public_html/panel/cron/gsc_sync.php >/dev/null 2>&1 && ok "panel/cron/gsc_sync.php"
+# El panel entero, en bucle: cualquier modulo nuevo o tocado sube solo.
+# setup.php y api/config.php quedan fuera a proposito.
+for f in panel/bootstrap.php panel/index.php panel/login.php panel/logout.php \
+         panel/gsc_paso.php panel/google_connect.php panel/google_callback.php \
+         panel/inc/*.php panel/pages/*.php panel/cron/*.php; do
+  [ -f "$f" ] || continue
+  fput "$f" "public_html/$f" >/dev/null 2>&1 && ok "$f"
+done
 echo "  (api/config.php y panel/setup.php NO se suben, a proposito)"
 
 # ---------- 5. .htaccess ----------
