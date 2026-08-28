@@ -101,6 +101,10 @@ fput panel/inc/vcard.php public_html/panel/inc/vcard.php  >/dev/null 2>&1 && ok 
 fput panel/bootstrap.php public_html/panel/bootstrap.php  >/dev/null 2>&1 && ok "panel/bootstrap.php"
 fput panel/inc/contenido.php public_html/panel/inc/contenido.php >/dev/null 2>&1 && ok "panel/inc/contenido.php"
 fput panel/pages/buscadores.php public_html/panel/pages/buscadores.php >/dev/null 2>&1 && ok "panel/pages/buscadores.php"
+fput panel/pages/analiticas.php public_html/panel/pages/analiticas.php >/dev/null 2>&1 && ok "panel/pages/analiticas.php"
+fput panel/inc/header.php    public_html/panel/inc/header.php    >/dev/null 2>&1 && ok "panel/inc/header.php"
+fput panel/inc/gsc.php       public_html/panel/inc/gsc.php       >/dev/null 2>&1 && ok "panel/inc/gsc.php"
+fput panel/gsc_paso.php      public_html/panel/gsc_paso.php      >/dev/null 2>&1 && ok "panel/gsc_paso.php"
 fput panel/cron/gsc_sync.php public_html/panel/cron/gsc_sync.php >/dev/null 2>&1 && ok "panel/cron/gsc_sync.php"
 echo "  (api/config.php y panel/setup.php NO se suben, a proposito)"
 
