@@ -9,6 +9,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         if ($row && password_verify($p, $row['password_hash'])) {
             session_regenerate_id(true);
             $_SESSION['admin_id'] = (int)$row['id']; $_SESSION['admin_user'] = $row['username'];
+            // Quien entra al panel es equipo: esta cookie hace que hit.php
+            // deje de contar sus visitas al sitio en las métricas (2 años).
+            setcookie('_nc', '1', ['expires' => time() + 63072000, 'path' => '/', 'secure' => true, 'httponly' => true, 'samesite' => 'Lax']);
             redirect('/panel/');
         } else { $err = 'Credenciales incorrectas'; usleep(350000); }
     } catch (Throwable $ex) { $err = 'Error del servidor'; }

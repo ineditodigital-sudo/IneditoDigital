@@ -37,7 +37,7 @@ $pps=$sess30>0?round($visits30/$sess30,1):0; $bounce=null;
 $byDay=[]; foreach(q("SELECT DATE(created_at) d, COUNT(*) c FROM pageviews WHERE $D GROUP BY DATE(created_at)") as $r) $byDay[$r['d']]=(int)$r['c'];
 $labels=[];$series=[]; for($i=29;$i>=0;$i--){ $day=date('Y-m-d',strtotime("-$i day")); $labels[]=date('d/m',strtotime($day)); $series[]=$byDay[$day]??0; }
 $top=array_map(fn($r)=>['path'=>$r['path'],'c'=>(int)$r['c']], q("SELECT path, COUNT(*) c FROM pageviews WHERE $D GROUP BY path ORDER BY c DESC LIMIT 10"));
-$SRCL=['direct'=>'Directo','organic'=>'Búsqueda (SEO)','social'=>'Redes sociales','referral'=>'Referidos','internal'=>'Interno'];
+$SRCL=['direct'=>'Directo','organic'=>'Búsqueda (SEO)','ia'=>'Desde IAs (GEO)','social'=>'Redes sociales','referral'=>'Referidos','internal'=>'Interno'];
 $DEVL=['desktop'=>'Escritorio','mobile'=>'Móvil','tablet'=>'Tablet'];
 $sc1=q("SELECT source, COUNT(*) c FROM pageviews WHERE $D GROUP BY source ORDER BY c DESC");
 $srcLabels=array_map(fn($r)=>$SRCL[$r['source']]??$r['source'],$sc1); $srcData=array_map(fn($r)=>(int)$r['c'],$sc1);
@@ -97,6 +97,35 @@ if (gsc_tabla_existe('gsc_totales')) {
     }
 }
 $gscBuenos = ['Enviada e indexada', 'Indexada'];
+
+// ---- Posicionamiento en IA (GEO): dos medidores, ambos automáticos ----
+// 1) visitas que llegan con referencia de una IA (hit.php las clasifica 'ia')
+// 2) lecturas de bots de IA sobre el sitio (render.php las cuenta en ia_bots)
+$IA_NOMBRES = [
+    'gptbot' => 'OpenAI · GPTBot', 'oai-searchbot' => 'OpenAI · SearchBot', 'chatgpt-user' => 'ChatGPT · visita en vivo',
+    'claudebot' => 'Anthropic · ClaudeBot', 'claude-user' => 'Claude · visita en vivo', 'claude-web' => 'Claude · web', 'anthropic-ai' => 'Anthropic',
+    'perplexitybot' => 'Perplexity · índice', 'perplexity-user' => 'Perplexity · visita en vivo',
+    'google-extended' => 'Google · Gemini', 'meta-externalagent' => 'Meta IA', 'bytespider' => 'ByteDance (TikTok)',
+    'ccbot' => 'Common Crawl (alimenta varias IA)', 'amazonbot' => 'Amazon (Rufus/Alexa)', 'applebot-extended' => 'Apple IA',
+    'duckassistbot' => 'DuckDuckGo IA', 'mistralai' => 'Mistral', 'cohere' => 'Cohere',
+];
+if (!gsc_tabla_existe('ia_bots')) {
+    try {
+        db()->exec("CREATE TABLE IF NOT EXISTS ia_bots (
+          fecha DATE NOT NULL, bot VARCHAR(40) NOT NULL, url VARCHAR(255) NOT NULL,
+          hits INT NOT NULL DEFAULT 1, PRIMARY KEY (fecha, bot, url)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    } catch (Throwable $e) {}
+}
+$iaVisDia = q("SELECT DATE(created_at) f, COUNT(*) c FROM pageviews WHERE $D AND source='ia' GROUP BY 1 ORDER BY 1");
+$iaVis30 = array_sum(array_map(fn($r) => (int)$r['c'], $iaVisDia));
+$iaLect30 = 0; $iaBotsDia = []; $iaBotsMotor = []; $iaUrlsLeidas = [];
+if (gsc_tabla_existe('ia_bots')) {
+    $iaBotsDia = q("SELECT fecha f, SUM(hits) c FROM ia_bots WHERE fecha >= (CURDATE() - INTERVAL 29 DAY) GROUP BY 1 ORDER BY 1");
+    $iaBotsMotor = q("SELECT bot, SUM(hits) c FROM ia_bots WHERE fecha >= (CURDATE() - INTERVAL 29 DAY) GROUP BY 1 ORDER BY 2 DESC");
+    $iaUrlsLeidas = q("SELECT url, SUM(hits) c, COUNT(DISTINCT bot) motores FROM ia_bots WHERE fecha >= (CURDATE() - INTERVAL 29 DAY) GROUP BY 1 ORDER BY 2 DESC LIMIT 12");
+    $iaLect30 = array_sum(array_map(fn($r) => (int)$r['c'], $iaBotsMotor));
+}
 $ct=csrf(); $ruri=g_redirect_uri();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -241,6 +270,46 @@ $ct=csrf(); $ruri=g_redirect_uri();
   <?php endif; ?>
 </div>
 
+<!-- Posicionamiento en IA (GEO): la métrica que no existía -->
+<div class="card" id="geo" style="border-color:#1c3326">
+  <h3 style="margin:0 0 4px">Posicionamiento en IA (GEO)</h3>
+  <p class="muted" style="margin:0 0 16px">Dos medidores automáticos: cuánta gente llega al sitio <strong>desde una IA</strong> (ChatGPT, Perplexity, Gemini, Claude, Copilot) y cuánto <strong>leen el sitio los robots de las IAs</strong> — la materia prima para que te recomienden.</p>
+
+  <div class="grid-kpi">
+    <div class="kpi"><div class="l">Visitas llegadas desde una IA (30d)</div><div class="v" style="color:#5fe0a0"><?= number_format($iaVis30) ?></div></div>
+    <div class="kpi"><div class="l">Lecturas de bots de IA (30d)</div><div class="v" style="color:#8ea6ff"><?= number_format($iaLect30) ?></div></div>
+    <div class="kpi"><div class="l">Motores de IA leyéndote</div><div class="v" style="color:#c3a0ff"><?= count($iaBotsMotor) ?></div></div>
+  </div>
+
+  <?php if ($iaLect30 === 0 && $iaVis30 === 0): ?>
+    <div class="mini" style="line-height:1.8">
+      La medición se instaló el <strong>28 de agosto de 2026</strong>; desde hoy cada lectura y cada visita quedan contadas, así que estos números empiezan en cero y de aquí solo acumulan.<br>
+      · Una <strong>lectura de bot</strong> significa que un motor (GPTBot de OpenAI, ClaudeBot, PerplexityBot, Gemini…) entró a estudiar una página del sitio: es el paso previo a que su IA pueda recomendarte.<br>
+      · Una <strong>visita desde IA</strong> es una persona que llegó porque una IA le enlazó el sitio. Ojo: muchas IAs abren enlaces sin decir de dónde vienen, así que este número siempre subestima — el complemento es el guion de 15 preguntas a ChatGPT, Gemini y Perplexity de la auditoría, que se repite cada trimestre a mano.
+    </div>
+  <?php else: ?>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:6px">
+      <div>
+        <h4 style="margin:0 0 12px;font-size:14px">Actividad por día</h4>
+        <div style="height:240px"><canvas id="chIaDia"></canvas></div>
+      </div>
+      <div>
+        <h4 style="margin:0 0 12px;font-size:14px">Qué motores te leen</h4>
+        <div style="height:240px"><canvas id="chIaMotor"></canvas></div>
+      </div>
+    </div>
+    <?php if ($iaUrlsLeidas): ?>
+      <h4 style="margin:14px 0 8px;font-size:14px">Qué páginas estudian las IAs</h4>
+      <table><thead><tr><th>Página</th><th>Lecturas (30d)</th><th>Motores distintos</th></tr></thead><tbody>
+        <?php foreach ($iaUrlsLeidas as $u): ?>
+          <tr><td><code style="font-size:12.5px"><?= e($u['url']) ?></code></td><td><?= (int)$u['c'] ?></td><td><?= (int)$u['motores'] ?></td></tr>
+        <?php endforeach; ?>
+      </tbody></table>
+    <?php endif; ?>
+    <p class="mini" style="margin:12px 0 0">Las visitas desde IA subestiman (muchas IAs no avisan de dónde vienen); las lecturas de bots son el termómetro duro. El complemento trimestral: el guion de 15 preguntas a ChatGPT, Gemini y Perplexity de la auditoría.</p>
+  <?php endif; ?>
+</div>
+
 <!-- Conexión Google -->
 <div class="card">
   <h3 style="margin:0 0 6px">Conexión con Google</h3>
@@ -316,6 +385,34 @@ $ct=csrf(); $ruri=g_redirect_uri();
         plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:14}}},
         scales:{x:{beginAtZero:true,grid:{color:grid},ticks:{precision:0}},y:{grid:{display:false}}}}});
   }
+<?php endif; ?>
+
+<?php if ($iaLect30 > 0 || $iaVis30 > 0): ?>
+  /* ---- Posicionamiento en IA (GEO) ---- */
+  var iaD=document.getElementById('chIaDia');
+  if(iaD){
+    <?php
+      // un eje de fechas común para lecturas y visitas
+      $iaFechas = [];
+      foreach ($iaBotsDia as $r) $iaFechas[$r['f']] = true;
+      foreach ($iaVisDia as $r) $iaFechas[$r['f']] = true;
+      $iaFechas = array_keys($iaFechas); sort($iaFechas);
+      $mapaLect = array_column($iaBotsDia, 'c', 'f');
+      $mapaVis  = array_column($iaVisDia, 'c', 'f');
+    ?>
+    new Chart(iaD,{type:'bar',data:{
+      labels:<?= json_encode(array_map(fn($f) => date('d/m', strtotime($f)), $iaFechas)) ?>,
+      datasets:[
+        {label:'Lecturas de bots de IA',data:<?= json_encode(array_map(fn($f) => (int)($mapaLect[$f] ?? 0), $iaFechas)) ?>,backgroundColor:'rgba(142,166,255,.75)',borderRadius:4},
+        {label:'Visitas desde IA',data:<?= json_encode(array_map(fn($f) => (int)($mapaVis[$f] ?? 0), $iaFechas)) ?>,backgroundColor:'rgba(95,224,160,.85)',borderRadius:4}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:14}}},
+        scales:{x:{grid:{display:false},stacked:false},y:{beginAtZero:true,grid:{color:grid},ticks:{precision:0}}}}});
+  }
+  var iaM=document.getElementById('chIaMotor');
+  if(iaM) new Chart(iaM,Object.assign({},donut,{data:{
+    labels:<?= json_encode(array_map(fn($r) => $IA_NOMBRES[$r['bot']] ?? $r['bot'], $iaBotsMotor)) ?>,
+    datasets:[{data:<?= json_encode(array_map(fn($r) => (int)$r['c'], $iaBotsMotor)) ?>,backgroundColor:COL,borderColor:'#0e0e15',borderWidth:2}]}}));
 <?php endif; ?>
 })();
 

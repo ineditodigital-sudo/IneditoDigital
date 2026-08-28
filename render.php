@@ -40,6 +40,19 @@ try {
   foreach ($pdo->query("SELECT * FROM portfolio WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['short_desc'])$o['description']=$r['short_desc']; if($r['image'])$o['image']=$r['image']; if($r['client'])$o['client']=$r['client']; if($r['category'])$o['category']=$r['category']; $portfolio[]=$o; }
 } catch (Throwable $ex) { /* si falla la BD, servimos el SPA base */ }
 
+/* GEO medible: cada lectura de un bot de IA queda contada por día, bot y URL.
+   Analíticas la grafica en "Posicionamiento en IA". Silencioso a propósito:
+   registrar la visita jamás puede tirar la página. */
+if ($isBot && $pdo && preg_match(
+    '/(oai-searchbot|gptbot|chatgpt-user|claude-user|claude-web|claudebot|anthropic-ai|perplexity-user|perplexitybot|google-extended|meta-externalagent|bytespider|ccbot|amazonbot|applebot-extended|duckassistbot|mistralai|cohere)/i',
+    $ua, $mIA)) {
+  try {
+    $pdo->prepare("INSERT INTO ia_bots (fecha, bot, url) VALUES (CURDATE(), :b, :u)
+                   ON DUPLICATE KEY UPDATE hits = hits + 1")
+        ->execute([':b' => strtolower($mIA[1]), ':u' => mb_substr($path, 0, 255)]);
+  } catch (Throwable $ex) { /* la tabla la crea el panel; si no está, no pasa nada */ }
+}
+
 $siteName = $seo['siteName'] ?: 'Inédito Digital';
 
 /* Autoría del blog (CON-02).
