@@ -55,6 +55,12 @@ function crud(string $page, array $c): void {
                 <select name="<?= $k ?>"><?php foreach($f['opts'] as $ov=>$ol): ?><option value="<?= e($ov) ?>" <?= (string)$val===(string)$ov?'selected':'' ?>><?= e($ol) ?></option><?php endforeach; ?></select>
               <?php elseif(($f['type']??'')==='date'): ?>
                 <input type="date" name="<?= $k ?>" value="<?= e($val) ?>">
+              <?php elseif (stripos($k, 'image') !== false || stripos($k, 'logo') !== false): ?>
+                <div style="display:flex;gap:12px;align-items:flex-start">
+                  <div data-prev="<?= $k ?>" style="flex:0 0 78px;height:56px;border-radius:10px;border:1px solid var(--line);background:#0b0b12 center/cover no-repeat;<?= $val !== '' ? 'background-image:url(' . e($val) . ');' : '' ?>"></div>
+                  <input type="text" name="<?= $k ?>" value="<?= e($val) ?>" style="flex:1"
+                         oninput="var c=document.querySelector('[data-prev=&quot;<?= $k ?>&quot;]'); if(c) c.style.backgroundImage=this.value.trim()?'url('+this.value.trim()+')':'';">
+                </div>
               <?php else: ?>
                 <input type="text" name="<?= $k ?>" value="<?= e($val) ?>">
               <?php endif; ?>
@@ -78,16 +84,28 @@ function crud(string $page, array $c): void {
     <?php if (!empty($c['note'])): ?><div class="card" style="border-color:#3a2f12;background:#191305"><div class="mini" style="color:#e0c07a"><?= e($c['note']) ?></div></div><?php endif; ?>
     <?php if (!$rows): ?><div class="card"><p class="muted" style="text-align:center;padding:30px 0">Aún no hay registros. Crea el primero con "+ Nuevo".</p></div>
     <?php else: ?>
-    <div class="card"><table><thead><tr><th><?= e($c['single']) ?></th><th>Estado</th><th></th></tr></thead><tbody>
-    <?php foreach ($rows as $r): ?><tr>
-      <td><strong><?= e($r[$tf] ?? '—') ?></strong><?php if(!empty($c['sub_field']) && !empty($r[$c['sub_field']])): ?><div class="mini"><?= e($r[$c['sub_field']]) ?></div><?php endif; ?></td>
-      <td><span class="badge b-<?= e($r['status']??'draft') ?>"><?= e(($r['status']??'draft')==='published'?'Publicado':'Borrador') ?></span></td>
-      <td class="actions" style="justify-content:flex-end">
-        <a class="btn small ghost" href="/panel/?p=<?= $page ?>&edit=<?= (int)$r['id'] ?>">Editar</a>
-        <form method="post" onsubmit="return confirm('¿Borrar este elemento?')" style="display:inline">
-          <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-          <button class="btn small danger" type="submit">Borrar</button></form>
-      </td></tr><?php endforeach; ?>
-    </tbody></table></div>
+    <div class="crud-grid">
+    <?php foreach ($rows as $r):
+        $img = trim((string)($r['image'] ?? ''));
+        $fondo = $img !== '' ? 'background-image:url(' . e($img) . ')' : 'background:' . grad_casa($page . (string)$r['id']);
+        $pub = ($r['status'] ?? 'draft') === 'published';
+    ?>
+      <div class="crud-card">
+        <a class="crud-thumb" href="/panel/?p=<?= $page ?>&edit=<?= (int)$r['id'] ?>" style="<?= $fondo ?>">
+          <span class="estado badge b-<?= $pub ? 'published' : 'draft' ?>"><?= $pub ? 'Publicado' : 'Borrador' ?></span>
+        </a>
+        <a class="crud-cuerpo" href="/panel/?p=<?= $page ?>&edit=<?= (int)$r['id'] ?>">
+          <div class="crud-t"><?= e($r[$tf] ?? '—') ?></div>
+          <?php if(!empty($c['sub_field']) && !empty($r[$c['sub_field']])): ?><div class="crud-s"><?= e($r[$c['sub_field']]) ?></div><?php endif; ?>
+        </a>
+        <div class="crud-pie">
+          <a class="btn small ghost" href="/panel/?p=<?= $page ?>&edit=<?= (int)$r['id'] ?>">Editar</a>
+          <form method="post" onsubmit="return confirm('¿Borrar este elemento?')" style="display:inline">
+            <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
+            <button class="btn small danger" type="submit">Borrar</button></form>
+        </div>
+      </div>
+    <?php endforeach; ?>
+    </div>
     <?php endif;
 }

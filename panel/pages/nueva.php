@@ -132,32 +132,29 @@ if (!$id) {
         Todavía no has creado ninguna página. Empieza arriba.
       </p></div>
     <?php else: ?>
-      <div class="card"><table>
-        <thead><tr><th>Página</th><th>Dirección</th><th>Estado</th><th></th></tr></thead>
-        <tbody>
+      <div class="pag-grid">
         <?php foreach ($rows as $r):
           $nb = count(json_decode((string)$r['borrador'], true) ?: []);
           $pendiente = ($r['borrador'] ?? '') !== ($r['contenido'] ?? '');
         ?>
-          <tr>
-            <td><strong><?= e($r['nombre']) ?></strong><div class="mini"><?= $nb ?> bloque(s)</div></td>
-            <td class="mini"><?= e($r['ruta']) ?></td>
-            <td>
-              <span class="badge b-<?= $r['status'] === 'published' ? 'published' : 'draft' ?>">
-                <?= $r['status'] === 'published' ? 'En línea' : 'Sin publicar' ?>
-              </span>
-              <?php if ($pendiente && $r['status'] === 'published'): ?><div class="mini" style="color:#e0c07a;margin-top:4px">con cambios pendientes</div><?php endif; ?>
-            </td>
-            <td class="actions" style="justify-content:flex-end">
-              <a class="btn small ghost" href="/panel/?p=nueva&id=<?= (int)$r['id'] ?>">Editar</a>
-              <?php if ($r['status'] === 'published'): ?>
-                <a class="btn small ghost" href="<?= e($r['ruta']) ?>" target="_blank">Ver</a>
-              <?php endif; ?>
-            </td>
-          </tr>
+          <a class="pag-card" href="/panel/?p=nueva&id=<?= (int)$r['id'] ?>">
+            <div class="pag-mini" aria-hidden style="background:<?= grad_casa('nueva' . (string)$r['slug']) ?>">
+              <i class="pag-ruta-pill"><?= e($r['ruta']) ?></i>
+            </div>
+            <div class="pag-info">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                <div class="n" style="text-transform:none;font-family:inherit;font-size:14.5px;font-weight:700"><?= e($r['nombre']) ?></div>
+                <span class="badge b-<?= $r['status'] === 'published' ? 'published' : 'draft' ?>"><?= $r['status'] === 'published' ? 'En línea' : 'Borrador' ?></span>
+              </div>
+              <div class="r"><?= $nb ?> bloque(s)<?= $pendiente && $r['status'] === 'published' ? ' · cambios pendientes' : '' ?></div>
+              <div class="pag-pie" style="margin-top:11px">
+                <span class="f"></span>
+                <span class="e">Editar →</span>
+              </div>
+            </div>
+          </a>
         <?php endforeach; ?>
-        </tbody>
-      </table></div>
+      </div>
     <?php endif;
     return;
 }

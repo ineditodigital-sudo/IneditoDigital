@@ -133,9 +133,9 @@ if (!$slug || !isset($registro[$slug])) {
       ?>
         <a class="pag-card" href="/panel/?p=paginas&pagina=<?= e($sk) ?>"
            data-busca="<?= e(mb_strtolower($reg['nombre'] . ' ' . $reg['ruta'])) ?>">
-          <?php $foto = trim((string)($e['seo_image'] ?? '')); ?>
-          <div class="pag-mini<?= $foto !== '' ? ' con-foto' : '' ?>" aria-hidden<?= $foto !== '' ? ' style="background-image:url(' . e($foto) . ')"' : '' ?>>
-            <span class="pag-letra"><?= e(mb_strtoupper(mb_substr($reg['nombre'], 0, 1))) ?></span>
+          <?php $foto = trim((string)($e['seo_image'] ?? ''));
+                $fondo = $foto !== '' ? 'background-image:url(' . e($foto) . ')' : 'background:' . grad_casa($sk); ?>
+          <div class="pag-mini<?= $foto !== '' ? ' con-foto' : '' ?>" aria-hidden style="<?= $fondo ?>">
             <i class="pag-ruta-pill"><?= e($reg['ruta']) ?></i>
           </div>
           <div class="pag-info">
