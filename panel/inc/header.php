@@ -2,26 +2,69 @@
 /** Un degradado de la casa, estable por semilla: cada tarjeta el suyo. */
 function grad_casa(string $s): string {
     $g = [
-        'linear-gradient(135deg,#1a0033,#7700CE)',
-        'linear-gradient(150deg,#2a004d,#9933FF)',
-        'linear-gradient(120deg,#10001f,#5b00a3)',
-        'linear-gradient(160deg,#14082e,#7a2bd8)',
-        'linear-gradient(140deg,#23003f,#b44dff)',
-        'linear-gradient(130deg,#041d16,#00b56a)',
+        'linear-gradient(140deg,#3B0083 0%,#9933FF 52%,#D98CFF 100%)',
+        'linear-gradient(140deg,#1B0B4F 0%,#4C46E8 52%,#9BB0FF 100%)',
+        'linear-gradient(140deg,#5E0A72 0%,#C13BD9 50%,#FF9BE0 100%)',
+        'linear-gradient(140deg,#2A0060 0%,#7700CE 48%,#CC66FF 100%)',
+        'linear-gradient(140deg,#120C3A 0%,#6A3BF5 55%,#C0A6FF 100%)',
+        'linear-gradient(140deg,#04352A 0%,#00B56A 55%,#7BEFBB 100%)',
     ];
     return $g[crc32($s) % count($g)];
+}
+
+/**
+ * Las hojas que asoman en la tarjeta de contenido.
+ * Van dentro del lienzo con degradado y el rótulo las tapa a medias:
+ * el gesto de "carpeta con documentos" de un vistazo.
+ */
+function ilu_hojas(): string {
+    return '<svg class="pcard-hojas" viewBox="0 0 220 132" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+      . '<g transform="rotate(-8 52 72)"><rect x="8" y="18" width="88" height="114" rx="9" fill="#fff" opacity=".72"/>'
+      . '<g stroke="#a9a9c4" stroke-width="3.4" stroke-linecap="round" opacity=".5"><path d="M24 42h56M24 56h42M24 70h52"/></g></g>'
+      . '<g transform="rotate(3 110 68)"><rect x="66" y="12" width="88" height="120" rx="9" fill="#fff" opacity=".94"/>'
+      . '<g stroke="#a9a9c4" stroke-width="3.4" stroke-linecap="round" opacity=".55"><path d="M82 38h56M82 52h42M82 66h52M82 80h36"/></g></g>'
+      . '<g transform="rotate(10 168 74)"><rect x="124" y="20" width="88" height="112" rx="9" fill="#fff" opacity=".78"/>'
+      . '<g stroke="#a9a9c4" stroke-width="3.4" stroke-linecap="round" opacity=".5"><path d="M140 44h56M140 58h42M140 72h50"/></g></g>'
+      . '</svg>';
+}
+
+/**
+ * La tarjeta de contenido. Todos los módulos pintan lo mismo con esto:
+ *   nombre, sub, href (a dónde se edita), ayuda, pie, ver (enlace público),
+ *   foto (si existe manda sobre el degradado), badge, semilla (degradado).
+ */
+function pcard(array $o): string {
+    $foto = trim((string)($o['foto'] ?? ''));
+    $fondo = $foto !== ''
+        ? 'background-image:url(' . e($foto) . ')'
+        : 'background:' . grad_casa((string)($o['semilla'] ?? $o['nombre'] ?? ''));
+    $h  = '<div class="pcard">';
+    $h .= '<a class="pcard-link" href="' . e($o['href']) . '" aria-label="' . e($o['nombre']) . '"></a>';
+    $h .= '<div class="pcard-lienzo' . ($foto !== '' ? ' con-foto' : '') . '" style="' . $fondo . '">';
+    if ($foto === '') $h .= ilu_hojas();
+    if (!empty($o['badge'])) $h .= '<span class="pcard-estado">' . $o['badge'] . '</span>';
+    $h .= '</div>';
+    $h .= '<div class="pcard-tab"><div class="pcard-n">' . e($o['nombre']) . '</div></div>';
+    $h .= '<div class="pcard-cuerpo"><div class="pcard-fila">';
+    $h .= '<span class="pcard-s">' . e($o['sub'] ?? '') . '</span>';
+    if (!empty($o['ver'])) {
+        $h .= '<a class="pcard-ir" href="' . e($o['ver']) . '" target="_blank" rel="noopener" title="Ver en el sitio">&#8599;</a>';
+    }
+    $h .= '</div>';
+    if (!empty($o['ayuda'])) $h .= '<div class="pcard-a">' . e($o['ayuda']) . '</div>';
+    $h .= '</div>';
+    $h .= '<div class="pcard-pie"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">'
+        . '<path d="M15 2H8a2 2 0 00-2 2v14a2 2 0 002 2h9a2 2 0 002-2V6zM15 2v4h4"/></svg>'
+        . '<span>' . e($o['pie'] ?? '') . '</span></div>';
+    $h .= '</div>';
+    return $h;
 }
 
 $nav = [
   'dashboard'  => ['Dashboard', 'M3 13h8V3H3zM3 21h8v-6H3zM13 21h8V11h-8zM13 3v6h8V3z'],
   'leads'      => ['Leads', 'M17 20v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 10a4 4 0 100-8 4 4 0 000 8'],
   'analiticas' => ['Analíticas', 'M3 3v18h18M18 17V9M13 17V5M8 17v-3'],
-  'paginas'    => ['Páginas', 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M9 13h6M9 17h4'],
-  'nueva'      => ['Mis páginas', 'M12 5v14M5 12h14'],
-  'miembros'   => ['Equipo', 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75'],
-  'servicios'  => ['Servicios', 'M20 7h-4V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z'],
-  'blog'       => ['Blog', 'M4 19.5A2.5 2.5 0 016.5 17H20M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z'],
-  'portafolio' => ['Portafolio', 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6'],
+  'contenido'  => ['Contenido', 'M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5'],
   'seo'        => ['SEO', 'M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.3-4.3'],
   'ajustes'    => ['Ajustes', 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z'],
 ];
@@ -131,34 +174,46 @@ th{color:var(--mut2);font-size:10.5px;text-transform:uppercase;letter-spacing:.7
 @keyframes degradado-panel{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes orbe-flota{0%,100%{transform:translateY(0)}50%{transform:translateY(16px)}}
 
-/* ---------------- tarjetas de páginas ---------------- */
-.pag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:16px}
-.pag-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
-  transition:transform .25s,border-color .25s,box-shadow .25s}
-.pag-card:hover{transform:translateY(-4px);border-color:rgba(153,51,255,.45);box-shadow:0 22px 44px -22px rgba(119,0,206,.55)}
-.pag-mini{aspect-ratio:16/9;background:linear-gradient(150deg,#170026,#0b0b13 66%);border-bottom:1px solid var(--line);position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
-.pag-mini::after{content:'';position:absolute;right:-30%;top:-45%;width:75%;height:110%;border-radius:50%;
-  background:radial-gradient(circle,rgba(153,51,255,.28),transparent 70%);transition:opacity .3s;opacity:.55}
-.pag-card:hover .pag-mini::after{opacity:1}
-.pag-ruta-pill{position:absolute;bottom:9px;left:10px;right:10px;font-style:normal;font-family:var(--f-mono);font-size:9px;color:rgba(242,240,246,.85);
-  background:rgba(7,7,11,.66);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(4px);border-radius:6px;padding:3.5px 9px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:max-content;max-width:calc(100% - 20px)}
-.pag-mini::before{content:'';position:absolute;left:-18%;bottom:-55%;width:80%;height:110%;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.14),transparent 68%)}
-.pag-mini.con-foto::before{background:linear-gradient(180deg,rgba(7,7,11,.10),rgba(7,7,11,.55));border-radius:0;inset:0;width:auto;height:auto}
+/* ---------------- la tarjeta de contenido ----------------
+   Marco oscuro, lienzo de color dentro, hojas asomando y el rotulo
+   montado en una pestana que muerde el lienzo. La misma pieza sirve
+   para paginas, servicios, blog, portafolio y bloques. */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:18px}
+.pcard{position:relative;background:#0F0F19;border:1px solid var(--line);border-radius:26px;padding:9px 9px 2px;
+  transition:transform .28s,border-color .28s,box-shadow .28s}
+.pcard:hover{transform:translateY(-5px);border-color:rgba(153,51,255,.42);box-shadow:0 26px 52px -26px rgba(119,0,206,.65)}
+.pcard-link{position:absolute;inset:0;z-index:1;border-radius:26px}
+.pcard-lienzo{position:relative;height:126px;border-radius:19px;overflow:hidden;background-size:cover;background-position:center}
+.pcard-lienzo::after{content:'';position:absolute;inset:0;background:radial-gradient(120% 95% at 12% -10%,rgba(255,255,255,.26),transparent 62%)}
+.pcard-lienzo.con-foto::after{background:linear-gradient(180deg,rgba(7,7,11,.05),rgba(7,7,11,.45))}
+.pcard-hojas{position:absolute;left:15%;top:38px;width:72%;filter:drop-shadow(0 12px 20px rgba(0,0,0,.4));transition:transform .35s}
+.pcard:hover .pcard-hojas{transform:translateY(-4px)}
+.pcard-estado{position:absolute;z-index:2;top:9px;right:9px}
+.pcard-tab{position:relative;z-index:2;margin-top:-33px;width:max-content;max-width:calc(100% - 30px);
+  background:#0F0F19;border-radius:0 17px 0 0;padding:10px 16px 2px 7px}
+.pcard-tab::after{content:'';position:absolute;left:100%;bottom:0;width:17px;height:17px;
+  background:radial-gradient(circle at 100% 0,transparent 16.5px,#0F0F19 17px)}
+.pcard-n{font-family:var(--f-display);text-transform:uppercase;font-size:12.5px;letter-spacing:.03em;line-height:1.25;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-cuerpo{position:relative;z-index:2;padding:1px 9px 0}
+.pcard-fila{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pcard-s{font-family:var(--f-mono);font-size:10.5px;color:var(--mut2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pcard-ir{position:relative;z-index:3;flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:var(--mut);font-size:13px;border:1px solid transparent;transition:color .2s,border-color .2s,background .2s}
+.pcard-ir:hover{color:#fff;border-color:var(--line2);background:rgba(255,255,255,.05)}
+.pcard-a{font-size:12px;color:var(--mut);line-height:1.5;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}
+.pcard-pie{position:relative;z-index:2;display:flex;align-items:center;gap:7px;padding:10px 9px 11px;color:var(--mut);font-size:11.5px}
+.pcard-pie svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.9;flex-shrink:0}
+.pcard-pie .sep{color:var(--mut2)}
 
-/* ---------------- tarjetas CRUD (blog · servicios · portafolio) ---------------- */
-.crud-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px}
-.crud-card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
-  transition:transform .25s,border-color .25s,box-shadow .25s}
-.crud-card:hover{transform:translateY(-4px);border-color:rgba(153,51,255,.45);box-shadow:0 22px 44px -22px rgba(119,0,206,.5)}
-.crud-thumb{aspect-ratio:16/9;background-size:cover;background-position:center;border-bottom:1px solid var(--line);position:relative}
-.crud-thumb .estado{position:absolute;top:9px;right:9px}
-.crud-cuerpo{padding:13px 15px 10px;flex:1;min-width:0}
-.crud-t{font-weight:700;font-size:14px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.crud-s{font-size:11.5px;color:var(--mut2);margin-top:5px;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em}
-.crud-pie{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 12px}
+/* ---------------- pestanas del modulo de contenido ---------------- */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.tabs a{display:inline-flex;align-items:center;gap:8px;padding:8px 15px;border-radius:999px;font-size:13px;color:var(--mut);
+  border:1px solid transparent;transition:color .18s,background .18s,border-color .18s}
+.tabs a:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.tabs a.on{color:#fff;background:linear-gradient(90deg,rgba(119,0,206,.35),rgba(153,51,255,.16));border-color:rgba(153,51,255,.4)}
+.tabs a i{font-style:normal;font-family:var(--f-mono);font-size:10px;color:var(--mut2);background:rgba(255,255,255,.06);border-radius:999px;padding:2px 7px}
+.tabs a.on i{color:#DDBBFF;background:rgba(255,255,255,.10)}
 
 /* ---------------- leads ---------------- */
 .avatar{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;
@@ -184,13 +239,6 @@ th{color:var(--mut2);font-size:10.5px;text-transform:uppercase;letter-spacing:.7
 .form-sec:first-of-type{margin-top:2px}
 .form-sec b{font-size:14.5px}
 .form-sec span{font-size:12px;color:var(--mut2)}
-.pag-info{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1}
-.pag-info .n{font-family:var(--f-display);text-transform:uppercase;font-size:12.5px;letter-spacing:.03em;line-height:1.3}
-.pag-info .r{font-family:var(--f-mono);font-size:11px;color:var(--mut2);margin-top:5px}
-.pag-info .a{color:var(--mut);font-size:12px;margin-top:9px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
-.pag-pie{display:flex;justify-content:space-between;align-items:center;margin-top:13px;gap:8px}
-.pag-pie .f{font-size:11px;color:var(--mut2)}
-.pag-pie .e{font-size:12px;color:var(--pur3);font-weight:700;white-space:nowrap}
 
 /* ---------------- editor en vivo ---------------- */
 .edt{display:grid;grid-template-columns:minmax(0,1fr) 470px;gap:18px;align-items:start}
@@ -271,9 +319,12 @@ details.sec .cuerpo{padding:2px 20px 20px;border-top:1px solid var(--line)}
   .edt-marco.movil iframe{width:100%}
   .edt-vista-top{flex-wrap:wrap;row-gap:6px}
   .edt-acciones{bottom:calc(64px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--bg) 40%)}
-  .pag-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:11px}
-  .pag-letra{font-size:38px}
-  .pag-info{padding:12px 13px 13px}
+  .pgrid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+  .pcard{border-radius:22px;padding:7px 7px 2px}
+  .pcard-lienzo{height:96px;border-radius:16px}
+  .pcard-hojas{top:22px}
+  .pcard-tab{margin-top:-28px;padding:8px 13px 2px 6px}
+  .pcard-a{display:none}
 }
 @media(prefers-reduced-motion:reduce){
   .banner-fondo,.banner-orbe,.edt-vivo-pill::before{animation:none}

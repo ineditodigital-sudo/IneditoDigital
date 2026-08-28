@@ -125,40 +125,29 @@ if (!$slug || !isset($registro[$slug])) {
       <input type="search" id="buscaPag" placeholder="Buscar página…" style="width:230px;align-self:center">
     </div>
 
-    <div class="pag-grid" id="gridPag">
+    <div class="pgrid" id="gridPag">
       <?php foreach ($registro as $sk => $reg):
         $e = $estado[$sk] ?? null;
-        $hayBorrador = $e && $e['borrador'] !== ($e['contenido'] ?? null) && !empty($e['borrador']);
-        $secN = count($reg['secciones']);
-      ?>
-        <a class="pag-card" href="/panel/?p=paginas&pagina=<?= e($sk) ?>"
-           data-busca="<?= e(mb_strtolower($reg['nombre'] . ' ' . $reg['ruta'])) ?>">
-          <?php $foto = trim((string)($e['seo_image'] ?? ''));
-                $fondo = $foto !== '' ? 'background-image:url(' . e($foto) . ')' : 'background:' . grad_casa($sk); ?>
-          <div class="pag-mini<?= $foto !== '' ? ' con-foto' : '' ?>" aria-hidden style="<?= $fondo ?>">
-            <i class="pag-ruta-pill"><?= e($reg['ruta']) ?></i>
-          </div>
-          <div class="pag-info">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-              <div class="n"><?= e($reg['nombre']) ?></div>
-              <?php if ($hayBorrador): ?><span class="badge b-draft">Borrador</span><?php endif; ?>
-            </div>
-            <div class="r"><?= e($reg['ruta']) ?> · <?= $secN ?> secciones</div>
-            <div class="a"><?= e($reg['ayuda'] ?? '') ?></div>
-            <div class="pag-pie">
-              <span class="f"><?= e(hace($e['updated_at'] ?? null)) ?></span>
-              <span class="e">Editar →</span>
-            </div>
-          </div>
-        </a>
-      <?php endforeach; ?>
+        $hayBorrador = $e && !empty($e['borrador']) && $e['borrador'] !== ($e['contenido'] ?? null);
+        echo '<div data-busca="' . e(mb_strtolower($reg['nombre'] . ' ' . $reg['ruta'])) . '">' . pcard([
+          'nombre'  => $reg['nombre'],
+          'sub'     => $reg['ruta'],
+          'href'    => '/panel/?p=paginas&pagina=' . rawurlencode($sk),
+          'ver'     => $reg['ruta'],
+          'ayuda'   => $reg['ayuda'] ?? '',
+          'pie'     => count($reg['secciones']) . ' secciones · ' . hace($e['updated_at'] ?? null),
+          'foto'    => $e['seo_image'] ?? '',
+          'semilla' => $sk,
+          'badge'   => $hayBorrador ? '<span class="badge b-draft">Borrador</span>' : '',
+        ]) . '</div>';
+      endforeach; ?>
     </div>
     <p class="mini" id="sinResultados" style="display:none;text-align:center;padding:30px 0">Ninguna página se llama así.</p>
 
     <script>
     (function () {
       var busca = document.getElementById('buscaPag');
-      var tarjetas = Array.prototype.slice.call(document.querySelectorAll('#gridPag .pag-card'));
+      var tarjetas = Array.prototype.slice.call(document.querySelectorAll('#gridPag [data-busca]'));
       var vacio = document.getElementById('sinResultados');
       busca.addEventListener('input', function () {
         var q = busca.value.trim().toLowerCase();
@@ -204,7 +193,7 @@ $rutaVista = $reg['ruta'] . (strpos($reg['ruta'], '?') === false ? '?' : '&') . 
 ?>
 <div class="topbar" style="margin-bottom:16px">
   <div>
-    <div class="kicker"><a href="/panel/?p=paginas" style="color:inherit">&larr; Todas las páginas</a></div>
+    <div class="kicker"><a href="/panel/?p=contenido" style="color:inherit">&larr; Todo el contenido</a></div>
     <h1 class="title"><?= e($reg['nombre']) ?></h1>
   </div>
 </div>
