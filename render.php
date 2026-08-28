@@ -89,7 +89,7 @@ if ($path === '/') {
   $desc = 'Agencia de marketing digital en Aguascalientes. Conectamos tus campañas con tus ventas reales y cada mes una IA audita si la estrategia está funcionando.';
   $bodyBuilder = function() use ($services,$settings,$P,$e,$blog) {
     $h = '<h1>Inédito Digital · Agencia de Marketing Digital en Aguascalientes</h1>';
-    $h .= '<p>Impulsamos tu negocio con estrategias de marketing digital, diseño web e inteligencia artificial. Diseño y desarrollo web, branding, SEO, Google Ads, embudos de venta, chatbots con IA, WhatsApp y e-commerce.</p>';
+    $h .= '<p>Impulsamos tu negocio con estrategias de marketing digital, diseño web e inteligencia artificial. Diseño y desarrollo web, branding, SEO, Google Ads, embudos de venta, chatbots con IA, WhatsApp y e-commerce. Y como agencia de publicidad en Aguascalientes llevamos campañas en Google Ads, Meta y ChatGPT Ads, siempre conectadas a un tablero de resultados.</p>';
     $h .= '<h2>Nuestros servicios</h2><ul>';
     foreach ($services as $s) $h .= '<li><a href="/servicios/'.e($s['slug']).'"><strong>'.e($s['title']).'</strong></a> — '.e($s['shortDescription'] ?? '').'</li>';
     $h .= '</ul>';
