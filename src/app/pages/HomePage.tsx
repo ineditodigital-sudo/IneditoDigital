@@ -101,6 +101,26 @@ export default function HomePage() {
   ];
 
 
+  /* La vitrina cuenta la nueva dirección: estos nueve van primero y en este
+     orden; cualquier otro servicio conserva su orden del panel detrás. Las
+     fichas, el menú y /servicios no cambian. */
+  const DESTACADOS = [
+    'auditoria-con-ia',
+    'tablero-de-resultados',
+    'chatgpt-ads',
+    'estrategia-de-canales',
+    'linkedin-de-empresa',
+    'google-ads',
+    'diseno-y-desarrollo-web',
+    'chatbots-y-agentes',
+    'posicionamiento-organico',
+  ];
+  const vitrina = [...services].sort((a, b) => {
+    const ia = DESTACADOS.indexOf(a.slug);
+    const ib = DESTACADOS.indexOf(b.slug);
+    return (ia === -1 ? DESTACADOS.length : ia) - (ib === -1 ? DESTACADOS.length : ib);
+  });
+
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent('Hola, quiero información sobre sus servicios de marketing digital')}`;
 
   const schema = {
@@ -587,7 +607,7 @@ export default function HomePage() {
           </form>
 
           <div className="mb-6 grid grid-cols-1 gap-4 md:mb-8 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-            {services.slice(0, 9).map((service, index) => (
+            {vitrina.slice(0, 9).map((service, index) => (
               <div
                 key={service.id}
                 className="animate-fadeIn"
@@ -787,6 +807,40 @@ export default function HomePage() {
             </p>
           </div>
 
+          {/* la numeralia: cifras que benefician sin exponer a nadie.
+              Los clientes no se nombran; si una cifra se vacía en el panel,
+              su columna desaparece. */}
+          <div className="mx-auto mb-9 grid max-w-4xl grid-cols-1 gap-7 sm:grid-cols-3 md:mb-12">
+            {[1, 2, 3].map((i) => {
+              const cifra = tCasos(`n${i}_cifra`, ['+80%', '4', '100%'][i - 1]);
+              if (!cifra) return null;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5, delay: (i - 1) * 0.1 }}
+                  className="text-center"
+                >
+                  <div
+                    className="heading bg-clip-text text-4xl leading-none text-transparent md:text-5xl"
+                    style={{ backgroundImage: 'linear-gradient(120deg,#9933FF,#CC66FF)' }}
+                  >
+                    {cifra}
+                  </div>
+                  <p className="mx-auto mt-2.5 max-w-[250px] text-[13px] leading-snug text-white/60">
+                    {tCasos(`n${i}_texto`, [
+                      'de tráfico orgánico logrado para un cliente en un año',
+                      'motores de IA donde medimos la presencia de cada cliente',
+                      'de nuestros clientes con tablero conectado a datos reales',
+                    ][i - 1])}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+
           <div
             className="relative mx-auto mb-8 max-w-6xl overflow-hidden md:mb-10"
             style={{
@@ -859,6 +913,11 @@ export default function HomePage() {
             </p>
           </motion.div>
 
+          {/* las tres promesas del documento de dirección, como bloque:
+              son las mismas que la cinta del inicio corea en corto */}
+          <div className="mb-1 font-mono text-[10px] uppercase tracking-[.2em] text-white/45">
+            {tVal('promesas_titulo', 'Las tres promesas que sostienen todo')}
+          </div>
           <div className="grid md:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <motion.div
@@ -871,13 +930,13 @@ export default function HomePage() {
               >
                 <span className="font-mono text-[10.5px] uppercase tracking-[.2em] text-[#AA66FF]">0{i}</span>
                 <h3 className="heading mb-2 mt-2 text-lg md:text-xl">
-                  {tVal(`c${i}_titulo`, ['FORMALIDAD', 'CLARIDAD', 'ACOMPAÑAMIENTO'][i - 1])}
+                  {tVal(`c${i}_titulo`, ['FORMALIDAD Y CONFIANZA', 'VISIBILIDAD COMPLETA', 'MEDICIÓN HASTA LA VENTA'][i - 1])}
                 </h3>
                 <p className="text-[14px] leading-relaxed text-white/65">
                   {tVal(`c${i}_texto`, [
-                    'Contrato, factura y fechas claras. La relación empieza formal y se queda así.',
-                    'Siempre sabes qué se está haciendo, por qué, y qué resultado se espera de cada acción.',
-                    'Una dirección comercial que se sienta contigo cada mes, no un proveedor que desaparece.',
+                    'Cuando alguien te busca, encuentra una empresa seria: presencia cuidada, soporte y todo en orden, por escrito.',
+                    'No solo Google: también los motores de IA que ya recomiendan proveedores. Casi nadie trabaja esto.',
+                    'Tablero conectado a datos reales y, cuando tu sistema lo permite, el cruce directo entre campañas y ventas cerradas.',
                   ][i - 1])}
                 </p>
               </motion.div>
@@ -898,17 +957,17 @@ export default function HomePage() {
         <div className="container relative mx-auto max-w-3xl text-center">
           <Kicker centrado>{tCierre('etiqueta', 'EL SIGUIENTE PASO')}</Kicker>
           <h2 className="heading mb-5 text-3xl [text-wrap:balance] md:text-6xl">
-            {tCierre('titulo', '¿LISTO PARA CRECER?')}
+            {tCierre('titulo', 'EMPIEZA POR SABER DÓNDE ESTÁS')}
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-[15.5px] leading-relaxed text-white/75 md:text-lg">
-            {tCierre('bajada', 'Agenda una consulta gratuita y descubre cómo podemos llevar tu negocio al siguiente nivel')}
+            {tCierre('bajada', 'Pide la auditoría de tu presencia digital: qué está bien, qué está mal y qué conviene hacer primero, con la evidencia de cada hallazgo.')}
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
-              onClick={() => openAssistant(undefined, 'agendar una consulta gratuita')}
+              onClick={() => openAssistant(undefined, 'quiero una auditoría de mi presencia digital')}
               className="group inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-8 py-4 text-white shadow-[0_0_30px_rgba(119,0,206,0.5)] transition-all duration-300 hover:from-[#9933FF] hover:to-[#7700CE] hover:shadow-[0_0_50px_rgba(119,0,206,0.8)] active:scale-95 sm:w-auto"
             >
-              <span className="heading text-sm tracking-[0.08em] md:text-base">{tCierre('boton', 'AGENDAR CONSULTA GRATIS')}</span>
+              <span className="heading text-sm tracking-[0.08em] md:text-base">{tCierre('boton', 'QUIERO MI AUDITORÍA')}</span>
               <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" size={18} />
             </button>
             <a
