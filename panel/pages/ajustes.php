@@ -19,7 +19,7 @@ $v = settings_all('site_settings'); $ct=csrf();
 <div class="kicker">Configuración</div><h1 class="title">Ajustes</h1><p class="subt">Datos del negocio y cuenta</p>
 <form method="post" class="card">
   <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="biz">
-  <h3 style="margin:0 0 6px">Información del negocio</h3>
+  <div class="form-sec"><b>Información del negocio</b><span>Lo que el sitio y la tarjeta digital muestran de contacto</span></div>
   <div class="rowf">
     <?php field('businessName','Nombre del negocio',$v); field('whatsappNumber','WhatsApp (con lada, ej. 5214491234567)',$v);
     field('businessPhone','Teléfono',$v); field('businessEmail','Email',$v);
@@ -33,7 +33,7 @@ $v = settings_all('site_settings'); $ct=csrf();
 
 <form method="post" class="card">
   <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="password">
-  <h3 style="margin:0 0 6px">Cambiar mi contraseña</h3>
+  <div class="form-sec"><b>Cambiar mi contraseña</b><span>Mínimo 8 caracteres</span></div>
   <div class="rowf">
     <div><label>Nueva contraseña</label><input type="password" name="new_password"></div>
     <div><label>Confirmar contraseña</label><input type="password" name="confirm"></div>

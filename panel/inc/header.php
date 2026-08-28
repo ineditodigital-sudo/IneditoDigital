@@ -1,4 +1,17 @@
 <?php
+/** Un degradado de la casa, estable por semilla: cada tarjeta el suyo. */
+function grad_casa(string $s): string {
+    $g = [
+        'linear-gradient(135deg,#1a0033,#7700CE)',
+        'linear-gradient(150deg,#2a004d,#9933FF)',
+        'linear-gradient(120deg,#10001f,#5b00a3)',
+        'linear-gradient(160deg,#14082e,#7a2bd8)',
+        'linear-gradient(140deg,#23003f,#b44dff)',
+        'linear-gradient(130deg,#041d16,#00b56a)',
+    ];
+    return $g[crc32($s) % count($g)];
+}
+
 $nav = [
   'dashboard'  => ['Dashboard', 'M3 13h8V3H3zM3 21h8v-6H3zM13 21h8V11h-8zM13 3v6h8V3z'],
   'leads'      => ['Leads', 'M17 20v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 10a4 4 0 100-8 4 4 0 000 8'],
@@ -128,14 +141,49 @@ th{color:var(--mut2);font-size:10.5px;text-transform:uppercase;letter-spacing:.7
 .pag-mini::after{content:'';position:absolute;right:-30%;top:-45%;width:75%;height:110%;border-radius:50%;
   background:radial-gradient(circle,rgba(153,51,255,.28),transparent 70%);transition:opacity .3s;opacity:.55}
 .pag-card:hover .pag-mini::after{opacity:1}
-.pag-letra{font-family:var(--f-display);font-size:52px;line-height:1;background:linear-gradient(130deg,var(--pur2),var(--pur3));
-  -webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9;transform:translateY(-6px);transition:transform .3s}
-.pag-card:hover .pag-letra{transform:translateY(-6px) scale(1.06)}
-.pag-ruta-pill{position:absolute;bottom:9px;left:10px;right:10px;font-style:normal;font-family:var(--f-mono);font-size:9px;color:var(--mut);
-  background:rgba(7,7,11,.72);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(4px);border-radius:6px;padding:3.5px 9px;
+.pag-ruta-pill{position:absolute;bottom:9px;left:10px;right:10px;font-style:normal;font-family:var(--f-mono);font-size:9px;color:rgba(242,240,246,.85);
+  background:rgba(7,7,11,.66);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(4px);border-radius:6px;padding:3.5px 9px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:max-content;max-width:calc(100% - 20px)}
-.pag-mini.con-foto .pag-letra{display:none}
-.pag-mini.con-foto::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,11,.10),rgba(7,7,11,.55))}
+.pag-mini::before{content:'';position:absolute;left:-18%;bottom:-55%;width:80%;height:110%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.14),transparent 68%)}
+.pag-mini.con-foto::before{background:linear-gradient(180deg,rgba(7,7,11,.10),rgba(7,7,11,.55));border-radius:0;inset:0;width:auto;height:auto}
+
+/* ---------------- tarjetas CRUD (blog · servicios · portafolio) ---------------- */
+.crud-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px}
+.crud-card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .25s,border-color .25s,box-shadow .25s}
+.crud-card:hover{transform:translateY(-4px);border-color:rgba(153,51,255,.45);box-shadow:0 22px 44px -22px rgba(119,0,206,.5)}
+.crud-thumb{aspect-ratio:16/9;background-size:cover;background-position:center;border-bottom:1px solid var(--line);position:relative}
+.crud-thumb .estado{position:absolute;top:9px;right:9px}
+.crud-cuerpo{padding:13px 15px 10px;flex:1;min-width:0}
+.crud-t{font-weight:700;font-size:14px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.crud-s{font-size:11.5px;color:var(--mut2);margin-top:5px;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em}
+.crud-pie{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 12px}
+
+/* ---------------- leads ---------------- */
+.avatar{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;
+  color:#fff;flex-shrink:0;letter-spacing:.02em;box-shadow:0 8px 20px -10px rgba(0,0,0,.8)}
+.chip .pt-est{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.lead-msg{margin-top:12px;background:var(--card2);border-left:2px solid var(--pur);border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.6;white-space:pre-wrap}
+
+/* ---------------- equipo ---------------- */
+.mie-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:14px}
+.mie-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 16px 16px;text-align:center;
+  transition:transform .25s,border-color .25s,box-shadow .25s;display:flex;flex-direction:column;align-items:center}
+.mie-card:hover{transform:translateY(-4px);border-color:rgba(153,51,255,.45);box-shadow:0 22px 44px -22px rgba(119,0,206,.5)}
+.mie-foto{width:74px;height:74px;border-radius:50%;background-size:cover;background-position:center;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-size:22px;color:#fff;
+  box-shadow:0 0 0 2px var(--bg),0 0 0 4px rgba(153,51,255,.55),0 12px 26px -12px rgba(119,0,206,.8)}
+.mie-n{font-weight:700;font-size:14.5px;line-height:1.3}
+.mie-p{font-size:11.5px;color:var(--mut);margin-top:4px}
+.mie-r{font-family:var(--f-mono);font-size:10.5px;color:var(--mut2);margin-top:7px}
+.mie-acc{display:flex;gap:6px;justify-content:center;margin-top:13px;flex-wrap:wrap}
+
+/* ---------------- secciones de formulario (ajustes · seo) ---------------- */
+.form-sec{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:10px;margin:26px 0 4px}
+.form-sec:first-of-type{margin-top:2px}
+.form-sec b{font-size:14.5px}
+.form-sec span{font-size:12px;color:var(--mut2)}
 .pag-info{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1}
 .pag-info .n{font-family:var(--f-display);text-transform:uppercase;font-size:12.5px;letter-spacing:.03em;line-height:1.3}
 .pag-info .r{font-family:var(--f-mono);font-size:11px;color:var(--mut2);margin-top:5px}
