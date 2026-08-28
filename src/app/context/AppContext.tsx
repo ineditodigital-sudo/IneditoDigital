@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { SERVICES, Service } from '../data/services';
+import { evento, instalarMedicionDeClicks } from '../metricas';
 import { BLOG_POSTS, BlogPost } from '../data/blog';
 import { PORTFOLIO_ITEMS, PortfolioItem } from '../data/portfolio';
 
@@ -132,6 +133,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [preselectedService, setPreselectedService] = useState<string | null>(null);
   const [initialContext, setInitialContext] = useState<string | null>(null);
+
+  /* Los clics a WhatsApp y tel: se cuentan con un solo listener global. */
+  useEffect(() => {
+    instalarMedicionDeClicks();
+  }, []);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -352,6 +358,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setIsAssistantOpen(true);
     setPreselectedService(preselectedService || null);
     setInitialContext(context || null);
+    /* la acción que más cerca queda del lead: qué pidió, desde qué página */
+    evento('asistente', context || preselectedService || '');
   };
 
   const closeAssistant = () => {
