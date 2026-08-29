@@ -679,7 +679,7 @@ export default function HomePage() {
           >
             <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#7700CE]/40 bg-[#7700CE]/15 px-4 py-1.5 font-mono text-[10.5px] uppercase tracking-[.18em] text-[#CC99FF]">
               <Bot size={14} />
-              {tIA('etiqueta', 'POTENCIA TU NEGOCIO CON IA')}
+              {tIA('etiqueta', 'IA APLICADA AL NEGOCIO')}
             </span>
             <h2 className="heading mb-4 text-2xl md:text-4xl lg:text-5xl">
               {tIA('titulo_1', 'SERVICIOS DE')}{' '}
@@ -688,16 +688,16 @@ export default function HomePage() {
               </span>
             </h2>
             <p className="mx-auto max-w-3xl text-[14.5px] leading-relaxed text-white/70 md:text-base">
-              {tIA('bajada', 'Automatiza, optimiza y escala tu negocio 24/7 con nuestras soluciones de IA personalizadas')}
+              {tIA('bajada', 'Inteligencia artificial puesta a trabajar donde se nota: atención, prospección, campañas y venta en línea. Todo conectado al mismo tablero.')}
             </p>
           </motion.div>
 
           <div className="mb-8 grid grid-cols-1 gap-4 md:mb-10 md:grid-cols-2 md:gap-5">
             {[
-              { p: 'w', ruta: '/servicios-ia/whatsapp', Icono: MessageCircle, titulo: 'IA PARA WHATSAPP', texto: 'Agente inteligente que atiende, califica y cierra ventas 24/7. Nunca pierdas otro cliente.', puntos: ['Respuestas instantáneas 24/7', 'Calificación automática de leads', 'Integración con tu CRM'] },
-              { p: 'v', ruta: '/servicios-ia/ventas', Icono: Target, titulo: 'IA DE VENTAS', texto: 'Encuentra clientes perfectos y cierra más ventas con prospección inteligente automatizada.', puntos: ['Prospección automática LinkedIn', 'Emails personalizados con IA', 'Seguimiento predictivo'] },
-              { p: 'm', ruta: '/servicios-ia/marketing', Icono: TrendingUp, titulo: 'IA PARA MARKETING', texto: 'Campañas que se optimizan solas. Contenido generado por IA. Resultados exponenciales.', puntos: ['Optimización automática de ads', 'Contenido generado por IA', 'Análisis predictivo de tendencias'] },
-              { p: 'e', ruta: '/servicios-ia/ecommerce', Icono: ShoppingCart, titulo: 'IA PARA E-COMMERCE', texto: 'Convierte más visitas en ventas. Recomendaciones inteligentes y checkout optimizado.', puntos: ['Recomendaciones personalizadas', 'Recuperación carritos abandonados', 'Optimización de precios dinámica'] },
+              { p: 'w', ruta: '/servicios-ia/whatsapp', Icono: MessageCircle, titulo: 'IA PARA WHATSAPP', texto: 'Un agente que contesta en segundos, pregunta lo que preguntaría tu equipo y pasa la conversación cuando hay intención real de compra.', puntos: ['Contesta también fuera de horario', 'Separa a quien pregunta de quien quiere comprar', 'Cada conversación queda en tu tablero'] },
+              { p: 'v', ruta: '/servicios-ia/ventas', Icono: Target, titulo: 'IA DE VENTAS', texto: 'Prospección y seguimiento con criterio: la IA prepara la lista y el contexto, tu equipo entra a cerrar y no a buscar.', puntos: ['Prospección en LinkedIn con criterio, no en frío', 'Mensajes escritos con el contexto de cada cuenta', 'Seguimiento que no se le olvida a nadie'] },
+              { p: 'm', ruta: '/servicios-ia/marketing', Icono: TrendingUp, titulo: 'IA PARA MARKETING', texto: 'Campañas que se corrigen con lo que dicen los datos y contenido producido a ritmo, sin perder el tono de tu marca.', puntos: ['El presupuesto se mueve a lo que sí convierte', 'Contenido a ritmo, con tu tono', 'Aviso cuando algo se sale de lo normal'] },
+              { p: 'e', ruta: '/servicios-ia/ecommerce', Icono: ShoppingCart, titulo: 'IA PARA E-COMMERCE', texto: 'Convertir mejor lo que ya llega a tu tienda: recomendaciones que sí aplican y carritos que no se pierden.', puntos: ['Recomendaciones según lo que cada quien ve', 'Recuperación de carritos abandonados', 'Precios que responden a la demanda'] },
             ].map(({ p, ruta, Icono, titulo, texto, puntos }, idx) => (
               <motion.div
                 key={p}
@@ -722,7 +722,7 @@ export default function HomePage() {
                     </div>
                     {p === 'w' && (
                       <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-xs font-bold text-emerald-400">
-                        {tTarIA('etiqueta_top', 'BESTSELLER')}
+                        {tTarIA('etiqueta_top', 'EL MÁS PEDIDO')}
                       </span>
                     )}
                   </div>
@@ -800,10 +800,10 @@ export default function HomePage() {
           <div className="mb-8 text-center md:mb-10">
             <Kicker centrado>{tCasos('etiqueta', 'PORTAFOLIO')}</Kicker>
             <h2 className="heading mb-4 text-2xl md:text-4xl">
-              {tCasos('titulo', 'CASOS DE ÉXITO')}
+              {tCasos('titulo', 'MARCAS QUE YA CONFÍAN')}
             </h2>
             <p className="mx-auto max-w-2xl text-[14.5px] leading-relaxed text-white/70 md:text-base">
-              {tCasos('bajada', 'Marcas que confían en INÉDITO DIGITAL')}
+              {tCasos('bajada', 'Trabajamos con empresas de Aguascalientes y de todo México. Por respeto a lo que cada una nos comparte, los resultados se cuentan en números y no en nombres.')}
             </p>
           </div>
 
@@ -874,7 +874,7 @@ export default function HomePage() {
               to="/portafolio"
               className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-6 py-3 text-white transition-all hover:border-[#AA66FF]/50 hover:bg-white/10 md:px-8 md:py-3.5"
             >
-              <span className="heading text-sm tracking-[0.08em] md:text-base">{tCasos('boton', 'VER MÁS CASOS')}</span>
+              <span className="heading text-sm tracking-[0.08em] md:text-base">{tCasos('boton', 'VER EL PORTAFOLIO')}</span>
             </Link>
           </div>
         </div>
