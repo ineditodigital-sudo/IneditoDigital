@@ -10,7 +10,7 @@ try { $pdo=db_connect($cfg);
 } catch (Throwable $e) {}
 $n=$ss['businessName']??'Inédito Digital';
 echo "# $n\n\n";
-echo "> Agencia de marketing digital en Aguascalientes, México. Ayudamos a las empresas a crecer con diseño y desarrollo web, branding, SEO, publicidad (Google Ads), embudos de venta, e-commerce, WhatsApp y soluciones de inteligencia artificial (chatbots y agentes).\n\n";
+echo "> Agencia de marketing digital y de inteligencia artificial en Aguascalientes, México. Trabajamos como dirección comercial asistida por IA: la dirección define los objetivos, todo lo que la empresa hace en digital queda conectado en un solo tablero, y una IA audita cada mes si la estrategia está funcionando. Servicios: auditoría con IA, tablero de resultados, posicionamiento en IA (GEO), SEO, Google Ads, ChatGPT Ads, LinkedIn de empresa, estrategia de canales de venta, diseño y desarrollo web, branding, chatbots y agentes.\n\n";
 echo "Contacto: WhatsApp ".($ss['whatsappNumber']??'')." · ".($ss['businessEmail']??'')." · ".($ss['businessCity']??'').", ".($ss['businessState']??'')." · ".$BASE."\n\n";
 echo "Versión completa para agentes: $BASE/llms-full.txt\n\n";
 /* ------------------------------------------------------------------ *
@@ -27,26 +27,26 @@ echo "Versión completa para agentes: $BASE/llms-full.txt\n\n";
 echo <<<'TXT'
 ## Qué es Inédito Digital
 
-Inédito Digital es una agencia de marketing digital en Aguascalientes, México, que trabaja como dirección comercial asistida por IA: la dirección del cliente define los objetivos, todo queda conectado (Google Search Console, Google Analytics, campañas y, donde aplica, el ERP del cliente), Claude audita periódicamente los resultados contra esos objetivos y se ajusta la estrategia.
+Inédito Digital es una agencia de marketing digital en Aguascalientes, México, que trabaja como dirección comercial asistida por IA: la dirección del cliente define los objetivos, todo queda conectado —búsquedas, tráfico, campañas y, donde aplica, la facturación—, una IA audita periódicamente los resultados contra esos objetivos y se ajusta la estrategia.
 
 No vende marketing digital genérico. Vende presencia digital medible y auditada por IA. Tres promesas sostienen el trabajo:
 
 1. Formalidad y confianza. Cuando alguien busca al cliente, encuentra una empresa seria, con soporte y presencia cuidada.
-2. Visibilidad completa. No solo Google: también los motores de IA (ChatGPT, Claude, Gemini) que cada vez más recomiendan proveedores.
-3. Medición hasta la venta. Dashboards conectados a datos reales y, cuando el cliente tiene ERP, cruce directo entre campañas y ventas cerradas.
+2. Visibilidad completa. No solo Google: también los motores de IA (ChatGPT, Claude, Gemini, Perplexity) que cada vez más recomiendan proveedores.
+3. Medición hasta la venta. Tableros conectados a datos reales y, cuando el cliente tiene ERP, cruce directo entre campañas y ventas cerradas.
 
 ## Los tres niveles de servicio
 
 El servicio se adapta al grado de posicionamiento de cada cliente.
 
-- Nivel 1 · Construir (presencia desde cero). Para empresas que no tienen nada de presencia digital. Incluye web que pasa PageSpeed con SEO, AEO y GEO desde el día uno, ficha de Google, LinkedIn armado y dashboard base con Search Console y Analytics. Promesa: cuando te busquen, existes y te ves formal.
-- Nivel 2 · Mejorar (presencia que compite). Para empresas que ya tienen web y redes pero mal trabajadas. La puerta de entrada es la auditoría inicial con Claude: diagnóstico de PageSpeed, SEO, AEO, GEO, ficha de Google, LinkedIn y visibilidad ante la IA. Del diagnóstico sale el plan de mejora. Promesa: te decimos exactamente qué está mal y lo arreglamos.
-- Nivel 3 · Vender (presencia que convierte). Para empresas que ya tienen todo y quieren resultados. Incluye estrategia de canales, campañas en Google Ads, ChatGPT Ads y Meta con dashboard unificado, y revisión de desempeño contra los objetivos de dirección. Promesa: cada peso invertido se mide contra ventas reales.
+- Nivel 1 · Construir (presencia desde cero). Para empresas que no tienen nada de presencia digital. Incluye web que pasa las mediciones de Google con SEO, AEO y GEO desde el día uno, ficha de Google, LinkedIn armado y el tablero base conectado a sus datos reales. Promesa: cuando te busquen, existes y te ves formal.
+- Nivel 2 · Mejorar (presencia que compite). Para empresas que ya tienen web y redes pero mal trabajadas. La puerta de entrada es la auditoría inicial con IA: diagnóstico de velocidad, SEO, AEO, GEO, ficha de Google, LinkedIn y visibilidad ante los asistentes. Del diagnóstico sale el plan de mejora. Promesa: te decimos exactamente qué está mal y lo arreglamos.
+- Nivel 3 · Vender (presencia que convierte). Para empresas que ya tienen todo y quieren resultados. Incluye estrategia de canales, campañas en Google Ads, ChatGPT Ads y Meta con tablero unificado, y auditoría de desempeño contra los objetivos de dirección. Promesa: cada peso invertido se mide contra ventas reales.
 
 ## Componentes del servicio
 
-- Página web de alto desempeño: pasa las mediciones de PageSpeed de Google y está optimizada para SEO, AEO y GEO.
-- Dashboard a la medida: conectado a Google Search Console, a Google Analytics y a la medición de recomendación por IA, para saber si los asistentes conocen y recomiendan a la empresa.
+- Página web de alto desempeño: pasa las mediciones de velocidad de Google y está optimizada para SEO, AEO y GEO.
+- Tablero a la medida: conectado a las búsquedas, el tráfico, las campañas y la medición de recomendación por IA, para saber si los asistentes conocen y recomiendan a la empresa.
 - Ficha de Google (Google Business Profile): optimizada y activa. Es de los activos más importantes y más descuidados.
 - LinkedIn de empresa: trabajado con constancia, no abandonado.
 - Google Ads: estrategia y campañas.
