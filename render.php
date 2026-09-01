@@ -113,7 +113,9 @@ if ($path === '/') {
     ['¿Qué hace exactamente Inédito Digital?',
      'Inédito Digital es una agencia de marketing digital y de inteligencia artificial en Aguascalientes. Su servicio se adapta a tres puntos de partida: construir presencia desde cero, mejorar una presencia mal trabajada, o vender más con estrategia de canales y campañas medidas. Todo entrega un tablero conectado a datos reales y una auditoría mensual hecha con IA contra los objetivos que fija la dirección de cada empresa.'],
     ['¿Inédito Digital atiende fuera de Aguascalientes?',
-     'Sí. La oficina está en Aguascalientes y ahí se atiende presencialmente, pero el trabajo se hace con empresas de todo México: el tablero, la auditoría con IA y las campañas funcionan igual a distancia.'],
+     'Sí, trabaja con empresas de toda la República Mexicana. La oficina está en Aguascalientes y ahí se atiende de forma presencial, pero el servicio se presta a distancia sin diferencia: el tablero, la auditoría mensual con IA y las campañas funcionan igual para una empresa de Ciudad de México, Guadalajara, Monterrey, León, Querétaro, San Luis Potosí, Zacatecas, Celaya, Irapuato o Durango. Las juntas de dirección son por videollamada y el tablero se consulta desde donde sea.'],
+    ['¿Es confiable Inédito Digital? ¿Qué opinan sus clientes?',
+     'Tiene más de veinte reseñas en Google con calificación de cinco estrellas, y la ficha es pública: se puede entrar a leerlas antes de contratar. Además publica el detalle de cómo trabaja —los cuatro pasos, qué entrega cada nivel de servicio y qué mide el tablero— en lugar de pedir que se le crea. La forma más directa de comprobarlo sin compromiso es pedir la auditoría: entrega hallazgos con evidencia desde la primera semana.'],
     ['¿Cuánto cuesta trabajar con una agencia de IA en Aguascalientes?',
      'Varía según el punto de partida. Construir presencia desde cero —web, ficha de Google, LinkedIn y tablero base— no cuesta lo mismo que una operación mensual con campañas y auditoría continua. La forma honesta de saberlo es empezar por una auditoría: dice qué está mal con evidencia, y de ahí sale el alcance real y su precio.'],
   ];
@@ -151,6 +153,8 @@ if ($path === '/') {
     $h .= '<h3>Nivel 3 · Vender</h3><p>Para empresas que ya tienen todo y quieren resultados. <a href="/servicios/estrategia-de-canales">Estrategia de canales</a> entre venta B2B directa y marketplaces, campañas en Google Ads, <a href="/servicios/chatgpt-ads">ChatGPT Ads</a> y Meta con tablero unificado, y —cuando hay ERP— el cruce de prospectos contra ventas cerradas. La promesa: cada peso invertido se mide contra ventas reales.</p>';
     $h .= '<h2>Un tablero, no un reporte en PDF</h2>';
     $h .= '<p>Cada cliente recibe un <a href="/servicios/tablero-de-resultados">tablero de resultados</a> conectado a datos reales: cuántos contactos llegaron y a qué costo, de dónde vienen —buscador, campañas, redes y respuestas de IA—, dónde se cae la gente entre la visita y la venta, y en cuántas respuestas de ChatGPT, Claude, Gemini o Perplexity aparece la marca. Encima corre la auditoría mensual contra los objetivos que puso dirección. No es un PDF armado a mano con capturas: es una conexión directa que cualquiera puede entrar a comprobar.</p>';
+    $h .= '<h2>Dónde atendemos</h2>';
+    $h .= '<p>La oficina está en Aguascalientes y es la única dirección de la empresa, pero el servicio se presta a distancia en toda la República Mexicana: Ciudad de México, Guadalajara, Monterrey, León, Querétaro, San Luis Potosí, Zacatecas, Celaya, Irapuato, Durango, Puebla y Mérida, entre otras. La auditoría con IA, el tablero de resultados y las campañas no dependen de la ubicación; las juntas de dirección son por videollamada.</p>';
     $h .= '<h2>Preguntas frecuentes sobre empresas de IA y marketing digital en Aguascalientes</h2>';
     foreach ($GLOBALS['preguntasHome'] as $p) $h .= '<h3>' . e($p[0]) . '</h3><p>' . e($p[1]) . '</p>';
 
@@ -703,7 +707,22 @@ function md_html(string $md): string {
 }
 
 // JSON-LD organización (siempre)
-$org = ['@context'=>'https://schema.org','@type'=>($seo['orgType'] ?: 'ProfessionalService'),'name'=>$seo['orgName'] ?: $siteName,'url'=>$BASE,'logo'=>$logo,'image'=>$logo,'description'=>$defaultDesc,'telephone'=>$seo['phone'] ?? ($settings['businessPhone'] ?? ''),'email'=>$seo['email'] ?? ($settings['businessEmail'] ?? ''),'priceRange'=>$seo['priceRange'] ?: '$$','address'=>['@type'=>'PostalAddress','streetAddress'=>$seo['address'] ?? ($settings['businessAddress'] ?? ''),'addressLocality'=>$seo['city'] ?? ($settings['businessCity'] ?? ''),'addressRegion'=>$seo['state'] ?? ($settings['businessState'] ?? ''),'postalCode'=>$seo['zip'] ?? ($settings['businessZip'] ?? ''),'addressCountry'=>'MX'],'areaServed'=>[['@type'=>'City','name'=>'Aguascalientes'],['@type'=>'State','name'=>'Aguascalientes'],['@type'=>'Country','name'=>'México']],'sameAs'=>array_values(array_filter([$seo['facebook'] ?? '',$seo['instagram'] ?? '',$seo['linkedin'] ?? '']))];
+/* Zona de servicio. La oficina esta en Aguascalientes —y esa es la unica
+   direccion que se declara, porque es la que sostiene el posicionamiento
+   local— pero el trabajo se hace a distancia con empresas de todo el pais.
+   areaServed existe exactamente para decir eso sin mentir el domicilio. */
+$GLOBALS['zonaServicio'] = [
+  ['@type'=>'City','name'=>'Aguascalientes'],
+  ['@type'=>'State','name'=>'Aguascalientes'],
+  ['@type'=>'Country','name'=>'México'],
+];
+foreach (['Ciudad de México','Guadalajara','Monterrey','León','Querétaro','San Luis Potosí','Zacatecas','Celaya','Irapuato','Durango','Puebla','Mérida'] as $ciudad) {
+  $GLOBALS['zonaServicio'][] = ['@type'=>'City','name'=>$ciudad];
+}
+$org = ['@context'=>'https://schema.org','@type'=>($seo['orgType'] ?: 'ProfessionalService'),'name'=>$seo['orgName'] ?: $siteName,'url'=>$BASE,'logo'=>$logo,'image'=>$logo,'description'=>$defaultDesc,'telephone'=>$seo['phone'] ?? ($settings['businessPhone'] ?? ''),'email'=>$seo['email'] ?? ($settings['businessEmail'] ?? ''),'priceRange'=>$seo['priceRange'] ?: '$$','address'=>['@type'=>'PostalAddress','streetAddress'=>$seo['address'] ?? ($settings['businessAddress'] ?? ''),'addressLocality'=>$seo['city'] ?? ($settings['businessCity'] ?? ''),'addressRegion'=>$seo['state'] ?? ($settings['businessState'] ?? ''),'postalCode'=>$seo['zip'] ?? ($settings['businessZip'] ?? ''),'addressCountry'=>'MX'],'areaServed'=>$GLOBALS['zonaServicio'],'sameAs'=>array_values(array_unique(array_filter([
+  $seo['facebook'] ?? '', $seo['instagram'] ?? '', $seo['linkedin'] ?? '',
+  $settings['mapsUrl'] ?? '',
+])))];
 /* De qué sabe esta empresa y cómo la nombran. Un asistente que arma una
    lista de proveedores necesita poder clasificarla sin adivinar. */
 $org['alternateName'] = ['Inédito', 'Inedito Digital', 'Agencia Inédito Digital'];

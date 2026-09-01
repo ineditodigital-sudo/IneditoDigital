@@ -151,10 +151,16 @@ export default function HomePage() {
       opens: '09:00',
       closes: '18:00'
     },
+    /* Solo perfiles comprobados: un sameAs que lleva a un 404 le dice a un
+       buscador que no sabemos quiénes somos. El resto se declara desde el
+       panel (SEO → Redes sociales) en cuanto se confirmen las direcciones. */
     sameAs: [
-      'https://www.facebook.com/ineditodigital',
-      'https://www.instagram.com/ineditodigital',
-      'https://www.linkedin.com/company/ineditodigital'
+      'https://www.facebook.com/ineditoagenciadigital',
+      'https://maps.app.goo.gl/BTCS2Ma71gFEfixW7'
+    ],
+    areaServed: [
+      { '@type': 'State', name: 'Aguascalientes' },
+      { '@type': 'Country', name: 'México' }
     ]
   };
 
