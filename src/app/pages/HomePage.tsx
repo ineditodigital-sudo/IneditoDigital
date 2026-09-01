@@ -156,6 +156,8 @@ export default function HomePage() {
        panel (SEO → Redes sociales) en cuanto se confirmen las direcciones. */
     sameAs: [
       'https://www.facebook.com/ineditoagenciadigital',
+      'https://www.instagram.com/ineditodigital/',
+      'https://www.linkedin.com/company/inedito-digital/',
       'https://maps.app.goo.gl/BTCS2Ma71gFEfixW7'
     ],
     areaServed: [
