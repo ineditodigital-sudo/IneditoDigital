@@ -155,6 +155,7 @@ if ($path === '/') {
     $h .= '<p>Cada cliente recibe un <a href="/servicios/tablero-de-resultados">tablero de resultados</a> conectado a datos reales: cuántos contactos llegaron y a qué costo, de dónde vienen —buscador, campañas, redes y respuestas de IA—, dónde se cae la gente entre la visita y la venta, y en cuántas respuestas de ChatGPT, Claude, Gemini o Perplexity aparece la marca. Encima corre la auditoría mensual contra los objetivos que puso dirección. No es un PDF armado a mano con capturas: es una conexión directa que cualquiera puede entrar a comprobar.</p>';
     $h .= '<h2>Dónde atendemos</h2>';
     $h .= '<p>La oficina está en Aguascalientes y es la única dirección de la empresa, pero el servicio se presta a distancia en toda la República Mexicana: Ciudad de México, Guadalajara, Monterrey, León, Querétaro, San Luis Potosí, Zacatecas, Celaya, Irapuato, Durango, Puebla y Mérida, entre otras. La auditoría con IA, el tablero de resultados y las campañas no dependen de la ubicación; las juntas de dirección son por videollamada.</p>';
+    $h .= '<p>Zonas con página propia: <a href="/servicios/marketing-digital-en-celaya">marketing digital en Celaya</a>, <a href="/servicios/marketing-digital-en-guanajuato">Guanajuato y el Bajío</a> y <a href="/servicios/marketing-digital-en-durango">Durango</a>.</p>';
     $h .= '<h2>Preguntas frecuentes sobre empresas de IA y marketing digital en Aguascalientes</h2>';
     foreach ($GLOBALS['preguntasHome'] as $p) $h .= '<h3>' . e($p[0]) . '</h3><p>' . e($p[1]) . '</p>';
 
@@ -797,7 +798,7 @@ if ($propio): ?>
 <?php else: ?>
 <link rel="preload" href="/fonts/Hanson-Bold.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="icon" href="/favicon.ico" sizes="any" />
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <?php endif; ?>

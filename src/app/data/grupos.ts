@@ -19,7 +19,13 @@ const DEFINICION: { titulo: string; cats: string[] }[] = [
   { titulo: 'Diseño y desarrollo', cats: ['Diseño', 'Desarrollo', 'Innovación', 'IA', 'Eventos'] },
 ];
 
-export function agruparServicios(servicios: Service[]): Grupo[] {
+/* Las landings de ciudad (categoria Cobertura) NO van al menu ni al catalogo:
+   existen para quien las busca por su ciudad, y se alcanzan desde el bloque
+   de cobertura del inicio. Meterlas al menu solo lo alargaria. */
+export const esCobertura = (s: Service) => s.category === 'Cobertura';
+
+export function agruparServicios(todos: Service[]): Grupo[] {
+  const servicios = todos.filter((s) => !esCobertura(s));
   const grupos: Grupo[] = DEFINICION.map((g) => ({
     ...g,
     items: servicios
