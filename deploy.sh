@@ -26,7 +26,8 @@ fput() { $CURL -u "$FTP_USER:$FTP_PASS" -T "$1" "$BASE/$2"; }
 # Tamano del archivo tal como esta alla. Sirve para distinguir un fallo de
 # verdad de un 451: el host acepta el archivo entero y despues corta la sesion
 # con error en su propia comprobacion. Si los bytes coinciden, subio bien.
-fsize() { $CURL -u "$FTP_USER:$FTP_PASS" -I "$BASE/$1" 2>/dev/null | tr -d '' | awk -F': ' '/^Content-Length/{print $2}'; }
+fsize() { $CURL -u "$FTP_USER:$FTP_PASS" -I "$BASE/$1" 2>/dev/null | tr -d '
+' | awk -F': ' '/^Content-Length/{print $2}'; }
 subir() {
   fput "$1" "$2" >/dev/null 2>&1 && return 0
   fput "$1" "$2" >/dev/null 2>&1 && return 0
@@ -95,18 +96,20 @@ for f in render.php sitemap.php llms.php llms-full.php; do
   fput "$f" "public_html/$f" >/dev/null 2>&1 && ok "$f"
 done
 fput api/.htaccess       public_html/api/.htaccess        >/dev/null 2>&1 && ok "api/.htaccess"
-fput api/hit.php         public_html/api/hit.php          >/dev/null 2>&1 && ok "api/hit.php"
-fput api/evento.php      public_html/api/evento.php       >/dev/null 2>&1 && ok "api/evento.php"
 fput tarjeta.php         public_html/tarjeta.php          >/dev/null 2>&1 && ok "tarjeta.php"
-# El panel entero, en bucle: cualquier modulo nuevo o tocado sube solo.
-# setup.php y api/config.php quedan fuera a proposito.
-for f in panel/bootstrap.php panel/index.php panel/login.php panel/logout.php \
-         panel/gsc_paso.php panel/google_connect.php panel/google_callback.php \
-         panel/inc/*.php panel/pages/*.php panel/cron/*.php; do
+
+# La api y el panel enteros, en bucle. Esto es a proposito un globo y no una
+# lista escrita a mano: dos veces un archivo nuevo se quedo sin subir porque
+# nadie recordo anotarlo aqui, y el sintoma (una pantalla que no existe en
+# produccion) no se parece en nada a la causa. Lo que NO debe viajar se
+# excluye por nombre abajo, que es una decision que si conviene ser explicita.
+NO_SUBIR="api/config.php api/config.example.php api/schema.sql panel/setup.php"
+for f in api/*.php panel/*.php panel/inc/*.php panel/pages/*.php panel/cron/*.php; do
   [ -f "$f" ] || continue
+  case " $NO_SUBIR " in *" $f "*) continue ;; esac
   fput "$f" "public_html/$f" >/dev/null 2>&1 && ok "$f"
 done
-echo "  (api/config.php y panel/setup.php NO se suben, a proposito)"
+echo "  (no se suben, a proposito: $NO_SUBIR)"
 
 # ---------- 5. .htaccess ----------
 step "5/6  Subiendo .htaccess (con reversion automatica)"

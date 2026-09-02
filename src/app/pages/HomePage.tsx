@@ -11,6 +11,24 @@ import { contenido } from '../cms';
 
 const ProcesoCiclo = lazy(() => import('../components/ProcesoCiclo'));
 
+type Cliente = { nombre: string; logo: string; url?: string };
+
+/**
+ * Los logos del carrusel. Se administran en el panel (Clientes) y render.php
+ * los deja en localStorage; si esa lista todavia no existe, se usan los logos
+ * del portafolio como respaldo para que la cinta nunca quede vacia.
+ */
+function leerClientes(): Cliente[] {
+  try {
+    const crudo = localStorage.getItem('inedito_clientes');
+    if (!crudo) return [];
+    const lista = JSON.parse(crudo);
+    return Array.isArray(lista) ? lista.filter((c) => c && c.logo) : [];
+  } catch {
+    return [];
+  }
+}
+
 /* Los adornos que la portada repite en varias secciones, en un solo lugar. */
 
 /** La retícula de puntos con su máscara radial. */
@@ -78,6 +96,9 @@ export default function HomePage() {
   const { services, portfolioItems, blogPosts, settings, openAssistant } = useApp();
   /* Lo que la persona escribe en el buscador que conversa. */
   const [busqueda, setBusqueda] = useState('');
+  /* Los logos del carrusel llegan del panel; el portafolio es el respaldo. */
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  useEffect(() => { setClientes(leerClientes()); }, []);
   /* Textos editables desde el panel. El segundo argumento de cada llamada es
      lo que hay hoy: si el campo se vacía, se usa eso y la página no se rompe. */
   const tTrans  = contenido('home', 'transformacion');
@@ -120,6 +141,10 @@ export default function HomePage() {
     const ib = DESTACADOS.indexOf(b.slug);
     return (ia === -1 ? DESTACADOS.length : ia) - (ib === -1 ? DESTACADOS.length : ib);
   });
+
+  const logos: Cliente[] = clientes.length
+    ? clientes
+    : portfolioItems.filter((i) => i.logo).map((i) => ({ nombre: i.client, logo: i.logo as string }));
 
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent('Hola, quiero información sobre sus servicios de marketing digital')}`;
 
@@ -862,11 +887,11 @@ export default function HomePage() {
             >
               {[0, 1].map((vuelta) => (
                 <div key={vuelta} aria-hidden={vuelta === 1} className="flex items-center">
-                  {portfolioItems.filter((item) => item.logo).map((item) => (
+                  {logos.map((item, i) => (
                     <img
-                      key={`${vuelta}-${item.id}`}
+                      key={`${vuelta}-${i}-${item.logo}`}
                       src={item.logo}
-                      alt={vuelta === 0 ? `${item.client} logo` : ''}
+                      alt={vuelta === 0 ? `${item.nombre} logo` : ''}
                       loading="lazy"
                       decoding="async"
                       className="mx-8 h-10 w-auto max-w-[150px] object-contain opacity-55 brightness-0 invert transition-opacity duration-300 hover:opacity-100 md:mx-10 md:h-12"

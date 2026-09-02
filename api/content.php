@@ -87,6 +87,15 @@ $settings = [
 $seo_global = ['siteName'=>$seo['siteName']??'','author'=>$seo['author']??'','defaultImage'=>$seo['defaultImage']??'','twitterHandle'=>$seo['twitterHandle']??'','googleAnalytics'=>$seo['googleAnalytics']??'','facebookPixel'=>$seo['facebookPixel']??'','googleSiteVerification'=>$seo['googleSiteVerification']??'','bingVerification'=>$seo['bingVerification']??''];
 $seo_schema = ['organizationName'=>$seo['orgName']??'','organizationType'=>$seo['orgType']??'ProfessionalService','phone'=>$seo['phone']??'','email'=>$seo['email']??'','priceRange'=>$seo['priceRange']??'$$','address'=>$seo['address']??'','city'=>$seo['city']??'','state'=>$seo['state']??'','zip'=>$seo['zip']??'','latitude'=>$seo['latitude']??'','longitude'=>$seo['longitude']??'','socialMedia'=>['facebook'=>$seo['facebook']??'','instagram'=>$seo['instagram']??'','linkedin'=>$seo['linkedin']??'']];
 
-$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema','paginas','paginas_nuevas');
+/* Los logos del carrusel viven aparte del portafolio: un logo es prueba
+   social, no un caso con pagina propia. */
+$clientes = [];
+try {
+    foreach ($pdo->query("SELECT nombre, logo, url FROM clientes WHERE visible=1 ORDER BY orden ASC, id ASC") as $r) {
+        $clientes[] = ['nombre' => $r['nombre'], 'logo' => $r['logo'], 'url' => $r['url']];
+    }
+} catch (Throwable $e) { /* si la tabla aun no existe, el carrusel usa el portafolio */ }
+
+$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema','paginas','paginas_nuevas','clientes');
 $sig = md5(json_encode($payload));
 echo json_encode(['ok'=>true,'sig'=>$sig] + $payload);

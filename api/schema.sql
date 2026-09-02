@@ -253,3 +253,21 @@ CREATE TABLE IF NOT EXISTS `media` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- Tabla: clientes
+-- ------------------------------------------------------------
+-- Los logos del carrusel de la portada. Vive aparte de `portfolio` a
+-- proposito: un logo es prueba social, no un caso con pagina propia.
+-- Mezclarlos obligaba a inventar una ficha de portafolio por cada logo,
+-- y esas fichas se indexaban vacias. Se administra en Panel -> Clientes.
+CREATE TABLE IF NOT EXISTS `clientes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(120) NOT NULL,
+  `logo` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `orden` int(11) NOT NULL DEFAULT 0,
+  `visible` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -38,6 +38,12 @@ try {
     $paginasPorRuta[$r['ruta']] = $r['slug'];
   }
   foreach ($pdo->query("SELECT * FROM portfolio WHERE status='published' ORDER BY id ASC") as $r) { $o=jval($r); $o['slug']=$r['slug']?:($o['slug']??''); $o['title']=$r['title']?:($o['title']??''); if($r['short_desc'])$o['description']=$r['short_desc']; if($r['image'])$o['image']=$r['image']; if($r['client'])$o['client']=$r['client']; if($r['category'])$o['category']=$r['category']; $portfolio[]=$o; }
+  /* Los logos del carrusel: viven aparte del portafolio porque un logo es
+     prueba social, no un caso con pagina propia. */
+  $clientes = [];
+  try {
+    foreach ($pdo->query("SELECT nombre, logo, url FROM clientes WHERE visible=1 ORDER BY orden ASC, id ASC") as $r) $clientes[] = $r;
+  } catch (Throwable $e) { /* sin tabla todavia: el carrusel usa el portafolio */ }
 } catch (Throwable $ex) { /* si falla la BD, servimos el SPA base */ }
 
 /* GEO medible: cada lectura de un bot de IA queda contada por día, bot y URL.
@@ -849,7 +855,7 @@ if ($propio): ?>
       : $pg['contenido'];
     $miembrosLS[$sl] = ['slug' => $sl, 'nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'datos' => $datos];
   }
-  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas,'inedito_miembros'=>$miembrosLS];
+  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas,'inedito_miembros'=>$miembrosLS,'inedito_clientes'=>$clientes];
 ?>
 <script>try{
 <?php foreach($LS as $k=>$v): ?>localStorage.setItem(<?= json_encode($k) ?>, <?= json_encode(json_encode($v, JSON_UNESCAPED_UNICODE), $FL) ?>);
