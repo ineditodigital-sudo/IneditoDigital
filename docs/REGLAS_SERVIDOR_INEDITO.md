@@ -90,4 +90,30 @@ donde nadie lo lee: es pedirle trabajo a alguien para nada.
 memoria, no toca producción) verifica justo eso: que los tres formularios se
 pintan y que al guardar las dos copias dicen lo mismo.
 
+## Los dos crones
+
+Se instalan a mano en cPanel (Cron Jobs). Ninguno de los dos hace daño si se
+corre de más: ambos preguntan primero si toca.
+
+```
+# todos los días, de madrugada: la foto de Search Console
+/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/gsc_sync.php
+
+# todos los días: levanta el reporte quincenal cuando ya pasaron 15 días
+/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/reporte_quincenal.php
+```
+
+El de Search Console **es el que hace comparable el reporte**: sin una foto
+diaria, la quincena se apoya en dos o tres puntos y no se puede decir
+«mejoró» con una fecha detrás.
+
+El del reporte tiene red: si el cron no está puesto, abrir el panel también
+lo levanta cuando ya toca (`panel/index.php`). Reunir los datos son ocho
+consultas; el PDF, que sí cuesta, se arma solo cuando alguien lo pide.
+
+Los dos viven dentro de `public_html`, así que por web son URLs abiertas.
+Por eso **exigen sesión cuando no vienen de la línea de comandos** — sin esa
+guarda cualquiera podría leer las métricas del sitio y hacer trabajar al
+servidor pidiéndolas en bucle.
+
 _Última actualización: 2026-09-02_

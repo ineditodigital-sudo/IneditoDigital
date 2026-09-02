@@ -111,6 +111,15 @@ for f in api/*.php panel/*.php panel/inc/*.php panel/pages/*.php panel/cron/*.ph
 done
 echo "  (no se suben, a proposito: $NO_SUBIR)"
 
+# La tipografia del reporte en PDF. El bucle de arriba solo sube .php, y sin
+# este archivo el PDF sale sin un solo titulo (falla a proposito, no en
+# silencio: ver panel/inc/reporte_pdf.php).
+$CURL -u "$FTP_USER:$FTP_PASS" "$BASE/" -Q "MKD /public_html/panel/inc/reporte" >/dev/null 2>&1 || true
+for f in panel/inc/reporte/*; do
+  [ -f "$f" ] || continue
+  fput "$f" "public_html/$f" >/dev/null 2>&1 && ok "$f" || bad "$f"
+done
+
 # ---------- 5. .htaccess ----------
 step "5/6  Subiendo .htaccess (con reversion automatica)"
 fput .htaccess public_html/.htaccess >/dev/null 2>&1

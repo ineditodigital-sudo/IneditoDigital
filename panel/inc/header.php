@@ -64,6 +64,7 @@ $nav = [
   'dashboard'  => ['Dashboard', 'M3 13h8V3H3zM3 21h8v-6H3zM13 21h8V11h-8zM13 3v6h8V3z'],
   'leads'      => ['Leads', 'M17 20v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 10a4 4 0 100-8 4 4 0 000 8'],
   'analiticas' => ['Analíticas', 'M3 3v18h18M18 17V9M13 17V5M8 17v-3'],
+  'reportes'   => ['Reportes', 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M9 13h6M9 17h6'],
   'contenido'  => ['Contenido', 'M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5'],
   'clientes'   => ['Clientes', 'M12 15a7 7 0 100-14 7 7 0 000 14zM8.2 13.9L7 22l5-3 5 3-1.2-8.1'],
   'seo'        => ['SEO', 'M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.3-4.3'],

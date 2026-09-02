@@ -271,3 +271,22 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- Tabla: reportes
+-- ------------------------------------------------------------
+-- La foto quincenal de todo lo medible, congelada. Se guarda el JSON
+-- entero y no unas columnas de resumen a proposito: Search Console
+-- reescribe los ultimos dias y las visitas se acumulan, asi que un
+-- reporte recalculado en vivo cambiaria cada vez que se abre y dejaria de
+-- servir para comparar. El PDF se arma al pedirlo desde esta foto.
+-- Ver panel/inc/reporte.php.
+CREATE TABLE IF NOT EXISTS `reportes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `desde` date NOT NULL,
+  `hasta` date NOT NULL,
+  `datos` mediumtext NOT NULL,
+  `creado_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_periodo` (`desde`,`hasta`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
