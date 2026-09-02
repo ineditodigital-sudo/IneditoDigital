@@ -66,3 +66,7 @@ deploy.env
 
 # Bundles temporales de las pruebas del asistente
 src/app/components/asistente/__pruebas__/.compilado/
+
+# Configuracion local de Claude Code: skills, agentes y ajustes
+# de cada maquina. No es codigo del sitio.
+.claude/
