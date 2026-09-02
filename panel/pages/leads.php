@@ -48,13 +48,14 @@ foreach ($STATUSES as $s) $counts[$s]=(int)db()->query("SELECT COUNT(*) c FROM l
 $ct = csrf();
 ?>
 <div class="topbar">
-  <div><h1 class="title">Leads</h1><p class="subt"><?= count($rows) ?> mostrados · <?= $counts['all'] ?> en total</p></div>
+  <div><div class="kicker">Ventas</div><h1 class="title">Leads</h1><p class="subt"><?= count($rows) ?> mostrados · <?= $counts['all'] ?> en total</p></div>
   <a class="btn" href="/panel/?p=leads&export=csv">Exportar CSV</a>
 </div>
 
+<?php $CEST = ['all'=>'#9a97ad','new'=>'#8ea6ff','contacted'=>'#ffcf7a','qualified'=>'#c3a0ff','converted'=>'#5fe0a0','lost'=>'#ff8fa6']; ?>
 <div style="margin-bottom:16px">
   <?php foreach (['all'=>'Todos']+$LB as $k=>$lab): ?>
-    <a class="chip <?= $f===$k?'active':'' ?>" href="/panel/?p=leads&f=<?= $k ?>"><?= e($lab) ?> (<?= $counts[$k]??0 ?>)</a>
+    <a class="chip <?= $f===$k?'active':'' ?>" href="/panel/?p=leads&f=<?= $k ?>"><span class="pt-est" style="background:<?= $CEST[$k] ?>"></span><?= e($lab) ?> (<?= $counts[$k]??0 ?>)</a>
   <?php endforeach; ?>
 </div>
 <form method="get" style="margin-bottom:20px;display:flex;gap:10px">
@@ -65,14 +66,21 @@ $ct = csrf();
 
 <?php if (!$rows): ?><div class="card"><p class="muted" style="text-align:center;padding:30px 0">No hay leads con este filtro.</p></div><?php endif; ?>
 
-<?php foreach ($rows as $l): $id=(int)$l['id']; ?>
+<?php foreach ($rows as $l): $id=(int)$l['id'];
+  $palabras = preg_split('/\s+/u', trim((string)$l['name'])) ?: [];
+  $ini = mb_strtoupper(mb_substr($palabras[0] ?? '?', 0, 1) . mb_substr($palabras[1] ?? '', 0, 1));
+  $ce = $CEST[$l['status']] ?? '#9a97ad';
+?>
 <div class="card">
   <div class="topbar" style="margin-bottom:10px">
-    <div style="flex:1;min-width:0">
-      <h3 style="margin:0 0 4px"><?= e($l['name']) ?></h3>
-      <div class="muted"><a href="mailto:<?= e($l['email']) ?>" style="color:#b58bff"><?= e($l['email']) ?></a> · <?= e($l['phone']) ?><?= $l['company']?' · '.e($l['company']):'' ?></div>
-      <?php if($l['message']): ?><div style="margin-top:10px;background:var(--card2);border-left:2px solid var(--pur);border-radius:6px;padding:12px 14px;font-size:14px;line-height:1.6;white-space:pre-wrap"><?= e($l['message']) ?></div><?php endif; ?>
-      <div class="mini" style="margin-top:8px"><?= e(date('d/m/Y H:i', strtotime((string)$l['created_at']))) ?> · <?= e($l['source']) ?></div>
+    <div style="display:flex;gap:14px;flex:1;min-width:0">
+      <span class="avatar" style="background:linear-gradient(140deg,<?= $ce ?>33,<?= $ce ?>cc);border:1px solid <?= $ce ?>55"><?= e($ini) ?></span>
+      <div style="flex:1;min-width:0">
+        <h3 style="margin:0 0 3px;font-size:15.5px"><?= e($l['name']) ?></h3>
+        <div class="muted" style="font-size:12.5px"><a href="mailto:<?= e($l['email']) ?>" style="color:#b58bff"><?= e($l['email']) ?></a> · <?= e($l['phone']) ?><?= $l['company']?' · '.e($l['company']):'' ?></div>
+        <?php if($l['message']): ?><div class="lead-msg"><?= e($l['message']) ?></div><?php endif; ?>
+        <div class="mini" style="margin-top:8px"><?= e(date('d/m/Y H:i', strtotime((string)$l['created_at']))) ?> · <?= e($l['source']) ?></div>
+      </div>
     </div>
     <span class="badge b-<?= e($l['status']) ?>"><?= e($LB[$l['status']]??$l['status']) ?></span>
   </div>

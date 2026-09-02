@@ -23,6 +23,15 @@ CURL="curl -sS --ssl-reqd --ftp-ssl-control -k --connect-timeout 20 --max-time 1
 SITE="https://www.inedito.digital"
 
 fput() { $CURL -u "$FTP_USER:$FTP_PASS" -T "$1" "$BASE/$2"; }
+# Tamano del archivo tal como esta alla. Sirve para distinguir un fallo de
+# verdad de un 451: el host acepta el archivo entero y despues corta la sesion
+# con error en su propia comprobacion. Si los bytes coinciden, subio bien.
+fsize() { $CURL -u "$FTP_USER:$FTP_PASS" -I "$BASE/$1" 2>/dev/null | tr -d '' | awk -F': ' '/^Content-Length/{print $2}'; }
+subir() {
+  fput "$1" "$2" >/dev/null 2>&1 && return 0
+  fput "$1" "$2" >/dev/null 2>&1 && return 0
+  [ "$(fsize "$2")" = "$(wc -c < "$1")" ]
+}
 fget() { $CURL -u "$FTP_USER:$FTP_PASS" "$BASE/$1" -o "$2"; }
 
 ok()   { printf "  \033[32mok\033[0m   %s\n" "$1"; }
@@ -45,7 +54,7 @@ echo "  -> $BK"
 step "2/6  Subiendo assets"
 n=0; err=0
 for f in dist/assets/*; do
-  fput "$f" "public_html/assets/$(basename "$f")" >/dev/null 2>&1 && n=$((n+1)) || { err=$((err+1)); bad "$(basename "$f")"; }
+  subir "$f" "public_html/assets/$(basename "$f")" && n=$((n+1)) || { err=$((err+1)); bad "$(basename "$f")"; }
 done
 echo "  $n subidos, $err fallos"
 [ "$err" -gt 0 ] && { bad "abortando: hay assets sin subir"; exit 1; }
@@ -63,18 +72,20 @@ for f in dist/*; do
   fput "$f" "public_html/$b" >/dev/null 2>&1 && ok "$b" || bad "$b"
 done
 
-# ---------- 3b. fuentes ----------
-# El bucle de arriba salta directorios, asi que dist/fonts/ se quedaba en tierra.
-# Es como Hanson estuvo dando 404 y los titulos salian en la fuente del sistema.
-if [ -d dist/fonts ]; then
-  step "3b/6 Subiendo fuentes"
-  $CURL -u "$FTP_USER:$FTP_PASS" "$BASE/" -Q "MKD /public_html/fonts" >/dev/null 2>&1 || true
-  for f in dist/fonts/*; do
+# ---------- 3b. carpetas de dist/ ----------
+# El bucle de arriba salta directorios. Asi es como dist/fonts/ se quedo en
+# tierra y Hanson dio 404 durante meses. Va generico a proposito: cualquier
+# carpeta nueva en public/ (fuentes, logos-ia, lo que venga) sube sola.
+step "3b/6 Subiendo carpetas de dist/"
+for d in dist/*/; do
+  b="$(basename "$d")"
+  [ "$b" = "assets" ] && continue          # ya subio en el paso 2
+  $CURL -u "$FTP_USER:$FTP_PASS" "$BASE/" -Q "MKD /public_html/$b" >/dev/null 2>&1 || true
+  for f in "$d"*; do
     [ -f "$f" ] || continue
-    b="$(basename "$f")"
-    fput "$f" "public_html/fonts/$b" >/dev/null 2>&1 && ok "fonts/$b" || bad "fonts/$b"
+    fput "$f" "public_html/$b/$(basename "$f")" >/dev/null 2>&1 && ok "$b/$(basename "$f")" || bad "$b/$(basename "$f")"
   done
-fi
+done
 
 # ---------- 4. PHP ----------
 # render.php va junto con el bundle: si se desfasan, se duplican o se pierden
@@ -85,12 +96,16 @@ for f in render.php sitemap.php llms.php llms-full.php; do
 done
 fput api/.htaccess       public_html/api/.htaccess        >/dev/null 2>&1 && ok "api/.htaccess"
 fput api/hit.php         public_html/api/hit.php          >/dev/null 2>&1 && ok "api/hit.php"
+fput api/evento.php      public_html/api/evento.php       >/dev/null 2>&1 && ok "api/evento.php"
 fput tarjeta.php         public_html/tarjeta.php          >/dev/null 2>&1 && ok "tarjeta.php"
-fput panel/inc/vcard.php public_html/panel/inc/vcard.php  >/dev/null 2>&1 && ok "panel/inc/vcard.php"
-fput panel/bootstrap.php public_html/panel/bootstrap.php  >/dev/null 2>&1 && ok "panel/bootstrap.php"
-fput panel/inc/contenido.php public_html/panel/inc/contenido.php >/dev/null 2>&1 && ok "panel/inc/contenido.php"
-fput panel/pages/buscadores.php public_html/panel/pages/buscadores.php >/dev/null 2>&1 && ok "panel/pages/buscadores.php"
-fput panel/cron/gsc_sync.php public_html/panel/cron/gsc_sync.php >/dev/null 2>&1 && ok "panel/cron/gsc_sync.php"
+# El panel entero, en bucle: cualquier modulo nuevo o tocado sube solo.
+# setup.php y api/config.php quedan fuera a proposito.
+for f in panel/bootstrap.php panel/index.php panel/login.php panel/logout.php \
+         panel/gsc_paso.php panel/google_connect.php panel/google_callback.php \
+         panel/inc/*.php panel/pages/*.php panel/cron/*.php; do
+  [ -f "$f" ] || continue
+  fput "$f" "public_html/$f" >/dev/null 2>&1 && ok "$f"
+done
 echo "  (api/config.php y panel/setup.php NO se suben, a proposito)"
 
 # ---------- 5. .htaccess ----------

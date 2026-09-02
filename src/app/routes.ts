@@ -21,6 +21,10 @@ const TermsPage = lazy(() => import('./pages/TermsPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const RutaLibre = lazy(() => import('./pages/RutaLibre'));
 
+// Tablero de demostracion para la expo. Va fuera del RootLayout a proposito:
+// es una pantalla de trabajo en blanco, sin la cabecera negra ni el pie.
+const TableroDemo = lazy(() => import('./pages/TableroDemo'));
+
 // Redirect pages
 const PatronFlexRedirect = lazy(() => import('./pages/PatronFlexRedirect'));
 const LaBarajaMenuRedirect = lazy(() => import('./pages/LaBarajaMenuRedirect'));
@@ -34,6 +38,10 @@ const AIEcommercePage = lazy(() => import('./pages/AIEcommercePage'));
 
 
 export const router = createBrowserRouter([
+  // Sin cabecera, pie ni asistente. Enlace privado: no se indexa (noindex en
+  // la pagina, X-Robots-Tag en render.php y /demo/ cerrado en robots.txt) y
+  // no hay ningun enlace hacia aqui desde el sitio.
+  { path: '/demo/tablero', Component: TableroDemo },
   {
     path: '/',
     Component: RootLayout,

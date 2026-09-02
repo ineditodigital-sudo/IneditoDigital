@@ -9,6 +9,9 @@ interface SEOProps {
   type?: string;
   author?: string;
   schema?: any;
+  /** Para páginas que existen pero no deben salir en buscadores. */
+  noindex?: boolean;
+  nofollow?: boolean;
 }
 
 export default function SEO({
@@ -18,7 +21,9 @@ export default function SEO({
   image = 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp',
   type = 'website',
   author,
-  schema
+  schema,
+  noindex = false,
+  nofollow = false
 }: SEOProps) {
   const location = useLocation();
   
@@ -46,8 +51,8 @@ export default function SEO({
   const finalKeywords = currentPageSEO?.keywords || keywords;
   const finalImage = currentPageSEO?.ogImage || image || globalSEO.defaultImage || image;
   const finalCanonical = currentPageSEO?.canonical || `https://www.inedito.digital${location.pathname}`;
-  const finalNoindex = currentPageSEO?.noindex ?? false;
-  const finalNofollow = currentPageSEO?.nofollow ?? false;
+  const finalNoindex = noindex || (currentPageSEO?.noindex ?? false);
+  const finalNofollow = nofollow || (currentPageSEO?.nofollow ?? false);
   
   const url = finalCanonical;
   const siteName = globalSEO.siteName || 'INÉDITO DIGITAL';

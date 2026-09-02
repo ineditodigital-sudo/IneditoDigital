@@ -434,3 +434,270 @@
     background: rgba(0, 0, 0, 0.4) !important;
   }
 }
+/* ============================================================
+   TABLERO DE DEMOSTRACIÓN  (/demo/tablero)
+   ============================================================
+   El sitio entero es negro y con la display en mayúsculas. El tablero es lo
+   contrario a propósito: fondo claro y tipografía de interfaz, porque es una
+   pantalla de trabajo y no una página de venta. Estas reglas solo aplican
+   dentro de .tablero, así que no tocan nada más. */
+
+/*
+ * Los dos temas.
+ *
+ * El tablero es lo único del sitio que puede ir en claro, así que las
+ * variables viven aquí dentro y no en :root: nada de esto toca al resto de
+ * las páginas, que son siempre negras.
+ *
+ * La barra lateral no cambia. Va oscura en los dos temas a propósito: es el
+ * marco, y el marco oscuro es lo que hace que el contenido claro se lea como
+ * contenido.
+ */
+.tablero {
+  --t-fondo: #F1F3F9;
+  --t-tarjeta: #FFFFFF;
+  --t-cabecera: rgba(255, 255, 255, 0.85);
+  --t-suave: #F8FAFC;
+  --t-pista: #F1F5F9;
+  --t-borde: #E2E8F0;
+  --t-borde-suave: #F1F5F9;
+  --t-txt: #0F172A;
+  --t-txt-2: #475569;
+  --t-txt-3: #94A3B8;
+  --t-ia: #0F172A;
+  --t-sombra: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px -12px rgba(15, 23, 42, .10);
+  /* El valor de "cuando llegamos": tiene que leerse como pasado en los dos. */
+  --t-antes: #CBD5E1;
+  /* La pastilla elegida de un control segmentado: tiene que verse levantada
+     sobre su riel, y "levantado" es más claro en claro y más claro en oscuro. */
+  --t-elevado: #FFFFFF;
+  /* Las píldoras de bien / aviso / mal. En claro son fondos pálidos; en
+     oscuro, el mismo color al 14% sobre el panel, que es lo único que se ve
+     bien sin gritar. */
+  --t-ok-bg: #ECFDF5;   --t-ok-tx: #047857;   --t-ok-ring: #A7F3D0;
+  --t-aviso-bg: #FFFBEB; --t-aviso-tx: #B45309; --t-aviso-ring: #FDE68A;
+  --t-mal-bg: #FFF1F2;  --t-mal-tx: #BE123C;  --t-mal-ring: #FECDD3;
+}
+
+.tablero.oscuro {
+  --t-fondo: #0A0C12;
+  --t-tarjeta: #141824;
+  --t-cabecera: rgba(20, 24, 36, 0.85);
+  --t-suave: #1B2030;
+  --t-pista: #232839;
+  --t-borde: #2A3042;
+  --t-borde-suave: #212636;
+  --t-txt: #E8EBF2;
+  --t-txt-2: #A9B2C6;
+  --t-txt-3: #6E7891;
+  --t-ia: #1B2030;
+  --t-sombra: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .6);
+  --t-antes: #3E465C;
+  --t-elevado: #333B52;
+  --t-ok-bg: rgba(16, 185, 129, .14);   --t-ok-tx: #34D399;   --t-ok-ring: rgba(16, 185, 129, .3);
+  --t-aviso-bg: rgba(245, 158, 11, .14); --t-aviso-tx: #FBBF24; --t-aviso-ring: rgba(245, 158, 11, .3);
+  --t-mal-bg: rgba(244, 63, 94, .14);   --t-mal-tx: #FB7185;   --t-mal-ring: rgba(244, 63, 94, .3);
+}
+
+.tablero h1,
+.tablero h2,
+.tablero h3,
+.tablero h4,
+.tablero h5,
+.tablero h6 {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  text-transform: none;
+  letter-spacing: -0.011em;
+}
+
+/* Las gráficas de recharts traen su propio foco punteado del navegador. */
+.tablero .recharts-wrapper:focus,
+.tablero .recharts-surface:focus {
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   IMPRESIÓN
+   ------------------------------------------------------------
+   "Guardar en PDF" es imprimir. Se esconde el tablero y queda solo el
+   documento del reporte, sin la caja del modal ni sus botones. */
+
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  .no-imprimir {
+    display: none !important;
+  }
+
+  /* El modal es fixed y con fondo oscuro: en papel eso sería una plancha
+     gris y una sola hoja recortada. */
+  .no-imprimir-fondo {
+    position: static !important;
+    overflow: visible !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .no-imprimir-fondo > div {
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+
+  /* Del tablero de atrás no se imprime nada: el reporte ya lo resume. */
+  .tablero > header,
+  .tablero > main {
+    display: none !important;
+  }
+
+  .zona-imprimible {
+    max-width: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Sin esto los fondos de color se imprimen en blanco y la portada
+     morada del reporte sale vacía. */
+  .documento,
+  .documento * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .evitar-corte {
+    break-inside: avoid;
+  }
+
+  /* En papel siempre el tema claro: un reporte en oscuro se come el tóner
+     y llega gris. */
+  .tablero.oscuro {
+    --t-fondo: #FFFFFF;
+    --t-tarjeta: #FFFFFF;
+    --t-suave: #F8FAFC;
+    --t-pista: #F1F5F9;
+    --t-borde: #E2E8F0;
+    --t-borde-suave: #F1F5F9;
+    --t-txt: #0F172A;
+    --t-txt-2: #475569;
+    --t-txt-3: #94A3B8;
+    --t-antes: #CBD5E1;
+    --t-elevado: #FFFFFF;
+    --t-ok-bg: #ECFDF5;   --t-ok-tx: #047857;   --t-ok-ring: #A7F3D0;
+    --t-aviso-bg: #FFFBEB; --t-aviso-tx: #B45309; --t-aviso-ring: #FDE68A;
+    --t-mal-bg: #FFF1F2;  --t-mal-tx: #BE123C;  --t-mal-ring: #FECDD3;
+  }
+}
+
+/* ============================================================
+   REFRESH DEL INDEX: flotación y cinta, en CSS puro
+   ============================================================ */
+
+/* Los chips y el teléfono del hero flotan sin un byte de JS. */
+@keyframes flotar {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-9px); }
+}
+.animate-flotar {
+  animation: flotar 3.4s ease-in-out infinite alternate;
+}
+
+/* La cinta corrediza. El contenido va duplicado, así que -50% empalma. */
+@keyframes cinta {
+  to { transform: translateX(-50%); }
+}
+.animate-cinta {
+  animation: cinta 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-flotar,
+  .animate-cinta {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   HERO "EN DISEÑO": el marco se traza, los cursores llegan
+   ============================================================
+   La idea: la portada se ve como si alguien la estuviera diseñando en este
+   momento. El texto NUNCA se anima —la lectura es sagrada—; lo que vive es
+   el marco de selección alrededor y los cursores de colaboradores. */
+
+/* El trazo del marco se dibuja una vez al entrar. */
+@keyframes marco-dibuja {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+.marco-traza {
+  stroke-dasharray: 1;
+  animation: marco-dibuja 1.5s cubic-bezier(0.6, 0, 0.2, 1) 0.35s both;
+}
+
+@keyframes marco-aparece {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Las hormigas marchantes de la selección, en bucle infinito. */
+@keyframes marco-hormigas {
+  to { stroke-dashoffset: -0.09; }
+}
+.marco-hormigas {
+  stroke-dasharray: 5 7;
+  animation: marco-aparece 0.6s ease 1.9s both, marco-hormigas 2.8s linear 1.9s infinite;
+}
+
+/* Asas de las esquinas y nombre del marco: aparecen al terminar el trazo. */
+.marco-asa {
+  animation: marco-aparece 0.35s ease 1.8s both;
+}
+
+/* Cada cursor llega desde su rumbo (variables --desde-x/y) y luego deriva. */
+@keyframes chip-llega {
+  from { opacity: 0; transform: translate(var(--desde-x, 40px), var(--desde-y, 26px)) scale(0.7); }
+  to   { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+.chip-llega {
+  animation: chip-llega 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes chip-deriva {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(7px, -9px); }
+}
+.chip-deriva {
+  animation: chip-deriva 4.5s ease-in-out infinite alternate;
+}
+
+/* El horizonte morado del pie del hero respira despacio. */
+@keyframes horizonte-late {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+.animate-horizonte {
+  animation: horizonte-late 5s ease-in-out infinite alternate;
+}
+
+/* Sin movimiento: todo queda en su estado final, visible y quieto. */
+/* El anillo orbital de la esfera: los guiones giran despacio. */
+@keyframes orbita {
+  to { transform: rotate(360deg); }
+}
+.animate-orbita {
+  animation: orbita 46s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-orbita,
+  .marco-traza,
+  .marco-hormigas,
+  .marco-asa,
+  .chip-llega,
+  .chip-deriva,
+  .animate-horizonte {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}

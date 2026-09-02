@@ -223,14 +223,21 @@ const sinonimos: Record<string, string[]> = {
   'chatbots-y-agentes': ['chatbot', 'bot', 'agente', 'automatizar', 'atencion', 'responder', 'whatsapp'],
   branding: ['marca', 'identidad', 'imagen', 'branding', 'rebranding'],
   'creacion-de-logo': ['logo', 'logotipo', 'isotipo', 'imagotipo'],
-  'email-marketing': ['correo', 'email', 'mailing', 'newsletter', 'boletin', 'suscriptores'],
-  'funnels-de-venta': ['embudo', 'funnel', 'conversion', 'captacion', 'leads'],
+  'funnels-de-venta': ['embudo', 'funnel', 'conversion', 'captacion', 'leads',
+    'correo', 'email', 'mailing', 'newsletter', 'boletin', 'suscriptores'],
   'servicios-qr': ['qr', 'codigo', 'menu digital', 'escanear'],
   'tarjetas-de-presentacion-digital': ['tarjeta', 'nfc', 'presentacion', 'contacto digital'],
   'activaciones-para-expo': ['expo', 'stand', 'feria', 'evento', 'activacion', 'photobooth', 'ruleta'],
   'ficha-de-google': ['google maps', 'en maps', 'business profile', 'my business', 'mi negocio en google',
     'ficha de google', 'ficha', 'resenas', 'reseñas', 'maps', 'mapa'],
   'auditoria-con-ia': ['auditoria', 'diagnostico', 'revision', 'analisis', 'que esta mal'],
+  'chatgpt-ads': ['chatgpt ads', 'anuncios en chatgpt', 'publicidad en chatgpt', 'anunciarme en chatgpt',
+    'anunciarme en la ia', 'pauta en ia', 'pagar por aparecer en chatgpt'],
+  'tablero-de-resultados': ['tablero', 'dashboard', 'reporte', 'reportes', 'metricas', 'medir',
+    'indicadores', 'kpi'],
+  'estrategia-de-canales': ['mercado libre', 'marketplace', 'marketplaces', 'amazon', 'canales de venta',
+    'donde vender', 'b2b'],
+  'linkedin-de-empresa': ['linkedin', 'perfil de empresa', 'red profesional'],
 };
 
 export type Coincidencia = { servicio: Service; puntos: number };
@@ -257,7 +264,7 @@ export function buscarServicios(texto: string, servicios: Service[], max = 3): C
 
     // sinonimos: lo que la gente escribe de verdad
     for (const sin of sinonimos[s.slug] ?? []) {
-      if (crudo.includes(sin)) puntos += 5;
+      if (crudo.includes(sin)) puntos += 5 + 5 * (palabras(sin).length - 1);
     }
 
     return { servicio: s, puntos };

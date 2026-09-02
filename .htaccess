@@ -61,7 +61,8 @@ Options -Indexes
   # Servicios del sitio anterior que hoy tienen ficha propia
   RewriteRule ^branding/?$              /servicios/branding [R=301,L]
   RewriteRule ^servicios-qr/?$          /servicios/servicios-qr [R=301,L]
-  RewriteRule ^email-mkt/?$             /servicios/email-marketing [R=301,L]
+  RewriteRule ^email-mkt/?$             /servicios/funnels-de-venta [R=301,L]
+  RewriteRule ^servicios/email-marketing/?$ /servicios/funnels-de-venta [R=301,L]
   RewriteRule ^google-ads/?$            /servicios/google-ads [R=301,L]
   RewriteRule ^chat-bots/?$             /servicios/chatbots-y-agentes [R=301,L]
   RewriteRule ^seo-sem/?$               /servicios/posicionamiento-organico [R=301,L]

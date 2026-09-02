@@ -46,4 +46,18 @@ El trabajo se limita a estos archivos salvo autorización explícita.
 - Subir/modificar/borrar **solo** dentro del alcance del proyecto principal y
   **solo** con confirmación previa del usuario.
 
-_Última actualización: 2026-07-16_
+
+## Base de datos: slug único en las tablas de contenido
+
+`services`, `blog_posts` y `portfolio` llevan `UNIQUE(slug)` desde el
+31-ago-2026. **No quitarlo.** Antes no existía, y eso rompía en silencio
+cualquier script que publicara contenido con
+`INSERT ... ON DUPLICATE KEY UPDATE`: en vez de actualizar la ficha,
+insertaba una fila más con el mismo slug. Como `render.php` resuelve el slug
+tomando la primera coincidencia, el sitio seguía sirviendo la versión vieja
+aunque el script reportara "publicado".
+
+Al publicar contenido por script, **verificar siempre contra la página real**
+(`curl` con user-agent de bot), no contra lo que imprime el script.
+
+_Última actualización: 2026-08-31_

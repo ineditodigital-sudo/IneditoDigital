@@ -150,7 +150,7 @@ export default function AboutPage() {
                   </div>
                   <h3 className="heading mb-3 text-lg leading-tight">{titulo}</h3>
                   <p className="text-[14.5px] leading-relaxed text-white/70">{texto}</p>
-                  {i === 1 && <FranjaLogosIA size={17} className="mt-4 text-white/60" />}
+                  {i === 1 && <FranjaLogosIA alto={18} className="mt-5" />}
                 </motion.article>
               ))}
             </div>

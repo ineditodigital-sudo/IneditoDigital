@@ -109,7 +109,7 @@ if (!$id) {
     ?>
     <div class="topbar">
       <div>
-        <h1 class="title">Páginas que tú creaste</h1>
+        <div class="kicker">Contenido libre</div><h1 class="title">Páginas que tú creaste</h1>
         <p class="subt">Arma páginas nuevas combinando bloques. Sin tocar código.</p>
       </div>
     </div>
@@ -132,32 +132,24 @@ if (!$id) {
         Todavía no has creado ninguna página. Empieza arriba.
       </p></div>
     <?php else: ?>
-      <div class="card"><table>
-        <thead><tr><th>Página</th><th>Dirección</th><th>Estado</th><th></th></tr></thead>
-        <tbody>
+      <div class="pgrid">
         <?php foreach ($rows as $r):
           $nb = count(json_decode((string)$r['borrador'], true) ?: []);
+          $pub = ($r['status'] ?? '') === 'published';
           $pendiente = ($r['borrador'] ?? '') !== ($r['contenido'] ?? '');
-        ?>
-          <tr>
-            <td><strong><?= e($r['nombre']) ?></strong><div class="mini"><?= $nb ?> bloque(s)</div></td>
-            <td class="mini"><?= e($r['ruta']) ?></td>
-            <td>
-              <span class="badge b-<?= $r['status'] === 'published' ? 'published' : 'draft' ?>">
-                <?= $r['status'] === 'published' ? 'En línea' : 'Sin publicar' ?>
-              </span>
-              <?php if ($pendiente && $r['status'] === 'published'): ?><div class="mini" style="color:#e0c07a;margin-top:4px">con cambios pendientes</div><?php endif; ?>
-            </td>
-            <td class="actions" style="justify-content:flex-end">
-              <a class="btn small ghost" href="/panel/?p=nueva&id=<?= (int)$r['id'] ?>">Editar</a>
-              <?php if ($r['status'] === 'published'): ?>
-                <a class="btn small ghost" href="<?= e($r['ruta']) ?>" target="_blank">Ver</a>
-              <?php endif; ?>
-            </td>
-          </tr>
-        <?php endforeach; ?>
-        </tbody>
-      </table></div>
+          echo pcard([
+            'nombre'  => $r['nombre'],
+            'sub'     => $r['ruta'],
+            'href'    => '/panel/?p=nueva&id=' . (int)$r['id'],
+            'ver'     => $pub ? $r['ruta'] : '',
+            'ayuda'   => $pendiente && $pub ? 'Tiene cambios guardados que todavía no se ven en el sitio.' : '',
+            'pie'     => $nb . ' bloque(s) · ' . ($pub ? 'en línea' : 'sin publicar'),
+            'foto'    => (string)($r['seo_image'] ?? ''),
+            'semilla' => 'nueva' . (string)$r['slug'],
+            'badge'   => '<span class="badge b-' . ($pub ? 'published' : 'draft') . '">' . ($pub ? 'En línea' : 'Borrador') . '</span>',
+          ]);
+        endforeach; ?>
+      </div>
     <?php endif;
     return;
 }
@@ -175,7 +167,7 @@ $pendiente = ($pag['borrador'] ?? '') !== ($pag['contenido'] ?? '');
 ?>
 <div class="topbar">
   <div>
-    <h1 class="title"><?= e($pag['nombre']) ?></h1>
+    <div class="kicker">Contenido libre</div><h1 class="title"><?= e($pag['nombre']) ?></h1>
     <p class="subt">
       <a href="/panel/?p=nueva" style="color:#b58bff">&larr; Mis páginas</a>
       &nbsp;·&nbsp; Dirección: <strong><?= e($pag['ruta']) ?></strong>

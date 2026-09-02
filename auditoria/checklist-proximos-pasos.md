@@ -60,7 +60,7 @@
 - [ ] **Preload de la imagen LCP** en render.php `(Alto · Bajo · Desarrollo)` — TEC-01
 - [ ] Descargar y **auto-hospedar las 6 imágenes de Unsplash** en WebP con dimensiones (lista en instrucciones §7) `(Medio · Bajo · Desarrollo)` — TEC-05
 - [ ] **Rutina de reseñas**: plantilla de solicitud + enlace directo a reseña de GBP, enviada al cierre de cada proyecto; responder el 100 % de las existentes `(Alto · Bajo · Negocio)` — LOC-03
-- [ ] Redactar y publicar las **2 primeras piezas del cluster GEO**: "¿Cómo aparecer en ChatGPT?" y "¿Qué es el posicionamiento GEO?" (briefs en instrucciones §8) `(Alto · Medio · Contenido)` — KW/CON-03
+- [x] ~~Redactar y publicar las **2 primeras piezas del cluster GEO**~~ — **Publicadas el 28/08**: `/blog/como-aparecer-en-chatgpt` (655 palabras, 5 H2, FAQ) y `/blog/que-es-posicionamiento-geo` (592 palabras, tabla GEO vs SEO), enlazadas entre sí, al cluster existente y a las fichas de posicionamiento-en-ia, auditoria-con-ia y chatgpt-ads. En sitemap; falta pedir su indexación en Search Console — KW/CON-03
 
 ## 📅 90 días
 

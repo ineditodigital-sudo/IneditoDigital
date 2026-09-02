@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown, ArrowRight, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { cn } from './ui/utils';
 import { marca } from '../cms';
+import { agruparServicios } from '../data/grupos';
+import { IconoServicio } from './IconoServicio';
 
 /*
  * Antes habia dos menus desplegables gemelos: "Servicios" (13 filas en una
@@ -23,18 +25,17 @@ export default function Header() {
   const mIA = marca.menuIA();
   const mLogo = marca.logo();
 
-  /* ---- los grupos del mega menu, armados desde los datos ---- */
-  const grupos = [
-    { titulo: m('grupo_pos', 'Posicionamiento'), cats: ['SEO', 'SEO Local', 'Estrategia'] },
-    { titulo: m('grupo_mkt', 'Marketing y publicidad'), cats: ['Marketing', 'Publicidad', 'Eventos', 'Email'] },
-    { titulo: m('grupo_dis', 'Diseño y desarrollo'), cats: ['Diseño', 'Desarrollo', 'Innovación', 'IA'] },
-  ].map((g) => ({
+  /*
+   * Los grupos del mega menu.
+   *
+   * Salen de agruparServicios y no de una lista propia: el asistente usa la
+   * misma funcion, y si el chat y el menu contestan distinto a "que servicios
+   * tienen" la culpa siempre es de dos listas paralelas. Aqui habia una.
+   */
+  const grupos = agruparServicios(services).map((g, i) => ({
     ...g,
-    items: services.filter((s) => g.cats.includes(s.category)),
+    titulo: m(`grupo_${i + 1}`, g.titulo),
   }));
-  // lo que no cayo en ningun grupo, al ultimo: ningun servicio se queda fuera
-  const asignados = new Set(grupos.flatMap((g) => g.items.map((s) => s.slug)));
-  grupos[grupos.length - 1].items.push(...services.filter((s) => !asignados.has(s.slug)));
 
   const itemsIA = [
     { label: mIA('geo', 'Posicionamiento en IA'), path: '/servicios/posicionamiento-en-ia', description: mIA('geo_desc', 'Que ChatGPT te recomiende') },
@@ -56,6 +57,45 @@ export default function Header() {
   const [movilAbierto, setMovilAbierto] = useState(false);
   const [megaAbierto, setMegaAbierto] = useState(false);
   const [movilServicios, setMovilServicios] = useState(false);
+
+  /*
+   * Abrir y cerrar el mega menu.
+   *
+   * El cierre lleva un respiro de 120 ms: entre el disparador y el panel hay
+   * un hueco de unos pixeles, y sin ese margen el menu parpadea justo cuando
+   * bajas el raton hacia el.
+   */
+  const temporizador = useRef<number | undefined>(undefined);
+  const abrirMega = () => {
+    window.clearTimeout(temporizador.current);
+    setMegaAbierto(true);
+  };
+  const cerrarMega = (retraso = 120) => {
+    window.clearTimeout(temporizador.current);
+    temporizador.current = window.setTimeout(() => setMegaAbierto(false), retraso);
+  };
+  useEffect(() => () => window.clearTimeout(temporizador.current), []);
+
+  /*
+   * Dos salidas mas, para cuando no hay raton que pueda "salirse":
+   * Escape, y tocar fuera de la cabecera. Sin esto, en tableta el panel se
+   * abria de un toque y no habia forma de quitarlo sin navegar.
+   */
+  useEffect(() => {
+    if (!megaAbierto) return;
+    const alPulsar = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') cerrarMega(0);
+    };
+    const alTocar = (e: PointerEvent) => {
+      if (!(e.target as Element)?.closest?.('header')) cerrarMega(0);
+    };
+    window.addEventListener('keydown', alPulsar);
+    document.addEventListener('pointerdown', alTocar);
+    return () => {
+      window.removeEventListener('keydown', alPulsar);
+      document.removeEventListener('pointerdown', alTocar);
+    };
+  }, [megaAbierto]);
 
   /* Rutas conocidas, para detectar la 404 (mismo criterio que antes) */
   const rutas = [
@@ -87,13 +127,14 @@ export default function Header() {
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        is404Page
-          ? 'bg-transparent py-3 md:py-4'
-          : isScrolled || megaAbierto
-          ? 'bg-black/85 backdrop-blur-xl border-b border-white/10 py-2 md:py-3'
-          : 'bg-transparent py-3 md:py-4'
+        // el relleno NO puede depender de megaAbierto: si la cabecera encoge
+        // al abrirse, se mueve bajo el raton y el menu se pone a oscilar
+        is404Page ? 'py-3 md:py-4' : isScrolled ? 'py-2 md:py-3' : 'py-3 md:py-4',
+        !is404Page && (isScrolled || megaAbierto)
+          ? 'bg-black/85 backdrop-blur-xl border-b border-white/10'
+          : 'bg-transparent'
       )}
-      onMouseLeave={() => setMegaAbierto(false)}
+      onMouseLeave={() => cerrarMega()}
     >
       <nav className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between">
@@ -111,27 +152,44 @@ export default function Header() {
 
           {/* Navegacion de escritorio */}
           <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-            <Enlace to="/" activo={location.pathname === '/'}>{m('inicio', 'Inicio')}</Enlace>
+            <Enlace to="/" activo={location.pathname === '/'} onHover={() => cerrarMega(0)}>
+              {m('inicio', 'Inicio')}
+            </Enlace>
 
             {/* El disparador del mega menu */}
-            <div onMouseEnter={() => setMegaAbierto(true)}>
+            <div onMouseEnter={abrirMega} onMouseLeave={() => cerrarMega()}>
               <Link
                 to="/servicios"
-                onFocus={() => setMegaAbierto(true)}
+                onFocus={abrirMega}
+                onClick={(e) => {
+                  /* En tactil no hay hover: el primer toque abre el panel en
+                     vez de navegar a ciegas; el segundo ya entra. */
+                  if (window.matchMedia('(hover: none)').matches && !megaAbierto) {
+                    e.preventDefault();
+                    abrirMega();
+                  }
+                }}
                 aria-expanded={megaAbierto}
                 aria-haspopup="true"
                 className={cn(
                   'text-xs xl:text-sm font-medium tracking-wide transition-colors relative flex items-center gap-1',
-                  enServicios ? 'text-[#AA66FF]' : 'text-white/80 hover:text-white'
+                  enServicios || megaAbierto ? 'text-[#AA66FF]' : 'text-white/80 hover:text-white'
                 )}
               >
                 {m('servicios', 'Servicios')}
-                <ChevronDown size={14} className={cn('transition-transform', megaAbierto && 'rotate-180')} />
+                <ChevronDown size={14} className={cn('transition-transform duration-200', megaAbierto && 'rotate-180')} />
               </Link>
             </div>
 
+            {/* Pasar por otro enlace cierra el panel: antes seguia abierto
+                tapando la pagina porque solo se cerraba al salir del header. */}
             {enlaces.slice(1).map((e) => (
-              <Enlace key={e.path} to={e.path} activo={location.pathname === e.path}>
+              <Enlace
+                key={e.path}
+                to={e.path}
+                activo={location.pathname === e.path}
+                onHover={() => cerrarMega(0)}
+              >
                 {e.label}
               </Enlace>
             ))}
@@ -163,16 +221,27 @@ export default function Header() {
       <AnimatePresence>
         {megaAbierto && (
           <motion.div
+            /*
+             * Mientras se desvanece, el panel sigue en el DOM ~220 ms. El
+             * pointerEvents va en las variantes y no en style porque durante
+             * la salida React ya no vuelve a pintar este subarbol: si no,
+             * queda una franja invisible por delante de la pagina y el primer
+             * clic despues de cerrar el menu se lo traga el panel.
+             */
             initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0, pointerEvents: 'auto' }}
+            exit={{ opacity: 0, y: 8, pointerEvents: 'none' }}
             transition={{ duration: 0.22, ease: [0.22, 0.61, 0.36, 1] }}
             className="absolute left-0 right-0 top-full hidden lg:block"
-            onMouseEnter={() => setMegaAbierto(true)}
+            onMouseEnter={abrirMega}
+            onMouseLeave={() => cerrarMega()}
           >
-            <div className="container mx-auto max-w-6xl px-6 pt-3 pb-6">
+            <div className="container mx-auto max-w-5xl px-6 pt-3 pb-6">
               <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl">
-                <div className="grid grid-cols-[1fr_1fr_1fr_1.15fr]">
+                <div
+                  className="grid"
+                  style={{ gridTemplateColumns: `repeat(${grupos.length}, 1fr) 1.15fr` }}
+                >
                   {/* Los tres grupos de servicios */}
                   {grupos.map((g) => (
                     <div key={g.titulo} className="border-r border-white/8 p-5">
@@ -184,11 +253,14 @@ export default function Header() {
                           <Link
                             key={s.slug}
                             to={`/servicios/${s.slug}`}
-                            className="group block rounded-lg px-2.5 py-2 transition-colors hover:bg-white/[.06]"
+                            className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-white/[.06]"
                           >
-                            <div className="text-[12.5px] font-medium text-white/85 transition-colors group-hover:text-white">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[.04] text-white/45 transition-colors group-hover:border-[#CC66FF]/40 group-hover:bg-[#CC66FF]/12 group-hover:text-[#CC66FF]">
+                              <IconoServicio nombre={s.icon} size={15} />
+                            </span>
+                            <span className="text-[12.5px] font-medium text-white/85 transition-colors group-hover:text-white">
                               {s.title}
-                            </div>
+                            </span>
                           </Link>
                         ))}
                       </div>
@@ -278,8 +350,9 @@ export default function Header() {
                         <Link
                           key={s.slug}
                           to={`/servicios/${s.slug}`}
-                          className="block rounded-lg px-2 py-1.5 text-xs text-white/70 transition-colors hover:bg-white/5 hover:text-white"
+                          className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-white/70 transition-colors hover:bg-white/5 hover:text-white"
                         >
+                          <IconoServicio nombre={s.icon} size={13} className="shrink-0 text-white/40" />
                           {s.title}
                         </Link>
                       ))}
@@ -333,10 +406,23 @@ export default function Header() {
 
 /* ---- enlaces auxiliares ---- */
 
-function Enlace({ to, activo, children }: { to: string; activo: boolean; children: React.ReactNode }) {
+function Enlace({
+  to,
+  activo,
+  children,
+  onHover,
+}: {
+  to: string;
+  activo: boolean;
+  children: React.ReactNode;
+  /** Pasar por aqui cierra el mega menu, si estaba abierto. */
+  onHover?: () => void;
+}) {
   return (
     <Link
       to={to}
+      onMouseEnter={onHover}
+      onFocus={onHover}
       className={cn(
         'text-xs xl:text-sm font-medium tracking-wide transition-colors relative group',
         activo ? 'text-[#AA66FF]' : 'text-white/80 hover:text-white'

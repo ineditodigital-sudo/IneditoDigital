@@ -1,352 +1,221 @@
-import { motion } from 'motion/react';
-import { ArrowRight, Sparkles, Users, Award, TrendingUp } from 'lucide-react';
-import { GlassCard } from './GlassCard';
+import { ArrowRight } from 'lucide-react';
 import Floating3DElements from './Floating3DElements';
 import TopographyCanvas from './TopographyCanvas';
-import OptimizedImage from './OptimizedImage';
-import { useState, useEffect, memo } from 'react';
+import { memo } from 'react';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
+
+/*
+ * El hero "en diseño": la portada se ve como si alguien la estuviera
+ * diseñando en este momento. El título vive dentro de un marco de selección
+ * que se traza solo al entrar, con sus asas en las esquinas y hormigas
+ * marchantes en bucle; tres cursores de colaboradores llegan volando, se
+ * acomodan y derivan despacio.
+ *
+ * Dos reglas de la casa que este componente cuida:
+ *  - El TEXTO nunca se anima. Se lee completo desde el primer cuadro; lo que
+ *    vive es el marco alrededor. Y la línea que posiciona sigue dentro del
+ *    h1, en mono (Hanson jamás en minúsculas).
+ *  - Cero JS de animación: todo es CSS. El hero es la zona LCP y no paga
+ *    un byte por el espectáculo.
+ *
+ * Un solo layout centrado para todos los tamaños: la estructura de columnas
+ * y el bento de fotos se retiraron a propósito. La esfera vive ahora en la
+ * banda de "Dirección comercial asistida por IA".
+ */
+
+/** Un cursor de colaborador con su etiqueta, como en una herramienta real. */
+function Cursor({
+  texto,
+  color,
+  textoOscuro = false,
+  className = '',
+  llegaDesde,
+  retraso,
+  derivaRetraso = '0s',
+}: {
+  texto: string;
+  color: string;
+  textoOscuro?: boolean;
+  className?: string;
+  llegaDesde: { x: string; y: string };
+  retraso: string;
+  derivaRetraso?: string;
+}) {
+  return (
+    <div
+      className={`chip-llega absolute z-30 ${className}`}
+      style={{ '--desde-x': llegaDesde.x, '--desde-y': llegaDesde.y, animationDelay: retraso } as React.CSSProperties}
+      aria-hidden
+    >
+      <div className="chip-deriva" style={{ animationDelay: derivaRetraso }}>
+        <svg width="15" height="15" viewBox="0 0 15 15" className="mb-0.5 drop-shadow">
+          <path d="M1.5,1.5 L13.5,6.5 L8,8 L6.5,13.5 Z" fill={color} stroke="rgba(0,0,0,.35)" strokeWidth="0.6" />
+        </svg>
+        <span
+          className="ml-2.5 inline-block rounded-full px-3 py-1 text-[11px] font-semibold shadow-lg md:text-xs"
+          style={{ background: color, color: textoOscuro ? '#14001e' : '#fff' }}
+        >
+          {texto}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 function HeroBento() {
   const { openAssistant } = useApp();
   /* Textos editables desde el panel. El segundo argumento es lo que hay hoy:
      si el campo queda vacío se usa eso, así la portada nunca se ve rota. */
   const t = contenido('home', 'portada');
-  const c = contenido('home', 'cifras');
   const b = contenido('home', 'bento');
-  
-  // Inicializar con detección más rápida para evitar layout shift
-  const [isMobile, setIsMobile] = useState(() => {
-    // Inicialización segura que funciona tanto en cliente como en SSR
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 1024;
-  });
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // lg breakpoint
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  return (
+    <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-4 py-20 md:py-24">
+      {/* Fondo topográfico animado */}
+      <TopographyCanvas />
+      {/* El resplandor superior: un gradiente, cero JS */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-[70%]"
+        style={{ background: 'radial-gradient(60% 58% at 50% -14%, rgba(153,51,255,.30), rgba(119,0,206,.10) 55%, transparent 78%)' }}
+      />
 
-  const decorativeElements = [
-    { shape: 'star', top: '10%', left: '15%', delay: 0 },
-    { shape: 'circle', top: '25%', right: '10%', delay: 0.5 },
-    { shape: 'star', bottom: '15%', left: '8%', delay: 1 },
-    { shape: 'circle', bottom: '30%', right: '12%', delay: 1.5 },
-  ];
+      {/* Elementos 3D flotantes */}
+      <div className="pointer-events-none absolute inset-0 z-10">
+        <Floating3DElements variant="mixed" count={6} />
+      </div>
 
-  if (isMobile) {
-    // VERSIÓN MÓVIL DEDICADA - DISEÑO CENTRADO
-    return (
-      <section className="relative min-h-screen flex flex-col justify-center items-center px-4 py-16 overflow-hidden">
-        {/* Fondo topográfico animado */}
-        <TopographyCanvas />
-        
-        {/* Elementos 3D flotantes - reducidos para móvil */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
-          <Floating3DElements variant="mixed" count={5} />
-        </div>
+      <div className="container relative z-20 mx-auto max-w-4xl text-center">
+        {/* ---- el lienzo: el marco de selección con el título dentro ---- */}
+        <div className="relative mx-auto inline-block px-6 py-7 sm:px-10 md:px-16 md:py-10">
+          {/* el trazo que se dibuja una vez y las hormigas en bucle */}
+          <svg
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+            preserveAspectRatio="none"
+            viewBox="0 0 100 100"
+          >
+            <rect
+              x="0.001" y="0.001" width="99.998" height="99.998"
+              pathLength={1}
+              className="marco-traza"
+              fill="none"
+              stroke="rgba(153,51,255,.6)"
+              strokeWidth="1.5"
+              vectorEffect="non-scaling-stroke"
+            />
+            <rect
+              x="0.001" y="0.001" width="99.998" height="99.998"
+              pathLength={1}
+              className="marco-hormigas"
+              fill="none"
+              stroke="rgba(204,102,255,.85)"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+              style={{ strokeDasharray: '0.02 0.025' }}
+            />
+          </svg>
 
-        <div className="container mx-auto relative z-20 max-w-lg text-center">
-          
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7700CE]/20 border border-[#7700CE]/40 backdrop-blur-xl mb-6 shadow-[0_0_30px_rgba(119,0,206,0.3)] animate-fadeIn-lcp" style={{ animationDelay: '0.1s' }}>
-            <Sparkles className="text-[#7700CE]" size={16} />
-            <span className="text-xs text-white font-semibold tracking-wide">{t('etiqueta', 'Agencia #1 en Aguascalientes')}</span>
-          </div>
+          {/* las asas de las esquinas */}
+          {['-left-1 -top-1', '-right-1 -top-1', '-left-1 -bottom-1', '-right-1 -bottom-1'].map((pos) => (
+            <span
+              key={pos}
+              aria-hidden
+              className={`marco-asa absolute ${pos} h-2 w-2 border border-[#CC66FF] bg-[#14001e]`}
+            />
+          ))}
 
-          {/* Título Principal - Centrado - CRÍTICO PARA LCP */}
-          <h1 className="heading mb-4">
-            <span className="block text-white mb-2 text-[28px] leading-tight">
-              {t('titulo_1', 'MARKETING DIGITAL +')}
+          {/* el nombre del marco, como en una herramienta de diseño */}
+          <span
+            aria-hidden
+            className="marco-asa absolute -top-6 left-0 flex items-center gap-1.5 font-mono text-[10px] tracking-[.14em] text-[#AA66FF]"
+          >
+            <span className="inline-block h-1.5 w-1.5 rounded-[2px] bg-[#AA66FF]/70" />
+            {t('etiqueta', 'Aguascalientes · Medimos hasta la venta')}
+          </span>
+
+          {/* EL TÍTULO. Estático y legible; la frase que posiciona va dentro. */}
+          <h1 className="heading">
+            <span className="mb-3 block font-mono text-[10.5px] font-semibold tracking-[.22em] text-[#AA66FF] md:text-[11.5px]">
+              {t('titulo_0', 'Agencia de marketing digital en Aguascalientes')}
             </span>
-            <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent text-[32px] leading-tight">
-              {t('titulo_2', 'INTELIGENCIA ARTIFICIAL')}
+            <span className="block text-3xl leading-tight text-white sm:text-4xl md:text-6xl">
+              {t('titulo_1', 'DIRECCIÓN COMERCIAL')}
+            </span>
+            <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-3xl leading-tight text-transparent [text-wrap:balance] sm:text-4xl md:text-6xl">
+              {t('titulo_2', 'ASISTIDA POR IA')}
             </span>
           </h1>
 
-          {/* Descripción */}
-          <p className="text-sm text-white/80 leading-relaxed mb-8 max-w-md mx-auto px-2 animate-fadeIn-lcp" style={{ animationDelay: '0.2s' }}>
-            {t('descripcion', 'Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.')}
-          </p>
-
-          {/* CTAs - Centrados y apilados */}
-          <div className="flex flex-col gap-3 mb-10 animate-fadeIn-lcp" style={{ animationDelay: '0.3s' }}>
-            <button
-              onClick={() => openAssistant(undefined, 'cotizar servicios de marketing digital')}
-              className="w-full inline-flex items-center justify-center px-8 py-4 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 shadow-[0_0_30px_rgba(119,0,206,0.5)] hover:shadow-[0_0_50px_rgba(119,0,206,0.8)] active:scale-95 group cursor-pointer"
-            >
-              <span className="font-bold tracking-wider text-base">{t('boton_1', 'COTIZAR AHORA')}</span>
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-            </button>
-            
-            <a
-              href="#servicios"
-              className="w-full inline-flex items-center justify-center px-8 py-4 rounded-full bg-white/5 border-2 border-white/20 hover:bg-white/10 text-white transition-all duration-300 backdrop-blur-sm active:scale-95"
-            >
-              <span className="font-bold tracking-wider text-base">{t('boton_2', 'VER SERVICIOS')}</span>
-            </a>
-          </div>
-
-          {/* Estadísticas - Diseño compacto horizontal centrado */}
-          <div className="grid grid-cols-3 gap-4 mb-8 animate-fadeIn" style={{ animationDelay: '0.5s' }}>
-            <div className="text-center">
-              <GlassCard className="py-4 px-2">
-                <Users className="text-[#7700CE] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">{c('cifra_1', '100+')}</div>
-                <div className="text-[10px] text-white/70 leading-tight">{c('texto_1', 'Clientes Activos')}</div>
-              </GlassCard>
-            </div>
-
-            <div className="text-center">
-              <GlassCard className="py-4 px-2">
-                <Award className="text-[#9933FF] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">{c('cifra_2', '5X')}</div>
-                <div className="text-[10px] text-white/70 leading-tight">{c('texto_2', 'ROI Promedio')}</div>
-              </GlassCard>
-            </div>
-
-            <div className="text-center">
-              <GlassCard className="py-4 px-2">
-                <TrendingUp className="text-[#CC66FF] mx-auto mb-2" size={24} />
-                <div className="heading text-2xl text-white mb-1">{c('cifra_3', '200%')}</div>
-                <div className="text-[10px] text-white/70 leading-tight">{c('texto_3', 'Crecimiento')}</div>
-              </GlassCard>
-            </div>
-          </div>
-
+          {/* los colaboradores trabajando en la página */}
+          <Cursor
+            texto={b('chip_1', 'IA auditando')}
+            color="#9933FF"
+            className="hidden left-0 top-[30%] -translate-x-1/2 sm:-left-6 md:block"
+            llegaDesde={{ x: '-70px', y: '50px' }}
+            retraso="1.1s"
+          />
+          <Cursor
+            texto={b('chip_2', 'Medido hasta la venta')}
+            color="#F2F0F6"
+            textoOscuro
+            className="hidden right-0 top-[6%] translate-x-1/3 sm:-right-8 md:block"
+            llegaDesde={{ x: '80px', y: '-40px' }}
+            retraso="1.45s"
+            derivaRetraso="1.6s"
+          />
+          <Cursor
+            texto={b('chip_3', 'Visible ante la IA')}
+            color="#00E585"
+            textoOscuro
+            className="-bottom-7 right-[14%]"
+            llegaDesde={{ x: '60px', y: '60px' }}
+            retraso="1.8s"
+            derivaRetraso="0.8s"
+          />
         </div>
-      </section>
-    );
-  }
 
-  // VERSIÓN DESKTOP ORIGINAL
-  return (
-    <section className="relative min-h-[85vh] flex items-center justify-center px-0 py-12 md:py-16 overflow-hidden">
-      {/* Fondo topográfico animado */}
-      <TopographyCanvas />
-      
-      {/* Elementos 3D flotantes */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <Floating3DElements variant="mixed" count={8} />
-      </div>
+        {/* Descripción */}
+        <p
+          className="animate-fadeIn-lcp mx-auto mt-7 max-w-2xl text-sm leading-relaxed text-white/75 md:text-base"
+          style={{ animationDelay: '0.25s' }}
+        >
+          {t('descripcion', 'No vendemos campañas sueltas: conectamos los objetivos de tu dirección con todo lo que tu negocio hace en digital, en un solo tablero, y cada mes una IA audita que la estrategia esté funcionando.')}
+        </p>
 
-      <div className="container mx-auto max-w-6xl relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
-          
-          {/* Columna Izquierda - Contenido */}
-          <motion.div
-            initial={{ opacity: 1, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-4 md:space-y-5 lg:pr-8"
+        {/* CTAs */}
+        <div
+          className="animate-fadeIn-lcp mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          style={{ animationDelay: '0.35s' }}
+        >
+          <button
+            onClick={() => openAssistant(undefined, 'cotizar servicios de marketing digital')}
+            className="group inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-8 py-4 text-white shadow-[0_0_30px_rgba(119,0,206,0.5)] transition-all duration-300 hover:from-[#9933FF] hover:to-[#7700CE] hover:shadow-[0_0_50px_rgba(119,0,206,0.8)] active:scale-95 sm:w-auto"
           >
-            {/* Título Principal - Limitado al 50% en desktop - CRÍTICO PARA LCP */}
-            <h1 className="heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight lg:max-w-[90%]">
-              <span className="block text-white mb-1 md:mb-2">{t('titulo_1', 'MARKETING DIGITAL +')}</span>
-              <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
-                {t('titulo_2', 'INTELIGENCIA ARTIFICIAL')}
-              </span>
-            </h1>
-
-            {/* Descripción */}
-            <p className="text-xs sm:text-sm md:text-base text-white/70 max-w-xl leading-relaxed">
-              {t('descripcion', 'Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.')}
-            </p>
-
-            {/* Botones CTA */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <button
-                onClick={() => openAssistant(undefined, 'cotizar servicios de marketing digital')}
-                className="inline-flex items-center justify-center px-6 md:px-7 py-3 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(119,0,206,0.6)] group cursor-pointer"
-              >
-                <span className="text-sm md:text-base font-bold tracking-wider">{t('boton_1', 'COTIZAR AHORA')}</span>
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-              </button>
-              
-              <a
-                href="#servicios"
-                className="inline-flex items-center justify-center px-6 md:px-7 py-3 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 text-white transition-all duration-300"
-              >
-                <span className="text-sm md:text-base font-bold tracking-wider">{t('boton_2', 'VER SERVICIOS')}</span>
-              </a>
-            </div>
-
-            {/* Estadísticas */}
-            <div className="flex flex-wrap gap-4 md:gap-6 pt-2 md:pt-3">
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0">
-                  <Users className="text-[#7700CE]" size={20} />
-                </div>
-                <div>
-                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_1', '100+')}</div>
-                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_1', 'Clientes Activos')}</div>
-                </div>
-              </div>
-
-              <div className="h-10 md:h-12 w-px bg-white/10" />
-
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0">
-                  <Award className="text-[#7700CE]" size={20} />
-                </div>
-                <div>
-                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_2', '5X')}</div>
-                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_2', 'ROI Promedio')}</div>
-                </div>
-              </div>
-
-              <div className="h-10 md:h-12 w-px bg-white/10" />
-
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="text-[#7700CE]" size={20} />
-                </div>
-                <div>
-                  <div className="heading text-xl md:text-2xl text-white">{c('cifra_3', '200%')}</div>
-                  <div className="text-[10px] md:text-xs text-white/60">{c('texto_3', 'Crecimiento')}</div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Columna Derecha - Bento Grid con Imágenes */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative"
+            <span className="text-sm font-bold tracking-wider md:text-base">{t('boton_1', 'QUIERO UNA AUDITORÍA')}</span>
+            <ArrowRight className="ml-2 transition-transform group-hover:translate-x-1" size={19} />
+          </button>
+          <a
+            href="#servicios"
+            className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 py-4 text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 active:scale-95 sm:w-auto"
           >
-            {/* Elementos decorativos flotantes */}
-            {decorativeElements.map((el, index) => (
-              <motion.div
-                key={index}
-                className="absolute z-20"
-                style={{
-                  top: el.top,
-                  left: el.left,
-                  right: el.right,
-                  bottom: el.bottom,
-                }}
-                animate={{
-                  y: [0, -20, 0],
-                  rotate: [0, 180, 360],
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 4,
-                  delay: el.delay,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                {el.shape === 'star' ? (
-                  <Sparkles className="text-[#7700CE]" size={20} />
-                ) : (
-                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#7700CE] to-[#9933FF]" />
-                )}
-              </motion.div>
-            ))}
-
-            {/* Bento Grid de Imágenes */}
-            <div className="grid grid-cols-12 grid-rows-12 gap-3 h-[450px] md:h-[500px]">
-              
-              {/* Imagen 1 - Top Left - Grande */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="col-span-7 row-span-7 relative overflow-hidden rounded-2xl md:rounded-3xl group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/40 to-[#9933FF]/40 z-10" />
-                <img
-                  src={b('img_1', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/feature-1-1.webp')}
-                  alt={b('img_1_alt', 'Marketing Digital Profesional')}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                {/* Badge flotante */}
-                <div className="absolute top-3 left-3 z-20">
-                  <GlassCard className="px-2.5 py-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00ff88] animate-pulse" />
-                      <span className="text-[10px] md:text-xs font-medium text-white">{b('etiqueta_1', 'Estrategia Digital')}</span>
-                    </div>
-                  </GlassCard>
-                </div>
-              </motion.div>
-
-              {/* Imagen 2 - Top Right */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                className="col-span-5 row-span-6 relative overflow-hidden rounded-2xl md:rounded-3xl group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#9933FF]/40 to-[#CC66FF]/40 z-10" />
-                <img
-                  src={b('img_2', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/helping-left-bg.webp')}
-                  alt={b('img_2_alt', 'Experto en Marketing')}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                {/* Elemento decorativo */}
-                <motion.div
-                  className="absolute bottom-3 right-3 z-20"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
-                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 md:border-4 border-[#7700CE] border-dashed opacity-50" />
-                </motion.div>
-              </motion.div>
-
-              {/* Imagen 3 - Bottom Left */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.7, duration: 0.5 }}
-                className="col-span-5 row-span-5 relative overflow-hidden rounded-2xl md:rounded-3xl group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/40 to-[#5500AA]/40 z-10" />
-                <img
-                  src={b('img_3', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/pexels-mikhail-nilov-7681676-scaled.webp')}
-                  alt={b('img_3_alt', 'Tecnología y IA')}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-              </motion.div>
-
-              {/* Imagen 4 - Bottom Right - Grande */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.9, duration: 0.5 }}
-                className="col-span-7 row-span-6 relative overflow-hidden rounded-2xl md:rounded-3xl group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#9933FF]/40 to-[#7700CE]/40 z-10" />
-                <img
-                  src={b('img_4', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/imagen_2024-11-20_172844415.webp')}
-                  alt={b('img_4_alt', 'Equipo Colaborativo')}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                {/* Badge flotante */}
-                <div className="absolute bottom-3 right-3 z-20">
-                  <GlassCard className="px-2.5 py-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <Sparkles className="text-[#7700CE]" size={14} />
-                      <span className="text-[10px] md:text-xs font-medium text-white">{b('etiqueta_2', 'Equipo Experto')}</span>
-                    </div>
-                  </GlassCard>
-                </div>
-              </motion.div>
-
-            </div>
-          </motion.div>
-
+            <span className="text-sm font-bold tracking-wider md:text-base">{t('boton_2', 'VER SERVICIOS')}</span>
+          </a>
         </div>
       </div>
+
+      {/* el horizonte morado del pie, respirando */}
+      <div
+        aria-hidden
+        className="animate-horizonte pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-44"
+        style={{ background: 'linear-gradient(to top, rgba(119,0,206,.30), rgba(119,0,206,.08) 55%, transparent)' }}
+      />
+      <div
+        aria-hidden
+        className="animate-horizonte pointer-events-none absolute -bottom-24 left-1/2 z-[5] h-48 w-[130%] -translate-x-1/2 rounded-[100%] blur-3xl"
+        style={{ background: 'radial-gradient(50% 100% at 50% 100%, rgba(153,51,255,.5), transparent 70%)' }}
+      />
     </section>
   );
 }

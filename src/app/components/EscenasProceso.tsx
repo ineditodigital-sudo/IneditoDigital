@@ -1,5 +1,8 @@
 import { motion } from 'motion/react';
-import { Check, MapPin, Star, TrendingUp, BadgeCheck, Trophy, ScanLine } from 'lucide-react';
+import {
+  Check, MapPin, Star, TrendingUp, BadgeCheck, Trophy, ScanLine,
+  LayoutDashboard, Megaphone, Route, Users,
+} from 'lucide-react';
 
 /*
  * La escena que se arma junto al proceso de cada servicio.
@@ -12,12 +15,15 @@ import { Check, MapPin, Star, TrendingUp, BadgeCheck, Trophy, ScanLine } from 'l
  *   mapa       ficha-de-google              el pin, la ficha y las resenas
  *   campana    google-ads                   las barras de la campana crecen
  *   chat       chatbots-y-agentes           una conversacion que cierra venta
- *   correo     email-marketing              la bandeja y la tasa de apertura
  *   embudo     funnels-de-venta             el embudo se llena nivel a nivel
  *   marca      branding / creacion-de-logo  el tablero de identidad
  *   qr         servicios-qr                 el codigo se dibuja y se escanea
  *   auditoria  auditoria-con-ia             la lista se palomea y sale la nota
  *   expo       activaciones-para-expo       la ruleta gira y entrega premio
+ *   anuncio    chatgpt-ads                  el anuncio entra en la respuesta
+ *   tablero    tablero-de-resultados        las fuentes se conectan al panel
+ *   bifurca    estrategia-de-canales        dos caminos y se elige uno
+ *   perfil     linkedin-de-empresa          el perfil se llena y publica
  *   web        diseno-y-desarrollo-web      la pagina se construye (respaldo)
  *
  * Todas comparten el mismo casco y el mismo contrato: `activo` va de 0 a 3 y
@@ -242,57 +248,6 @@ function EscenaChat({ activo }: { activo: number }) {
         ))}
       </motion.div>
       <Distintivo activo={activo} texto="Venta cerrada 24/7" />
-    </>
-  );
-}
-
-/** La bandeja de correo: la campana llega, se abre y convierte. */
-function EscenaCorreo({ activo }: { activo: number }) {
-  return (
-    <>
-      {/* paso 1: llegan los correos */}
-      {[0, 1].map((i) => (
-        <motion.div
-          key={i}
-          {...pieza(activo, 0, i * 0.1)}
-          className="mb-2 flex items-center gap-2.5 rounded-lg border border-white/8 bg-white/[.03] p-2.5"
-        >
-          <span className="h-5 w-5 shrink-0 rounded-full bg-white/12" />
-          <div className="flex-1">
-            <span className="mb-1 block h-1.5 w-1/3 rounded-full bg-white/20" />
-            <span className="block h-1 w-3/4 rounded-full bg-white/10" />
-          </div>
-        </motion.div>
-      ))}
-      {/* paso 2: el tuyo, abierto y destacado */}
-      <motion.div
-        {...pieza(activo, 1)}
-        className="mb-3 rounded-lg border border-[#CC66FF]/35 bg-[#CC66FF]/10 p-3"
-      >
-        <div className="mb-2 flex items-center gap-2.5">
-          <span className="h-5 w-5 shrink-0 rounded-full bg-[#CC66FF]/50" />
-          <span className="h-1.5 w-2/5 rounded-full bg-[#CC66FF]/60" />
-          <span className="ml-auto rounded-full bg-[#CC66FF]/25 px-1.5 py-0.5 font-mono text-[8px] uppercase text-[#CC66FF]">Abierto</span>
-        </div>
-        <span className="mb-1 block h-1 w-full rounded-full bg-white/15" />
-        <span className="block h-1 w-2/3 rounded-full bg-white/15" />
-      </motion.div>
-      {/* paso 3: la tasa de apertura crece */}
-      <motion.div {...pieza(activo, 2)}>
-        <div className="mb-1 flex justify-between font-mono text-[9px] text-white/45">
-          <span>Tasa de apertura</span>
-          <span className="text-[#4ADE80]">42%</span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-white/10">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-[#9933FF] to-[#4ADE80]"
-            initial={{ width: '6%' }}
-            animate={activo >= 2 ? { width: '42%' } : { width: '6%' }}
-            transition={{ duration: 0.9, ease: suave }}
-          />
-        </div>
-      </motion.div>
-      <Distintivo activo={activo} texto="Suscriptor → cliente" />
     </>
   );
 }
@@ -544,6 +499,210 @@ function EscenaExpo({ activo }: { activo: number }) {
   );
 }
 
+/** El anuncio entrando dentro de una respuesta de la IA. */
+function EscenaAnuncioIA({ activo }: { activo: number }) {
+  return (
+    <>
+      <div className="flex h-full flex-col justify-center gap-2.5 px-8 pb-8">
+        {/* paso 1: alguien pregunta */}
+        <motion.div {...pieza(activo, 0)} className="self-end rounded-2xl rounded-br-sm bg-white/10 px-3.5 py-2">
+          <span className="text-[11px] text-white/70">¿Quién me puede hacer esto en Aguascalientes?</span>
+        </motion.div>
+        {/* paso 2: la IA arranca a contestar */}
+        <motion.div
+          {...pieza(activo, 1)}
+          className="self-start space-y-1.5 rounded-2xl rounded-bl-sm bg-white/[.06] px-3.5 py-2.5"
+        >
+          {[70, 96, 54].map((a, i) => (
+            <motion.span
+              key={i}
+              className="block h-1.5 rounded-full bg-white/20"
+              initial={{ width: 0 }}
+              animate={activo >= 1 ? { width: a } : { width: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 + i * 0.12, ease: suave }}
+            />
+          ))}
+        </motion.div>
+        {/* paso 3: el espacio comprado */}
+        <motion.div
+          {...pieza(activo, 2)}
+          className="w-full max-w-[15rem] self-start rounded-xl border border-[#CC66FF]/40 p-3"
+          style={{ background: 'linear-gradient(120deg, rgba(119,0,206,.28), rgba(119,0,206,.08))' }}
+        >
+          <div className="mb-1 flex items-center gap-1.5">
+            <Megaphone size={11} className="text-[#CC66FF]" />
+            <span className="font-mono text-[8.5px] uppercase tracking-[.16em] text-[#CC66FF]">Patrocinado</span>
+          </div>
+          <div className="h-1.5 w-24 rounded-full bg-white/45" />
+          <div className="mt-1.5 h-1.5 w-32 rounded-full bg-white/20" />
+        </motion.div>
+      </div>
+      <Distintivo activo={activo} texto="Antes que tu competencia" Icono={Megaphone} />
+    </>
+  );
+}
+
+/** Las fuentes sueltas conectandose a un solo panel. */
+function EscenaTablero({ activo }: { activo: number }) {
+  const fuentes = ['Search Console', 'Analytics', 'Campañas', 'Ventas'];
+  return (
+    <>
+      <div className="flex h-full items-center justify-center gap-5 px-8 pb-8">
+        {/* paso 1: las fuentes, cada una por su lado */}
+        <div className="space-y-1.5">
+          {fuentes.map((f, i) => (
+            <motion.div
+              key={f}
+              {...pieza(activo, 0, i * 0.08)}
+              className="rounded-lg border border-white/12 bg-white/[.05] px-2.5 py-1.5 text-[9px] text-white/55"
+            >
+              {f}
+            </motion.div>
+          ))}
+        </div>
+        {/* paso 2: los cables */}
+        <svg width="46" height="96" className="shrink-0 overflow-visible">
+          {fuentes.map((_, i) => (
+            <motion.path
+              key={i}
+              d={`M0,${11 + i * 25} C24,${11 + i * 25} 24,48 46,48`}
+              fill="none"
+              stroke="#9933FF"
+              strokeWidth="1.5"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={activo >= 1 ? { pathLength: 1, opacity: 0.8 } : { pathLength: 0, opacity: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: suave }}
+            />
+          ))}
+        </svg>
+        {/* paso 3: el panel */}
+        <motion.div {...pieza(activo, 2)} className="w-40 rounded-xl border border-white/12 bg-white/[.05] p-3">
+          <div className="mb-2 grid grid-cols-2 gap-1.5">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="rounded-md bg-white/[.06] px-1.5 py-1">
+                <div className="h-1 w-6 rounded-full bg-white/20" />
+                <div className="mt-1 h-1.5 w-8 rounded-full bg-[#CC66FF]/70" />
+              </div>
+            ))}
+          </div>
+          <div className="flex h-9 items-end gap-1">
+            {[38, 52, 46, 66, 78, 92].map((a, i) => (
+              <motion.span
+                key={i}
+                className="flex-1 rounded-sm bg-gradient-to-t from-[#7700CE] to-[#CC66FF]"
+                initial={{ height: 0 }}
+                animate={activo >= 2 ? { height: `${a}%` } : { height: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 + i * 0.07, ease: suave }}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </div>
+      <Distintivo activo={activo} texto="Un solo número" Icono={LayoutDashboard} />
+    </>
+  );
+}
+
+/** Dos caminos, y la cuenta que decide cual. */
+function EscenaCanales({ activo }: { activo: number }) {
+  const rutas = [
+    { nombre: 'B2B directo', deja: '68%', n: 1 },
+    { nombre: 'Marketplace', deja: '31%', n: 2 },
+  ];
+  return (
+    <>
+      <div className="flex h-full items-center justify-center px-8 pb-8">
+        <div className="flex items-center gap-4">
+          {/* paso 1: de donde sales */}
+          <motion.div
+            {...pieza(activo, 0)}
+            className="rounded-lg border border-white/12 bg-white/[.05] px-3 py-2 text-[10px] text-white/60"
+          >
+            Tu producto
+          </motion.div>
+          <svg width="40" height="70" className="shrink-0 overflow-visible">
+            {[18, 52].map((y, i) => (
+              <motion.path
+                key={i}
+                d={`M0,35 C20,35 20,${y} 40,${y}`}
+                fill="none"
+                stroke="#9933FF"
+                strokeWidth="1.5"
+                initial={{ pathLength: 0 }}
+                animate={activo >= 1 ? { pathLength: 1 } : { pathLength: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.12, ease: suave }}
+              />
+            ))}
+          </svg>
+          {/* paso 2 y 3: las dos rutas, y la que gana */}
+          <div className="space-y-2.5">
+            {rutas.map((ruta, i) => {
+              const gana = activo >= 3 && i === 0;
+              return (
+                <motion.div
+                  key={ruta.nombre}
+                  {...pieza(activo, ruta.n)}
+                  className={`w-36 rounded-lg border px-3 py-2 transition-colors duration-500 ${
+                    gana ? 'border-[#CC66FF]/60 bg-[#CC66FF]/12' : 'border-white/12 bg-white/[.05]'
+                  }`}
+                >
+                  <div className={`text-[10px] ${gana ? 'text-white' : 'text-white/55'}`}>{ruta.nombre}</div>
+                  <div className="mt-1 flex items-baseline gap-1">
+                    <span className={`text-[13px] font-bold ${gana ? 'text-[#CC66FF]' : 'text-white/40'}`}>
+                      {ruta.deja}
+                    </span>
+                    <span className="text-[8.5px] text-white/35">deja</span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      <Distintivo activo={activo} texto="Con la cuenta hecha" Icono={Route} />
+    </>
+  );
+}
+
+/** El perfil de empresa llenandose y empezando a publicar. */
+function EscenaPerfil({ activo }: { activo: number }) {
+  return (
+    <>
+      <div className="flex h-full items-center justify-center px-8 pb-8">
+        <motion.div
+          {...pieza(activo, 0)}
+          className="w-52 overflow-hidden rounded-xl border border-white/12 bg-white/[.05]"
+        >
+          {/* paso 1: la portada y el logo */}
+          <div className="h-9" style={{ background: 'linear-gradient(100deg,#7700CE,#9933FF)' }} />
+          <div className="relative px-3 pb-3">
+            <div className="-mt-4 mb-2 h-8 w-8 rounded-lg border-2 border-[#120018] bg-white/85" />
+            {/* paso 2: los datos */}
+            <motion.div {...pieza(activo, 1)} className="space-y-1.5">
+              <div className="h-1.5 w-24 rounded-full bg-white/45" />
+              <div className="h-1.5 w-32 rounded-full bg-white/18" />
+              <div className="flex items-center gap-1 pt-0.5">
+                <Users size={9} className="text-white/40" />
+                <span className="text-[8.5px] text-white/40">240 seguidores del sector</span>
+              </div>
+            </motion.div>
+            {/* paso 3: la cadencia */}
+            <div className="mt-2.5 space-y-1.5 border-t border-white/8 pt-2.5">
+              {[0, 1].map((i) => (
+                <motion.div key={i} {...pieza(activo, 2, i * 0.14)} className="rounded-md bg-white/[.06] px-2 py-1.5">
+                  <div className="h-1 w-20 rounded-full bg-white/25" />
+                  <div className="mt-1 h-1 w-28 rounded-full bg-white/12" />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+      <Distintivo activo={activo} texto="Te toman en serio" Icono={BadgeCheck} />
+    </>
+  );
+}
+
 /** La pagina web construyendose (la escena original, ahora solo para web). */
 function EscenaWeb({ activo }: { activo: number }) {
   return (
@@ -595,7 +754,6 @@ const escenas: Record<string, (p: { activo: number }) => JSX.Element> = {
   'ficha-de-google': EscenaMapa,
   'google-ads': EscenaCampana,
   'chatbots-y-agentes': EscenaChat,
-  'email-marketing': EscenaCorreo,
   'funnels-de-venta': EscenaEmbudo,
   branding: EscenaMarca,
   'creacion-de-logo': EscenaMarca,
@@ -603,6 +761,10 @@ const escenas: Record<string, (p: { activo: number }) => JSX.Element> = {
   'auditoria-con-ia': EscenaAuditoria,
   'activaciones-para-expo': EscenaExpo,
   'diseno-y-desarrollo-web': EscenaWeb,
+  'chatgpt-ads': EscenaAnuncioIA,
+  'tablero-de-resultados': EscenaTablero,
+  'estrategia-de-canales': EscenaCanales,
+  'linkedin-de-empresa': EscenaPerfil,
 };
 
 export function Escena({ slug, activo }: { slug: string; activo: number }) {

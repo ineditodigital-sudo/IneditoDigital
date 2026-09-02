@@ -103,7 +103,7 @@ if (!$id) {
     ?>
     <div class="topbar">
       <div>
-        <h1 class="title">Equipo</h1>
+        <div class="kicker">La casa</div><h1 class="title">Equipo</h1>
         <p class="subt">La página de contacto de cada integrante. Es la que se abre al acercar su tarjeta NFC.</p>
       </div>
     </div>
@@ -124,34 +124,29 @@ if (!$id) {
       <div class="card"><p class="muted" style="text-align:center;padding:26px 0">
         Todavía no hay nadie. Agrega al primer integrante aquí arriba.</p></div>
     <?php else: ?>
-      <div class="card"><table>
-        <thead><tr><th>Integrante</th><th>Dirección</th><th>Estado</th><th></th></tr></thead>
-        <tbody>
+      <div class="mie-grid">
         <?php foreach ($rows as $r):
-            $d = miembro_con_respaldo(json_decode((string)$r['contenido'], true) ?: []); ?>
-          <tr>
-            <td>
-              <strong><?= e($r['nombre']) ?></strong>
-              <?php if ($d['puesto'] !== ''): ?><div class="mini"><?= e($d['puesto']) ?></div><?php endif; ?>
-            </td>
-            <td><code><?= e($r['ruta']) ?></code></td>
-            <td>
-              <?php if ($r['status'] === 'published'): ?>
-                <span style="color:#5ad18c">En línea</span>
-              <?php else: ?>
-                <span style="color:#d1a25a">Borrador</span>
-              <?php endif; ?>
-            </td>
-            <td style="text-align:right;white-space:nowrap">
+            $d = miembro_con_respaldo(json_decode((string)$r['contenido'], true) ?: []);
+            $foto = trim((string)($d['foto'] ?? ''));
+            $palabras = preg_split('/\s+/u', trim((string)$r['nombre'])) ?: [];
+            $ini = mb_strtoupper(mb_substr($palabras[0] ?? '?', 0, 1) . mb_substr($palabras[1] ?? '', 0, 1));
+        ?>
+          <div class="mie-card">
+            <span class="mie-foto" style="<?= $foto !== '' ? 'background-image:url(' . e($foto) . ')' : 'background:' . grad_casa($r['nombre']) ?>"><?= $foto === '' ? e($ini) : '' ?></span>
+            <div class="mie-n"><?= e($r['nombre']) ?></div>
+            <?php if ($d['puesto'] !== ''): ?><div class="mie-p"><?= e($d['puesto']) ?></div><?php endif; ?>
+            <div class="mie-r"><?= e($r['ruta']) ?></div>
+            <div style="margin-top:9px">
+              <?php if ($r['status'] === 'published'): ?><span class="badge b-published">En línea</span>
+              <?php else: ?><span class="badge b-draft">Borrador</span><?php endif; ?>
+            </div>
+            <div class="mie-acc">
               <a class="btn small ghost" href="/panel/?p=miembros&id=<?= (int)$r['id'] ?>">Editar</a>
-              <?php if ($r['status'] === 'published'): ?>
-                <a class="btn small ghost" href="<?= e($r['ruta']) ?>" target="_blank">Ver</a>
-              <?php endif; ?>
-            </td>
-          </tr>
+              <?php if ($r['status'] === 'published'): ?><a class="btn small ghost" href="<?= e($r['ruta']) ?>" target="_blank">Ver</a><?php endif; ?>
+            </div>
+          </div>
         <?php endforeach; ?>
-        </tbody>
-      </table></div>
+      </div>
     <?php endif;
     return;
 }
@@ -241,7 +236,7 @@ foreach ($grupos as $gk => $g) {
 <div class="topbar">
   <div>
     <a class="mini" href="/panel/?p=miembros">&larr; Equipo</a>
-    <h1 class="title"><?= e($m['nombre']) ?></h1>
+    <div class="kicker">La casa</div><h1 class="title"><?= e($m['nombre']) ?></h1>
     <p class="subt">Su dirección es <code><?= e($m['ruta']) ?></code> &mdash; esa es la que se graba en su tarjeta NFC.</p>
   </div>
   <?php if ($m['status'] === 'published'): ?>
