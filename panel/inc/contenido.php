@@ -27,6 +27,19 @@
  *   numero    cifra corta (estadísticas)
  */
 
+/**
+ * OJO al tocar los "def" de este registro:
+ *
+ * Son el respaldo que el panel escribe en la base cuando alguien pulsa
+ * Publicar, y por lo tanto GANAN sobre el respaldo que trae el codigo de
+ * la SPA. Si aqui dice "NUESTRO PROCESO" y HomePage.tsx dice "COMO
+ * TRABAJAMOS", basta con que alguien publique la portada para que el
+ * sitio retroceda al texto viejo (ya paso el 28-ago-2026: se revirtieron
+ * el titulo del proceso, sus cuatro pasos, el enfoque y el cierre).
+ *
+ * Regla: cada vez que cambie un texto en HomePage.tsx, el "def" de aqui
+ * cambia igual.
+ */
 function registro_paginas(): array {
     return [
 
@@ -43,8 +56,9 @@ function registro_paginas(): array {
                     'campos' => [
                         'etiqueta'   => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'Agencia #1 en Aguascalientes',
                                          'ayuda' => 'El textito que va sobre el título grande.'],
-                        'titulo_1'   => ['label' => 'Título, primera línea', 'tipo' => 'texto', 'def' => 'MARKETING DIGITAL +'],
-                        'titulo_2'   => ['label' => 'Título, segunda línea (en color)', 'tipo' => 'texto', 'def' => 'INTELIGENCIA ARTIFICIAL',
+                        'titulo_0'   => ['label' => 'Línea superior (la frase que posiciona en Google)', 'tipo' => 'texto', 'def' => 'Agencia de marketing digital en Aguascalientes'],
+                        'titulo_1'   => ['label' => 'Título, primera línea', 'tipo' => 'texto', 'def' => 'DIRECCIÓN COMERCIAL'],
+                        'titulo_2'   => ['label' => 'Título, segunda línea (en color)', 'tipo' => 'texto', 'def' => 'ASISTIDA POR IA',
                                          'ayuda' => 'Esta línea se muestra con el degradado morado de la marca.'],
                         'descripcion'=> ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
                                          'def' => 'Para hacer crecer tu negocio con estrategias de marketing digital potenciadas por IA, automatización y creatividad de vanguardia.'],
@@ -66,6 +80,9 @@ function registro_paginas(): array {
                         'img_3_alt' => ['label' => 'Foto 3 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Tecnología y IA'],
                         'img_4'     => ['label' => 'Foto 4', 'tipo' => 'imagen', 'def' => 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/imagen_2024-11-20_172844415.webp'],
                         'img_4_alt' => ['label' => 'Foto 4 · descripción para buscadores', 'tipo' => 'texto', 'def' => 'Equipo Colaborativo'],
+                        'chip_1' => ['label' => 'Chip flotante 1', 'tipo' => 'texto', 'def' => 'IA auditando'],
+                        'chip_2' => ['label' => 'Chip flotante 2', 'tipo' => 'texto', 'def' => 'Medido hasta la venta'],
+                        'chip_3' => ['label' => 'Chip flotante 3', 'tipo' => 'texto', 'def' => 'Visible ante la IA'],
                         'etiqueta_1' => ['label' => 'Etiqueta sobre la primera foto', 'tipo' => 'texto', 'def' => 'Estrategia Digital'],
                         'etiqueta_2' => ['label' => 'Etiqueta sobre la última foto', 'tipo' => 'texto', 'def' => 'Equipo Experto'],
                     ],
@@ -85,34 +102,19 @@ function registro_paginas(): array {
                 ],
 
                 'transformacion' => [
-                    'nombre' => 'El poder de la transformación digital',
-                    'ayuda'  => 'La franja blanca con las cuatro tarjetas.',
+                    'nombre' => 'El punto de partida',
+                    'ayuda'  => 'El interludio oscuro que plantea el problema: invertir sin medir.',
                     'campos' => [
-                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'EL PODER DE LA'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'TRANSFORMACIÓN DIGITAL'],
-                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo',
-                                       'def' => 'Combinamos lo mejor del marketing tradicional con IA y automatización de vanguardia'],
-                    ],
-                ],
-
-
-                'tarjetas' => [
-                    'nombre' => 'Las cuatro tarjetas de transformación',
-                    'ayuda'  => 'Las tarjetas con imagen de la franja blanca.',
-                    'campos' => [
-                        't1_titulo' => ['label' => 'Tarjeta 1 · título', 'tipo' => 'texto', 'def' => 'IA'],
-                        't1_texto'  => ['label' => 'Tarjeta 1 · descripción', 'tipo' => 'texto', 'def' => 'Automatización y chatbots 24/7'],
-                        't1_imagen' => ['label' => 'Tarjeta 1 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjU4NjYzNTl8MA&ixlib=rb-4.1.0&q=80&w=1080'],
-                        't2_titulo' => ['label' => 'Tarjeta 2 · título', 'tipo' => 'texto', 'def' => 'Estrategia'],
-                        't2_texto'  => ['label' => 'Tarjeta 2 · descripción', 'tipo' => 'texto', 'def' => 'Diseños que convierten'],
-                        't2_imagen' => ['label' => 'Tarjeta 2 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1683721003111-070bcc053d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMG1hcmtldGluZ3xlbnwxfHx8fDE3NjU4MTg3MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080'],
-                        't3_titulo' => ['label' => 'Tarjeta 3 · título', 'tipo' => 'texto', 'def' => 'Analítica'],
-                        't3_texto'  => ['label' => 'Tarjeta 3 · descripción', 'tipo' => 'texto', 'def' => 'Decisiones basadas en datos'],
-                        't3_imagen' => ['label' => 'Tarjeta 3 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwYW5hbHl0aWNzJTIwZGFzaGJvYXJkfGVufDF8fHx8MTc2NTg5NTQ4N3ww&ixlib=rb-4.1.0&q=80&w=1080'],
-                        't4_titulo' => ['label' => 'Tarjeta 4 · título', 'tipo' => 'texto', 'def' => 'Resultados'],
-                        't4_texto'  => ['label' => 'Tarjeta 4 · descripción', 'tipo' => 'texto', 'def' => 'ROI comprobado y crecimiento sostenible'],
-                        't4_imagen' => ['label' => 'Tarjeta 4 · imagen', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHJlc3VsdHN8ZW58MXx8fHwxNzY1ODk1NDg3fDA&ixlib=rb-4.1.0&q=80&w=1080'],
+                        'visible'   => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'etiqueta'  => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'EL PUNTO DE PARTIDA'],
+                        'postura_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'EL MARKETING QUE NO SE MIDE'],
+                        'postura_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'ES UN GASTO'],
+                        'texto'     => ['label' => 'Texto', 'tipo' => 'area',
+                                        'def' => 'Página, redes, campañas: muchas empresas ya invierten en digital sin poder decir qué les regresa cada peso. La transformación digital de verdad empieza cuando todo lo que haces se mide contra ventas.'],
+                        's1'        => ['label' => 'Sello 1', 'tipo' => 'texto', 'def' => 'Sin reportes maquillados'],
+                        's2'        => ['label' => 'Sello 2', 'tipo' => 'texto', 'def' => 'Sin promesas de humo'],
+                        's3'        => ['label' => 'Sello 3', 'tipo' => 'texto', 'def' => 'Sin gastar por gastar'],
+                        'enlace'    => ['label' => 'Texto del enlace que baja al enfoque', 'tipo' => 'texto', 'def' => 'ASÍ LO RESOLVEMOS'],
                     ],
                 ],
 
@@ -120,33 +122,33 @@ function registro_paginas(): array {
                     'nombre' => 'Las cuatro tarjetas de IA',
                     'ayuda'  => 'Cada tarjeta de la sección oscura de inteligencia artificial.',
                     'campos' => [
-                        'etiqueta_top' => ['label' => 'Etiqueta de la primera tarjeta', 'tipo' => 'texto', 'def' => 'BESTSELLER'],
+                        'etiqueta_top' => ['label' => 'Etiqueta de la primera tarjeta', 'tipo' => 'texto', 'def' => 'EL MÁS PEDIDO'],
                         'ver_mas'      => ['label' => 'Texto del enlace de cada tarjeta', 'tipo' => 'texto', 'def' => 'Conocer más'],
                         'boton'        => ['label' => 'Texto del botón del final', 'tipo' => 'texto', 'def' => 'VER TODOS LOS SERVICIOS IA'],
 
                         'w_titulo' => ['label' => 'WhatsApp · título', 'tipo' => 'texto', 'def' => 'IA PARA WHATSAPP'],
-                        'w_texto'  => ['label' => 'WhatsApp · descripción', 'tipo' => 'parrafo', 'def' => 'Agente inteligente que atiende, califica y cierra ventas 24/7. Nunca pierdas otro cliente.'],
-                        'w_p1'     => ['label' => 'WhatsApp · punto 1', 'tipo' => 'texto', 'def' => 'Respuestas instantáneas 24/7'],
-                        'w_p2'     => ['label' => 'WhatsApp · punto 2', 'tipo' => 'texto', 'def' => 'Calificación automática de leads'],
-                        'w_p3'     => ['label' => 'WhatsApp · punto 3', 'tipo' => 'texto', 'def' => 'Integración con tu CRM'],
+                        'w_texto'  => ['label' => 'WhatsApp · descripción', 'tipo' => 'parrafo', 'def' => 'Un agente que contesta en segundos, pregunta lo que preguntaría tu equipo y pasa la conversación cuando hay intención real de compra.'],
+                        'w_p1'     => ['label' => 'WhatsApp · punto 1', 'tipo' => 'texto', 'def' => 'Contesta también fuera de horario'],
+                        'w_p2'     => ['label' => 'WhatsApp · punto 2', 'tipo' => 'texto', 'def' => 'Separa a quien pregunta de quien quiere comprar'],
+                        'w_p3'     => ['label' => 'WhatsApp · punto 3', 'tipo' => 'texto', 'def' => 'Cada conversación queda en tu tablero'],
 
                         'v_titulo' => ['label' => 'Ventas · título', 'tipo' => 'texto', 'def' => 'IA DE VENTAS'],
-                        'v_texto'  => ['label' => 'Ventas · descripción', 'tipo' => 'parrafo', 'def' => 'Encuentra clientes perfectos y cierra más ventas con prospección inteligente automatizada.'],
-                        'v_p1'     => ['label' => 'Ventas · punto 1', 'tipo' => 'texto', 'def' => 'Prospección automática LinkedIn'],
-                        'v_p2'     => ['label' => 'Ventas · punto 2', 'tipo' => 'texto', 'def' => 'Emails personalizados con IA'],
-                        'v_p3'     => ['label' => 'Ventas · punto 3', 'tipo' => 'texto', 'def' => 'Seguimiento predictivo'],
+                        'v_texto'  => ['label' => 'Ventas · descripción', 'tipo' => 'parrafo', 'def' => 'Prospección y seguimiento con criterio: la IA prepara la lista y el contexto, tu equipo entra a cerrar y no a buscar.'],
+                        'v_p1'     => ['label' => 'Ventas · punto 1', 'tipo' => 'texto', 'def' => 'Prospección en LinkedIn con criterio, no en frío'],
+                        'v_p2'     => ['label' => 'Ventas · punto 2', 'tipo' => 'texto', 'def' => 'Mensajes escritos con el contexto de cada cuenta'],
+                        'v_p3'     => ['label' => 'Ventas · punto 3', 'tipo' => 'texto', 'def' => 'Seguimiento que no se le olvida a nadie'],
 
                         'm_titulo' => ['label' => 'Marketing · título', 'tipo' => 'texto', 'def' => 'IA PARA MARKETING'],
-                        'm_texto'  => ['label' => 'Marketing · descripción', 'tipo' => 'parrafo', 'def' => 'Campañas que se optimizan solas. Contenido generado por IA. Resultados exponenciales.'],
-                        'm_p1'     => ['label' => 'Marketing · punto 1', 'tipo' => 'texto', 'def' => 'Optimización automática de ads'],
-                        'm_p2'     => ['label' => 'Marketing · punto 2', 'tipo' => 'texto', 'def' => 'Contenido generado por IA'],
-                        'm_p3'     => ['label' => 'Marketing · punto 3', 'tipo' => 'texto', 'def' => 'Análisis predictivo de tendencias'],
+                        'm_texto'  => ['label' => 'Marketing · descripción', 'tipo' => 'parrafo', 'def' => 'Campañas que se corrigen con lo que dicen los datos y contenido producido a ritmo, sin perder el tono de tu marca.'],
+                        'm_p1'     => ['label' => 'Marketing · punto 1', 'tipo' => 'texto', 'def' => 'El presupuesto se mueve a lo que sí convierte'],
+                        'm_p2'     => ['label' => 'Marketing · punto 2', 'tipo' => 'texto', 'def' => 'Contenido a ritmo, con tu tono'],
+                        'm_p3'     => ['label' => 'Marketing · punto 3', 'tipo' => 'texto', 'def' => 'Aviso cuando algo se sale de lo normal'],
 
                         'e_titulo' => ['label' => 'E-commerce · título', 'tipo' => 'texto', 'def' => 'IA PARA E-COMMERCE'],
-                        'e_texto'  => ['label' => 'E-commerce · descripción', 'tipo' => 'parrafo', 'def' => 'Convierte más visitas en ventas. Recomendaciones inteligentes y checkout optimizado.'],
-                        'e_p1'     => ['label' => 'E-commerce · punto 1', 'tipo' => 'texto', 'def' => 'Recomendaciones personalizadas'],
-                        'e_p2'     => ['label' => 'E-commerce · punto 2', 'tipo' => 'texto', 'def' => 'Recuperación carritos abandonados'],
-                        'e_p3'     => ['label' => 'E-commerce · punto 3', 'tipo' => 'texto', 'def' => 'Optimización de precios dinámica'],
+                        'e_texto'  => ['label' => 'E-commerce · descripción', 'tipo' => 'parrafo', 'def' => 'Convertir mejor lo que ya llega a tu tienda: recomendaciones que sí aplican y carritos que no se pierden.'],
+                        'e_p1'     => ['label' => 'E-commerce · punto 1', 'tipo' => 'texto', 'def' => 'Recomendaciones según lo que cada quien ve'],
+                        'e_p2'     => ['label' => 'E-commerce · punto 2', 'tipo' => 'texto', 'def' => 'Recuperación de carritos abandonados'],
+                        'e_p3'     => ['label' => 'E-commerce · punto 3', 'tipo' => 'texto', 'def' => 'Precios que responden a la demanda'],
                     ],
                 ],
 
@@ -154,9 +156,12 @@ function registro_paginas(): array {
                     'nombre' => 'Banda del nuevo enfoque',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'etiqueta' => ['label' => 'Etiqueta', 'tipo' => 'texto', 'def' => 'NUEVO'],
-                        'titulo'   => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'DIRECCIÓN COMERCIAL ASISTIDA POR IA'],
-                        'texto'    => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Marketing digital, publicidad y contenido con todo conectado a datos reales: dirección define los objetivos, y una IA audita cada mes si la estrategia está funcionando.'],
+                        'etiqueta' => ['label' => 'Etiqueta', 'tipo' => 'texto', 'def' => 'NUESTRO ENFOQUE'],
+                        'titulo_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'NO ES UNA PROMESA,'],
+                        'titulo_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'ES UN SISTEMA'],
+                        'logos_texto' => ['label' => 'Texto sobre los logos de IA', 'tipo' => 'texto', 'def' => 'Presencia medida en'],
+                        'indice_titulo' => ['label' => 'Rótulo sobre la lista de piezas', 'tipo' => 'texto', 'def' => 'Las cuatro piezas del sistema'],
+                        'texto'    => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Somos una agencia de marketing digital y de inteligencia artificial, y nuestra forma de trabajar es un sistema: dirección pone el objetivo, todo lo que tu negocio hace en digital queda conectado, y una IA lo revisa cada mes contra ese objetivo. Casi nadie en Aguascalientes trabaja así.'],
                         'e1_titulo'=> ['label' => 'Enlace 1 · título', 'tipo' => 'texto', 'def' => 'Los tres niveles de servicio'],
                         'e1_texto' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Construir, mejorar o vender: según en qué punto estés'],
                         'e1_url'   => ['label' => 'Enlace 1 · URL', 'tipo' => 'texto', 'def' => '/servicios'],
@@ -172,14 +177,65 @@ function registro_paginas(): array {
                     ],
                 ],
 
+                'cinta' => [
+                    'nombre' => 'Cinta corrediza',
+                    'campos' => [
+                        'visible' => ['label' => 'Mostrar la cinta', 'tipo' => 'switch', 'def' => '1'],
+                        'f1' => ['label' => 'Frase 1', 'tipo' => 'texto', 'def' => 'Estrategia dirigida por objetivos'],
+                        'f2' => ['label' => 'Frase 2', 'tipo' => 'texto', 'def' => 'Medimos hasta la venta'],
+                        'f3' => ['label' => 'Frase 3', 'tipo' => 'texto', 'def' => 'Formalidad y confianza'],
+                        'f4' => ['label' => 'Frase 4', 'tipo' => 'texto', 'def' => 'Visibilidad completa, también ante la IA'],
+                    ],
+                ],
+
+                'niveles' => [
+                    'nombre' => 'Los tres niveles',
+                    'campos' => [
+                        'visible'    => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1'   => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'EL SERVICIO SE ADAPTA'],
+                        'titulo_2'   => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'A DÓNDE ESTÁS'],
+                        'bajada'     => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'No es el mismo trabajo para una empresa que no tiene nada que para una que ya invierte y quiere vender más. Estos son los tres puntos de partida.'],
+                        'n1_titulo'  => ['label' => 'Nivel 1 · título', 'tipo' => 'texto', 'def' => 'CONSTRUIR'],
+                        'n1_texto'   => ['label' => 'Nivel 1 · texto', 'tipo' => 'area', 'def' => 'Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.'],
+                        'n1_promesa' => ['label' => 'Nivel 1 · promesa', 'tipo' => 'texto', 'def' => 'Cuando te busquen, existes y te ves formal.'],
+                        'n2_titulo'  => ['label' => 'Nivel 2 · título', 'tipo' => 'texto', 'def' => 'MEJORAR'],
+                        'n2_texto'   => ['label' => 'Nivel 2 · texto', 'tipo' => 'area', 'def' => 'Para empresas con web y redes mal trabajadas. Empieza con una auditoría que dice exactamente qué está mal, con la evidencia de cada hallazgo.'],
+                        'n2_promesa' => ['label' => 'Nivel 2 · promesa', 'tipo' => 'texto', 'def' => 'Te decimos exactamente qué está mal y lo arreglamos.'],
+                        'n3_titulo'  => ['label' => 'Nivel 3 · título', 'tipo' => 'texto', 'def' => 'VENDER'],
+                        'n3_texto'   => ['label' => 'Nivel 3 · texto', 'tipo' => 'area', 'def' => 'Para empresas que ya tienen todo. Estrategia de canales, campañas medidas en un solo tablero y —con ERP— el cruce de prospectos contra ventas cerradas.'],
+                        'n3_promesa' => ['label' => 'Nivel 3 · promesa', 'tipo' => 'texto', 'def' => 'Cada peso invertido se mide contra ventas reales.'],
+                        'boton'      => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'VER LOS SERVICIOS'],
+                    ],
+                ],
+
+                'tablero' => [
+                    'nombre' => 'El tablero de resultados',
+                    'campos' => [
+                        'visible'    => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'etiqueta'   => ['label' => 'Etiqueta', 'tipo' => 'texto', 'def' => 'Lo que recibes'],
+                        'titulo_1'   => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'UN TABLERO,'],
+                        'titulo_2'   => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'NO UN REPORTE EN PDF'],
+                        'texto'      => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Cada cliente tiene una pantalla conectada a sus datos reales, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.'],
+                        'p1'         => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Cuántos contactos llegaron y a qué costo cada uno'],
+                        'p2'         => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'De dónde llegan: buscador, campañas, redes y respuestas de IA'],
+                        'p3'         => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Dónde se cae la gente entre la visita y la venta'],
+                        'p4'         => ['label' => 'Punto 4', 'tipo' => 'texto', 'def' => 'Una auditoría con IA cada mes contra los objetivos de dirección'],
+                        'imagen_alt' => ['label' => 'Texto alternativo de la imagen', 'tipo' => 'texto', 'def' => 'Tablero de resultados de Inédito Digital con contactos, costo por contacto, ventas y el embudo hasta la venta'],
+                        'pie'        => ['label' => 'Pie de la imagen', 'tipo' => 'texto', 'def' => 'Vista del tablero con datos de demostración'],
+                    ],
+                ],
+
                 'servicios' => [
                     'nombre' => 'Nuestros servicios',
                     'ayuda'  => 'El encabezado de la lista de servicios. Los servicios en sí se administran en la sección "Servicios" del menú.',
                     'campos' => [
                         'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'NUESTROS'],
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'SERVICIOS'],
+                        'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'LO QUE HACEMOS'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo',
                                        'def' => 'Soluciones digitales que generan resultados reales y medibles'],
+                        'buscador' => ['label' => 'Texto guía del buscador', 'tipo' => 'texto', 'def' => 'Escribe qué necesita tu empresa…'],
+                        'ver_mas'  => ['label' => 'Texto del enlace de cada tarjeta', 'tipo' => 'texto', 'def' => 'Ver más'],
                         'boton'    => ['label' => 'Texto del botón del final', 'tipo' => 'texto', 'def' => 'VER TODOS LOS SERVICIOS'],
                     ],
                 ],
@@ -189,11 +245,11 @@ function registro_paginas(): array {
                     'ayuda'  => 'La sección oscura con las cuatro soluciones de IA.',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'POTENCIA TU NEGOCIO CON IA'],
+                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA APLICADA AL NEGOCIO'],
                         'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'SERVICIOS DE'],
                         'titulo_2' => ['label' => 'Título, segunda parte (en degradado)', 'tipo' => 'texto', 'def' => 'INTELIGENCIA ARTIFICIAL'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo',
-                                       'def' => 'Automatiza, optimiza y escala tu negocio 24/7 con nuestras soluciones de IA personalizadas'],
+                                       'def' => 'Inteligencia artificial puesta a trabajar donde se nota: atención, prospección, campañas y venta en línea. Todo conectado al mismo tablero.'],
                     ],
                 ],
 
@@ -202,17 +258,18 @@ function registro_paginas(): array {
                     'ayuda'  => 'Los cuatro pasos de cómo trabajan.',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo'   => ['label' => 'Título de la sección', 'tipo' => 'texto', 'def' => 'NUESTRO PROCESO'],
+                        'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'EL CICLO COMPLETO'],
+                        'titulo'   => ['label' => 'Título de la sección', 'tipo' => 'texto', 'def' => 'CÓMO TRABAJAMOS'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo',
-                                       'def' => 'Metodología probada que garantiza resultados excepcionales'],
-                        'paso_1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'DESCUBRIMIENTO'],
-                        'paso_1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'texto', 'def' => 'Analizamos tu negocio y competencia'],
-                        'paso_2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'ESTRATEGIA'],
-                        'paso_2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'texto', 'def' => 'Diseñamos el plan de acción ganador'],
-                        'paso_3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'EJECUCIÓN'],
-                        'paso_3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'texto', 'def' => 'Implementamos con excelencia'],
-                        'paso_4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'OPTIMIZACIÓN'],
-                        'paso_4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'texto', 'def' => 'Mejoramos continuamente resultados'],
+                                       'def' => 'Dirección define, todo se conecta, la IA audita y se ajusta. Así se ve el ciclo completo.'],
+                        'paso_1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'OBJETIVOS'],
+                        'paso_1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'texto', 'def' => 'Dirección define qué quiere lograr y en qué plazo'],
+                        'paso_2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'CONECTAR'],
+                        'paso_2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'texto', 'def' => 'Tu presencia, tus campañas y tus ventas quedan en un solo tablero'],
+                        'paso_3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'AUDITAR'],
+                        'paso_3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'texto', 'def' => 'Cada mes una IA revisa el desempeño contra esos objetivos'],
+                        'paso_4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'AJUSTAR'],
+                        'paso_4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'texto', 'def' => 'Se corrige con lo que dice el dato, no con la corazonada'],
                     ],
                 ],
 
@@ -221,9 +278,16 @@ function registro_paginas(): array {
                     'ayuda'  => 'El encabezado del carrusel de proyectos. Los proyectos se administran en "Portafolio".',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo'  => ['label' => 'Título de la sección', 'tipo' => 'texto', 'def' => 'CASOS DE ÉXITO'],
-                        'bajada'  => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Marcas que confían en INÉDITO DIGITAL'],
-                        'boton'   => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'VER MÁS CASOS'],
+                        'etiqueta'=> ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'PORTAFOLIO'],
+                        'titulo'  => ['label' => 'Título de la sección', 'tipo' => 'texto', 'def' => 'MARCAS QUE YA CONFÍAN'],
+                        'bajada'  => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Trabajamos con empresas de Aguascalientes y de todo México. Por respeto a lo que cada una nos comparte, los resultados se cuentan en números y no en nombres.'],
+                        'n1_cifra' => ['label' => 'Cifra 1 (vacía = se oculta)', 'tipo' => 'texto', 'def' => '+80%'],
+                        'n1_texto' => ['label' => 'Cifra 1 · qué significa', 'tipo' => 'texto', 'def' => 'de tráfico orgánico logrado para un cliente en un año'],
+                        'n2_cifra' => ['label' => 'Cifra 2 (vacía = se oculta)', 'tipo' => 'texto', 'def' => '4'],
+                        'n2_texto' => ['label' => 'Cifra 2 · qué significa', 'tipo' => 'texto', 'def' => 'motores de IA donde medimos la presencia de cada cliente'],
+                        'n3_cifra' => ['label' => 'Cifra 3 (vacía = se oculta)', 'tipo' => 'texto', 'def' => '100%'],
+                        'n3_texto' => ['label' => 'Cifra 3 · qué significa', 'tipo' => 'texto', 'def' => 'de nuestros clientes con tablero conectado a datos reales'],
+                        'boton'   => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'VER EL PORTAFOLIO'],
                     ],
                 ],
 
@@ -231,26 +295,32 @@ function registro_paginas(): array {
                     'nombre' => 'Llamado final',
                     'ayuda'  => 'El bloque del final que invita a contactar.',
                     'campos' => [
-                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿LISTO PARA CRECER?'],
+                        'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'EL SIGUIENTE PASO'],
+                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'EMPIEZA POR SABER DÓNDE ESTÁS'],
                         'bajada' => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo',
-                                     'def' => 'Agenda una consulta gratuita y descubre cómo podemos llevar tu negocio al siguiente nivel'],
-                        'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'AGENDAR CONSULTA GRATIS'],
+                                     'def' => 'Pide la auditoría de tu presencia digital: qué está bien, qué está mal y qué conviene hacer primero, con la evidencia de cada hallazgo.'],
+                        'boton'  => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'QUIERO MI AUDITORÍA'],
+                        'boton_wa' => ['label' => 'Texto del botón de WhatsApp', 'tipo' => 'texto', 'def' => 'ESCRÍBENOS POR WHATSAPP'],
                     ],
                 ],
 
                 'valores' => [
-                    'nombre' => 'Trabajamos con pasión',
+                    'nombre' => 'La casa',
+                    'ayuda'  => 'Antes «Trabajamos con pasión»: de dónde somos y cómo se trabaja con nosotros.',
                     'campos' => [
-                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'TRABAJAMOS CON'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PASIÓN'],
-                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Un equipo dedicado a transformar tu negocio con tecnología de vanguardia'],
-                        'v1_titulo' => ['label' => 'Valor 1 · título', 'tipo' => 'texto', 'def' => 'INNOVACIÓN'],
-                        'v1_texto'  => ['label' => 'Valor 1 · descripción', 'tipo' => 'texto', 'def' => 'Utilizamos las últimas tecnologías en IA y automatización'],
-                        'v2_titulo' => ['label' => 'Valor 2 · título', 'tipo' => 'texto', 'def' => 'RESULTADOS'],
-                        'v2_texto'  => ['label' => 'Valor 2 · descripción', 'tipo' => 'texto', 'def' => 'Nos enfocamos en métricas que realmente importan'],
-                        'v3_titulo' => ['label' => 'Valor 3 · título', 'tipo' => 'texto', 'def' => 'CRECIMIENTO'],
-                        'v3_texto'  => ['label' => 'Valor 3 · descripción', 'tipo' => 'texto', 'def' => 'Tu éxito es nuestra máxima prioridad'],
+                        'visible'   => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'etiqueta'  => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'QUIÉN ESTÁ DETRÁS'],
+                        'postura_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'DE AGUASCALIENTES,'],
+                        'postura_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'PARA EMPRESAS QUE VAN EN SERIO'],
+                        'texto'     => ['label' => 'Texto', 'tipo' => 'area',
+                                        'def' => 'Estamos en Aguascalientes y trabajamos con empresas de todo México. Lo que se promete queda por escrito, lo que se hace queda medido, y siempre hay una persona que da la cara.'],
+                        'promesas_titulo' => ['label' => 'Rótulo sobre las columnas', 'tipo' => 'texto', 'def' => 'Las tres promesas que sostienen todo'],
+                        'c1_titulo' => ['label' => 'Promesa 1 · título', 'tipo' => 'texto', 'def' => 'FORMALIDAD Y CONFIANZA'],
+                        'c1_texto'  => ['label' => 'Promesa 1 · texto', 'tipo' => 'texto', 'def' => 'Cuando alguien te busca, encuentra una empresa seria: presencia cuidada, soporte y todo en orden, por escrito.'],
+                        'c2_titulo' => ['label' => 'Promesa 2 · título', 'tipo' => 'texto', 'def' => 'VISIBILIDAD COMPLETA'],
+                        'c2_texto'  => ['label' => 'Promesa 2 · texto', 'tipo' => 'texto', 'def' => 'No solo Google: también los motores de IA que ya recomiendan proveedores. Casi nadie trabaja esto.'],
+                        'c3_titulo' => ['label' => 'Promesa 3 · título', 'tipo' => 'texto', 'def' => 'MEDICIÓN HASTA LA VENTA'],
+                        'c3_texto'  => ['label' => 'Promesa 3 · texto', 'tipo' => 'texto', 'def' => 'Tablero conectado a datos reales y, cuando tu sistema lo permite, el cruce directo entre campañas y ventas cerradas.'],
                     ],
                 ],
             ],
@@ -1602,7 +1672,7 @@ En WhatsApp te lo aclaran de una vez y con la información correcta.'],
                         'r_garantia' => ['label' => 'Respuesta · garantías', 'tipo' => 'area', 'def' => 'No prometemos posiciones ni cifras concretas: nadie que trabaje en serio puede garantizar eso, y quien lo promete te está vendiendo humo.
 
 Lo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes contra el punto de partida y te decimos si funciona o si no. Si no funciona, lo dice el reporte, no nosotros.'],
-                        'r_catalogo' => ['label' => 'Respuesta · qué servicios tienen', 'tipo' => 'texto', 'def' => 'Trabajamos en tres frentes, más todo lo de inteligencia artificial. ¿Cuál te interesa?'],
+                        'r_catalogo' => ['label' => 'Respuesta · qué servicios tienen', 'tipo' => 'texto', 'def' => 'Estos son los frentes en los que trabajamos, más todo lo de inteligencia artificial. ¿Cuál te interesa?'],
                         'r_grupo_ia' => ['label' => 'Respuesta · bloque de IA', 'tipo' => 'texto', 'def' => 'Esto es lo que hacemos con inteligencia artificial:'],
                         'r_listo' => ['label' => 'Mensaje final antes de WhatsApp', 'tipo' => 'area', 'def' => 'Listo. Te preparé el mensaje con todo lo que consultaste.
 

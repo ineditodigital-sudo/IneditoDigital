@@ -18,7 +18,10 @@ export default function ServicesPage() {
   const t = contenido('servicios', 'encabezado');
   const tNiv = contenido('servicios', 'niveles');
   const tTar = contenido('servicios', 'tarjeta');
-  const { services } = useApp();
+  const { services: todosLosServicios } = useApp();
+  /* El catalogo muestra el que hacemos, no donde lo hacemos: las landings de
+     ciudad viven aparte y se llega a ellas desde el bloque de cobertura. */
+  const services = todosLosServicios.filter((s) => s.category !== 'Cobertura' && s.category !== 'Sectores');
 
   /* Los tres niveles del documento de dirección. Antes de la lista de fichas,
      porque la pregunta que trae a la gente no es "qué servicios hay" sino
