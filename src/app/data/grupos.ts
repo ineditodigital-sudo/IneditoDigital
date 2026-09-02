@@ -22,7 +22,7 @@ const DEFINICION: { titulo: string; cats: string[] }[] = [
 /* Las landings de ciudad (categoria Cobertura) NO van al menu ni al catalogo:
    existen para quien las busca por su ciudad, y se alcanzan desde el bloque
    de cobertura del inicio. Meterlas al menu solo lo alargaria. */
-export const esCobertura = (s: Service) => s.category === 'Cobertura';
+export const esCobertura = (s: Service) => s.category === 'Cobertura' || s.category === 'Sectores';
 
 export function agruparServicios(todos: Service[]): Grupo[] {
   const servicios = todos.filter((s) => !esCobertura(s));
