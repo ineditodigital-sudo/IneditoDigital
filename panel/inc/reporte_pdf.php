@@ -162,6 +162,30 @@ function r_hanson($im, string $txt, float $x, float $y, float $tam, string $hex 
     return $w;
 }
 
+/**
+ * El logotipo de la casa.
+ *
+ * Va grande en la portada y pequeño al pie de cada lámina, donde antes había
+ * un renglón con el nombre y la fecha repetidos. Un logotipo dice lo mismo
+ * ocupando una sexta parte, y la fecha ya está en la portada.
+ *
+ * Devuelve el alto que ocupó, en puntos, para poder apoyar lo de abajo.
+ */
+function r_logo($im, float $x, float $y, float $ancho): float
+{
+    $ruta = __DIR__ . '/reporte/logo.png';
+    if (!is_readable($ruta)) return 0.0;
+    $src = @imagecreatefrompng($ruta);
+    if (!$src) return 0.0;
+    $sw = imagesx($src); $sh = imagesy($src);
+    $w = (int)round($ancho * R_ESCALA);
+    $h = (int)round($w * $sh / $sw);
+    imagealphablending($im, true);
+    imagecopyresampled($im, $src, (int)round($x * R_ESCALA), (int)round($y * R_ESCALA), 0, 0, $w, $h, $sw, $sh);
+    imagedestroy($src);
+    return $ancho * $sh / $sw;
+}
+
 function r_jpeg($im, int $calidad = 86): string
 {
     ob_start(); imagejpeg($im, null, $calidad); $b = (string)ob_get_clean();
@@ -194,9 +218,10 @@ function r_seccion($im, Pdf $pdf, string $num, string $titulo, string $resumen):
     return $y + 30;
 }
 
-/** Solo el número de lámina, abajo a la derecha. Nada más. */
-function r_folio(Pdf $pdf, int $n, int $total): void
+/** El pie: el logotipo a la izquierda y el número de lámina a la derecha. */
+function r_folio($im, Pdf $pdf, int $n, int $total): void
 {
+    r_logo($im, R_M, Pdf::ALTO - 38, 74);
     $pdf->texto(Pdf::ANCHO - R_M, Pdf::ALTO - 26, $n . ' / ' . $total, 8, false, R_MUT2, 'der');
 }
 
@@ -248,6 +273,7 @@ function reporte_pdf(array $d): string
         fn($n, $t) => r_titular($pdf, $d, $cmp, $est, $hall, $n, $t),
         fn($n, $t) => r_visitas($pdf, $d, $cmp, $res, $n, $t),
         fn($n, $t) => r_buscador($pdf, $d, $cmp, $res, $n, $t),
+        fn($n, $t) => r_palabras($pdf, $d, $res, $n, $t),
         fn($n, $t) => r_ia($pdf, $d, $cmp, $res, $n, $t),
         fn($n, $t) => r_embudo($pdf, $d, $res, $n, $t),
     ];
@@ -270,15 +296,15 @@ function r_portada(Pdf $pdf, array $d, string $per): void
     r_reticula($im, 24, 118);
     r_caja($im, 0, 0, Pdf::ANCHO, 4, R_PUR2);
 
-    r_caja($im, 84, 160, 44, 3, R_PUR3);
-    r_hanson($im, 'Reporte de', 84, 244, 58);
-    r_hanson($im, 'resultados', 84, 314, 58, R_PUR3);
-    r_degradado($im, 84, 392, 300, 2);
+    r_logo($im, 84, 118, 188);
+    r_caja($im, 84, 184, 44, 3, R_PUR3);
+    r_hanson($im, 'Reporte de', 84, 262, 56);
+    r_hanson($im, 'resultados', 84, 330, 56, R_PUR3);
+    r_degradado($im, 84, 402, 300, 2);
 
     $pdf->fondo(r_jpeg($im, 90), (int)(Pdf::ANCHO * R_ESCALA), (int)(Pdf::ALTO * R_ESCALA));
-    $pdf->texto(84, 152, 'INÉDITO DIGITAL', 9, true, R_PUR3, 'izq', 2.4);
-    $pdf->texto(84, 374, $per, 13.5, false, R_TXT);
-    $pdf->texto(84, 424, 'Sitio, buscadores y asistentes de IA', 11, false, R_SUAVE);
+    $pdf->texto(84, 386, $per, 13.5, false, R_TXT);
+    $pdf->texto(84, 432, 'Sitio, buscadores y asistentes de IA', 11, false, R_SUAVE);
     $pdf->texto(84, Pdf::ALTO - 40, 'Generado el ' . reporte_fecha_larga(substr((string)$d['generado'], 0, 10)), 8.5, false, '#A79CB8');
     $pdf->texto(Pdf::ANCHO - 84, Pdf::ALTO - 40, 'inedito.digital', 9, true, '#CFC6DC', 'der', 1.2);
 }
@@ -326,7 +352,7 @@ function r_titular(Pdf $pdf, array $d, ?array $cmp, array $est, array $hall, int
         $pdf->texto(R_M + 16, $py + 18, $txt, 13, true, R_TXT);
     }
 
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 
@@ -417,7 +443,7 @@ function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t):
         if (++$fila >= 3) { $fila = 0; $col++; }
     }
 
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 
@@ -435,7 +461,7 @@ function r_buscador(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t)
         $pdf->parrafo(R_M, $y + 74, 660,
             'La sincronización diaria con Search Console es la que permite comparar una quincena con la anterior. Se instala como tarea programada en el hosting.',
             11, false, R_MUT);
-        r_folio($pdf, $n, $t); r_cerrar($pdf, $im); return;
+        r_folio($im, $pdf, $n, $t); r_cerrar($pdf, $im); return;
     }
 
     $cifras = [
@@ -481,16 +507,92 @@ function r_buscador(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t)
         . ($marcadas ? '. Con punto: entre el puesto 11 y el 20 con demanda real, las que menos esfuerzo piden para llegar a la primera página.' : '.'),
         8, false, R_MUT2);
 
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 
-/* --- 04 · los asistentes de IA --- */
+
+/* --- 04 · las palabras clave --- */
+function r_palabras(Pdf $pdf, array $d, array $res, int $n, int $t): void
+{
+    $pdf->pagina();
+    $im = r_lienzo();
+    $y = r_seccion($im, $pdf, '04', 'Las palabras clave', $res['palabras'] ?? '');
+    $pal = $d['palabras'] ?? ['temas' => [], 'declaradas' => 0, 'midiendo' => 0, 'sin_aparecer' => [], 'cuantas_sin' => 0];
+    $gw = Pdf::ANCHO - R_M * 2;
+    $cw = $gw * 0.56;
+
+    /* Por tema y no consulta por consulta: ciento veintisiete renglones no
+       caben ni se leen, y lo que importa es en qué terreno vas bien. */
+    $pdf->texto(R_M, $y, 'Por dónde te encuentran', 9, false, R_MUT);
+    $pdf->texto(R_M + $cw, $y, 'puesto medio', 9, false, R_MUT, 'der');
+    $max = 1;
+    foreach ($pal['temas'] as $tm) $max = max($max, (int)$tm['impresiones']);
+
+    /* El paso se calcula con el alto que queda: con siete temas la ultima
+       fila se metia debajo del logotipo del pie. */
+    /* «Otras busquedas» es el cajon de lo que no encaja, no un tema: en la
+       grafica ocupaba un renglon y no se puede hacer nada con el. Se
+       menciona al pie y ya. */
+    $otras = null;
+    $lista = [];
+    foreach ($pal['temas'] as $tm) {
+        if ($tm['nombre'] === 'Otras búsquedas') { $otras = $tm; continue; }
+        $lista[] = $tm;
+    }
+    $lista = array_slice($lista, 0, 6);
+    $paso = $lista ? min(44.0, (Pdf::ALTO - 58 - ($y + 30)) / count($lista)) : 44.0;
+    $fy = $y + 30;
+    foreach ($lista as $tm) {
+        /* El color dice a qué distancia estás: verde dentro de la primera
+           página, ámbar en la segunda, rojo más allá. */
+        $pos = (float)$tm['posicion'];
+        $color = $pos <= 10 ? R_VERDE : ($pos <= 20 ? R_AMBAR : R_ROJO);
+        $pdf->texto(R_M, $fy, $tm['nombre'], 10.5, true, R_TXT);
+        $pdf->texto(R_M + $cw, $fy, (string)$tm['posicion'], 10.5, true, $color, 'der');
+        r_caja($im, R_M, $fy + 7, $cw, 3, R_LINEA);
+        r_caja($im, R_M, $fy + 7, max(2.0, $cw * $tm['impresiones'] / $max), 3, $color);
+        $pdf->texto(R_M, $fy + 22, $tm['n'] . ($tm['n'] === 1 ? ' búsqueda · ' : ' búsquedas · ')
+            . number_format((int)$tm['impresiones']) . ' apariciones'
+            . ($tm['clics'] > 0 ? ' · ' . $tm['clics'] . ' entradas' : ''), 8.5, false, R_MUT2);
+        $fy += $paso;
+    }
+    /* La columna derecha reutiliza $fy: donde acaban las barras se guarda
+       aqui, o la nota de abajo cae en mitad de la lista. */
+    $finTemas = $fy;
+
+    /* Las que se trabajan y todavía no aparecen: es la otra mitad de la
+       pregunta, y sin ella el bloque solo cuenta lo que ya salió bien. */
+    $x2 = R_M + $cw + 56;
+    $pdf->texto($x2, $y, 'Se trabajan y aún no aparecen', 9, false, R_MUT);
+    $fy = $y + 30;
+    foreach (array_slice($pal['sin_aparecer'], 0, 9) as $p) {
+        r_caja($im, $x2, $fy - 3.5, 3, 3, R_LINEA2);
+        $pdf->texto($x2 + 12, $fy, r_recorta($p, 46), 9.5, false, R_SUAVE);
+        $fy += 19;
+    }
+    if ($pal['cuantas_sin'] > 9) {
+        $pdf->texto($x2 + 12, $fy + 4, 'y ' . ($pal['cuantas_sin'] - 9) . ' más', 8.5, false, R_MUT2);
+    }
+    if ($otras) {
+        /* Justo debajo de la ultima barra, no en una altura fija: con seis
+           temas o con tres la nota tiene que caer siempre igual de cerca. */
+        $pdf->texto(R_M, $finTemas + 4, 'Otras ' . $otras['n'] . ' búsquedas sueltas suman '
+            . number_format((int)$otras['impresiones']) . ' apariciones más, sin un tema común.', 8.5, false, R_MUT2);
+    }
+    $pdf->texto($x2, Pdf::ALTO - 92, 'De las ' . $pal['declaradas'] . ' que declara el sitio,', 8.5, false, R_MUT2);
+    $pdf->texto($x2, Pdf::ALTO - 78, $pal['cuantas_sin'] . ' no tienen ni una aparición todavía.', 8.5, false, R_MUT2);
+
+    r_folio($im, $pdf, $n, $t);
+    r_cerrar($pdf, $im);
+}
+
+/* --- 05 · los asistentes de IA --- */
 function r_ia(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '04', 'Los asistentes de IA', $res['ia'] ?? '');
+    $y = r_seccion($im, $pdf, '05', 'Los asistentes de IA', $res['ia'] ?? '');
     $ia = $d['ia'];
     $gw = Pdf::ANCHO - R_M * 2;
 
@@ -531,16 +633,16 @@ function r_ia(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t): void
         $fy += 27;
     }
 
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 
-/* --- 05 · el embudo --- */
+/* --- 06 · el embudo --- */
 function r_embudo(Pdf $pdf, array $d, array $res, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '05', 'De la visita al cliente', $res['embudo'] ?? '');
+    $y = r_seccion($im, $pdf, '06', 'De la visita al cliente', $res['embudo'] ?? '');
     $v = $d['visitas']; $e = $d['embudo'];
     $gw = Pdf::ANCHO - R_M * 2;
 
@@ -576,16 +678,16 @@ function r_embudo(Pdf $pdf, array $d, array $res, int $n, int $t): void
         $pdf->texto(R_M, Pdf::ALTO - 52, 'Reparto de las acciones: ' . implode(' · ', $partes), 9, false, R_MUT);
     }
 
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 
-/* --- 06 · el balance --- */
+/* --- 07 · el balance --- */
 function r_balance(Pdf $pdf, array $hall, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '06', 'El balance', '');
+    $y = r_seccion($im, $pdf, '07', 'El balance', '');
     $gw = Pdf::ANCHO - R_M * 2;
     $cw = $gw / 2 - 30;
 
@@ -623,16 +725,16 @@ function r_balance(Pdf $pdf, array $hall, int $n, int $t): void
         }
     }
 
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 
-/* --- 07 · qué hacer --- */
+/* --- 08 · qué hacer --- */
 function r_recomendaciones(Pdf $pdf, array $reco, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '07', 'Qué hacer ahora', 'En orden: arriba está lo que más mueve con menos esfuerzo.');
+    $y = r_seccion($im, $pdf, '08', 'Qué hacer ahora', 'En orden: arriba está lo que más mueve con menos esfuerzo.');
     $gw = Pdf::ANCHO - R_M * 2;
 
     $reco = array_slice($reco, 0, 4);
@@ -650,11 +752,11 @@ function r_recomendaciones(Pdf $pdf, array $reco, int $n, int $t): void
         }
     }
 
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 
-/* --- 08 · dónde está Inédito --- */
+/* --- 09 · dónde está Inédito --- */
 function r_estatus(Pdf $pdf, array $d, array $est, int $n, int $t): void
 {
     $pdf->pagina();
@@ -662,7 +764,7 @@ function r_estatus(Pdf $pdf, array $d, array $est, int $n, int $t): void
     /* La única lámina de datos con luz: es la conclusión y conviene que se
        note al llegar. */
     r_resplandor($im, 1090, 660, 540, R_PUR, 0.44);
-    $y = r_seccion($im, $pdf, '08', 'Dónde está Inédito', $est['frase']);
+    $y = r_seccion($im, $pdf, '09', 'Dónde está Inédito', $est['frase']);
     $gw = Pdf::ANCHO - R_M * 2;
 
     $tonos = [0 => R_ROJO, 1 => R_AMBAR, 2 => R_PUR3, 3 => R_VERDE];
@@ -690,7 +792,7 @@ function r_estatus(Pdf $pdf, array $d, array $est, int $n, int $t): void
     $pdf->texto(R_M, Pdf::ALTO - 36, 'El siguiente reporte se genera solo el ' . reporte_fecha_larga($sig)
         . ', y cubrirá desde el ' . reporte_fecha_larga(date('Y-m-d', strtotime($d['periodo']['hasta'] . ' +1 day'))) . '.',
         9, false, R_MUT2);
-    r_folio($pdf, $n, $t);
+    r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
 }
 

@@ -53,6 +53,78 @@ function rq1(string $sql, array $p = [], $def = 0) {
     return $r ? array_values($r[0])[0] : $def;
 }
 
+/**
+ * Los temas en los que se reparten las búsquedas.
+ *
+ * El orden manda: una consulta cae en el primero que la reconoce. Por eso la
+ * marca va primero («inédito digital» no es marketing) y las ciudades antes
+ * que marketing («agencia de marketing digital en celaya» cuenta como
+ * cobertura nacional, que es la estrategia que la puso ahí).
+ */
+const REPORTE_TEMAS = [
+    ['Tu marca',                ['inedito', 'inédito']],
+    ['IA, GEO y ChatGPT',       ['ia', 'inteligencia artificial', 'chatgpt', 'chat gpt', 'geo', 'aeo',
+                                 'chatbot', 'agente', 'automatiz', 'asistente']],
+    ['Otras ciudades',          ['celaya', 'guanajuato', 'durango', 'leon', 'león', 'penjamo', 'pénjamo',
+                                 'abasolo', 'zacatecas', 'san luis', 'queretaro', 'querétaro', 'irapuato',
+                                 'salamanca', 'silao', 'guadalajara', 'jalisco', 'cdmx', 'monterrey']],
+    ['Diseño y desarrollo web', ['web', 'pagina', 'página', 'sitio', 'diseño', 'diseno', 'ecommerce', 'tienda']],
+    ['SEO y posicionamiento',   ['seo', 'posicionamiento', 'organico', 'orgánico', 'google maps', 'ficha de google', 'indexa']],
+    ['Publicidad',              ['publicidad', 'ads', 'anuncio', 'campaña', 'campana']],
+    ['Marketing digital',       ['marketing', 'mercadotecnia', 'digital', 'agencia']],
+];
+
+/** Sin acentos y en minúsculas, para poder comparar dos textos escritos a mano. */
+function reporte_llano(string $s): string
+{
+    $s = mb_strtolower(trim($s), 'UTF-8');
+    $s = strtr($s, ['á'=>'a','é'=>'e','í'=>'i','ó'=>'o','ú'=>'u','ü'=>'u','ñ'=>'n']);
+    return trim(preg_replace('/\s+/u', ' ', $s));
+}
+
+/** ¿Aparece esta palabra dentro del texto, empezando en un límite? */
+function reporte_contiene(string $texto, string $palabra): bool
+{
+    /* El límite solo por la izquierda: así «automatiz» reconoce
+       «automatización», y «ia» no se dispara dentro de «agencia». */
+    return (bool)preg_match('/(?<![\p{L}])' . preg_quote($palabra, '/') . '/u', $texto);
+}
+
+/** Reparte las consultas medidas en temas, con su mejor puesto y su volumen. */
+function reporte_temas(array $consultas): array
+{
+    $temas = [];
+    foreach (REPORTE_TEMAS as [$nombre, $_]) $temas[$nombre] = ['nombre'=>$nombre, 'n'=>0, 'impresiones'=>0, 'clics'=>0, 'mejor'=>null, 'suma'=>0.0];
+    $temas['Otras búsquedas'] = ['nombre'=>'Otras búsquedas', 'n'=>0, 'impresiones'=>0, 'clics'=>0, 'mejor'=>null, 'suma'=>0.0];
+
+    foreach ($consultas as $c) {
+        $q = reporte_llano((string)$c['consulta']);
+        $donde = 'Otras búsquedas';
+        foreach (REPORTE_TEMAS as [$nombre, $palabras]) {
+            foreach ($palabras as $p) {
+                if (reporte_contiene($q, reporte_llano($p))) { $donde = $nombre; break 2; }
+            }
+        }
+        $t = &$temas[$donde];
+        $t['n']++;
+        $t['impresiones'] += (int)$c['impresiones'];
+        $t['clics'] += (int)$c['clics'];
+        $t['suma'] += (float)$c['posicion'] * max(1, (int)$c['impresiones']);
+        if ($t['mejor'] === null || (float)$c['posicion'] < $t['mejor']) $t['mejor'] = round((float)$c['posicion'], 1);
+        unset($t);
+    }
+
+    $out = [];
+    foreach ($temas as $t) {
+        if ($t['n'] === 0) continue;
+        $t['posicion'] = round($t['suma'] / max(1, $t['impresiones']), 1);
+        unset($t['suma']);
+        $out[] = $t;
+    }
+    usort($out, fn($x, $y) => $y['impresiones'] <=> $x['impresiones']);
+    return $out;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Reunir                                                            */
 /* ------------------------------------------------------------------ */
@@ -138,6 +210,49 @@ function reporte_reunir(string $desde, string $hasta): array {
         'leads'    => (int)rq1("SELECT COUNT(*) FROM leads WHERE $W AND source <> 'Prueba de integracion'", $p),
     ];
 
+    /* --- las palabras clave: lo que se trabaja contra lo que ya aparece --- */
+    /* Para agrupar por tema se miran TODAS las consultas de la foto, no las
+       cuarenta que caben en la tabla: con una muestra recortada por volumen
+       los temas de cola larga —que son justo los nuevos— desaparecian. */
+    $todasLasConsultas = $buscador['fecha']
+        ? array_map(fn($r) => ['consulta' => $r['consulta'], 'clics' => (int)$r['clics'],
+                               'impresiones' => (int)$r['impresiones'], 'posicion' => (float)$r['posicion']],
+            rq("SELECT consulta, clics, impresiones, posicion FROM gsc_consultas WHERE fecha = :f", [':f' => $buscador['fecha']]))
+        : [];
+
+    $declaradas = [];
+    foreach (['services', 'blog_posts', 'portfolio'] as $tabla) {
+        foreach (rq("SELECT keywords, data_json FROM `$tabla` WHERE status='published'") as $r) {
+            $lista = preg_split('/[,\n]+/', (string)$r['keywords']) ?: [];
+            $j = json_decode((string)$r['data_json'], true);
+            foreach ((array)($j['seo']['keywords'] ?? []) as $k) $lista[] = (string)$k;
+            foreach ($lista as $k) {
+                $k = trim($k);
+                if ($k !== '') $declaradas[reporte_llano($k)] = $k;
+            }
+        }
+    }
+    /* Una palabra «ya aparece» si alguna consulta medida la contiene o al
+       revés: nadie escribe en Google exactamente lo que puso en el panel. */
+    $medidasLlano = array_map(fn($c) => reporte_llano((string)$c['consulta']), $todasLasConsultas);
+    $sinAparecer = [];
+    foreach ($declaradas as $llano => $original) {
+        foreach ($medidasLlano as $m) {
+            if ($m === $llano || str_contains($m, $llano) || str_contains($llano, $m)) continue 2;
+        }
+        $sinAparecer[] = $original;
+    }
+    /* Primero las frases: son objetivos de verdad, no palabras sueltas. */
+    usort($sinAparecer, fn($a, $b) => substr_count($b, ' ') <=> substr_count($a, ' '));
+
+    $palabras = [
+        'temas'        => reporte_temas($todasLasConsultas),
+        'declaradas'   => count($declaradas),
+        'midiendo'     => count($todasLasConsultas),
+        'sin_aparecer' => array_slice($sinAparecer, 0, 12),
+        'cuantas_sin'  => count($sinAparecer),
+    ];
+
     /* --- inventario de contenido, al día de hoy --- */
     $contenido = [
         'servicios'  => (int)rq1("SELECT COUNT(*) FROM services WHERE status='published'"),
@@ -154,6 +269,7 @@ function reporte_reunir(string $desde, string $hasta): array {
         'visitas'   => $visitas,
         'buscador'  => $buscador,
         'ia'        => $ia,
+        'palabras'  => $palabras,
         'embudo'    => $embudo,
         'contenido' => $contenido,
     ];
@@ -384,6 +500,24 @@ function reporte_resumenes(array $h, ?array $a = null): array
             $t .= ' El problema no es que no te vean: es que no te eligen.';
         }
         $out['buscador'] = $t;
+    }
+
+    /* --- palabras clave --- */
+    $pal = $h['palabras'] ?? null;
+    if ($pal && $pal['temas']) {
+        $conVarias = array_values(array_filter($pal['temas'], fn($x) => $x['n'] >= 2));
+        $t = 'El sitio trabaja ' . $pal['declaradas'] . ' palabras clave y ' . $pal['midiendo']
+           . ' ya generan apariciones en Google.';
+        if (count($conVarias) >= 2) {
+            usort($conVarias, fn($x, $y) => $x['posicion'] <=> $y['posicion']);
+            $mejor = $conVarias[0]; $peor = end($conVarias);
+            $t .= ' Donde estás mejor colocado es en «' . mb_strtolower($mejor['nombre'], 'UTF-8')
+                . '», puesto ' . $mejor['posicion'] . ' de media; donde estás más lejos es en «'
+                . mb_strtolower($peor['nombre'], 'UTF-8') . '», puesto ' . $peor['posicion'] . '.';
+        }
+        $out['palabras'] = $t;
+    } else {
+        $out['palabras'] = 'Todavía no hay consultas medidas para agrupar por tema.';
     }
 
     /* --- posicionamiento en IA --- */
