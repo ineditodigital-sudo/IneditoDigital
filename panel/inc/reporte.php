@@ -86,7 +86,10 @@ function reporte_reunir(string $desde, string $hasta): array {
         'por_dia'   => $porDia,
         'paginas'   => array_map(fn($r) => ['path' => $r['path'], 'n' => (int)$r['c']],
                         rq("SELECT path, COUNT(*) c FROM pageviews WHERE $W GROUP BY 1 ORDER BY 2 DESC LIMIT 12", $p)),
-        'fuentes'   => array_column(rq("SELECT COALESCE(NULLIF(source,''),'directo') s, COUNT(*) c FROM pageviews WHERE $W GROUP BY 1 ORDER BY 2 DESC", $p), 'c', 's'),
+        /* hit.php escribe 'direct'; una visita sin origen llega vacia. Las dos
+           son lo mismo y se juntan aqui, porque medio analisis pregunta por
+           esta clave y con dos nombres distintos no encontraba ninguna. */
+        'fuentes'   => array_column(rq("SELECT CASE WHEN COALESCE(source,'') IN ('','direct') THEN 'directo' ELSE source END s, COUNT(*) c FROM pageviews WHERE $W GROUP BY 1 ORDER BY 2 DESC", $p), 'c', 's'),
         'aparatos'  => array_column(rq("SELECT COALESCE(NULLIF(device,''),'?') d, COUNT(*) c FROM pageviews WHERE $W GROUP BY 1 ORDER BY 2 DESC", $p), 'c', 'd'),
     ];
     $visitas['fuentes'] = array_map('intval', $visitas['fuentes']);
@@ -192,7 +195,7 @@ function reporte_hallazgos(array $h, ?array $a): array {
     if ($a) {
         $d = reporte_delta($v['total'], $a['visitas']['total']);
         if ($d['pct'] !== null && abs($d['pct']) >= 10) {
-            $f = ['titulo' => 'Las visitas ' . ($d['signo'] > 0 ? 'subieron' : 'bajaron') . ' ' . abs($d['pct']) . '%',
+            $f = ['peso' => 1, 'titulo' => 'Las visitas ' . ($d['signo'] > 0 ? 'subieron' : 'bajaron') . ' ' . abs($d['pct']) . '%',
                   'texto'  => 'De ' . number_format((int)$a['visitas']['total']) . ' a ' . number_format($v['total'])
                               . ' páginas vistas, y de ' . number_format((int)$a['visitas']['personas']) . ' a '
                               . number_format($v['personas']) . ' personas distintas.'];
@@ -203,7 +206,7 @@ function reporte_hallazgos(array $h, ?array $a): array {
     $dir = (int)($v['fuentes']['directo'] ?? 0);
     $org = (int)($v['fuentes']['organic'] ?? 0);
     if ($v['total'] > 30 && $dir / max(1, $v['total']) > 0.6) {
-        $alertas[] = ['titulo' => 'Casi todo el tráfico llega directo',
+        $alertas[] = ['peso' => 2, 'titulo' => 'Casi todo el tráfico llega directo',
                       'texto'  => round($dir / $v['total'] * 100) . '% entra escribiendo la dirección o desde un enlace sin rastro, '
                                   . 'contra ' . round($org / max(1, $v['total']) * 100) . '% desde el buscador. '
                                   . 'Es gente que ya te conocía: el sitio todavía no está trayendo desconocidos.'];
@@ -217,7 +220,7 @@ function reporte_hallazgos(array $h, ?array $a): array {
         if ($a && $a['buscador']['posicion'] > 0 && $b['posicion'] > 0) {
             $d = reporte_delta($b['posicion'], $a['buscador']['posicion'], true);
             if ($d['hay'] && abs((float)$d['abs']) >= 1) {
-                $f = ['titulo' => 'La posición media ' . ($d['signo'] < 0 ? 'mejoró' : 'empeoró') . ' ' . abs(round((float)$d['abs'], 1)) . ' puestos',
+                $f = ['peso' => 2, 'titulo' => 'La posición media ' . ($d['signo'] < 0 ? 'mejoró' : 'empeoró') . ' ' . abs(round((float)$d['abs'], 1)) . ' puestos',
                       'texto'  => 'Pasó de ' . $a['buscador']['posicion'] . ' a ' . $b['posicion'] . ' en promedio sobre todas las búsquedas donde apareces.'];
                 if ($d['signo'] < 0) $logros[] = $f; else $alertas[] = $f;
             }
@@ -247,19 +250,19 @@ function reporte_hallazgos(array $h, ?array $a): array {
         }
 
         if ($b['sin_indexar'] > 0) {
-            $alertas[] = ['titulo' => $b['sin_indexar'] . ' páginas sin indexar',
+            $alertas[] = ['peso' => 2, 'titulo' => $b['sin_indexar'] . ' páginas sin indexar',
                           'texto'  => 'Google conoce esas direcciones y decidió no ponerlas en su índice. Mientras sigan así no pueden recibir una sola visita.'];
             $reco[] = ['prioridad' => 1, 'titulo' => 'Pedir indexación de lo que quedó fuera',
                        'texto'  => 'Revisar en Search Console el motivo de cada una y solicitar indexación desde la herramienta de inspección de URL.'];
         }
         if ($b['fotos'] < max(2, (int)($h['periodo']['dias'] / 3))) {
-            $alertas[] = ['titulo' => 'Faltan fotos de Search Console',
+            $alertas[] = ['peso' => 4, 'titulo' => 'Faltan fotos de Search Console',
                           'texto'  => 'En ' . $h['periodo']['dias'] . ' días solo se guardaron ' . $b['fotos'] . '. Sin una foto diaria, la comparación entre quincenas se apoya en muy pocos puntos.'];
             $reco[] = ['prioridad' => 2, 'titulo' => 'Dejar corriendo la sincronización diaria',
                        'texto' => 'El cron de Search Console guarda cada día el estado del sitio. Es lo que permite decir «mejoró» con una fecha detrás.'];
         }
     } else {
-        $alertas[] = ['titulo' => 'Sin datos de Search Console en el periodo',
+        $alertas[] = ['peso' => 4, 'titulo' => 'Sin datos de Search Console en el periodo',
                       'texto'  => 'No se guardó ninguna foto entre estas fechas, así que el bloque de buscador queda sin comparación.'];
     }
 
@@ -267,7 +270,7 @@ function reporte_hallazgos(array $h, ?array $a): array {
     if ($ia['lecturas'] > 0) {
         $lista = [];
         foreach ($ia['motores'] as $bot => $n) $lista[] = (REPORTE_MOTORES[$bot] ?? $bot) . ' · ' . number_format($n);
-        $logros[] = ['titulo' => number_format($ia['lecturas']) . ' lecturas de motores de IA',
+        $logros[] = ['peso' => 2, 'titulo' => number_format($ia['lecturas']) . ' lecturas de motores de IA',
                      'texto'  => count($ia['motores']) . ' motores distintos entraron a leer el sitio en la quincena. '
                                  . 'Cada lectura es una oportunidad de que te citen cuando alguien pregunta por tu sector.',
                      'lista'  => array_slice($lista, 0, 6)];
@@ -280,25 +283,25 @@ function reporte_hallazgos(array $h, ?array $a): array {
                                    . '. Suele resolverse con enlaces desde sitios que esos motores sí rastrean y con contenido que responda preguntas completas.'];
         }
         if ($ia['visitas'] === 0) {
-            $alertas[] = ['titulo' => 'Te leen, pero todavía no te mandan gente',
+            $alertas[] = ['peso' => 2, 'titulo' => 'Te leen, pero todavía no te mandan gente',
                           'texto'  => 'Hubo ' . number_format($ia['lecturas']) . ' lecturas de bots y ninguna visita llegó desde un asistente. '
                                       . 'Ser leído es el primer paso; ser citado con enlace es el segundo.'];
         }
     } else {
-        $alertas[] = ['titulo' => 'Ningún motor de IA leyó el sitio',
+        $alertas[] = ['peso' => 1, 'titulo' => 'Ningún motor de IA leyó el sitio',
                       'texto'  => 'Sin lecturas no hay forma de que un asistente te recomiende. Conviene revisar que robots.txt no los esté bloqueando.'];
     }
 
     /* ---- embudo ---- */
     if ($v['total'] > 50 && $e['acciones'] === 0) {
-        $alertas[] = ['titulo' => 'Nadie tocó WhatsApp, el teléfono ni el asistente',
+        $alertas[] = ['peso' => 1, 'titulo' => 'Nadie tocó WhatsApp, el teléfono ni el asistente',
                       'texto'  => number_format($v['total']) . ' páginas vistas y cero acciones registradas. '
                                   . 'O la gente entra y no encuentra el siguiente paso, o llega a leer y no a contratar.'];
         $reco[] = ['prioridad' => 1, 'titulo' => 'Hacer visible el siguiente paso',
                    'texto'  => 'Con visitas y sin una sola acción, el problema no es de tráfico. Revisar que en las páginas más vistas haya un botón claro arriba, sin tener que bajar.'];
     }
     if ($e['leads'] === 0 && $e['acciones'] > 0) {
-        $alertas[] = ['titulo' => 'Hubo acciones pero ningún prospecto',
+        $alertas[] = ['peso' => 1, 'titulo' => 'Hubo acciones pero ningún prospecto',
                       'texto'  => $e['acciones'] . ' personas hicieron algo y ninguna dejó sus datos. La fuga está entre el clic y el formulario.'];
     }
 
@@ -311,8 +314,196 @@ function reporte_hallazgos(array $h, ?array $a): array {
         }
     }
 
+    /* Por impacto, no por el orden en que se escribieron las reglas: una nota
+       de mantenimiento no puede encabezar por encima de «nadie te contacta». */
+    $porPeso = fn($x, $y) => ($x['peso'] ?? 3) <=> ($y['peso'] ?? 3);
+    usort($logros, $porPeso);
+    usort($alertas, $porPeso);
     usort($reco, fn($x, $y) => $x['prioridad'] <=> $y['prioridad']);
     return ['logros' => $logros, 'alertas' => $alertas, 'recomendaciones' => $reco];
+}
+
+/* ------------------------------------------------------------------ */
+/*  Lo que significa cada bloque                                      */
+/* ------------------------------------------------------------------ */
+
+/** «7 de cada 10», que se entiende mejor que «68%». */
+function reporte_de_cada_diez(float $parte, float $total): string
+{
+    if ($total <= 0) return '';
+    $n = (int)round($parte / $total * 10);
+    $letras = [0=>'Ninguno', 1=>'Uno', 2=>'Dos', 3=>'Tres', 4=>'Cuatro', 5=>'La mitad',
+               6=>'Seis', 7=>'Siete', 8=>'Ocho', 9=>'Nueve', 10=>'Todos'];
+    return $letras[$n] ?? (string)$n;
+}
+
+/**
+ * Una o dos frases por sección: qué pasó y qué quiere decir.
+ *
+ * Van arriba de cada lámina, antes que los números. El orden importa: quien
+ * abre el reporte quiere saber si está mejor o peor, y las tablas son para
+ * comprobarlo, no para deducirlo.
+ */
+function reporte_resumenes(array $h, ?array $a = null): array
+{
+    $v = $h['visitas']; $b = $h['buscador']; $ia = $h['ia']; $e = $h['embudo'];
+    $out = [];
+
+    /* --- visitas --- */
+    if ($v['total'] === 0) {
+        $out['visitas'] = 'No se registró ninguna visita en el periodo.';
+    } else {
+        $t = number_format($v['personas']) . ' personas entraron y vieron ' . number_format($v['total']) . ' páginas.';
+        if ($a && (int)$a['visitas']['personas'] > 0) {
+            $d = reporte_delta($v['personas'], $a['visitas']['personas']);
+            if ($d['pct'] !== null && abs($d['pct']) >= 5)
+                $t .= ' Son ' . abs($d['pct']) . '% ' . ($d['signo'] > 0 ? 'más' : 'menos') . ' que la quincena pasada.';
+        }
+        $dir = (int)($v['fuentes']['directo'] ?? 0);
+        $org = (int)($v['fuentes']['organic'] ?? 0);
+        if ($dir / max(1, $v['total']) >= 0.55) {
+            $t .= ' ' . reporte_de_cada_diez((float)$dir, (float)$v['total'])
+                . ' de cada diez llegaron escribiendo la dirección: gente que ya te conocía.';
+        } elseif ($org / max(1, $v['total']) >= 0.35) {
+            $t .= ' ' . reporte_de_cada_diez((float)$org, (float)$v['total'])
+                . ' de cada diez llegaron desde el buscador, que es tráfico nuevo.';
+        }
+        $out['visitas'] = $t;
+    }
+
+    /* --- buscador --- */
+    if (!$b['fecha']) {
+        $out['buscador'] = 'No se guardó ninguna foto de Search Console en estas fechas, así que este bloque va sin comparación.';
+    } else {
+        $t = 'Google te mostró ' . number_format($b['impresiones']) . ' veces y entraron ' . number_format($b['clics']) . '.';
+        if ($b['posicion'] > 0) {
+            $t .= ' Apareces en el puesto ' . $b['posicion'] . ' de media';
+            $t .= $b['posicion'] > 10 ? ', y la primera página termina en el diez.' : ', ya dentro de la primera página.';
+        }
+        if ($b['impresiones'] >= 200 && $b['ctr'] < 2) {
+            $t .= ' El problema no es que no te vean: es que no te eligen.';
+        }
+        $out['buscador'] = $t;
+    }
+
+    /* --- posicionamiento en IA --- */
+    if ($ia['lecturas'] === 0) {
+        $out['ia'] = 'Ningún motor de IA leyó el sitio en la quincena. Sin lecturas no hay forma de que un asistente te recomiende.';
+    } else {
+        $t = count($ia['motores']) . ' motores de IA leyeron el sitio ' . number_format($ia['lecturas']) . ' veces.';
+        $t .= $ia['visitas'] === 0
+            ? ' Te leen; todavía ninguno te ha mandado gente. Ser leído es el primer paso, ser citado con enlace es el segundo.'
+            : ' ' . number_format($ia['visitas']) . ' visitas llegaron desde un asistente.';
+        $out['ia'] = $t;
+    }
+
+    /* --- embudo --- */
+    if ($e['acciones'] === 0) {
+        $out['embudo'] = $v['personas'] > 0
+            ? 'De ' . number_format($v['personas']) . ' personas, ninguna tocó WhatsApp, el teléfono ni el asistente. El sitio informa; todavía no conversa.'
+            : 'Sin visitas no hay acciones que contar.';
+    } elseif ($e['leads'] === 0) {
+        $out['embudo'] = number_format($e['personas']) . ' personas hicieron algo y ninguna dejó sus datos. La fuga está entre el clic y el formulario.';
+    } else {
+        $out['embudo'] = number_format($e['personas']) . ' personas hicieron algo y ' . number_format($e['leads'])
+            . ' dejaron sus datos: ' . round($e['leads'] / max(1, $v['personas']) * 100, 1) . '% de quienes entraron.';
+    }
+
+    return $out;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Dónde está Inédito                                                */
+/* ------------------------------------------------------------------ */
+
+/**
+ * El cierre del reporte: cuatro cosas que tienen que pasar para que el sitio
+ * traiga clientes, y en cuál va cada una.
+ *
+ * El nivel va de 0 a 3 y no es una nota: es en qué paso de la cadena está
+ * cada cosa. Una empresa puede estar en 3 de visibilidad y en 0 de contacto,
+ * que es justo el caso más común y el que hay que ver de un golpe.
+ */
+function reporte_estatus(array $h): array
+{
+    $v = $h['visitas']; $b = $h['buscador']; $ia = $h['ia']; $e = $h['embudo'];
+    $dim = [];
+
+    /* 1. que Google te encuentre */
+    if ($b['impresiones'] === 0) {
+        $dim[] = ['que'=>'Que Google te encuentre', 'nivel'=>0, 'estado'=>'Sin datos',
+                  'texto'=>'No hay medición de Search Console en el periodo.'];
+    } elseif ($b['posicion'] > 0 && $b['posicion'] <= 10) {
+        $dim[] = ['que'=>'Que Google te encuentre', 'nivel'=>3, 'estado'=>'En primera página',
+                  'texto'=>'Posición media ' . $b['posicion'] . ' sobre ' . number_format($b['impresiones']) . ' apariciones.'];
+    } elseif ($b['impresiones'] >= 300) {
+        $dim[] = ['que'=>'Que Google te encuentre', 'nivel'=>2, 'estado'=>'Visible, todavía lejos',
+                  'texto'=>'Apareces ' . number_format($b['impresiones']) . ' veces, pero en el puesto ' . $b['posicion'] . ' de media.'];
+    } else {
+        $dim[] = ['que'=>'Que Google te encuentre', 'nivel'=>1, 'estado'=>'Empezando',
+                  'texto'=>'Todavía pocas apariciones: ' . number_format($b['impresiones']) . ' en la quincena.'];
+    }
+
+    /* 2. que te elijan en el resultado */
+    $ctr = (float)$b['ctr'];
+    if ($b['impresiones'] < 100) {
+        $dim[] = ['que'=>'Que te elijan al verte', 'nivel'=>1, 'estado'=>'Sin volumen para juzgar',
+                  'texto'=>'Hacen falta más apariciones para que el porcentaje signifique algo.'];
+    } elseif ($ctr >= 3) {
+        $dim[] = ['que'=>'Que te elijan al verte', 'nivel'=>3, 'estado'=>'Buen porcentaje',
+                  'texto'=>'De cada 100 que te ven en Google, ' . $ctr . ' entran.'];
+    } elseif ($ctr >= 1.5) {
+        $dim[] = ['que'=>'Que te elijan al verte', 'nivel'=>2, 'estado'=>'Mejorable',
+                  'texto'=>'Entran ' . $ctr . ' de cada 100. El título y la descripción del resultado son lo que decide.'];
+    } else {
+        $dim[] = ['que'=>'Que te elijan al verte', 'nivel'=>1, 'estado'=>'Te ven y siguen de largo',
+                  'texto'=>'Solo ' . $ctr . ' de cada 100 entran. Es lo más barato de mejorar.'];
+    }
+
+    /* 3. que las IA te tomen en cuenta */
+    $motores = count($ia['motores']);
+    if ($ia['lecturas'] === 0) {
+        $dim[] = ['que'=>'Que las IA te tomen en cuenta', 'nivel'=>0, 'estado'=>'Nadie te lee',
+                  'texto'=>'Sin lecturas, ningún asistente puede recomendarte.'];
+    } elseif ($ia['visitas'] > 0) {
+        $dim[] = ['que'=>'Que las IA te tomen en cuenta', 'nivel'=>3, 'estado'=>'Te citan',
+                  'texto'=>number_format($ia['visitas']) . ' personas llegaron desde un asistente.'];
+    } elseif ($motores >= 5) {
+        $dim[] = ['que'=>'Que las IA te tomen en cuenta', 'nivel'=>2, 'estado'=>'Te leen, no te citan',
+                  'texto'=>$motores . ' motores entraron ' . number_format($ia['lecturas']) . ' veces; ninguno te mandó gente todavía.'];
+    } else {
+        $dim[] = ['que'=>'Que las IA te tomen en cuenta', 'nivel'=>1, 'estado'=>'Apenas empiezan',
+                  'texto'=>'Solo ' . $motores . ' motor' . ($motores === 1 ? '' : 'es') . ' te ha leído.'];
+    }
+
+    /* 4. que te contacten */
+    if ($e['leads'] > 0) {
+        $dim[] = ['que'=>'Que te contacten', 'nivel'=>3, 'estado'=>'Llegan prospectos',
+                  'texto'=>number_format($e['leads']) . ' dejaron sus datos en la quincena.'];
+    } elseif ($e['acciones'] > 0) {
+        $dim[] = ['que'=>'Que te contacten', 'nivel'=>2, 'estado'=>'Tocan, no escriben',
+                  'texto'=>number_format($e['acciones']) . ' acciones y ningún formulario enviado.'];
+    } elseif ($v['personas'] > 20) {
+        $dim[] = ['que'=>'Que te contacten', 'nivel'=>0, 'estado'=>'Sin señal',
+                  'texto'=>'Con ' . number_format($v['personas']) . ' visitantes, ni una sola acción registrada.'];
+    } else {
+        $dim[] = ['que'=>'Que te contacten', 'nivel'=>1, 'estado'=>'Falta volumen',
+                  'texto'=>'Con tan pocas visitas todavía no hay nada que medir aquí.'];
+    }
+
+    /* La frase de cierre sale de dónde se corta la cadena: el primer paso
+       que falla es el que define el estado del negocio, no el promedio. */
+    $niveles = array_column($dim, 'nivel');
+    $flojo = array_search(min($niveles), $niveles, true);
+    $frase = [
+        0 => 'Inédito ya tiene presencia, pero la cadena se corta en «' . mb_strtolower($dim[$flojo]['que'], 'UTF-8')
+             . '». Mientras ese paso no se mueva, lo demás no se convierte en clientes.',
+        1 => 'Inédito está construyendo la base. Lo que falta es volumen en «' . mb_strtolower($dim[$flojo]['que'], 'UTF-8') . '».',
+        2 => 'Inédito ya es visible en buscadores y en asistentes de IA. El siguiente salto está en convertir esa presencia en conversaciones.',
+        3 => 'La cadena completa está funcionando: te encuentran, te eligen, las IA te citan y la gente escribe.',
+    ][min($niveles)];
+
+    return ['dimensiones' => $dim, 'frase' => $frase, 'nivel_min' => min($niveles), 'paso_flojo' => $dim[$flojo]['que']];
 }
 
 /* ------------------------------------------------------------------ */
@@ -344,6 +535,8 @@ function reporte_crear(?string $hasta = null): array {
     $datos = reporte_reunir($desde, $hasta);
     $antes = reporte_anterior($hasta);
     $datos['hallazgos'] = reporte_hallazgos($datos, $antes);
+    $datos['resumenes']  = reporte_resumenes($datos, $antes);
+    $datos['estatus']    = reporte_estatus($datos);
     $datos['anterior']  = $antes ? ['desde' => $antes['periodo']['desde'], 'hasta' => $antes['periodo']['hasta']] : null;
     $datos['comparacion'] = $antes ? [
         'visitas'     => reporte_delta($datos['visitas']['total'], $antes['visitas']['total']),
