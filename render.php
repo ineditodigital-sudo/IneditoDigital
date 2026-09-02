@@ -158,6 +158,8 @@ if ($path === '/') {
     $h .= '<h2>Dónde atendemos</h2>';
     $h .= '<p>La oficina está en Aguascalientes y es la única dirección de la empresa, pero el servicio se presta a distancia en toda la República Mexicana: Ciudad de México, Guadalajara, Monterrey, León, Querétaro, San Luis Potosí, Zacatecas, Celaya, Irapuato, Durango, Puebla y Mérida, entre otras. La auditoría con IA, el tablero de resultados y las campañas no dependen de la ubicación; las juntas de dirección son por videollamada.</p>';
     $h .= '<p>Zonas con página propia: <a href="/servicios/marketing-digital-en-celaya">marketing digital en Celaya</a>, <a href="/servicios/marketing-digital-en-guanajuato">Guanajuato y el Bajío</a> y <a href="/servicios/marketing-digital-en-durango">Durango</a>.</p>';
+    $h .= '<h2>Por sector</h2>';
+    $h .= '<p>Cada giro decide la compra en un lugar distinto, así que el trabajo cambia con él: <a href="/servicios/marketing-para-restaurantes">restaurantes y bares</a>, <a href="/servicios/marketing-inmobiliario">inmobiliarias y desarrollos</a>, <a href="/servicios/marketing-industrial-b2b">industria y proveeduría B2B</a>, <a href="/servicios/marketing-para-ecommerce">comercio y e-commerce</a> y <a href="/servicios/marketing-educativo">escuelas y centros de formación</a>.</p>';
     $h .= '<h2>Preguntas frecuentes sobre empresas de IA y marketing digital en Aguascalientes</h2>';
     foreach ($GLOBALS['preguntasHome'] as $p) $h .= '<h3>' . e($p[0]) . '</h3><p>' . e($p[1]) . '</p>';
 
