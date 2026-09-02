@@ -1,20 +1,57 @@
-<?php require __DIR__ . '/../inc/crud.php';
+<?php
+/**
+ * Los servicios.
+ *
+ * La ficha de /servicios/… se arma casi entera con campos que hasta ahora
+ * solo existían dentro del data_json y no tenían formulario: la definición
+ * que abre la página, para quién es, el proceso paso a paso y las preguntas
+ * frecuentes. Eran justo los que más cuestan de escribir y los únicos que
+ * había que pedirle a un programador.
+ *
+ * «Precio» y «Descripción completa» ya no se piden: no se pintan en ninguna
+ * página. Si algún día el sitio los muestre, vuelven aquí con su `json`.
+ */
+require_once __DIR__ . '/../inc/crud.php';
+
 crud('servicios', [
   'table'=>'services','single'=>'Servicio','plural'=>'Servicios','title_field'=>'title','sub_field'=>'category',
-  'note'=>'Administrar aquí guarda en la base de datos (MySQL). Reflejar este contenido en el sitio público es una fase posterior.',
+  'notas'=>[
+    'Lo esencial'    => 'Encabezado de la ficha y de la tarjeta',
+    'La página'      => 'El cuerpo de /servicios/…',
+    'El proceso'     => 'El recorrido que se arma al bajar por la página',
+    'Preguntas'      => 'Salen en la página y también las leen las IA',
+    'Buscadores'     => 'Solo para Google y las IA',
+  ],
   'fields'=>[
-    'title'=>['label'=>'Título','type'=>'text'],
-    'slug'=>['label'=>'Slug (URL)','type'=>'text','help'=>'Se genera del título si lo dejas vacío.'],
-    'category'=>['label'=>'Categoría','type'=>'text'],
-    'price'=>['label'=>'Precio','type'=>'text'],
-    'image'=>['label'=>'URL de imagen','type'=>'text','wide'=>true],
-    'short_desc'=>['label'=>'Descripción corta','type'=>'textarea','wide'=>true],
-    'full_desc'=>['label'=>'Descripción completa','type'=>'textarea','wide'=>true],
-    'features'=>['label'=>'Características (una por línea)','type'=>'textarea','wide'=>true],
-    'benefits'=>['label'=>'Beneficios (una por línea)','type'=>'textarea','wide'=>true],
-    'meta_title'=>['label'=>'Meta Title (SEO)','type'=>'text'],
-    'meta_desc'=>['label'=>'Meta Description (SEO)','type'=>'text'],
-    'keywords'=>['label'=>'Keywords','type'=>'text','wide'=>true],
-    'status'=>['label'=>'Estado','type'=>'select','opts'=>['draft'=>'Borrador','published'=>'Publicado']],
+    'title'      => ['label'=>'Nombre del servicio','type'=>'texto','json'=>'title','grupo'=>'Lo esencial'],
+    'slug'       => ['label'=>'Slug (URL)','type'=>'texto','json'=>'slug','grupo'=>'Lo esencial','help'=>'Se genera del nombre si lo dejas vacío.'],
+    'category'   => ['label'=>'Categoría','type'=>'texto','json'=>'category','grupo'=>'Lo esencial',
+                     'help'=>'Agrupa el servicio en el menú y en /servicios. «Cobertura» y «Sectores» quedan fuera del menú a propósito.'],
+    'icon'       => ['label'=>'Icono del menú','type'=>'texto','json'=>'icon','col'=>false,'grupo'=>'Lo esencial',
+                     'help'=>'Search · Code · Bot · Palette · Sparkles · Mail · TrendingUp · Target · QrCode · Nfc · MapPin · ScanSearch · LayoutDashboard · Linkedin · Megaphone · Route'],
+    'order'      => ['label'=>'Orden','type'=>'numero','json'=>'order','col'=>false,'grupo'=>'Lo esencial','help'=>'Menor número, más arriba.'],
+    'status'     => ['label'=>'Estado','type'=>'select','grupo'=>'Lo esencial','opts'=>['draft'=>'Borrador','published'=>'Publicado']],
+
+    'short_desc' => ['label'=>'Descripción corta','type'=>'area','json'=>'shortDescription','grupo'=>'La página',
+                     'help'=>'Una frase. Es lo que se lee en la tarjeta y en el menú.'],
+    'full_desc'  => ['label'=>'Definición','type'=>'area','json'=>'definicion','grupo'=>'La página',
+                     'help'=>'Abre la página respondiendo «qué es esto». Es de lo primero que citan las IA, así que conviene que empiece nombrando el servicio.'],
+    'image'      => ['label'=>'Imagen del encabezado','type'=>'imagen','json'=>'bannerImage','grupo'=>'La página'],
+    'features'   => ['label'=>'Qué incluye','type'=>'lista','json'=>'features','grupo'=>'La página'],
+    'benefits'   => ['label'=>'Beneficios','type'=>'lista','json'=>'benefits','grupo'=>'La página'],
+    'ideal'      => ['label'=>'Para quién es','type'=>'lista','json'=>'ideal','col'=>false,'grupo'=>'La página'],
+
+    'process'    => ['label'=>'Pasos','type'=>'pares','json'=>'process','col'=>false,'grupo'=>'El proceso',
+                     'claves'=>['step'=>'#','title'=>'Título del paso','description'=>'Descripción'],'auto'=>'step'],
+
+    'faq'        => ['label'=>'Preguntas frecuentes','type'=>'pares','json'=>'faq','col'=>false,'grupo'=>'Preguntas',
+                     'claves'=>['question'=>'Pregunta','answer'=>'Respuesta']],
+
+    'related'    => ['label'=>'Servicios relacionados','type'=>'lista','json'=>'relatedServices','col'=>false,'grupo'=>'Preguntas',
+                     'help'=>'El slug de cada uno, tal como aparece arriba.'],
+
+    'keywords'   => ['label'=>'Palabras clave','type'=>'lista','json'=>'seo.keywords','sep'=>'comas','grupo'=>'Buscadores'],
+    'meta_title' => ['label'=>'Título para buscadores','type'=>'texto','json'=>'seo.metaTitle','grupo'=>'Buscadores','help'=>'Si lo dejas vacío se usa el nombre del servicio.'],
+    'meta_desc'  => ['label'=>'Descripción para buscadores','type'=>'texto','json'=>'seo.metaDescription','grupo'=>'Buscadores','wide'=>true],
   ],
 ]);

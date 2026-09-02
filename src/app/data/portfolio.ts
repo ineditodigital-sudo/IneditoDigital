@@ -1,3 +1,13 @@
+/**
+ * Titulo y descripcion escritos a mano para buscadores. Opcional: si estan
+ * vacios manda lo de siempre (el titulo del caso, su descripcion corta).
+ */
+export interface SeoFicha {
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+}
+
 export interface PortfolioItem {
   id: string;
   slug: string;
@@ -16,6 +26,7 @@ export interface PortfolioItem {
   tags: string[];
   year: string;
   highlights: string[];
+  seo?: SeoFicha;
 }
 
 export const PORTFOLIO_ITEMS: PortfolioItem[] = [

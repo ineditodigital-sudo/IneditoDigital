@@ -60,4 +60,34 @@ aunque el script reportara "publicado".
 Al publicar contenido por script, **verificar siempre contra la página real**
 (`curl` con user-agent de bot), no contra lo que imprime el script.
 
-_Última actualización: 2026-08-31_
+## Cada ficha vive en dos copias: columnas y `data_json`
+
+`services`, `blog_posts` y `portfolio` guardan lo mismo dos veces: unas
+columnas de MySQL y un `data_json` con la ficha completa. **El sitio arranca
+del `data_json`** (`render.php` hace `jval($r)` y solo deja que unas pocas
+columnas lo pisen), así que una columna que `render.php` no copia no llega a
+la web por más que el panel diga "guardado".
+
+Eso creaba dos trampas simétricas, resueltas el 02-sep-2026:
+
+- **Campos que se editaban y no salían.** El reto y la solución de un caso,
+  el tiempo de lectura de un artículo: el panel escribía la columna y el
+  sitio seguía leyendo el `data_json`.
+- **Campos que salían y no se podían editar.** El sitio del cliente, el año,
+  los servicios aplicados, los logros, el proceso y las preguntas frecuentes
+  de un servicio: solo existían dentro del `data_json` y ninguna pantalla los
+  ofrecía.
+
+**La regla ahora:** cada campo del panel declara con `json` a qué clave del
+`data_json` corresponde, y `crud()` escribe las dos copias en cada guardado.
+Un campo sin columna lleva `'col' => false` y vive solo en el `data_json`.
+
+**Al añadir un campo a un módulo de contenido**, comprobar antes que el sitio
+lo pinta en alguna parte, y darle su `json`. Un campo sin `json` se guarda
+donde nadie lo lee: es pedirle trabajo a alguien para nada.
+
+`scripts/probar_crud.php` (`php scripts/probar_crud.php`, contra SQLite en
+memoria, no toca producción) verifica justo eso: que los tres formularios se
+pintan y que al guardar las dos copias dicen lo mismo.
+
+_Última actualización: 2026-09-02_

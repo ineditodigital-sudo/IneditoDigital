@@ -65,9 +65,13 @@ export default function ServiceDetailPage() {
   return (
     <>
       <DynamicSEO
-        title={`${service.title} - INÉDITO DIGITAL`}
-        description={service.shortDescription}
-        keywords={[service.title.toLowerCase(), 'marketing digital aguascalientes', service.category.toLowerCase()]}
+        title={service.seo?.metaTitle || `${service.title} - INÉDITO DIGITAL`}
+        description={service.seo?.metaDescription || service.shortDescription}
+        keywords={
+          service.seo?.keywords?.length
+            ? service.seo.keywords
+            : [service.title.toLowerCase(), 'marketing digital aguascalientes', service.category.toLowerCase()]
+        }
       />
 
       <div className="relative bg-[#07060B]">

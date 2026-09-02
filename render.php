@@ -13,6 +13,13 @@ $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $isBot = (bool)preg_match('/bot|crawl|spider|slurp|googlebot|bingbot|duckduck|baidu|yandex|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|gptbot|oai-searchbot|chatgpt-user|claudebot|anthropic|perplexity|google-extended|ccbot|bytespider|amazonbot|applebot|meta-externalagent/i', $ua);
 
 function e($v){ return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8'); }
+/* El titulo y la descripcion que alguien escribio en el panel para esta
+   ficha. Si estan vacios, quien llama decide con que rellenar: el sitio
+   nunca debe quedarse sin <title>. */
+function seoDe(array $x, string $clave): string {
+  $v = $x['seo'][$clave] ?? '';
+  return is_string($v) ? trim($v) : '';
+}
 function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); return is_array($o) ? $o : []; }
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
@@ -184,14 +191,14 @@ if ($path === '/') {
 elseif ($seg[0] === 'servicios' && isset($seg[1])) {
   $s = $findBySlug($services, $seg[1]);
   if ($s) {
-    $title = ($s['title'] ?? '').' | Servicios · '.$siteName;
+    $title = seoDe($s, 'metaTitle') ?: ($s['title'] ?? '').' | Servicios · '.$siteName;
     $primera = '';
     if (!empty($s['definicion'])) {
       $p = preg_split('~(?<=[.!?])\s~u', (string)$s['definicion'], 2);
       $primera = trim($p[0] ?? '');
       if (mb_strlen($primera) > 165) $primera = '';
     }
-    $desc = $primera ?: ($s['shortDescription'] ?? $defaultDesc);
+    $desc = seoDe($s, 'metaDescription') ?: ($primera ?: ($s['shortDescription'] ?? $defaultDesc));
     $canonical = $BASE.'/servicios/'.$s['slug']; $crumbs[]=['Servicios','/servicios']; $crumbs[]=[$s['title'],'/servicios/'.$s['slug']];
     $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical,'dateModified'=>date('Y-m-d', strtotime((string)($s['fecha'] ?: 'now')))];
     $bodyBuilder = function() use ($s) {
@@ -241,7 +248,8 @@ elseif ($seg[0] === 'servicios') {
 elseif ($seg[0] === 'portafolio' && isset($seg[1])) {
   $s = $findBySlug($portfolio, $seg[1]);
   if ($s) {
-    $title = ($s['title'] ?? '').' | Portafolio · '.$siteName; $desc = $s['description'] ?? $defaultDesc;
+    $title = seoDe($s, 'metaTitle') ?: ($s['title'] ?? '').' | Portafolio · '.$siteName;
+    $desc = seoDe($s, 'metaDescription') ?: ($s['description'] ?? $defaultDesc);
     $canonical=$BASE.'/portafolio/'.$s['slug']; $crumbs[]=['Portafolio','/portafolio']; $crumbs[]=[$s['title'],'/portafolio/'.$s['slug']];
     $bodyBuilder = function() use ($s){ $h='<h1>'.e($s['title'] ?? '').'</h1>'; if(!empty($s['client']))$h.='<p><strong>Cliente:</strong> '.e($s['client']).'</p>'; $h.='<p>'.e($s['description'] ?? '').'</p>'; foreach(['challenge'=>'Reto','solution'=>'Solución'] as $k=>$l) if(!empty($s[$k]))$h.='<h2>'.$l.'</h2><p>'.e($s[$k]).'</p>'; if(!empty($s['results'])&&is_array($s['results'])){ $h.='<h2>Resultados</h2><ul>'; foreach($s['results'] as $r) $h.='<li>'.e(($r['metric'] ?? '').': '.($r['value'] ?? '')).'</li>'; $h.='</ul>'; } return $h; };
   } else { $is404 = true; }
@@ -253,7 +261,8 @@ elseif ($seg[0] === 'portafolio') {
 elseif ($seg[0] === 'blog' && isset($seg[1])) {
   $b = $findBySlug($blog, $seg[1]);
   if ($b) {
-    $title=($b['title'] ?? '').' | Blog · '.$siteName; $desc=$b['excerpt'] ?? $defaultDesc; $ogType='article';
+    $title = seoDe($b, 'metaTitle') ?: ($b['title'] ?? '').' | Blog · '.$siteName;
+    $desc = seoDe($b, 'metaDescription') ?: ($b['excerpt'] ?? $defaultDesc); $ogType='article';
     $canonical=$BASE.'/blog/'.$b['slug']; $crumbs[]=['Blog','/blog']; $crumbs[]=[$b['title'],'/blog/'.$b['slug']];
     $schema[]=['@context'=>'https://schema.org','@type'=>'BlogPosting','headline'=>$b['title'] ?? '','description'=>$b['excerpt'] ?? '','image'=>$b['image'] ?? $GLOBALS['logo'],'author'=>$GLOBALS['autorArticulo']($b['author'] ?? $siteName, $miembros, $BASE),'publisher'=>['@type'=>'Organization','name'=>$siteName,'logo'=>['@type'=>'ImageObject','url'=>$GLOBALS['logo']]],'mainEntityOfPage'=>$canonical,'inLanguage'=>'es'] + $GLOBALS['fechasArticulo']($b);
     $bodyBuilder=function() use ($b){

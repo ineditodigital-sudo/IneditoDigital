@@ -1,3 +1,5 @@
+import type { SeoFicha } from './portfolio';
+
 export interface Service {
   id: string;
   slug: string;
@@ -15,6 +17,7 @@ export interface Service {
   faq: { question: string; answer: string }[];
   relatedServices: string[];
   order: number;
+  seo?: SeoFicha;
 }
 
 export const SERVICES: Service[] = [

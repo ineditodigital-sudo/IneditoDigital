@@ -16,7 +16,11 @@ export default function PortfolioDetailPage() {
 
   return (
     <>
-      <SEO title={`${item.title} - Caso de Éxito`} description={item.description} />
+      <SEO
+        title={item.seo?.metaTitle || `${item.title} - Caso de Éxito`}
+        description={item.seo?.metaDescription || item.description}
+        keywords={item.seo?.keywords ?? item.tags}
+      />
       <div className="py-16 md:py-24 px-4">
         <div className="container mx-auto max-w-5xl">
           <Link to="/portafolio" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-8 transition-colors">
