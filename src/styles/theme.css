@@ -701,3 +701,43 @@
     stroke-dashoffset: 0;
   }
 }
+
+/* ------------------------------------------------------------------
+   Portada animada de los artículos sin foto (PortadaArticulo.tsx).
+
+   Se hace con CSS y no con JavaScript a propósito: en /blog hay una
+   rejilla con ocho de estas a la vez, y animar eso desde el hilo
+   principal se nota en el scroll. Solo se mueven `transform` y
+   `opacity`, que el navegador compone en la tarjeta gráfica.
+   ------------------------------------------------------------------ */
+.portada-mancha {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(17px);
+  will-change: transform, opacity;
+  animation-name: portada-derivar;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.portada-mancha--2 { animation-name: portada-derivar-2; }
+.portada-mancha--3 { animation-name: portada-derivar-3; }
+
+@keyframes portada-derivar {
+  from { transform: translate3d(0, 0, 0) scale(1);       opacity: .85; }
+  to   { transform: translate3d(9%, 7%, 0) scale(1.16);  opacity: 1; }
+}
+@keyframes portada-derivar-2 {
+  from { transform: translate3d(0, 0, 0) scale(1.08);    opacity: .7; }
+  to   { transform: translate3d(-11%, 9%, 0) scale(.92); opacity: .95; }
+}
+@keyframes portada-derivar-3 {
+  from { transform: translate3d(0, 0, 0) scale(.95);     opacity: .55; }
+  to   { transform: translate3d(7%, -10%, 0) scale(1.2); opacity: .85; }
+}
+
+/* Quien pidió menos movimiento se queda con el degradado quieto, que ya
+   es una portada completa. */
+@media (prefers-reduced-motion: reduce) {
+  .portada-mancha { animation: none; }
+}

@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { Clock, ArrowRight } from 'lucide-react';
+import PortadaArticulo from '../components/PortadaArticulo';
 import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
@@ -40,7 +41,12 @@ export default function BlogPage() {
                 <Link to={`/blog/${post.slug}`}>
                   <GlassCard hover className="h-full group">
                     <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-white/5">
-                      <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <PortadaArticulo
+                        imagen={post.image}
+                        titulo={post.title}
+                        slug={post.slug}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                     </div>
                     <div className="flex items-center gap-4 text-sm text-white/60 mb-3">
                       <span className="text-[#7700CE]">{post.category}</span>

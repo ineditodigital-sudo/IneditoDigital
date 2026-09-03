@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router';
+import PortadaArticulo from '../components/PortadaArticulo';
 import { Markdown } from '../components/Markdown';
 import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
 import SEO from '../components/SEO';
@@ -73,7 +74,12 @@ export default function BlogPostPage() {
           </div>
 
           <div className="aspect-video rounded-2xl overflow-hidden mb-12 bg-white/5">
-            <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+            <PortadaArticulo
+              imagen={post.image}
+              titulo={post.title}
+              slug={post.slug}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           <GlassCard className="max-w-none mb-12">
