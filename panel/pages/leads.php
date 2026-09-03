@@ -1,6 +1,12 @@
 <?php
 $STATUSES = ['new','contacted','qualified','converted','lost'];
 $LB = ['new'=>'Nuevo','contacted'=>'Contactado','qualified'=>'Calificado','converted'=>'Convertido','lost'=>'Perdido'];
+/** «4491204353» se lee mal; «449 120 4353» se lee de un vistazo. */
+function tel_bonito(string $d): string {
+    if (strlen($d) === 12 && str_starts_with($d, '52')) $d = substr($d, 2);
+    if (strlen($d) !== 10) return $d;
+    return substr($d, 0, 3) . ' ' . substr($d, 3, 3) . ' ' . substr($d, 6);
+}
 function wa_link(?string $p): string { $n=preg_replace('/\D/','',(string)$p); if(strlen($n)===10)$n='52'.$n; return 'https://wa.me/'.$n; }
 
 // Exportar CSV (limpia el buffer del layout y envía el archivo)
@@ -135,46 +141,131 @@ $ct = csrf();
 
 <?php if (!$rows): ?><div class="card"><p class="muted" style="text-align:center;padding:30px 0">No hay leads con este filtro.</p></div><?php endif; ?>
 
-<?php foreach ($rows as $l): $id=(int)$l['id'];
-  $palabras = preg_split('/\s+/u', trim((string)$l['name'])) ?: [];
-  $ini = mb_strtoupper(mb_substr($palabras[0] ?? '?', 0, 1) . mb_substr($palabras[1] ?? '', 0, 1));
-  $ce = $CEST[$l['status']] ?? '#9a97ad';
+<style>
+  /* El color del estado entra por --est y se usa en un filete a la izquierda.
+     Antes iba en un circulo con la inicial del nombre: una letra dentro de un
+     cuadro no dice nada que el nombre de al lado no diga ya. */
+  .lead{background:var(--card);border:1px solid var(--line);border-left:2px solid var(--est);
+    border-radius:14px;padding:20px 22px;margin-bottom:14px;transition:border-color .18s}
+  .lead:hover{border-color:var(--line2);border-left-color:var(--est)}
+  .lead-cab{display:flex;align-items:flex-start;gap:16px;margin-bottom:4px}
+  .lead-cab h3{margin:0;font-size:16px;letter-spacing:.01em}
+  .lead-est{margin-left:auto;flex:none;font-size:11px;font-weight:700;color:var(--est);
+    text-transform:uppercase;letter-spacing:.1em;padding-top:3px}
+  .lead-meta{font-size:12px;color:var(--mut2);margin-top:4px}
+  /* Cita, no caja rellena: el mensaje es la voz de la persona. */
+  /* Sin relleno ni esquinas: el encabezado del panel le pone fondo y radio a
+     .lead-msg, y una caja gris dentro de otra caja gris solo suma bordes. */
+  .lead-msg{background:none;border-radius:0;border-left:2px solid var(--line2);
+    padding:2px 0 2px 16px;margin:16px 0 0;color:var(--txt);
+    font-size:13.5px;line-height:1.7;white-space:pre-line}
+  .lead-vias{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:13px}
+  .lead-vias a{color:#b58bff;text-decoration:none}
+  .lead-vias a:hover{text-decoration:underline}
+  .lead-vias .falta{color:var(--mut2)}
+  .lead-pie{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+    margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+  .lead-pie select{width:auto;padding:7px 11px;font-size:12.5px}
+  .lead-pie .aparte{margin-left:auto}
+  /* Borrar en voz baja: sin WhatsApp ni correo era el unico boton de la
+     tarjeta y se leia como la accion principal. Solo se enciende al pasar. */
+  .lead-pie .borrar{border-color:var(--line);color:var(--mut2)}
+  .lead-pie .borrar:hover{border-color:#b3324f;color:#ff7d9c}
+  .lead-notas{margin-top:14px}
+  .lead-notas summary{cursor:pointer;font-size:12px;color:var(--mut2);list-style:none;display:flex;align-items:center;gap:7px}
+  .lead-notas summary::-webkit-details-marker{display:none}
+  .lead-notas summary::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--line2)}
+  /* Un punto morado avisa de que hay nota, sin tener que abrirla. */
+  .lead-notas.hay summary::before{background:var(--pur3)}
+  .lead-notas.hay summary{color:var(--mut)}
+  .lead-notas textarea{min-height:74px;margin-top:10px;font-size:13px}
+  @media(max-width:640px){ .lead{padding:16px} .lead-pie .aparte{margin-left:0} }
+</style>
+
+<?php foreach ($rows as $l): $id = (int)$l['id'];
+  $ce   = $CEST[$l['status']] ?? '#9a97ad';
+  /* Se arma solo con lo que existe: pegar campos vacios con « · » dejaba
+     puntos sueltos bajo el nombre. */
+  $meta = array_filter([
+    date('d/m/Y H:i', strtotime((string)$l['created_at'])),
+    trim((string)$l['source']),
+    trim((string)$l['company']),
+  ], fn($x) => $x !== '');
+  $tel    = preg_replace('/\D/', '', (string)$l['phone']);
+  $hayTel = strlen($tel) >= 10;
+  $correo = trim((string)$l['email']);
+  $nota   = trim((string)($l['notes'] ?? ''));
 ?>
-<div class="card">
-  <div class="topbar" style="margin-bottom:10px">
-    <div style="display:flex;gap:14px;flex:1;min-width:0">
-      <span class="avatar" style="background:linear-gradient(140deg,<?= $ce ?>33,<?= $ce ?>cc);border:1px solid <?= $ce ?>55"><?= e($ini) ?></span>
-      <div style="flex:1;min-width:0">
-        <h3 style="margin:0 0 3px;font-size:15.5px"><?= e($l['name']) ?></h3>
-        <div class="muted" style="font-size:12.5px"><a href="mailto:<?= e($l['email']) ?>" style="color:#b58bff"><?= e($l['email']) ?></a> · <?= e($l['phone']) ?><?= $l['company']?' · '.e($l['company']):'' ?></div>
-        <?php if($l['message']): ?><div class="lead-msg"><?= e($l['message']) ?></div><?php endif; ?>
-        <div class="mini" style="margin-top:8px"><?= e(date('d/m/Y H:i', strtotime((string)$l['created_at']))) ?> · <?= e($l['source']) ?></div>
-      </div>
+<article class="lead" style="--est:<?= e($ce) ?>">
+  <div class="lead-cab">
+    <div style="min-width:0">
+      <h3><?= e($l['name']) ?></h3>
+      <div class="lead-meta"><?= e(implode(' · ', $meta)) ?></div>
     </div>
-    <span class="badge b-<?= e($l['status']) ?>"><?= e($LB[$l['status']]??$l['status']) ?></span>
+    <span class="lead-est"><?= e($LB[$l['status']] ?? $l['status']) ?></span>
   </div>
-  <div class="actions">
-    <form method="post" style="display:flex;gap:6px;align-items:center">
-      <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="update_status">
-      <input type="hidden" name="id" value="<?= $id ?>"><input type="hidden" name="f" value="<?= e($f) ?>">
-      <select name="status" style="width:auto"><?php foreach($STATUSES as $s): ?><option value="<?= $s ?>" <?= $l['status']===$s?'selected':'' ?>><?= e($LB[$s]) ?></option><?php endforeach; ?></select>
-      <button class="btn small" type="submit">Guardar</button>
+
+  <?php if (trim((string)$l['message']) !== ''): ?>
+    <blockquote class="lead-msg"><?= e($l['message']) ?></blockquote>
+  <?php endif; ?>
+
+  <div class="lead-vias">
+    <?php if ($hayTel): ?>
+      <a href="tel:+<?= e(strlen($tel) === 10 ? '52' . $tel : $tel) ?>"><?= e(tel_bonito($tel)) ?></a>
+    <?php else: ?>
+      <span class="falta">Sin teléfono</span>
+    <?php endif; ?>
+    <?php if ($correo !== ''): ?>
+      <a href="mailto:<?= e($correo) ?>"><?= e($correo) ?></a>
+    <?php endif; ?>
+    <?php if (trim((string)$l['service']) !== ''): ?>
+      <span class="falta">Le interesa: <?= e($l['service']) ?></span>
+    <?php endif; ?>
+  </div>
+
+  <div class="lead-pie">
+    <form method="post" style="display:contents">
+      <input type="hidden" name="csrf" value="<?= $ct ?>">
+      <input type="hidden" name="action" value="update_status">
+      <input type="hidden" name="id" value="<?= $id ?>">
+      <input type="hidden" name="f" value="<?= e($f) ?>">
+      <?php /* Cambiar el estado guarda solo: el boton «Guardar» de al lado
+               era un paso de mas para una lista de cinco opciones. */ ?>
+      <select name="status" onchange="this.form.requestSubmit ? this.form.requestSubmit() : this.form.submit()">
+        <?php foreach ($STATUSES as $st): ?>
+          <option value="<?= $st ?>" <?= $l['status'] === $st ? 'selected' : '' ?>><?= e($LB[$st]) ?></option>
+        <?php endforeach; ?>
+      </select>
     </form>
-    <a class="btn small" href="mailto:<?= e($l['email']) ?>">Correo</a>
-    <a class="btn small green" target="_blank" rel="noopener" href="<?= e(wa_link($l['phone'])) ?>">WhatsApp</a>
-    <form method="post" onsubmit="return confirm('¿Borrar este lead? No se puede deshacer.')" style="display:inline">
-      <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="delete">
-      <input type="hidden" name="id" value="<?= $id ?>"><input type="hidden" name="f" value="<?= e($f) ?>">
-      <button class="btn small danger" type="submit">Borrar</button>
+
+    <?php /* Una sola accion principal: lo que de verdad se hace con un lead
+             es escribirle. Lo demas queda en voz baja. */ ?>
+    <?php if ($hayTel): ?>
+      <a class="btn small green" target="_blank" rel="noopener" href="<?= e(wa_link($l['phone'])) ?>">Escribir por WhatsApp</a>
+    <?php endif; ?>
+    <?php if ($correo !== ''): ?>
+      <a class="btn small ghost" href="mailto:<?= e($correo) ?>">Correo</a>
+    <?php endif; ?>
+
+    <form method="post" class="aparte" onsubmit="return confirm('¿Borrar a <?= e(addslashes($l['name'])) ?>? No se puede deshacer.')">
+      <input type="hidden" name="csrf" value="<?= $ct ?>">
+      <input type="hidden" name="action" value="delete">
+      <input type="hidden" name="id" value="<?= $id ?>">
+      <input type="hidden" name="f" value="<?= e($f) ?>">
+      <button class="btn small danger borrar" type="submit">Borrar</button>
     </form>
   </div>
-  <details style="margin-top:12px"><summary class="mini" style="cursor:pointer">Notas internas</summary>
-    <form method="post" style="margin-top:8px">
-      <input type="hidden" name="csrf" value="<?= $ct ?>"><input type="hidden" name="action" value="note">
-      <input type="hidden" name="id" value="<?= $id ?>"><input type="hidden" name="f" value="<?= e($f) ?>">
-      <textarea name="notes" style="min-height:70px" placeholder="Notas sobre este prospecto…"><?= e($l['notes'] ?? '') ?></textarea>
-      <button class="btn small ghost" type="submit" style="margin-top:8px">Guardar nota</button>
+
+  <details class="lead-notas <?= $nota !== '' ? 'hay' : '' ?>" <?= $nota !== '' ? 'open' : '' ?>>
+    <summary><?= $nota !== '' ? 'Notas internas' : 'Añadir una nota' ?></summary>
+    <form method="post">
+      <input type="hidden" name="csrf" value="<?= $ct ?>">
+      <input type="hidden" name="action" value="note">
+      <input type="hidden" name="id" value="<?= $id ?>">
+      <input type="hidden" name="f" value="<?= e($f) ?>">
+      <textarea name="notes" placeholder="Lo que sepas de este prospecto y no esté arriba…"><?= e($nota) ?></textarea>
+      <button class="btn small ghost" type="submit" style="margin-top:10px">Guardar nota</button>
     </form>
   </details>
-</div>
+</article>
 <?php endforeach; ?>
