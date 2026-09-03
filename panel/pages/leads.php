@@ -180,12 +180,24 @@ $esperando = ($counts['new'] ?? 0) + ($counts['contacted'] ?? 0);
 <?php endif; ?>
 
 <?php $CEST = ['all'=>'#9a97ad','new'=>'#8ea6ff','contacted'=>'#ffcf7a','qualified'=>'#c3a0ff','converted'=>'#5fe0a0','lost'=>'#ff8fa6']; ?>
-<div style="margin-bottom:16px">
+<div class="filtros">
   <?php foreach (['all'=>'Todos']+$LB as $k=>$lab): ?>
     <a class="chip <?= $f===$k?'active':'' ?>" href="/panel/?p=leads&f=<?= $k ?>"><span class="pt-est" style="background:<?= $CEST[$k] ?>"></span><?= e($lab) ?> (<?= $counts[$k]??0 ?>)</a>
   <?php endforeach; ?>
 </div>
-<form method="get" style="margin-bottom:20px;display:flex;gap:10px">
+<script>
+  /* Si el filtro activo quedo fuera de la tira, no se ve cual esta puesto.
+     Se mueve el scroll del contenedor y no la pagina: scrollIntoView
+     arrastraria tambien el vertical. */
+  (function () {
+    var a = document.querySelector('.filtros .chip.active');
+    if (a && a.parentElement.scrollWidth > a.parentElement.clientWidth) {
+      a.parentElement.scrollLeft = Math.max(0, a.offsetLeft - 16);
+    }
+  })();
+</script>
+
+<form method="get" class="buscador" style="margin-bottom:20px;display:flex;gap:10px">
   <input type="hidden" name="p" value="leads"><input type="hidden" name="f" value="<?= e($f) ?>">
   <input type="text" name="q" value="<?= e($q) ?>" placeholder="Buscar por nombre, email, empresa, teléfono…">
   <button class="btn ghost" type="submit">Buscar</button>
@@ -258,7 +270,27 @@ $esperando = ($counts['new'] ?? 0) + ($counts['contacted'] ?? 0);
   .vacio a{color:#a982f0}
   @media(max-width:640px){
     .lead-est{margin-left:0;width:100%}
-    .lead-acc .aparte{margin-left:0}
+    /* «Borrar» deja de irse al extremo: pegado al resto en una fila que ya
+       se envuelve, quedaba solo y demasiado a mano. */
+    .lead-acc{gap:10px}
+    /* Se envuelven en fila, no se apilan: tres renglones de controles por
+       persona convertian la lista en un formulario. «Borrar» conserva su
+       esquina derecha para no quedar a mano. */
+    /* Lo que se toca llega a 44px, que es donde un pulgar deja de fallar.
+       El padding va repetido aqui a proposito: «.lead-acc select» es mas
+       especifico que la regla movil de «select» del panel y la ganaba, asi
+       que el desplegable se quedaba en 32px mientras todo lo demas crecia. */
+    .lead-acc select{flex:1 1 150px;min-width:0;padding:12px 14px;font-size:15px}
+    .lead-mas > summary{padding:12px 16px}
+    .lead-nota summary{padding:14px 0}
+    .lead-acc .aparte{margin-left:auto}
+    .lead-campos input{min-width:0;width:100%}
+    .lead-txt{font-size:14.5px}
+    /* El buscador ocupa el ancho y el boton se pone debajo: apretados al
+       lado, el campo no dejaba leer ni lo que uno escribe. */
+    .buscador{flex-wrap:wrap}
+    .buscador input{flex:1 1 100%}
+    .buscador .btn{margin-left:auto}
   }
 </style>
 

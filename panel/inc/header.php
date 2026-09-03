@@ -163,6 +163,9 @@ label{display:block;font-size:11.5px;color:var(--mut);text-transform:uppercase;l
 .chip{display:inline-block;border:1px solid var(--line);background:var(--card);color:var(--mut);border-radius:999px;padding:7px 14px;font-size:13px;margin-right:6px;cursor:pointer;transition:border-color .18s,color .18s}
 .chip:hover{border-color:rgba(153,51,255,.4);color:var(--txt)}
 .chip.active{background:var(--pur);color:#fff;border-color:var(--pur)}
+/* El contenedor manda el espacio; el chip ya no lo lleva encima. */
+.filtros{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.filtros .chip{margin-right:0}
 .badge{font-size:10.5px;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.6px;font-family:var(--f-mono)}
 .b-new{background:rgba(80,120,255,.18);color:#8ea6ff}.b-contacted{background:rgba(255,190,80,.15);color:#ffcf7a}
 .b-qualified{background:rgba(150,90,255,.18);color:#c3a0ff}.b-converted{background:rgba(40,200,120,.16);color:#5fe0a0}.b-lost{background:rgba(255,80,110,.14);color:#ff8fa6}
@@ -301,6 +304,26 @@ details.sec .cuerpo{padding:2px 20px 20px;border-top:1px solid var(--line)}
    La sidebar se vuelve barra inferior con iconos y rótulos chicos,
    las tablas ruedan de lado y las cuadrículas anchas se apilan. */
 @media(max-width:640px){
+  /* --- lo que se toca con el pulgar --- */
+  /* Un blanco de 31px de alto se falla. Y por debajo de 16px iOS hace zoom
+     al enfocar un campo, que descoloca la pantalla entera. */
+  input,textarea,select{padding:12px 14px;font-size:16px}
+  .btn{padding:12px 20px}
+  .btn.small{padding:13px 18px;font-size:13px}
+
+  /* Los filtros, en una sola tira que se desliza: en tres renglones se
+     comian el primer pantallazo, que es justo donde tiene que estar el
+     primer prospecto. El degradado del borde avisa de que sigue. */
+  .filtros{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+    /* El sangrado tiene que ser EXACTAMENTE el padding de .main en este
+       ancho (14px); con 16px sobresalia 2px y la pagina entera se movia. */
+    margin-inline:-14px;padding-inline:14px;
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);
+    mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent)}
+  .filtros::-webkit-scrollbar{display:none}
+  .filtros .chip{flex:none;padding:12px 16px;font-size:13.5px;scroll-snap-align:start}
+
   body{flex-direction:column}
   .side{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;height:auto;z-index:40;
     flex-direction:row;align-items:center;padding:4px 6px calc(4px + env(safe-area-inset-bottom));
