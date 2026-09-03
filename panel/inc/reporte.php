@@ -17,19 +17,32 @@ declare(strict_types=1);
 /** Cada cuánto se levanta un reporte. */
 const REPORTE_DIAS = 15;
 
-/** Los motores de IA que hoy sabemos leer. Sirven para notar al que falta. */
+/**
+ * Los motores de IA que se pueden reconocer por su user-agent.
+ *
+ * Gemini y Apple Intelligence NO están, y no es un olvido: `Google-Extended`
+ * y `Applebot-Extended` no son rastreadores. Son etiquetas que se ponen en
+ * robots.txt para autorizar el uso del contenido; el rastreo lo hacen
+ * Googlebot y Applebot con su user-agent de siempre. Nunca van a dejar
+ * huella aquí, así que listarlos hacía que el reporte recomendara perseguir
+ * un fantasma.
+ *
+ * Que Gemini te cite no depende de esto: sus respuestas con enlaces salen de
+ * Google Search, así que lo que decide es la posición en el buscador.
+ */
 const REPORTE_MOTORES = [
     'gptbot'            => 'ChatGPT (rastreo)',
     'oai-searchbot'     => 'ChatGPT (búsqueda)',
     'chatgpt-user'      => 'ChatGPT (en vivo)',
     'claudebot'         => 'Claude (rastreo)',
     'claude-user'       => 'Claude (en vivo)',
+    'claude-searchbot'  => 'Claude (búsqueda)',
     'perplexitybot'     => 'Perplexity',
-    'google-extended'   => 'Gemini',
+    'perplexity-user'   => 'Perplexity (en vivo)',
     'bytespider'        => 'TikTok / Doubao',
     'meta-externalagent'=> 'Meta AI',
     'amazonbot'         => 'Amazon',
-    'applebot-extended' => 'Apple Intelligence',
+    'ccbot'             => 'Common Crawl',
 ];
 
 function reporte_tabla(): void {
@@ -392,7 +405,6 @@ function reporte_hallazgos(array $h, ?array $a): array {
                      'lista'  => array_slice($lista, 0, 6)];
 
         $faltan = array_diff_key(REPORTE_MOTORES, $ia['motores']);
-        unset($faltan['applebot-extended']);
         if ($faltan) {
             $reco[] = ['prioridad' => 2, 'titulo' => 'Motores que todavía no te leen',
                        'texto'  => 'No aparece ninguna lectura de ' . implode(', ', array_slice(array_values($faltan), 0, 4))
