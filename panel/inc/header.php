@@ -145,6 +145,18 @@ h1.title{font-family:var(--f-display);text-transform:uppercase;font-size:24px;le
 input,textarea,select{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:11px;padding:11px 13px;font-size:14px;font-family:inherit;
   transition:border-color .18s,box-shadow .18s}
 input:focus,textarea:focus,select:focus{outline:none;border-color:rgba(153,51,255,.55);box-shadow:0 0 0 3px rgba(119,0,206,.18)}
+/* Seleccionar texto en el panel no puede verse como seleccionarlo en el
+   navegador: el azul del sistema sobre este morado es de otra casa. */
+::selection{background:rgba(153,51,255,.32);color:#fff}
+input,textarea{caret-color:var(--pur2)}
+/* Anillo de foco para TODO lo que se puede accionar, no solo los campos.
+   Sin esto, quien navega con teclado no sabe donde esta parado. */
+a:focus-visible,button:focus-visible,select:focus-visible,summary:focus-visible,
+[tabindex]:focus-visible{outline:2px solid var(--pur2);outline-offset:2px;border-radius:6px}
+a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none}
+/* Las cifras alineadas: fechas, telefonos y numeros en columna solo se leen
+   si cada digito ocupa lo mismo. */
+.cifras,time,.tabular{font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1}
 textarea{min-height:110px;resize:vertical}
 label{display:block;font-size:11.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin:14px 0 6px;font-family:var(--f-mono)}
 .rowf{display:grid;grid-template-columns:1fr 1fr;gap:16px}
