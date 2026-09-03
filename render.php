@@ -20,6 +20,32 @@ function seoDe(array $x, string $clave): string {
   $v = $x['seo'][$clave] ?? '';
   return is_string($v) ? trim($v) : '';
 }
+/**
+ * Las preguntas frecuentes que trae un articulo, si las trae.
+ *
+ * Busca la seccion «## Preguntas frecuentes» y dentro las lineas en negrita
+ * que terminan en interrogacion, con su respuesta debajo. Es el formato con
+ * el que se escriben los articulos del sitio, y evita mantener las preguntas
+ * en dos sitios: el texto que lee una persona y el schema que lee la maquina
+ * salen del mismo parrafo.
+ */
+function faqDeArticulo(string $md): array {
+  if (!preg_match('/^##\s*Preguntas frecuentes\s*$(.*)/mus', $md, $m)) return [];
+  /* Se corta en el siguiente h2 para no arrastrar el resto del articulo. */
+  $bloque = preg_split('/^##\s/mu', $m[1])[0] ?? '';
+  if (!preg_match_all('/^\*\*(.+?\?)\*\*\s*\n(.+?)(?=\n\s*\n|\z)/mus', $bloque, $ps, PREG_SET_ORDER)) return [];
+  $out = [];
+  foreach ($ps as $p) {
+    $q = trim($p[1]);
+    $a = trim(preg_replace('/\s+/u', ' ', strip_tags($p[2])));
+    /* El markdown de la respuesta se limpia: el schema quiere texto. */
+    $a = str_replace(['**', '*', '`'], '', $a);
+    if ($q !== '' && mb_strlen($a) > 20) $out[] = ['@type'=>'Question','name'=>$q,
+      'acceptedAnswer'=>['@type'=>'Answer','text'=>$a]];
+  }
+  return $out;
+}
+
 function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); return is_array($o) ? $o : []; }
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
@@ -265,6 +291,10 @@ elseif ($seg[0] === 'blog' && isset($seg[1])) {
     $desc = seoDe($b, 'metaDescription') ?: ($b['excerpt'] ?? $defaultDesc); $ogType='article';
     $canonical=$BASE.'/blog/'.$b['slug']; $crumbs[]=['Blog','/blog']; $crumbs[]=[$b['title'],'/blog/'.$b['slug']];
     $schema[]=['@context'=>'https://schema.org','@type'=>'BlogPosting','headline'=>$b['title'] ?? '','description'=>$b['excerpt'] ?? '','image'=>$b['image'] ?? $GLOBALS['logo'],'author'=>$GLOBALS['autorArticulo']($b['author'] ?? $siteName, $miembros, $BASE),'publisher'=>['@type'=>'Organization','name'=>$siteName,'logo'=>['@type'=>'ImageObject','url'=>$GLOBALS['logo']]],'mainEntityOfPage'=>$canonical,'inLanguage'=>'es'] + $GLOBALS['fechasArticulo']($b);
+    /* Si el articulo trae preguntas frecuentes, se declaran: es lo que un
+       asistente extrae cuando alguien le hace esa misma pregunta. */
+    $faq = faqDeArticulo((string)($b['content'] ?? ''));
+    if ($faq) $schema[] = ['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=>$faq];
     $bodyBuilder=function() use ($b){
       $md=(string)($b['content'] ?? ''); if(trim($md)==='') $md=$b['excerpt'] ?? '';
       // El titulo va como h1 y se quita la linea "# " con la que abre el

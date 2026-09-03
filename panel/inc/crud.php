@@ -34,6 +34,8 @@
  *   'auto'   en 'pares': clave que se numera sola (1, 2, 3…)
  */
 
+require_once __DIR__ . '/indexnow.php';
+
 /** Un texto por línea → arreglo. */
 function crud_lineas($s): array {
     $s = trim((string)$s);
@@ -106,6 +108,27 @@ function crud_a_columna(array $f, $val): string {
         return implode("\n", $ls);
     }
     return (string)$val;
+}
+
+
+/**
+ * Avisa a los buscadores de la ficha recién guardada, si está publicada.
+ *
+ * Devuelve el texto que se añade al mensaje del panel, para que quien guarda
+ * vea que el aviso salió —o por qué no—. Nunca interrumpe el guardado: el
+ * contenido ya está en la base cuando esto corre.
+ */
+function crud_avisar(string $page, array $par, array $json): string
+{
+    if (($par[':status'] ?? '') !== 'published') return '';
+    $ruta = indexnow_ruta($page, (string)($par[':slug'] ?? $json['slug'] ?? ''));
+    if ($ruta === '') return '';
+    try {
+        $r = indexnow_avisar([$ruta, '/']);
+        return $r['ok'] ? ' Se avisó a los buscadores.' : ' (el aviso a buscadores no salió: ' . $r['mensaje'] . ')';
+    } catch (Throwable $e) {
+        return '';
+    }
 }
 
 function crud(string $page, array $c): void {
@@ -196,7 +219,7 @@ function crud(string $page, array $c): void {
                 $par[':id'] = $id;
                 $par[':data_json'] = json_encode($json, JSON_UNESCAPED_UNICODE);
                 db()->prepare("UPDATE `$table` SET $set, `data_json`=:data_json WHERE id=:id")->execute($par);
-                set_flash('Cambios guardados. Ya están en el sitio.');
+                set_flash('Cambios guardados. Ya están en el sitio.' . crud_avisar($page, $par, $json));
             } else {
                 $colStr = implode(',', array_map(fn($col) => "`$col`", $cols));
                 $valStr = implode(',', array_map(fn($col) => ":$col", $cols));
@@ -208,7 +231,7 @@ function crud(string $page, array $c): void {
                 $json['id'] = (string)$nuevo;
                 db()->prepare("UPDATE `$table` SET `data_json`=:d WHERE id=:i")
                     ->execute([':d' => json_encode($json, JSON_UNESCAPED_UNICODE), ':i' => $nuevo]);
-                set_flash('Creado correctamente.');
+                set_flash('Creado correctamente.' . crud_avisar($page, $par, $json));
             }
             redirect("/panel/?p=$page");
         }

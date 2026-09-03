@@ -116,4 +116,24 @@ Por eso **exigen sesión cuando no vienen de la línea de comandos** — sin esa
 guarda cualquiera podría leer las métricas del sitio y hacer trabajar al
 servidor pidiéndolas en bucle.
 
+## IndexNow: no borrar el archivo de la llave
+
+En la raíz del sitio vive `a7f3c92e4b1d84605e7a2c3f9b8d1046.txt`, cuyo
+contenido es esa misma cadena. **No es basura.** Es como IndexNow comprueba
+que quien avisa de una URL nueva es el dueño del dominio. Si se borra, el
+aviso deja de funcionar y nadie se entera, porque falla en silencio.
+
+El original está en `public/`, así que Vite lo copia a `dist/` en cada
+build y el deploy lo sube. La llave también está escrita en
+`panel/inc/indexnow.php`: si se cambia una, hay que cambiar la otra.
+
+Sirve para Bing, Yandex, Seznam y Naver. **Google no participa** —ahí el
+camino sigue siendo Search Console—, pero la búsqueda de ChatGPT se apoya en
+el índice de Bing, así que entrar rápido a Bing es entrar rápido a las
+respuestas de ChatGPT.
+
+Publicar cualquier ficha desde el panel dispara el aviso solo
+(`crud_avisar` en `panel/inc/crud.php`), y el mensaje de "Cambios
+guardados" dice si salió.
+
 _Última actualización: 2026-09-02_
