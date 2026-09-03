@@ -42,16 +42,32 @@ $company = $clean($data['company'] ?? '');
 $service = $clean($data['service'] ?? '');
 $message = $clean($data['message'] ?? '');
 $source  = $clean($data['source']  ?? '') ?: 'Formulario de contacto web';
+/* El asistente marca 'whatsapp' cuando entrega la conversación por ahí. */
+$canal   = $clean($data['canal']   ?? '');
 
-// --- Validación ---
+/* --- Validación ---
+ *
+ * El formulario de contacto pide las cuatro cosas y siempre las manda. El
+ * asistente, no: pregunta lo mínimo a propósito y muchas veces solo tiene el
+ * nombre y lo que la persona quiere, porque el contacto se va a dar por
+ * WhatsApp. Exigirle un correo válido significaba rechazar justo el lead que
+ * ya venía caminando, así que en ese canal la conversación misma es la vía
+ * de contacto y basta con saber quién es y qué pidió.
+ */
+$hayCorreo = $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+$hayTel    = strlen(preg_replace('/\D/', '', $phone)) >= 8;
+
 $errors = [];
-if ($name === '')                                     $errors[] = 'name';
-if (!filter_var($email, FILTER_VALIDATE_EMAIL))       $errors[] = 'email';
-if ($phone === '')                                    $errors[] = 'phone';
-if ($message === '')                                  $errors[] = 'message';
+if ($name === '')                    $errors[] = 'name';
+if ($message === '')                 $errors[] = 'message';
+if ($email !== '' && !$hayCorreo)    $errors[] = 'email';
+if (!$hayCorreo && !$hayTel && $canal !== 'whatsapp') {
+    $errors[] = 'email';
+    $errors[] = 'phone';
+}
 if ($errors) {
     http_response_code(422);
-    echo json_encode(['ok' => false, 'error' => 'Datos inválidos', 'fields' => $errors]);
+    echo json_encode(['ok' => false, 'error' => 'Datos inválidos', 'fields' => array_values(array_unique($errors))]);
     exit;
 }
 
@@ -78,7 +94,17 @@ try {
     error_log('[lead] DB error: ' . $e->getMessage());
 }
 
-// --- Enviar correo ---
+/* --- Enviar correo ---
+ *
+ * Salvo cuando la conversación se va por WhatsApp: ahí el aviso ya llega al
+ * teléfono, y mandar además un correo por la misma persona convierte el
+ * buzón en ruido. El registro queda en el panel con todo el contexto, que es
+ * para lo que sirve. */
+if ($canal === 'whatsapp') {
+    echo json_encode(['ok' => !$dbFailed, 'guardado' => !$dbFailed, 'correo' => false]);
+    exit;
+}
+
 require __DIR__ . '/mailer.php';
 require __DIR__ . '/email_template.php';
 $html    = lead_email_html($lead);

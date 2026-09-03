@@ -20,6 +20,27 @@ if (($_GET['export'] ?? '') === 'csv') {
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     csrf_check();
     $act = $_POST['action'] ?? ''; $id = (int)($_POST['id'] ?? 0);
+    if ($act === 'crear') {
+        $nombre = trim((string)($_POST['name'] ?? ''));
+        if ($nombre === '') {
+            set_flash('Falta el nombre.');
+        } else {
+            db()->prepare('INSERT INTO leads (name,email,phone,company,service,message,source,status)
+                           VALUES (:n,:e,:t,:c,:s,:m,:o,:st)')
+                ->execute([
+                    ':n' => $nombre,
+                    ':e' => trim((string)($_POST['email'] ?? '')),
+                    ':t' => trim((string)($_POST['phone'] ?? '')),
+                    ':c' => trim((string)($_POST['company'] ?? '')),
+                    ':s' => trim((string)($_POST['service'] ?? '')),
+                    ':m' => trim((string)($_POST['message'] ?? '')),
+                    ':o' => trim((string)($_POST['source'] ?? '')) ?: 'Capturado a mano',
+                    ':st'=> in_array($_POST['status'] ?? '', $STATUSES, true) ? $_POST['status'] : 'new',
+                ]);
+            set_flash('«' . $nombre . '» quedó registrado.');
+        }
+        redirect('/panel/?p=leads');
+    }
     if ($id > 0) {
         if ($act === 'update_status' && in_array($_POST['status'] ?? '', $STATUSES, true)) {
             db()->prepare('UPDATE leads SET status=:s WHERE id=:id')->execute([':s'=>$_POST['status'], ':id'=>$id]);
@@ -49,8 +70,56 @@ $ct = csrf();
 ?>
 <div class="topbar">
   <div><div class="kicker">Ventas</div><h1 class="title">Leads</h1><p class="subt"><?= count($rows) ?> mostrados · <?= $counts['all'] ?> en total</p></div>
-  <a class="btn" href="/panel/?p=leads&export=csv">Exportar CSV</a>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn ghost" href="/panel/?p=leads&export=csv">Exportar CSV</a>
+    <a class="btn" href="/panel/?p=leads&nuevo=1#nuevo">+ Registrar uno</a>
+  </div>
 </div>
+
+<?php if (isset($_GET['nuevo'])): ?>
+<div class="card" id="nuevo">
+  <div class="form-sec" style="margin-top:0">
+    <b>Registrar un lead a mano</b>
+    <span>Para quien escribió por WhatsApp, llamó o te buscó fuera del sitio</span>
+  </div>
+  <form method="post">
+    <input type="hidden" name="csrf" value="<?= $ct ?>">
+    <input type="hidden" name="action" value="crear">
+    <div class="rowf">
+      <div><label>Nombre</label><input type="text" name="name" required autofocus></div>
+      <div><label>Teléfono</label><input type="text" name="phone" placeholder="449 120 4353"></div>
+    </div>
+    <div class="rowf">
+      <div><label>Correo</label><input type="text" name="email"></div>
+      <div><label>Empresa</label><input type="text" name="company"></div>
+    </div>
+    <div class="rowf">
+      <div><label>Qué le interesa</label><input type="text" name="service" placeholder="IA de Ventas, tablero…"></div>
+      <div>
+        <label>Cómo llegó</label>
+        <select name="source">
+          <option>WhatsApp</option>
+          <option>Llamada</option>
+          <option>Ficha de Google</option>
+          <option>Recomendación</option>
+          <option>Presencial</option>
+          <option>Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="rowf" style="grid-template-columns:1fr">
+      <div>
+        <label>Qué pidió</label>
+        <textarea name="message" placeholder="Lo que te escribió, con sus palabras."></textarea>
+      </div>
+    </div>
+    <div style="margin-top:18px;display:flex;gap:10px">
+      <button class="btn" type="submit">Guardar</button>
+      <a class="btn ghost" href="/panel/?p=leads">Cancelar</a>
+    </div>
+  </form>
+</div>
+<?php endif; ?>
 
 <?php $CEST = ['all'=>'#9a97ad','new'=>'#8ea6ff','contacted'=>'#ffcf7a','qualified'=>'#c3a0ff','converted'=>'#5fe0a0','lost'=>'#ff8fa6']; ?>
 <div style="margin-bottom:16px">

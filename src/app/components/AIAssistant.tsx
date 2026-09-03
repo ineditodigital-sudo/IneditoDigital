@@ -7,7 +7,7 @@ import { Input } from './ui/input';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
 import { detectarGlobal, buscarServicios, buscarPregunta, buscarExtra } from './asistente/intenciones';
-import { enlaceWhatsApp, type Requerimiento } from './asistente/mensajeWhatsApp';
+import { enlaceWhatsApp, construirMensaje, type Requerimiento } from './asistente/mensajeWhatsApp';
 import type { Service } from '../data/services';
 import { agruparServicios } from '../data/grupos';
 
@@ -559,15 +559,40 @@ ${extra.pagina.desc}`, {
     setReq(final);
     setFase('listo');
 
-    addLead({
+    const datos = {
       name: final.nombre || 'Sin nombre',
       email: final.email || '',
       phone: final.telefono || '',
       company: final.empresa,
       service: final.servicio,
-      message: final.detalle,   // el detalle; la consulta completa va en el mensaje de WhatsApp
+      message: final.detalle,
       source: 'Asistente web',
-    });
+    };
+    addLead(datos);
+
+    /* Y al servidor, que es donde alguien lo va a ver.
+     *
+     * `addLead` solo guarda en el navegador de quien está visitando: durante
+     * meses el asistente juntó nombre, empresa y servicio, se lo entregó a
+     * WhatsApp y la copia se perdió al cerrar la pestaña. La tabla de leads
+     * estaba en cero mientras llegaban mensajes.
+     *
+     * Se guarda AQUÍ y no al pulsar el botón de WhatsApp a propósito: así
+     * queda registro también de quien armó su consulta y no llegó a enviarla,
+     * que es justo la fuga que no se veía.
+     *
+     * El mensaje lleva lo que preguntó, para que quien atienda no arranque
+     * de cero. Si falla, no se le dice nada a la persona: su camino es
+     * WhatsApp y ese sigue abierto. */
+    void fetch('/api/lead.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...datos,
+        message: construirMensaje({ ...final, consultas }),
+        canal: 'whatsapp',
+      }),
+    }).catch(() => {});
 
     bot(
       tCon(
