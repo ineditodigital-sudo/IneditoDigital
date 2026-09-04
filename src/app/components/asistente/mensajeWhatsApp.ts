@@ -69,9 +69,15 @@ export function construirMensaje(r: Requerimiento): string {
   /* --- lo que ya consulte --- */
   const consultas = (r.consultas ?? []).filter((c) => hay(c.pregunta));
   if (consultas.length) {
+    /* La nota de lo ya respondido va en su propio renglon y entre parentesis.
+       Pegada al final de la cita con un guion se leia como parte de lo que
+       escribio la persona, sobre todo cuando la consulta es larga. */
     const lineas = consultas
       .slice(0, 6)
-      .map((c) => `• "${c.pregunta.trim()}"${c.respondido ? ` — ${c.respondido}` : ''}`)
+      .map((c) => {
+        const q = `• "${c.pregunta.trim()}"`;
+        return c.respondido ? `${q}\n   (${c.respondido})` : q;
+      })
       .join('\n');
     bloques.push(`Esto es lo que consulté en su asistente:\n${lineas}`);
   } else if (hay(r.detalle)) {

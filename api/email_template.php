@@ -2,33 +2,49 @@
 /**
  * El aviso de un prospecto nuevo, por correo.
  *
- * Se lee casi siempre en el teléfono y en treinta segundos, así que responde
- * en este orden: quién escribió, qué dijo con sus palabras, y el botón para
- * contestarle. Los datos de ficha van después, que es cuando ya se decidió
- * atender.
+ * Dirección visual
+ * ----------------
+ * Brutalista: cero esquinas redondeadas, filetes gruesos como estructura en
+ * vez de cajas flotando, contraste tipográfico duro —el nombre enorme y
+ * apretado contra rótulos diminutos en monoespaciada— y bloques planos de
+ * color, sin degradados suaves ni sombras. La versión anterior era una
+ * tarjeta redondeada con banda en degradado, centrada en la página: el molde
+ * que traen todos los correos de notificación, y por eso no se distinguía de
+ * ninguno.
  *
- * Escrito con tablas y estilos en línea porque un correo no es una página:
- * Outlook ignora flex, grid y casi todo lo que no sea una tabla. Y sin
- * tipografía de marca: las fuentes web no cargan en la mayoría de los
- * clientes, así que la identidad la llevan el logotipo, el color y el peso.
- * Poner el titular como imagen sería peor —muchos clientes bloquean las
- * imágenes y el correo llegaría sin encabezado.
+ * La monoespaciada no es disfraz de «técnico»: se usa solo donde hay dato y
+ * medida —fecha, teléfono, rótulos de ficha—, que es para lo que sirve.
+ *
+ * Sin numeración de secciones y sin rótulo pequeño encima del titular: el
+ * nombre de quien escribió es el titular y se sostiene solo.
+ *
+ * Sin tipografía de marca, y no por descuido: Gmail y compañía eliminan
+ * @font-face, así que una fuente propia no llegaría a nadie. La voz la
+ * llevan el logotipo, el morado y el peso. Poner el titular como imagen
+ * sería peor: muchos clientes bloquean imágenes y llegaría un correo mudo.
+ *
+ * Todo en tablas y estilos en línea porque Outlook ignora flex, grid y casi
+ * cualquier cosa moderna.
  */
 declare(strict_types=1);
 
-/** El color de la casa, repetido aquí porque un correo viaja solo. */
-const MAIL_FONDO = '#0B0A12';
-const MAIL_CARTA = '#13131F';
-const MAIL_LINEA = '#26263A';
-const MAIL_TXT   = '#F2F0F6';
-const MAIL_SUAVE = '#CBC4DA';
-const MAIL_MUT   = '#8F8BA4';
+/* --- la paleta, repetida aquí porque un correo viaja solo --- */
+const MAIL_NEGRO = '#08080D';
+const MAIL_CARTA = '#101018';
+const MAIL_LINEA = '#2A2A3D';
+const MAIL_TXT   = '#FFFFFF';
+const MAIL_SUAVE = '#CFC8DC';
+const MAIL_MUT   = '#8B8799';
 const MAIL_PUR   = '#7700CE';
 const MAIL_PUR2  = '#9933FF';
 const MAIL_PUR3  = '#CC66FF';
-const MAIL_VERDE = '#1FAA53';
+const MAIL_VERDE = '#00E585';
 
-/** El número, listo para wa.me. Devuelve '' si no hay uno usable. */
+/** Las dos voces. Sin webfont: en correo no carga y no hay vuelta de hoja. */
+const MAIL_SANS = "Helvetica Neue, Helvetica, Arial, sans-serif";
+const MAIL_MONO = "'Courier New', Courier, monospace";
+
+/** El número listo para wa.me. Devuelve '' si no hay uno usable. */
 function mail_wa(string $tel): string
 {
     $d = preg_replace('/\D/', '', $tel);
@@ -46,27 +62,44 @@ function mail_tel(string $tel): string
 }
 
 /**
- * Un botón que aguanta en Outlook: una tabla con fondo, no un <a> con
- * padding, que ahí se pinta como un enlace suelto.
+ * Un botón de bloque: tabla con fondo y esquinas rectas. Un <a> con relleno
+ * se pinta como enlace suelto en Outlook, y el radio redondeado rompería la
+ * dirección.
  */
-function mail_boton(string $url, string $texto, string $fondo, string $color = '#FFFFFF'): string
+function mail_boton(string $url, string $texto, string $fondo, string $color = '#000000'): string
 {
     $u = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-    $t = htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
-    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;">
-      <tr><td align="center" bgcolor="' . $fondo . '" style="border-radius:10px;">
+    $t = htmlspecialchars(mb_strtoupper($texto, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td bgcolor="' . $fondo . '" style="background:' . $fondo . ';">
         <a href="' . $u . '" target="_blank"
-           style="display:inline-block;padding:14px 26px;font:700 14px/1 Arial,Helvetica,sans-serif;
-                  color:' . $color . ';text-decoration:none;border-radius:10px;">' . $t . '</a>
+           style="display:block;padding:17px 30px;font:700 13px/1 ' . MAIL_SANS . ';
+                  letter-spacing:1.6px;color:' . $color . ';text-decoration:none;">' . $t . '</a>
       </td></tr></table>';
 }
 
+/** El rótulo de una sección: monoespaciada, diminuto, muy espaciado. */
+function mail_rotulo(string $txt): string
+{
+    return '<div style="font:400 10px/1 ' . MAIL_MONO . ';letter-spacing:2.6px;
+        text-transform:uppercase;color:' . MAIL_MUT . ';">'
+        . htmlspecialchars($txt, ENT_QUOTES, 'UTF-8') . '</div>';
+}
+
+/** Un filete. La estructura a la vista, que es de lo que va esto. */
+function mail_filete(string $color, int $alto = 3): string
+{
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr><td height="' . $alto . '" bgcolor="' . $color . '"
+          style="height:' . $alto . 'px;line-height:' . $alto . 'px;font-size:0;">&nbsp;</td></tr>
+    </table>';
+}
 
 /**
- * La version en texto plano.
+ * La versión en texto plano.
  *
  * El mailer la sacaba quitando etiquetas del HTML, y con una maqueta de
- * tablas eso deja una escalera de espacios sin sentido. Ademas de leerse
+ * tablas eso deja una escalera de espacios sin sentido. Además de leerse
  * mejor en los clientes que no pintan HTML, un correo con las dos versiones
  * bien hechas pasa mejor los filtros de spam.
  */
@@ -76,18 +109,20 @@ function lead_email_texto(array $lead): string
     $mensaje = trim((string)($lead['message'] ?? ''));
     $fecha   = trim((string)($lead['fecha'] ?? '')) ?: date('Y-m-d H:i:s');
 
-    $l = ['NUEVO PROSPECTO', '', $nombre];
-    $l[] = (trim((string)($lead['source'] ?? '')) ?: 'Sitio web') . ' · ' . date('d/m/Y H:i', strtotime($fecha));
+    $l = ['NUEVO PROSPECTO', str_repeat('=', 44), '', mb_strtoupper($nombre, 'UTF-8')];
+    $l[] = (trim((string)($lead['source'] ?? '')) ?: 'Sitio web') . '  /  ' . date('d.m.Y / H:i', strtotime($fecha));
     $l[] = '';
     if ($mensaje !== '') { $l[] = $mensaje; $l[] = ''; }
+    $l[] = str_repeat('-', 44);
     foreach ([
-        'Teléfono'    => ($p = trim((string)($lead['phone'] ?? ''))) !== '' ? mail_tel($p) : '',
-        'Correo'      => trim((string)($lead['email'] ?? '')),
-        'Empresa'     => trim((string)($lead['company'] ?? '')),
-        'Le interesa' => trim((string)($lead['service'] ?? '')),
+        'TELÉFONO'    => ($p = trim((string)($lead['phone'] ?? ''))) !== '' ? mail_tel($p) : '',
+        'CORREO'      => trim((string)($lead['email'] ?? '')),
+        'EMPRESA'     => trim((string)($lead['company'] ?? '')),
+        'LE INTERESA' => trim((string)($lead['service'] ?? '')),
     ] as $rot => $val) {
-        if ($val !== '') $l[] = $rot . ': ' . $val;
+        if ($val !== '') $l[] = str_pad($rot, 14) . $val;
     }
+    $l[] = str_repeat('-', 44);
     $l[] = '';
     $l[] = 'Abrir en el panel: https://www.inedito.digital/panel/?p=leads';
     return implode("\n", $l);
@@ -97,7 +132,7 @@ function lead_email_texto(array $lead): string
  * El correo completo.
  *
  * `$lead` acepta name, email, phone, company, service, message, source y,
- * si quien llama los tiene, `fecha` e `id`.
+ * si quien llama la tiene, `fecha`.
  */
 function lead_email_html(array $lead): string
 {
@@ -109,27 +144,20 @@ function lead_email_html(array $lead): string
     $correo  = trim((string)($lead['email'] ?? ''));
     $wa      = mail_wa($tel);
     $fecha   = trim((string)($lead['fecha'] ?? '')) ?: date('Y-m-d H:i:s');
+    $origen  = trim((string)($lead['source'] ?? '')) ?: 'Sitio web';
 
-    /* El asistente firma el mensaje con dónde estaba la persona. Se saca a su
-       propio renglón: dice en qué andaba interesada antes de escribir, que es
-       la mitad del contexto.
-
-       Vienen dos formas y no una: «la página /ruta» cuando estaba en una
-       interior, y «el sitio» cuando estaba en la portada. Tratar la segunda
-       como si fuera una ruta producía el enlace roto
-       https://www.inedito.digitalel%20sitio. */
-    $desde = '';       // lo que se enseña
-    $desdeUrl = '';    // a dónde lleva, si es que lleva a algún sitio
+    /* El asistente firma con dónde estaba la persona, y vienen dos formas:
+       «la página /ruta» si estaba en una interior, «el sitio» si estaba en la
+       portada. Tratar la segunda como ruta producía un enlace roto. */
+    $desde = ''; $desdeUrl = '';
     if (preg_match('~\(Escribo desde ([^)]+)\)~u', $mensaje, $m)) {
         $bruto = trim($m[1]);
         $mensaje = trim(preg_replace('~_?\(Escribo desde [^)]+\)_?~u', '', $mensaje));
-
         if (preg_match('~(/[^\s)]*)~u', $bruto, $mp)) {
             $desde = $mp[1];
             $desdeUrl = 'https://www.inedito.digital' . $mp[1];
         } elseif (mb_stripos($bruto, 'el sitio') !== false) {
-            /* location.pathname siempre trae al menos «/», así que esto solo
-               ocurre cuando estaba en la portada. */
+            /* location.pathname siempre trae al menos «/»: solo la portada. */
             $desde = 'La portada';
             $desdeUrl = 'https://www.inedito.digital/';
         } else {
@@ -137,9 +165,8 @@ function lead_email_html(array $lead): string
         }
     }
 
-    $meses = [1=>'ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
     $t = strtotime($fecha);
-    $cuando = (int)date('j', $t) . ' ' . $meses[(int)date('n', $t)] . ' ' . date('Y', $t) . ', ' . date('H:i', $t);
+    $cuando = date('d.m.Y', $t) . ' / ' . date('H:i', $t);
 
     /* --- la ficha, solo con lo que existe --- */
     $filas = [];
@@ -152,60 +179,66 @@ function lead_email_html(array $lead): string
             ? '<a href="' . $e($desdeUrl) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e($desde) . '</a>'
             : $e($desde)];
     }
-    $filas[] = ['Cómo llegó', $e(trim((string)($lead['source'] ?? '')) ?: 'Sitio web')];
     $filas[] = ['Recibido', $e($cuando)];
 
     $fichaHtml = '';
     foreach ($filas as $i => [$rot, $val]) {
-        $borde = $i < count($filas) - 1 ? 'border-bottom:1px solid ' . MAIL_LINEA . ';' : '';
+        $sep = $i > 0 ? 'border-top:1px solid ' . MAIL_LINEA . ';' : '';
         $fichaHtml .= '<tr>
-          <td style="padding:13px 0;width:120px;' . $borde . 'font:400 13px/1.4 Arial,Helvetica,sans-serif;color:' . MAIL_MUT . ';vertical-align:top;">' . $e($rot) . '</td>
-          <td style="padding:13px 0;' . $borde . 'font:400 14px/1.5 Arial,Helvetica,sans-serif;color:' . MAIL_TXT . ';vertical-align:top;">' . $val . '</td>
+          <td width="132" style="width:132px;padding:14px 14px 14px 0;' . $sep . '
+              font:400 10px/1.7 ' . MAIL_MONO . ';letter-spacing:1.6px;text-transform:uppercase;
+              color:' . MAIL_MUT . ';vertical-align:top;">' . $e($rot) . '</td>
+          <td style="padding:14px 0;' . $sep . 'font:400 15px/1.6 ' . MAIL_SANS . ';
+              color:' . MAIL_TXT . ';vertical-align:top;">' . $val . '</td>
         </tr>';
     }
 
-    /* --- lo que escribió, entero y con sus saltos de línea --- */
-    $mensajeHtml = '';
+    /* --- lo que escribió, entero y con sus saltos --- */
     if ($mensaje !== '') {
-        $mensajeHtml = '
-        <tr><td style="padding:0 32px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td style="padding-left:18px;border-left:2px solid ' . MAIL_PUR2 . ';
-                         font:400 16px/1.7 Arial,Helvetica,sans-serif;color:' . MAIL_TXT . ';">'
-                /* Tres saltos seguidos o mas se quedan en uno: quien escribe
-                   desde el telefono deja lineas en blanco de sobra, y aqui
-                   se convertian en huecos enormes. */
-                . nl2br($e(preg_replace('/\n{3,}/', "\n\n", $mensaje))) . '</td>
-            </tr>
-          </table>
-        </td></tr>
-        <tr><td style="height:28px;line-height:28px;">&nbsp;</td></tr>';
+        /* Tres saltos seguidos o más se quedan en uno: quien escribe desde el
+           teléfono deja líneas en blanco de sobra. */
+        $cuerpo = nl2br($e(preg_replace("/\n{3,}/", "\n\n", $mensaje)));
+        /* El asistente redacta el mensaje para WhatsApp, donde *asi* es
+           negrita. En un correo los asteriscos salen crudos y parecen un
+           error de quien escribio. */
+        $cuerpo = preg_replace('~\*([^*\n<]{1,80})\*~u',
+            '<strong style="font-weight:700;">$1</strong>', $cuerpo);
+        $mensajeHtml = '<div style="font:400 17px/1.65 ' . MAIL_SANS . ';color:' . MAIL_TXT . ';">'
+                     . $cuerpo . '</div>';
     } else {
-        $mensajeHtml = '
-        <tr><td style="padding:0 32px;font:400 15px/1.6 Arial,Helvetica,sans-serif;color:' . MAIL_MUT . ';">
-          No dejó mensaje. Los datos de contacto están abajo.
-        </td></tr>
-        <tr><td style="height:28px;line-height:28px;">&nbsp;</td></tr>';
+        $mensajeHtml = '<div style="font:400 15px/1.6 ' . MAIL_SANS . ';color:' . MAIL_MUT . ';">'
+                     . 'No dejó mensaje. Los datos están abajo.</div>';
     }
 
-    /* --- los botones --- */
+    /* --- botones --- */
     $acciones = '';
     if ($wa !== '') {
         $txtWa = rawurlencode('Hola ' . explode(' ', $nombre)[0] . ', te escribo de Inédito Digital. Vi tu mensaje desde el sitio.');
-        $acciones .= '<td style="padding-right:10px;">' . mail_boton('https://wa.me/' . $wa . '?text=' . $txtWa, 'Escribir por WhatsApp', MAIL_VERDE) . '</td>';
+        $acciones .= '<td style="padding-right:12px;">' . mail_boton('https://wa.me/' . $wa . '?text=' . $txtWa, 'Escribir por WhatsApp', MAIL_VERDE, '#04240F') . '</td>';
     }
     if ($correo !== '') {
-        $acciones .= '<td style="padding-right:10px;">' . mail_boton('mailto:' . $correo, 'Responder por correo', MAIL_PUR) . '</td>';
-    }
-    if ($acciones === '') {
-        $acciones = '<td style="font:400 14px/1.6 Arial,Helvetica,sans-serif;color:' . MAIL_MUT . ';">'
-                  . 'No dejó teléfono ni correo. Si te escribió por WhatsApp, guarda su número en el panel.</td>';
+        $acciones .= '<td style="padding-right:12px;">' . mail_boton('mailto:' . $correo, 'Responder por correo', MAIL_PUR2, '#FFFFFF') . '</td>';
     }
 
-    /* El texto que asoma en la bandeja, antes de abrir. */
+    $accionesHtml = $acciones !== ''
+        ? '<tr><td style="padding:0 40px 34px;">
+             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>' . $acciones . '</tr></table>
+           </td></tr>'
+        : '<tr><td style="padding:0 40px 34px;">
+             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+               <tr><td style="border-left:3px solid ' . MAIL_PUR2 . ';padding:2px 0 2px 16px;
+                   font:400 14px/1.6 ' . MAIL_SANS . ';color:' . MAIL_SUAVE . ';">
+                 No dejó teléfono ni correo. Si te escribió por WhatsApp, guarda su número en el
+                 panel para poder buscarla después.
+               </td></tr>
+             </table>
+           </td></tr>';
+
+    /* Tambien sin los asteriscos: este es el texto que asoma en la bandeja
+       antes de abrir, y ahi no hay negritas que valgan. */
     $asomo = $mensaje !== ''
-        ? mb_substr(preg_replace('/\s+/u', ' ', $mensaje), 0, 110)
+        ? mb_substr(preg_replace(['/\*([^*
+]{1,80})\*/u', '/\s+/u'], ['$1', ' '], $mensaje), 0, 110)
         : $nombre . ' dejó sus datos en el sitio.';
 
     return '<!doctype html>
@@ -217,66 +250,62 @@ function lead_email_html(array $lead): string
 <meta name="supported-color-schemes" content="dark">
 <title>Nuevo prospecto</title>
 </head>
-<body style="margin:0;padding:0;background:' . MAIL_FONDO . ';">
+<body style="margin:0;padding:0;background:' . MAIL_NEGRO . ';">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;">' . $e($asomo) . '</div>
 
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="' . MAIL_FONDO . '" style="background:' . MAIL_FONDO . ';">
-<tr><td align="center" style="padding:28px 14px 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       bgcolor="' . MAIL_NEGRO . '" style="background:' . MAIL_NEGRO . ';">
+<tr><td align="center" style="padding:0 0 44px;">
 
-  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
-         style="width:600px;max-width:100%;background:' . MAIL_CARTA . ';border:1px solid ' . MAIL_LINEA . ';border-radius:18px;overflow:hidden;">
+  <table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0"
+         style="width:620px;max-width:100%;background:' . MAIL_CARTA . ';">
 
-    <!-- encabezado -->
-    <tr><td bgcolor="' . MAIL_PUR . '" background="" style="background:' . MAIL_PUR . ';
-        background-image:linear-gradient(120deg,' . MAIL_PUR . ' 0%,' . MAIL_PUR2 . ' 58%,' . MAIL_PUR3 . ' 100%);
-        padding:26px 32px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="font:700 12px/1 Arial,Helvetica,sans-serif;letter-spacing:2.4px;text-transform:uppercase;color:#F3E6FF;">
-            Nuevo prospecto
-          </td>
-          <td align="right">
-            <img src="https://www.inedito.digital/media/inedito-logo.png" width="104" alt="Inédito Digital"
-                 style="display:block;width:104px;height:auto;border:0;">
-          </td>
-        </tr>
-      </table>
+    <!-- franja: morado plano, sin degradado y sin esquinas -->
+    <tr><td bgcolor="' . MAIL_PUR . '" style="background:' . MAIL_PUR . ';padding:18px 40px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+        <td style="vertical-align:middle;">
+          <img src="https://www.inedito.digital/media/inedito-logo.png" width="96" alt="Inédito Digital"
+               style="display:block;width:96px;height:auto;border:0;">
+        </td>
+        <td align="right" style="vertical-align:middle;font:400 10px/1 ' . MAIL_MONO . ';
+            letter-spacing:2.6px;color:#EAD4FF;">NUEVO PROSPECTO</td>
+      </tr></table>
     </td></tr>
 
-    <!-- quien -->
-    <tr><td style="padding:30px 32px 6px;">
-      <div style="font:700 26px/1.25 Arial,Helvetica,sans-serif;color:' . MAIL_TXT . ';letter-spacing:-.01em;">' . $e($nombre) . '</div>
-      <div style="padding-top:7px;font:400 13.5px/1.5 Arial,Helvetica,sans-serif;color:' . MAIL_MUT . ';">
-        ' . $e(trim((string)($lead['source'] ?? '')) ?: 'Sitio web') . ' · ' . $e($cuando) . '
-      </div>
+    <!-- el nombre manda -->
+    <tr><td style="padding:44px 40px 0;">
+      <div style="font:900 40px/1.02 ' . MAIL_SANS . ';letter-spacing:-1.4px;
+           text-transform:uppercase;color:' . MAIL_TXT . ';">' . $e($nombre) . '</div>
+      <div style="padding-top:16px;font:400 11px/1.6 ' . MAIL_MONO . ';letter-spacing:1.8px;
+           text-transform:uppercase;color:' . MAIL_MUT . ';">'
+           . $e($origen) . ' &nbsp;/&nbsp; ' . $e($cuando) . '</div>
     </td></tr>
-    <tr><td style="height:22px;line-height:22px;">&nbsp;</td></tr>
 
-    <!-- lo que escribio -->
-    ' . $mensajeHtml . '
+    <tr><td style="padding:32px 40px 0;">' . mail_filete(MAIL_PUR2, 3) . '</td></tr>
 
-    <!-- acciones -->
-    <tr><td style="padding:0 32px;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>' . $acciones . '</tr></table>
-    </td></tr>
-    <tr><td style="height:30px;line-height:30px;">&nbsp;</td></tr>
+    <!-- lo que escribió -->
+    <tr><td style="padding:26px 40px 0;">' . mail_rotulo('Lo que escribió') . '</td></tr>
+    <tr><td style="padding:16px 40px 34px;">' . $mensajeHtml . '</td></tr>
 
-    <!-- ficha -->
-    <tr><td style="padding:0 32px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-             style="border-top:1px solid ' . MAIL_LINEA . ';">
-        ' . $fichaHtml . '
-      </table>
+    ' . $accionesHtml . '
+
+    <!-- la ficha -->
+    <tr><td style="padding:0 40px;">' . mail_filete(MAIL_LINEA, 1) . '</td></tr>
+    <tr><td style="padding:22px 40px 0;">' . mail_rotulo('La ficha') . '</td></tr>
+    <tr><td style="padding:10px 40px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">' . $fichaHtml . '</table>
     </td></tr>
 
     <!-- pie -->
-    <tr><td style="padding:26px 32px 30px;">
+    <tr><td style="padding:34px 40px 0;">' . mail_filete(MAIL_PUR2, 3) . '</td></tr>
+    <tr><td style="padding:24px 40px 40px;">
       <a href="https://www.inedito.digital/panel/?p=leads" target="_blank"
-         style="font:700 13.5px/1 Arial,Helvetica,sans-serif;color:' . MAIL_PUR3 . ';text-decoration:none;">
-        Abrir en el panel &rarr;
-      </a>
-      <div style="padding-top:16px;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#645F78;">
-        Aviso automático de inedito.digital. Responder a este correo contesta a ' . $e($nombre) . '.
+         style="font:700 12px/1 ' . MAIL_SANS . ';letter-spacing:1.8px;text-transform:uppercase;
+                color:' . MAIL_PUR3 . ';text-decoration:none;">Abrir en el panel &nbsp;&#8599;</a>
+      <div style="padding-top:18px;font:400 10px/1.7 ' . MAIL_MONO . ';letter-spacing:1.2px;
+           text-transform:uppercase;color:#5C5870;">
+        Aviso automático de inedito.digital<br>
+        Responder a este correo contesta a ' . $e($nombre) . '
       </div>
     </td></tr>
 

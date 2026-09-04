@@ -559,12 +559,35 @@ ${extra.pagina.desc}`, {
     setReq(final);
     setFase('listo');
 
+    /* El servicio sale de lo que la persona DESCRIBIÓ, no del primer botón
+       que tocó.
+       El primer lead real llegó marcado como «Google Ads» porque así empezó
+       la conversación; después escribió un requerimiento de contenido,
+       reels, community manager y Meta Ads, y el campo se quedó con lo
+       primero. El equipo leía en la ficha una cosa distinta de la que
+       pedía. Un párrafo escrito a mano pesa más que un botón. */
+    const descripcion = mensajes
+      .filter((m) => m.emisor === 'user')
+      .map((m) => m.texto.trim())
+      .filter((t) => t.length > 90)
+      .sort((a, b) => b.length - a.length)[0];
+
+    let servicioFinal = final.servicio;
+    if (descripcion) {
+      /* Solo el primero. Con dos, la segunda coincidencia salia por una
+         palabra suelta —«Diseño de posts» activaba «Diseño y Desarrollo
+         Web»— y una etiqueta equivocada es peor que una etiqueta corta.
+         El requerimiento entero va en el mensaje de todas formas. */
+      const hallado = buscarServicios(descripcion, services).filter((c) => c.puntos >= 8)[0];
+      if (hallado) servicioFinal = hallado.servicio.title;
+    }
+
     const datos = {
       name: final.nombre || 'Sin nombre',
       email: final.email || '',
       phone: final.telefono || '',
       company: final.empresa,
-      service: final.servicio,
+      service: servicioFinal,
       message: final.detalle,
       source: 'Asistente web',
     };
