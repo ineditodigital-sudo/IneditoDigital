@@ -25,6 +25,20 @@ function send_lead_email(array $cfg, array $lead, string $html, string $subject,
         $mail->isSendmail();
         $mail->CharSet = 'UTF-8';
 
+        /* Alineacion con el dominio, que es lo que mira Gmail.
+         *
+         * Sin esto, sendmail pone como remitente del SOBRE al usuario del
+         * sistema —algo@host.secureserver.net— y Gmail comprueba SPF contra
+         * ESE dominio, no contra inedito.digital: la alineacion de DMARC
+         * falla y el correo acaba en spam o se descarta. Los buzones del
+         * propio servidor no lo notan porque se entregan sin salir.
+         *
+         * Hostname manda ademas en el Message-ID y en el saludo HELO: por
+         * omision PHPMailer usa el nombre de la maquina, que tampoco se
+         * parece al dominio del remitente. */
+        $mail->Sender   = $s['from_email'];
+        $mail->Hostname = 'inedito.digital';
+
         $mail->setFrom($s['from_email'], $s['from_name']);
         // Responder va directo al prospecto
         if (!empty($lead['email'])) {

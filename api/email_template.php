@@ -110,13 +110,31 @@ function lead_email_html(array $lead): string
     $wa      = mail_wa($tel);
     $fecha   = trim((string)($lead['fecha'] ?? '')) ?: date('Y-m-d H:i:s');
 
-    /* El asistente firma el mensaje con la página desde donde escribieron.
-       Se saca a su propio renglón: dice en qué estaba interesado antes de
-       escribir, que es la mitad del contexto. */
-    $desde = '';
-    if (preg_match('~\(Escribo desde (?:la página )?([^)]+)\)~u', $mensaje, $m)) {
-        $desde = trim($m[1]);
-        $mensaje = trim(preg_replace('~_?\(Escribo desde (?:la página )?[^)]+\)_?~u', '', $mensaje));
+    /* El asistente firma el mensaje con dónde estaba la persona. Se saca a su
+       propio renglón: dice en qué andaba interesada antes de escribir, que es
+       la mitad del contexto.
+
+       Vienen dos formas y no una: «la página /ruta» cuando estaba en una
+       interior, y «el sitio» cuando estaba en la portada. Tratar la segunda
+       como si fuera una ruta producía el enlace roto
+       https://www.inedito.digitalel%20sitio. */
+    $desde = '';       // lo que se enseña
+    $desdeUrl = '';    // a dónde lleva, si es que lleva a algún sitio
+    if (preg_match('~\(Escribo desde ([^)]+)\)~u', $mensaje, $m)) {
+        $bruto = trim($m[1]);
+        $mensaje = trim(preg_replace('~_?\(Escribo desde [^)]+\)_?~u', '', $mensaje));
+
+        if (preg_match('~(/[^\s)]*)~u', $bruto, $mp)) {
+            $desde = $mp[1];
+            $desdeUrl = 'https://www.inedito.digital' . $mp[1];
+        } elseif (mb_stripos($bruto, 'el sitio') !== false) {
+            /* location.pathname siempre trae al menos «/», así que esto solo
+               ocurre cuando estaba en la portada. */
+            $desde = 'La portada';
+            $desdeUrl = 'https://www.inedito.digital/';
+        } else {
+            $desde = $bruto;
+        }
     }
 
     $meses = [1=>'ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
@@ -129,7 +147,11 @@ function lead_email_html(array $lead): string
     if ($correo !== '') $filas[] = ['Correo', '<a href="mailto:' . $e($correo) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e($correo) . '</a>'];
     if (trim((string)($lead['company'] ?? '')) !== '') $filas[] = ['Empresa', $e($lead['company'])];
     if (trim((string)($lead['service'] ?? '')) !== '') $filas[] = ['Le interesa', $e($lead['service'])];
-    if ($desde !== '') $filas[] = ['Estaba viendo', '<a href="https://www.inedito.digital' . $e($desde) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e($desde) . '</a>'];
+    if ($desde !== '') {
+        $filas[] = ['Estaba viendo', $desdeUrl !== ''
+            ? '<a href="' . $e($desdeUrl) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e($desde) . '</a>'
+            : $e($desde)];
+    }
     $filas[] = ['Cómo llegó', $e(trim((string)($lead['source'] ?? '')) ?: 'Sitio web')];
     $filas[] = ['Recibido', $e($cuando)];
 
