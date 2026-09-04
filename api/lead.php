@@ -89,6 +89,9 @@ try {
         ':ip' => $_SERVER['REMOTE_ADDR'] ?? '',
         ':ua' => substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255),
     ]);
+    /* El mismo número que la fila del panel: el correo lo enseña como folio y
+       así se puede hablar del lead sin repetir el nombre entero. */
+    $lead['id'] = (int)$pdo->lastInsertId();
 } catch (Throwable $e) {
     $dbFailed = true;
     error_log('[lead] DB error: ' . $e->getMessage());

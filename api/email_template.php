@@ -29,6 +29,8 @@
 declare(strict_types=1);
 
 /* --- la paleta, repetida aquí porque un correo viaja solo --- */
+require_once __DIR__ . '/titulo.php';
+
 const MAIL_NEGRO = '#08080D';
 const MAIL_CARTA = '#101018';
 const MAIL_LINEA = '#2A2A3D';
@@ -66,15 +68,22 @@ function mail_tel(string $tel): string
  * se pinta como enlace suelto en Outlook, y el radio redondeado rompería la
  * dirección.
  */
-function mail_boton(string $url, string $texto, string $fondo, string $color = '#000000'): string
+function mail_boton(string $url, string $texto, string $fondo, string $color = '#000000', bool $hueco = false): string
 {
     $u = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
     $t = htmlspecialchars(mb_strtoupper($texto, 'UTF-8'), ENT_QUOTES, 'UTF-8');
-    return '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-      <td bgcolor="' . $fondo . '" style="background:' . $fondo . ';">
+    /* Hueco: el color se va del relleno al filo. La acción secundaria se
+       distingue por forma y no por un tono más apagado del mismo relleno, que
+       a media pantalla y con brillo bajo no se distingue de nada.
+       Van a todo el ancho y apilados: dos botones lado a lado se parten en el
+       teléfono, y ahí es donde se leen estos avisos. */
+    $bg = $hueco ? MAIL_CARTA : $fondo;
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td align="center" bgcolor="' . $bg . '" style="background:' . $bg . ';'
+        . ($hueco ? 'border:1px solid ' . $fondo . ';' : '') . '">
         <a href="' . $u . '" target="_blank"
-           style="display:block;padding:17px 30px;font:700 13px/1 ' . MAIL_SANS . ';
-                  letter-spacing:1.6px;color:' . $color . ';text-decoration:none;">' . $t . '</a>
+           style="display:block;padding:18px 24px;font:700 13px/1 ' . MAIL_SANS . ';
+                  letter-spacing:1.8px;color:' . $color . ';text-decoration:none;">' . $t . '</a>
       </td></tr></table>';
 }
 
@@ -169,26 +178,38 @@ function lead_email_html(array $lead): string
     $cuando = date('d.m.Y', $t) . ' / ' . date('H:i', $t);
 
     /* --- la ficha, solo con lo que existe --- */
+    /* Tres columnas por renglón: rótulo, valor y si el valor es un dato que
+       se mide. La mono va solo en esos —teléfono y fecha—; en el resto sería
+       disfraz de técnico sobre texto corriente. */
     $filas = [];
-    if ($tel !== '')    $filas[] = ['Teléfono', '<a href="tel:+' . $e($wa ?: preg_replace('/\D/', '', $tel)) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e(mail_tel($tel)) . '</a>'];
-    if ($correo !== '') $filas[] = ['Correo', '<a href="mailto:' . $e($correo) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e($correo) . '</a>'];
-    if (trim((string)($lead['company'] ?? '')) !== '') $filas[] = ['Empresa', $e($lead['company'])];
-    if (trim((string)($lead['service'] ?? '')) !== '') $filas[] = ['Le interesa', $e($lead['service'])];
+    if ($tel !== '')    $filas[] = ['Teléfono', '<a href="tel:+' . $e($wa ?: preg_replace('/\D/', '', $tel)) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e(mail_tel($tel)) . '</a>', true];
+    if ($correo !== '') $filas[] = ['Correo', '<a href="mailto:' . $e($correo) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e($correo) . '</a>', false];
+    if (trim((string)($lead['company'] ?? '')) !== '') $filas[] = ['Empresa', $e($lead['company']), false];
+    if (trim((string)($lead['service'] ?? '')) !== '') $filas[] = ['Le interesa', $e($lead['service']), false];
     if ($desde !== '') {
         $filas[] = ['Estaba viendo', $desdeUrl !== ''
             ? '<a href="' . $e($desdeUrl) . '" style="color:' . MAIL_PUR3 . ';text-decoration:none;">' . $e($desde) . '</a>'
-            : $e($desde)];
+            : $e($desde), false];
     }
-    $filas[] = ['Recibido', $e($cuando)];
+    /* Que no haya dejado forma de contacto es un dato de la ficha, no una
+       alerta: iba en un recuadro con borde morado y pesaba más que el mensaje. */
+    if ($tel === '' && $correo === '') {
+        $filas[] = ['Contacto', '<span style="color:' . MAIL_SUAVE . ';">No dejó teléfono ni correo. '
+                  . 'Si te escribió por WhatsApp, guarda su número en el panel para poder buscarla después.</span>', false];
+    }
+    $filas[] = ['Recibido', $e($cuando), true];
 
     $fichaHtml = '';
-    foreach ($filas as $i => [$rot, $val]) {
+    foreach ($filas as $i => [$rot, $val, $dato]) {
         $sep = $i > 0 ? 'border-top:1px solid ' . MAIL_LINEA . ';' : '';
+        $fuente = $dato
+            ? "400 14px/1.6 " . MAIL_MONO . ";letter-spacing:.3px"
+            : "400 15px/1.6 " . MAIL_SANS;
         $fichaHtml .= '<tr>
-          <td width="132" style="width:132px;padding:14px 14px 14px 0;' . $sep . '
-              font:400 10px/1.7 ' . MAIL_MONO . ';letter-spacing:1.6px;text-transform:uppercase;
+          <td class="rot" width="124" style="width:124px;padding:15px 16px 15px 0;' . $sep . '
+              font:400 10px/1.8 ' . MAIL_MONO . ';letter-spacing:1.6px;text-transform:uppercase;
               color:' . MAIL_MUT . ';vertical-align:top;">' . $e($rot) . '</td>
-          <td style="padding:14px 0;' . $sep . 'font:400 15px/1.6 ' . MAIL_SANS . ';
+          <td class="val" style="padding:15px 0;' . $sep . 'font:' . $fuente . ';
               color:' . MAIL_TXT . ';vertical-align:top;">' . $val . '</td>
         </tr>';
     }
@@ -210,29 +231,48 @@ function lead_email_html(array $lead): string
                      . 'No dejó mensaje. Los datos están abajo.</div>';
     }
 
-    /* --- botones --- */
-    $acciones = '';
+    /* --- botones ---
+       El panel siempre está. Los otros dos solo si hay a dónde escribir, y
+       cuando no hay ninguno el panel deja de ser secundario y se pinta lleno:
+       pasa a ser la única acción posible y tiene que verse como tal. */
+    $panel = 'https://www.inedito.digital/panel/?p=leads';
+    $botones = [];
     if ($wa !== '') {
         $txtWa = rawurlencode('Hola ' . explode(' ', $nombre)[0] . ', te escribo de Inédito Digital. Vi tu mensaje desde el sitio.');
-        $acciones .= '<td style="padding-right:12px;">' . mail_boton('https://wa.me/' . $wa . '?text=' . $txtWa, 'Escribir por WhatsApp', MAIL_VERDE, '#04240F') . '</td>';
+        $botones[] = mail_boton('https://wa.me/' . $wa . '?text=' . $txtWa, 'Escribir por WhatsApp', MAIL_VERDE, '#04240F');
     }
     if ($correo !== '') {
-        $acciones .= '<td style="padding-right:12px;">' . mail_boton('mailto:' . $correo, 'Responder por correo', MAIL_PUR2, '#FFFFFF') . '</td>';
+        $botones[] = mail_boton('mailto:' . $correo, 'Responder por correo', MAIL_PUR2, '#FFFFFF');
+    }
+    $botones[] = $botones
+        ? mail_boton($panel, 'Abrir en el panel', MAIL_PUR2, MAIL_PUR3, true)
+        : mail_boton($panel, 'Abrir en el panel', MAIL_PUR2, '#FFFFFF');
+
+    $accionesHtml = '';
+    foreach ($botones as $k => $btn) {
+        $accionesHtml .= '<tr><td style="padding-top:' . ($k ? '10' : '0') . 'px;">' . $btn . '</td></tr>';
+    }
+    $accionesHtml = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">'
+                  . $accionesHtml . '</table>';
+
+    /* El folio es el mismo número que la fila del panel: sirve para hablar del
+       lead sin repetir el nombre entero. */
+    $id = (int)($lead['id'] ?? 0);
+    $folio = $id > 0 ? 'Nº ' . sprintf('%03d', $id) : 'Nuevo prospecto';
+
+    /* El titular en la Hanson. Si el servidor no pudiera dibujarla, vuelve a
+       texto vivo: más vale un titular en otra fuente que un hueco. */
+    $tituloHtml = titulo_imagen($nombre, 540);
+    if ($tituloHtml === '') {
+        $tituloHtml = '<div style="font:900 38px/1.04 ' . MAIL_SANS . ';letter-spacing:-1.2px;
+             text-transform:uppercase;color:' . MAIL_TXT . ';">' . $e($nombre) . '</div>';
     }
 
-    $accionesHtml = $acciones !== ''
-        ? '<tr><td style="padding:0 40px 34px;">
-             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>' . $acciones . '</tr></table>
-           </td></tr>'
-        : '<tr><td style="padding:0 40px 34px;">
-             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-               <tr><td style="border-left:3px solid ' . MAIL_PUR2 . ';padding:2px 0 2px 16px;
-                   font:400 14px/1.6 ' . MAIL_SANS . ';color:' . MAIL_SUAVE . ';">
-                 No dejó teléfono ni correo. Si te escribió por WhatsApp, guarda su número en el
-                 panel para poder buscarla después.
-               </td></tr>
-             </table>
-           </td></tr>';
+    /* Solo es cierto cuando hay a quién responderle: en un lead de WhatsApp sin
+       correo, responder no llega a ninguna parte. */
+    $pieResponder = $correo !== ''
+        ? '<br>Responder a este correo contesta a ' . $e($nombre)
+        : '';
 
     /* Tambien sin los asteriscos: este es el texto que asoma en la bandeja
        antes de abrir, y ahi no hay negritas que valgan. */
@@ -249,6 +289,20 @@ function lead_email_html(array $lead): string
 <meta name="color-scheme" content="dark">
 <meta name="supported-color-schemes" content="dark">
 <title>Nuevo prospecto</title>
+<style>
+  /* Lo unico que entienden Gmail, Apple Mail y Outlook.com por igual. Outlook
+     de escritorio las ignora y se queda con la version ancha, que ahi es la
+     correcta porque la ventana nunca es estrecha. */
+  @media only screen and (max-width:480px) {
+    .p   { padding-left:22px !important; padding-right:22px !important; }
+    /* El rotulo deja de ser columna y se pone encima del valor: a 375px de
+       ancho, 124 para la etiqueta dejaban tres palabras por renglon. */
+    .rot { display:block !important; width:auto !important;
+           padding:16px 0 5px !important; }
+    .val { display:block !important; width:auto !important;
+           padding:0 0 16px !important; border-top:0 !important; }
+  }
+</style>
 </head>
 <body style="margin:0;padding:0;background:' . MAIL_NEGRO . ';">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;">' . $e($asomo) . '</div>
@@ -257,59 +311,59 @@ function lead_email_html(array $lead): string
        bgcolor="' . MAIL_NEGRO . '" style="background:' . MAIL_NEGRO . ';">
 <tr><td align="center" style="padding:0 0 44px;">
 
-  <table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0"
-         style="width:620px;max-width:100%;background:' . MAIL_CARTA . ';">
+  <!--[if mso]><table role="presentation" width="620" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+         style="width:100%;max-width:620px;background:' . MAIL_CARTA . ';">
 
-    <!-- franja: morado plano, sin degradado y sin esquinas -->
-    <tr><td bgcolor="' . MAIL_PUR . '" style="background:' . MAIL_PUR . ';padding:18px 40px;">
+    <!-- El membrete va sobre el negro de la carta y no sobre una banda morada.
+         El isotipo del logo ES ese morado: encima del bloque desaparecía y
+         quedaba el logotipo manco. Sin banda, la carta es una sola superficie y
+         la estructura la levantan los filetes, que es como se construye el
+         resto de la casa. -->
+    <tr><td class="p" style="padding:36px 40px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
         <td style="vertical-align:middle;">
-          <img src="https://www.inedito.digital/media/inedito-logo.png" width="96" alt="Inédito Digital"
-               style="display:block;width:96px;height:auto;border:0;">
+          <img src="https://www.inedito.digital/media/inedito-logo.png" width="104" alt="Inédito Digital"
+               style="display:block;width:104px;height:auto;border:0;">
         </td>
         <td align="right" style="vertical-align:middle;font:400 10px/1 ' . MAIL_MONO . ';
-            letter-spacing:2.6px;color:#EAD4FF;">NUEVO PROSPECTO</td>
+            letter-spacing:2.6px;text-transform:uppercase;color:' . MAIL_MUT . ';">' . $e($folio) . '</td>
       </tr></table>
     </td></tr>
 
-    <!-- el nombre manda -->
-    <tr><td style="padding:44px 40px 0;">
-      <div style="font:900 40px/1.02 ' . MAIL_SANS . ';letter-spacing:-1.4px;
-           text-transform:uppercase;color:' . MAIL_TXT . ';">' . $e($nombre) . '</div>
-      <div style="padding-top:16px;font:400 11px/1.6 ' . MAIL_MONO . ';letter-spacing:1.8px;
-           text-transform:uppercase;color:' . MAIL_MUT . ';">'
-           . $e($origen) . ' &nbsp;/&nbsp; ' . $e($cuando) . '</div>
-    </td></tr>
+    <tr><td class="p" style="padding:30px 40px 0;">' . mail_filete(MAIL_PUR2, 3) . '</td></tr>
 
-    <tr><td style="padding:32px 40px 0;">' . mail_filete(MAIL_PUR2, 3) . '</td></tr>
+    <!-- el nombre, en la Hanson -->
+    <tr><td class="p" style="padding:32px 40px 0;">' . $tituloHtml . '</td></tr>
+    <tr><td class="p" style="padding:20px 40px 0;font:400 11px/1.6 ' . MAIL_MONO . ';letter-spacing:1.8px;
+        text-transform:uppercase;color:' . MAIL_MUT . ';">'
+        . $e($origen) . ' &nbsp;/&nbsp; ' . $e($cuando) . '</td></tr>
+
+    <tr><td class="p" style="padding:32px 40px 0;">' . mail_filete(MAIL_LINEA, 1) . '</td></tr>
 
     <!-- lo que escribió -->
-    <tr><td style="padding:26px 40px 0;">' . mail_rotulo('Lo que escribió') . '</td></tr>
-    <tr><td style="padding:16px 40px 34px;">' . $mensajeHtml . '</td></tr>
+    <tr><td class="p" style="padding:28px 40px 0;">' . mail_rotulo('Lo que escribió') . '</td></tr>
+    <tr><td class="p" style="padding:18px 40px 0;">' . $mensajeHtml . '</td></tr>
 
-    ' . $accionesHtml . '
+    <tr><td class="p" style="padding:32px 40px 0;">' . mail_filete(MAIL_LINEA, 1) . '</td></tr>
 
-    <!-- la ficha -->
-    <tr><td style="padding:0 40px;">' . mail_filete(MAIL_LINEA, 1) . '</td></tr>
-    <tr><td style="padding:22px 40px 0;">' . mail_rotulo('La ficha') . '</td></tr>
-    <tr><td style="padding:10px 40px 0;">
+    <!-- La ficha, sin rótulo encima: cada renglón ya dice lo que es y el
+         título solo repetía. -->
+    <tr><td class="p" style="padding:4px 40px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">' . $fichaHtml . '</table>
     </td></tr>
 
-    <!-- pie -->
-    <tr><td style="padding:34px 40px 0;">' . mail_filete(MAIL_PUR2, 3) . '</td></tr>
-    <tr><td style="padding:24px 40px 40px;">
-      <a href="https://www.inedito.digital/panel/?p=leads" target="_blank"
-         style="font:700 12px/1 ' . MAIL_SANS . ';letter-spacing:1.8px;text-transform:uppercase;
-                color:' . MAIL_PUR3 . ';text-decoration:none;">Abrir en el panel &nbsp;&#8599;</a>
-      <div style="padding-top:18px;font:400 10px/1.7 ' . MAIL_MONO . ';letter-spacing:1.2px;
-           text-transform:uppercase;color:#5C5870;">
-        Aviso automático de inedito.digital<br>
-        Responder a este correo contesta a ' . $e($nombre) . '
-      </div>
+    <tr><td class="p" style="padding:36px 40px 0;">' . mail_filete(MAIL_PUR2, 3) . '</td></tr>
+
+    <tr><td class="p" style="padding:30px 40px 0;">' . $accionesHtml . '</td></tr>
+
+    <tr><td class="p" style="padding:32px 40px 40px;font:400 10px/1.9 ' . MAIL_MONO . ';
+        letter-spacing:1.2px;text-transform:uppercase;color:#7E7A98;">
+      Aviso automático de inedito.digital' . $pieResponder . '
     </td></tr>
 
   </table>
+  <!--[if mso]></td></tr></table><![endif]-->
 
 </td></tr>
 </table>
