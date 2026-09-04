@@ -19,12 +19,6 @@ function espera(string $cuando): array {
     return [date('d/m/Y', $t), 'viejo'];
 }
 
-/** El primer trozo del mensaje, para la vista de bandeja. */
-function asomo(string $txt, int $n = 190): string {
-    $t = trim(preg_replace('/\s+/u', ' ', $txt));
-    return mb_strlen($t) > $n ? mb_substr($t, 0, $n - 1) . '…' : $t;
-}
-
 /** «4491204353» se lee mal; «449 120 4353» se lee de un vistazo. */
 function tel_bonito(string $d): string {
     if (strlen($d) === 12 && str_starts_with($d, '52')) $d = substr($d, 2);
@@ -67,7 +61,29 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                     ':o' => trim((string)($_POST['source'] ?? '')) ?: 'Capturado a mano',
                     ':st'=> in_array($_POST['status'] ?? '', $STATUSES, true) ? $_POST['status'] : 'new',
                 ]);
-            set_flash('«' . $nombre . '» quedó registrado.');
+            /* Tambien avisa: quien captura no suele ser quien da
+               seguimiento, y el correo es el registro que le llega al resto
+               del equipo. Si el envio falla, el lead ya esta guardado. */
+            $aviso = '';
+            try {
+                $lead = [
+                    'name'    => $nombre,
+                    'email'   => trim((string)($_POST['email'] ?? '')),
+                    'phone'   => trim((string)($_POST['phone'] ?? '')),
+                    'company' => trim((string)($_POST['company'] ?? '')),
+                    'service' => trim((string)($_POST['service'] ?? '')),
+                    'message' => trim((string)($_POST['message'] ?? '')),
+                    'source'  => trim((string)($_POST['source'] ?? '')) ?: 'Capturado a mano',
+                    'fecha'   => date('Y-m-d H:i:s'),
+                ];
+                require_once dirname(__DIR__, 2) . '/api/mailer.php';
+                require_once dirname(__DIR__, 2) . '/api/email_template.php';
+                $r = send_lead_email($GLOBALS['cfg'], $lead, lead_email_html($lead),
+                        'Nuevo prospecto: ' . $nombre . ($lead['company'] !== '' ? ' · ' . $lead['company'] : ''),
+                        lead_email_texto($lead));
+                $aviso = $r['ok'] ? ' El equipo ya recibió el aviso.' : ' (el aviso por correo no salió)';
+            } catch (Throwable $e) { /* el lead ya quedó guardado */ }
+            set_flash('«' . $nombre . '» quedó registrado.' . $aviso);
         }
         redirect('/panel/?p=leads');
     }
@@ -236,7 +252,7 @@ $esperando = ($counts['new'] ?? 0) + ($counts['contacted'] ?? 0);
   .lead-est i{width:6px;height:6px;border-radius:50%;background:var(--est);flex:none}
   /* El mensaje es lo que se viene a leer: va en el color del texto y con
      medida de lectura, no dentro de una caja. */
-  .lead-txt{margin:10px 0 0;max-width:68ch;font-size:14px;line-height:1.65;color:var(--txt)}
+  .lead-txt{margin:10px 0 0;max-width:68ch;font-size:14px;line-height:1.65;color:var(--txt);white-space:pre-line}
   .lead-datos{margin-top:9px;font-size:12.5px;color:var(--mut2);display:flex;gap:16px;flex-wrap:wrap}
   .lead-datos a{color:#a982f0;text-decoration:none}
   .lead-datos a:hover{text-decoration:underline}
@@ -316,7 +332,9 @@ $esperando = ($counts['new'] ?? 0) + ($counts['contacted'] ?? 0);
   </div>
 
   <?php if (trim((string)$l['message']) !== ''): ?>
-    <p class="lead-txt"><?= e(asomo((string)$l['message'])) ?></p>
+    <?php /* Entero y con sus saltos de linea: recortado a 190 caracteres se
+             perdia justo el final, que es donde la gente pone lo que quiere. */ ?>
+    <p class="lead-txt"><?= e(trim((string)$l['message'])) ?></p>
   <?php endif; ?>
 
   <div class="lead-datos">

@@ -13,7 +13,7 @@ require_once __DIR__ . '/PHPMailer/SMTP.php';
  * Envía el correo del lead a todos los destinatarios configurados.
  * Devuelve ['ok'=>bool, 'error'=>string|null].
  */
-function send_lead_email(array $cfg, array $lead, string $html, string $subject): array
+function send_lead_email(array $cfg, array $lead, string $html, string $subject, string $texto = ''): array
 {
     $s = $cfg['smtp'];
     $mail = new PHPMailer(true);
@@ -37,7 +37,9 @@ function send_lead_email(array $cfg, array $lead, string $html, string $subject)
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $html;
-        $mail->AltBody = trim(preg_replace('/\s*\n\s*\n\s*/', "\n", strip_tags(
+        /* Si quien llama trae una version en texto, se usa esa: quitarle las
+           etiquetas a una maqueta de tablas deja una escalera de espacios. */
+        $mail->AltBody = $texto !== '' ? $texto : trim(preg_replace('/\s*\n\s*\n\s*/', "\n", strip_tags(
             str_replace(['<br>', '<br/>', '<br />', '</tr>', '</div>'], "\n", $html)
         )));
 

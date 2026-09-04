@@ -96,20 +96,19 @@ try {
 
 /* --- Enviar correo ---
  *
- * Salvo cuando la conversación se va por WhatsApp: ahí el aviso ya llega al
- * teléfono, y mandar además un correo por la misma persona convierte el
- * buzón en ruido. El registro queda en el panel con todo el contexto, que es
- * para lo que sirve. */
-if ($canal === 'whatsapp') {
-    echo json_encode(['ok' => !$dbFailed, 'guardado' => !$dbFailed, 'correo' => false]);
-    exit;
-}
-
+ * TODOS los leads avisan, tambien los que se van por WhatsApp. Se probo lo
+ * contrario —el mensaje ya llega al telefono, para que ademas un correo— y
+ * no aguanta: quien recibe el WhatsApp no es siempre quien da seguimiento, y
+ * el correo es el que queda como registro para el equipo. */
 require __DIR__ . '/mailer.php';
 require __DIR__ . '/email_template.php';
+$lead['fecha'] = date('Y-m-d H:i:s');
 $html    = lead_email_html($lead);
-$subject = 'Nuevo lead web: ' . $name . ($company !== '' ? ' (' . $company . ')' : '');
-$mailRes = send_lead_email($cfg, $lead, $html, $subject);
+$texto   = lead_email_texto($lead);
+/* El asunto dice quien y desde donde: en una bandeja llena, «Nuevo lead web»
+   repetido veinte veces no distingue nada. */
+$subject = 'Nuevo prospecto: ' . $name . ($company !== '' ? ' · ' . $company : ($service !== '' ? ' · ' . $service : ''));
+$mailRes = send_lead_email($cfg, $lead, $html, $subject, $texto);
 
 if (!$mailRes['ok']) {
     error_log('[lead] Mail error: ' . ($mailRes['error'] ?? '?'));

@@ -9,14 +9,26 @@
   SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 </IfModule>
 
-# Bloquear descarga de configuración, esquema y documentación por HTTP
-<FilesMatch "\.(sql|md|json|ini|bak|log)$">
+# Bloquear descarga de configuración, esquema y documentación por HTTP.
+#
+# La marca puede ir en medio del nombre y no solo al final: un respaldo
+# llamado «config.php.bak-20260904-183910» no termina en .bak, y con el
+# patrón anterior —anclado con $— Apache lo servía como texto plano con las
+# credenciales dentro. Ahora basta con que la marca aparezca.
+<FilesMatch "\.(sql|md|json|ini|bak|log|save|old|orig|swp|swo|tmp|dist|backup|copy)([._~-]|$)">
+  Require all denied
+</FilesMatch>
+
+# Cualquier cosa que empiece por punto, y los archivos de respaldo que dejan
+# los editores al guardar.
+<FilesMatch "^\.|~$|^#.*#$">
   Require all denied
 </FilesMatch>
 
 # Estos .php son librerías incluidas por otros scripts, NO endpoints.
 # Bloquear su acceso directo evita respuestas vacías 200 y fugas por error.
-<FilesMatch "^(config|db|mailer|email_template|admin_token)\.php$">
+# Sin el ancla final: así también cae «config.php.loquesea».
+<FilesMatch "^(config|db|mailer|email_template|admin_token)\.php">
   Require all denied
 </FilesMatch>
 
