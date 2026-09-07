@@ -5,6 +5,8 @@ import { GlassCard } from '../components/GlassCard';
 import TopographyCanvas from '../components/TopographyCanvas';
 import { TopoLineas } from '../components/TopoLineas';
 import { RecorridoProceso } from '../components/RecorridoProceso';
+import EsferaIA from '../components/EsferaIA';
+import FAQAccordion from '../components/FAQAccordion';
 import Floating3DElements from '../components/Floating3DElements';
 import SectionDivider from '../components/SectionDivider';
 import { useApp } from '../context/AppContext';
@@ -142,50 +144,34 @@ export default function AIEcommercePage() {
       </section>
 
       <div className="bg-black">
-        {/* DE QUE SE TRATA — la definicion primero, que es lo que cita un
-            asistente, y despues el texto largo. Antes esta pagina servia
-            poco mas de doscientas palabras y Google no la habia visitado
-            nunca. */}
-        <section className="px-4 pt-10 pb-6 md:pt-14 md:pb-10">
-          <div className="container mx-auto max-w-5xl">
-            {/* Dos columnas y no una: la definición sostiene la izquierda
-                —se queda fija mientras se lee el resto— y el desarrollo corre
-                por la derecha. En una sola columna esto eran trescientas
-                palabras seguidas, que es un muro y no una página. */}
-            <div className="grid gap-8 lg:grid-cols-12 lg:gap-14">
+        {/* DE QUÉ SE TRATA — la definición al lado de la esfera.
+            Aquí había trescientas palabras en dos columnas, que es lo primero
+            que veía alguien después del titular. La esfera es la misma de la
+            portada: gira sola, se arrastra y suelta pulsos al tocarla. */}
+        <section className="px-4 py-12 md:py-20">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
               <motion.div
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.6 }}
-                className="lg:col-span-5"
               >
-                <div className="lg:sticky lg:top-28">
-                  <span className="mb-5 block h-[3px] w-14 bg-[#9933FF]" />
-                  <p className="text-[18px] md:text-[21px] leading-[1.6] text-white/90">
-                    {tCtx('definicion', '')}
-                  </p>
-                </div>
+                <span className="mb-6 block h-[3px] w-16 bg-[#9933FF]" />
+                <p className="text-[19px] leading-[1.55] text-white/90 md:text-[24px]">
+                  {tCtx('definicion', '')}
+                </p>
               </motion.div>
 
-              <div className="space-y-5 lg:col-span-7">
-                {tCtx('texto_largo', '')
-                  .split(/\n\s*\n/)
-                  .map((p) => p.trim())
-                  .filter(Boolean)
-                  .map((parrafo, i) => (
-                    <motion.p
-                      key={i}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: '-80px' }}
-                      transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.06 }}
-                      className="text-[15.5px] leading-[1.8] text-white/60 md:text-[16.5px]"
-                    >
-                      {parrafo}
-                    </motion.p>
-                  ))}
-              </div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className="relative order-first lg:order-last"
+              >
+                <EsferaIA className="aspect-square w-full" />
+              </motion.div>
             </div>
           </div>
         </section>
@@ -304,6 +290,32 @@ export default function AIEcommercePage() {
           />
         )}
 
+        {/* EL TEXTO LARGO — aquí y no arriba. A esta altura la página ya
+            enseñó una esfera, un bento, una sección clara y una animación
+            larga, así que una lectura seguida se lee como cambio de ritmo. */}
+        <section className="px-4 py-12 md:py-20">
+          <div className="container mx-auto max-w-5xl">
+            <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+              {tCtx('texto_largo', '')
+                .split(/\n\s*\n/)
+                .map((p) => p.trim())
+                .filter(Boolean)
+                .map((parrafo, i) => (
+                  <motion.p
+                    key={i}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.05 }}
+                    className="text-[15.5px] leading-[1.8] text-white/60 md:text-[16.5px]"
+                  >
+                    {parrafo}
+                  </motion.p>
+                ))}
+            </div>
+          </div>
+        </section>
+
         {/* IDEAL PARA */}
         {tIde.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
@@ -347,27 +359,14 @@ export default function AIEcommercePage() {
                 {tFaq('titulo_1', 'PREGUNTAS')}{' '}
                 <span className="text-[#CC66FF]">{tFaq('titulo_2', 'FRECUENTES')}</span>
               </h2>
-              <div className="grid gap-x-12 border-t border-white/10 lg:grid-cols-2">
-                {[1, 2, 3, 4, 5, 6]
+              {/* El acordeón que ya existe, en su variante oscura: trece
+                  párrafos abiertos de golpe eran otro muro. */}
+              <FAQAccordion
+                variant="dark"
+                items={[1, 2, 3, 4, 5, 6]
                   .filter((n) => tFaq(`q${n}`, '') !== '')
-                  .map((n) => (
-                    <motion.div
-                      key={n}
-                      initial={{ opacity: 0, y: 14 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: '-60px' }}
-                      transition={{ duration: 0.5 }}
-                      className="border-b border-white/10 py-6"
-                    >
-                      <h3 className="mb-2.5 text-[16px] md:text-[17px] font-bold text-white">
-                        {tFaq(`q${n}`, '')}
-                      </h3>
-                      <p className="text-[15px] leading-[1.75] text-white/60">
-                        {tFaq(`r${n}`, '')}
-                      </p>
-                    </motion.div>
-                  ))}
-              </div>
+                  .map((n) => ({ q: tFaq(`q${n}`, ''), a: tFaq(`r${n}`, '') }))}
+              />
             </div>
           </section>
         )}
