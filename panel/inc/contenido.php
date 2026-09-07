@@ -991,6 +991,22 @@ function registro_paginas(): array {
                     ],
                 ],
 
+                'contexto' => [
+                    'nombre' => 'De qué se trata',
+                    'campos' => [
+                        'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'Los servicios de inteligencia artificial aplicada son sistemas que se conectan a la operación real de una empresa —su chat, su catálogo, su lista de prospectos, sus campañas— y se hacen cargo de una parte concreta del trabajo. No son una herramienta que alguien tiene que aprender a usar: son procesos que quedan corriendo.'],
+                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'Casi todas las empresas que preguntan por inteligencia artificial llegan con la pregunta al revés. Preguntan qué herramienta comprar, cuando lo que hay que decidir primero es qué parte del negocio está costando dinero.
+
+En la práctica los cuellos de botella se repiten. Uno: llegan mensajes y no hay quien conteste a tiempo, así que la venta se va con quien respondió primero. Dos: hay prospectos de sobra pero nadie sabe cuáles valen, y el equipo los atiende por orden de llegada. Tres: se gasta en campañas sin poder decir cuál trajo clientes. Cuatro: entra gente a la tienda y compra una fracción mínima. Cada uno de esos problemas tiene una solución distinta, y por eso están separados en cuatro servicios y no vendidos como un paquete único.
+
+Lo que tienen en común es que no son demostraciones. Se conectan a lo que ya usas —tu número de WhatsApp, tu CRM, tu catálogo, tus cuentas de campañas— y trabajan con tus datos reales. Un agente entrenado con información genérica contesta como un folleto y la gente lo nota en dos mensajes; la diferencia entre uno que sirve y uno que estorba está casi toda en el entrenamiento, no en el modelo.
+
+También conviene decir lo que la IA no arregla. No arregla un producto que no se vende, ni un precio fuera de mercado, ni un proceso interno roto — lo que hace es que ese problema se note más rápido y a mayor escala. Antes de automatizar algo hay que confirmar que ese algo funciona cuando lo hace una persona.
+
+Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del país. Si no tienes claro cuál de los cuatro frentes es el tuyo, se empieza por una revisión de dónde se está perdiendo el dinero, y eso se puede medir antes de contratar nada.'],
+                    ],
+                ],
+
                 'cifras' => [
                     'nombre' => 'Cifras de la portada',
                     'campos' => [
@@ -1123,12 +1139,16 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Configuración'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos tu número de WhatsApp Business y definimos qué puede resolver el agente y qué no.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Entrenamos la IA con información de tu negocio y flujos de conversación.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Integración'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Lo enlazamos con lo que ya usas: catálogo, calendario, CRM o la hoja donde llevas los pedidos.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos el agente a tu WhatsApp Business en minutos.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se entrena con tus precios, tus políticas y tus preguntas reales, y empieza a contestar solo.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'El agente empieza a atender, calificar y dar seguimiento automáticamente.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Cada semana se revisan las conversaciones que se le complicaron y se le enseña a resolverlas.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Mejora continua basada en datos reales y comportamiento de usuarios.'],
                     ],
                 ],
@@ -1148,6 +1168,23 @@ function registro_paginas(): array {
                     ],
                 ],
 
+                'contexto' => [
+                    'nombre' => 'De qué se trata',
+                    'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
+                    'campos' => [
+                        'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'Un agente de IA en WhatsApp es un programa que atiende el chat de tu negocio con lenguaje normal: lee lo que te escriben, responde con la información real de tu empresa —precios, horarios, disponibilidad— y pasa la conversación a una persona cuando hace falta. Vive en tu número de siempre, así que el cliente no nota ningún cambio.'],
+                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'En México, WhatsApp no es un canal de atención más: es el canal. La gente no llama, no manda correo y muchas veces ni siquiera entra al sitio — busca el número y escribe. Ahí es donde se decide la venta, y ahí es donde se pierde: alguien pregunta a las diez de la noche, un domingo, o justo cuando el equipo está atendiendo a otro cliente.
+
+Lo que más sorprende al medirlo es que el problema casi nunca es el precio ni el producto. Es el tiempo. Quien contesta primero se lleva la venta, y contestar «primero» significa minutos, no horas. Un negocio que responde al día siguiente está compitiendo contra dos que ya cotizaron.
+
+El agente cubre exactamente ese hueco, y conviene entender en qué se diferencia de los bots de menú que todos conocemos. Un menú te obliga a elegir entre opciones que alguien programó; si tu pregunta no está en la lista, no hay salida y la persona escribe «quiero hablar con un humano». Un agente lee lo que le escribieron con sus propias palabras, lo entiende aunque venga con faltas o a medias, y consulta tus datos reales para responder.
+
+Lo que lo hace funcionar no es la tecnología, es el entrenamiento. Lo alimentamos con tus precios, tus políticas, tus tiempos de entrega y las preguntas que de verdad te hacen — que casi siempre son las mismas quince. Y le definimos el punto exacto donde suelta la conversación: cuando alguien negocia, se molesta, pide algo raro o ya está listo para comprar. Un agente que insiste en atender lo que no sabe hace más daño que no tener ninguno.
+
+Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la lista de lo que preguntan tus clientes, ordenada por frecuencia. Esa lista suele decir más sobre qué falta explicar en tu sitio y en tu material de venta que cualquier encuesta.'],
+                    ],
+                ],
+
                 'imagenes' => [
                     'nombre' => 'Imágenes de la página',
                     'ayuda'  => 'Las fotos que acompañan cada sección.',
@@ -1157,6 +1194,23 @@ function registro_paginas(): array {
                         'support' => ['label' => 'Imagen de support', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'business' => ['label' => 'Imagen de business', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
+                'faq' => [
+                    'nombre' => 'Preguntas frecuentes',
+                    'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
+                        'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿Mis clientes se van a dar cuenta de que hablan con una IA?'],
+                        'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'Se lo decimos desde el primer mensaje, y es lo correcto: engañar a alguien sobre eso se nota y molesta. Lo que sí notan es que les contestan al instante y con información correcta, que es lo que buscaban. La molestia con los bots viene de los que no resuelven nada, no de saber que es un bot.'],
+                        'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Qué pasa si el agente no sabe responder?'],
+                        'r2' => ['label' => 'Respuesta 2', 'tipo' => 'parrafo', 'def' => 'Avisa que lo va a pasar con alguien del equipo y guarda la conversación completa, para que quien llegue no haga repetir todo desde el principio. Definimos contigo los casos en los que debe soltar siempre: reclamos, negociación de precio, o cuando la persona ya quiere comprar.'],
+                        'q3' => ['label' => 'Pregunta 3', 'tipo' => 'texto', 'def' => '¿Se puede usar mi número actual de WhatsApp?'],
+                        'r3' => ['label' => 'Respuesta 3', 'tipo' => 'parrafo', 'def' => 'Sí, y es lo recomendable — cambiar de número es tirar años de conversaciones y de contactos guardados. Se migra a WhatsApp Business API conservando el mismo número. Durante ese trámite el número queda inactivo unas horas, así que se agenda en horario de baja actividad.'],
+                        'q4' => ['label' => 'Pregunta 4', 'tipo' => 'texto', 'def' => '¿Cuánto tarda en estar funcionando?'],
+                        'r4' => ['label' => 'Respuesta 4', 'tipo' => 'parrafo', 'def' => 'La conexión técnica toma pocos días. Lo que marca el ritmo es reunir tu información: precios vigentes, políticas y las preguntas reales de tus clientes. Con eso a la mano, entre dos y tres semanas está contestando; sin eso, el agente responde en genérico y no vale la pena encenderlo.'],
                     ],
                 ],
 
@@ -1232,12 +1286,16 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Análisis'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Revisamos tu proceso de venta actual y definimos qué señales indican que un prospecto está listo.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA analiza tu histórico de ventas y perfil de cliente ideal.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Prospección'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos el CRM, el sitio y los canales por donde te contactan, para que todo caiga en un solo lugar.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Busca y califica prospectos automáticamente en múltiples fuentes.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Contacto'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se ordena la lista por probabilidad de cierre y se preparan los primeros contactos y los recordatorios.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Ejecuta secuencias personalizadas de email, LinkedIn y llamadas.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Con los cierres reales de cada mes el sistema aprende qué prospecto sí valía y ajusta el criterio.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Aprende de cada interacción para mejorar continuamente los resultados.'],
                     ],
                 ],
@@ -1257,6 +1315,23 @@ function registro_paginas(): array {
                     ],
                 ],
 
+                'contexto' => [
+                    'nombre' => 'De qué se trata',
+                    'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
+                    'campos' => [
+                        'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'La IA de ventas es el uso de inteligencia artificial para que un equipo comercial deje de gastar su tiempo en prospectos que nunca iban a comprar. Ordena la lista por probabilidad real, escribe el primer contacto con el dato de cada empresa y sostiene el seguimiento que normalmente se abandona al tercer intento.'],
+                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'En casi todos los equipos comerciales pasa lo mismo, y rara vez se dice en voz alta: la mayor parte del tiempo del vendedor no se va vendiendo. Se va buscando datos, escribiendo correos que nadie abre, llenando el CRM y persiguiendo prospectos que jamás iban a comprar. La parte que de verdad genera ingresos —hablar con alguien que sí tiene el problema, el presupuesto y la urgencia— ocupa una fracción de la semana.
+
+El primer frente es a quién llamar. Un vendedor con doscientos contactos y sin criterio los atiende por orden de llegada, que es el peor orden posible. Con los datos que ya tienes —de dónde llegó, qué páginas vio, cuánto tardó en contestar, qué tan grande es la empresa— se puede ordenar esa lista por probabilidad real de cierre. El equipo empieza por arriba y la misma semana rinde distinto.
+
+El segundo es el primer contacto. El correo en frío genérico tiene una tasa de respuesta miserable y todos lo sabemos, pero personalizar doscientos a mano es imposible. La IA lee la información pública de cada empresa y redacta un primer mensaje que menciona algo concreto de ellos. No sustituye al vendedor: le entrega el borrador para que lo revise y lo mande, que es la diferencia entre veinte contactos al día y ciento cincuenta.
+
+El tercero es el seguimiento, que es donde se pierde más dinero. La mayoría de las ventas se cierra después del cuarto o quinto contacto, y la mayoría de los vendedores se detiene en el segundo. No por flojera: porque nadie lleva la cuenta y la agenda se llena. El sistema recuerda, avisa y propone el siguiente mensaje en el momento adecuado.
+
+Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de venta que ya funciona. Si el problema es que el producto no se está vendiendo, automatizar el contacto solo hace que más gente diga que no, más rápido. En ese caso hay que revisar la oferta primero, y lo decimos.'],
+                    ],
+                ],
+
                 'imagenes' => [
                     'nombre' => 'Imágenes de la página',
                     'ayuda'  => 'Las fotos que acompañan cada sección.',
@@ -1266,6 +1341,23 @@ function registro_paginas(): array {
                         'collaboration' => ['label' => 'Imagen de collaboration', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1496180470114-6ef490f3ff22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMG1lZXRpbmd8ZW58MXx8fHwxNzY3NjI2NDE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'growth' => ['label' => 'Imagen de growth', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
+                'faq' => [
+                    'nombre' => 'Preguntas frecuentes',
+                    'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
+                        'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿Esto reemplaza a mi equipo de ventas?'],
+                        'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'No, y quien lo prometa está exagerando. La venta la cierra una persona, sobre todo con ticket alto. Lo que se automatiza es lo que rodea a la venta: buscar datos, redactar el primer contacto, recordar el seguimiento, llenar el CRM. Un vendedor gasta ahí buena parte de su semana.'],
+                        'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Necesito tener un CRM antes de empezar?'],
+                        'r2' => ['label' => 'Respuesta 2', 'tipo' => 'parrafo', 'def' => 'Ayuda mucho, pero no es obligatorio para arrancar. Se puede empezar con lo que tengas, incluso una hoja de cálculo, y montar el CRM en paralelo. Lo que sí hace falta es que alguien registre lo que pasó con cada prospecto: sin ese dato el sistema no tiene de qué aprender.'],
+                        'q3' => ['label' => 'Pregunta 3', 'tipo' => 'texto', 'def' => '¿Cómo sabe la IA cuáles prospectos son buenos?'],
+                        'r3' => ['label' => 'Respuesta 3', 'tipo' => 'parrafo', 'def' => 'Al principio con reglas que definimos contigo: tamaño de la empresa, giro, comportamiento en el sitio, rapidez de respuesta. Después con tus cierres reales — cuando ya hay unas decenas de ventas y de pérdidas registradas, el criterio deja de ser una suposición y pasa a ser tu historial.'],
+                        'q4' => ['label' => 'Pregunta 4', 'tipo' => 'texto', 'def' => '¿Los correos automáticos no suenan a robot?'],
+                        'r4' => ['label' => 'Respuesta 4', 'tipo' => 'parrafo', 'def' => 'Los genéricos sí, y por eso no funcionan. El planteamiento aquí es otro: la IA prepara un borrador que menciona algo concreto de esa empresa y el vendedor lo revisa antes de mandarlo. Nadie manda nada sin leerlo. Lo que se gana es velocidad, no permiso para escribir mal.'],
                     ],
                 ],
 
@@ -1341,12 +1433,16 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Conexión'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Revisamos qué se está midiendo hoy y qué cuenta como resultado, que casi nunca es lo mismo.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Integramos tus cuentas de ads, redes sociales y analytics.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Análisis'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos las plataformas de campañas, la analítica y el sitio en un solo tablero.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA estudia tu histórico y performance actual.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se generan variantes de anuncio, se reparte el presupuesto y saltan alertas cuando algo cae.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Genera contenido, optimiza campañas y segmenta audiencias.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Mejora Continua'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Cada mes se revisa qué trajo clientes de verdad y se mueve el dinero hacia ahí.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Aprende de resultados y ajusta estrategia automáticamente.'],
                     ],
                 ],
@@ -1366,6 +1462,23 @@ function registro_paginas(): array {
                     ],
                 ],
 
+                'contexto' => [
+                    'nombre' => 'De qué se trata',
+                    'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
+                    'campos' => [
+                        'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'La IA aplicada a marketing es usar inteligencia artificial para decidir dónde poner el presupuesto, producir el contenido que hace falta y detectar lo que no está funcionando antes de que se gaste el mes. No es publicar más rápido: es dejar de gastar en lo que no devuelve nada.'],
+                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'La mayoría de las áreas de marketing no tiene un problema de ideas: tiene un problema de evidencia. Se publica, se pauta y se reporta alcance, pero nadie puede decir con certeza qué campaña trajo clientes y cuál solo gastó. Cuando llega el momento de recortar, se recorta por intuición o por lo que menos defienda alguien en la junta.
+
+El primer uso serio de la IA aquí es de lectura, no de creación. Una cuenta de campañas genera más datos de los que un humano alcanza a revisar cada semana: combinaciones de anuncio, público, horario, dispositivo y ubicación. Un sistema los recorre completos y encuentra los patrones que se pierden a ojo — que el anuncio que peor rinde en general es el mejor los fines de semana, o que un público chico y aburrido está trayendo la mitad de los clientes reales.
+
+El segundo es de producción, y aquí conviene ser claro sobre el alcance. La IA genera muchas versiones de un mismo mensaje en el tiempo que tomaba escribir una, y eso importa porque la publicidad se agota: el mismo anuncio que funcionó dos meses deja de funcionar cuando la gente ya lo vio. Tener variantes listas mantiene la campaña viva. Lo que no hace la IA es decidir qué tiene que decir tu marca — eso sigue siendo una decisión humana, y delegarla es lo que produce esas campañas que podrían ser de cualquiera.
+
+El tercero es la alerta temprana. Una campaña que se descompone un martes y se revisa el lunes siguiente ya quemó una semana de presupuesto. Configuramos avisos sobre lo que de verdad importa —costo por cliente, no por clic— para que el problema se vea el mismo día.
+
+Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGPT, Gemini y Perplexity cuando alguien pregunta por tu categoría. Cada vez más gente decide ahí antes de llegar a Google, y es medible.'],
+                    ],
+                ],
+
                 'imagenes' => [
                     'nombre' => 'Imágenes de la página',
                     'ayuda'  => 'Las fotos que acompañan cada sección.',
@@ -1375,6 +1488,23 @@ function registro_paginas(): array {
                         'analytics' => ['label' => 'Imagen de analytics', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'team' => ['label' => 'Imagen de team', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3Njc2Nzg4ODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
+                'faq' => [
+                    'nombre' => 'Preguntas frecuentes',
+                    'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
+                        'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿La IA va a escribir todo mi contenido?'],
+                        'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'Puede, y no lo recomendamos. El contenido escrito completo por una IA suena a contenido escrito por una IA, y la gente lo distingue cada vez mejor. Sirve muy bien para producir variantes de un mensaje que ya decidiste, para adaptar un texto a cada canal y para salir del renglón en blanco.'],
+                        'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Sirve si mi presupuesto de publicidad es chico?'],
+                        'r2' => ['label' => 'Respuesta 2', 'tipo' => 'parrafo', 'def' => 'Con presupuestos pequeños la automatización de pujas rinde poco, porque el sistema no junta datos suficientes para aprender. Lo que sí rinde desde el primer mes es medir bien y producir más variantes. Preferimos decirlo antes que vender una optimización que no va a tener de qué alimentarse.'],
+                        'q3' => ['label' => 'Pregunta 3', 'tipo' => 'texto', 'def' => '¿Cómo sé si de verdad está funcionando?'],
+                        'r3' => ['label' => 'Respuesta 3', 'tipo' => 'parrafo', 'def' => 'Porque la conversación cambia de tema. Se deja de discutir alcance e impresiones y se empieza a discutir cuánto costó cada cliente y de qué campaña salió. Si a los tres meses el reporte sigue hablando de seguidores, algo se hizo mal.'],
+                        'q4' => ['label' => 'Pregunta 4', 'tipo' => 'texto', 'def' => '¿Qué es eso de aparecer en las respuestas de ChatGPT?'],
+                        'r4' => ['label' => 'Respuesta 4', 'tipo' => 'parrafo', 'def' => 'Cuando alguien le pregunta a un asistente por proveedores de tu categoría, la respuesta menciona empresas concretas. Estar o no estar ahí ya mueve clientes, y depende de cosas que se trabajan: que tu sitio sea legible para esos sistemas y que existan menciones tuyas fuera de tu propia página.'],
                     ],
                 ],
 
@@ -1450,12 +1580,16 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
                         'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Instalación'],
+                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Revisamos la tienda con los números en la mano: dónde entra la gente y en qué paso se cae.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos la IA a tu tienda en minutos, sin código.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Entrenamiento'],
+                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos catálogo, inventario y paquetería, para que las respuestas salgan del dato real.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA aprende tu catálogo, políticas y tono de voz.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
+                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se activan búsqueda inteligente, recomendaciones, atención en el chat y recuperación de carritos.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Empieza a asistir, recomendar y recuperar carritos.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
+                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Se mide qué recomendación vende y qué mensaje recupera, y se ajusta con las ventas del mes.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Mejora continua basada en conversiones reales.'],
                     ],
                 ],
@@ -1475,6 +1609,23 @@ function registro_paginas(): array {
                     ],
                 ],
 
+                'contexto' => [
+                    'nombre' => 'De qué se trata',
+                    'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
+                    'campos' => [
+                        'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'La IA para e-commerce es el conjunto de sistemas que trabajan sobre las visitas que tu tienda ya recibe: recomiendan el producto correcto, responden las dudas que frenan la compra y recuperan los carritos abandonados. No traen más gente — hacen que compre más de la que ya está entrando.'],
+                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'En una tienda en línea la cuenta que casi nadie mira es esta: de cada cien personas que entran, entre una y tres compran. Todo el esfuerzo suele irse en traer más gente, cuando el margen más barato está en las noventa y siete que ya llegaron y se fueron.
+
+El primer frente es la búsqueda dentro de la tienda, que es donde se pierde la venta más fácil de todas. Quien usa el buscador ya decidió comprar y solo quiere encontrar. Un buscador que exige la palabra exacta —que no entiende «tenis para correr» si el producto se llama «calzado deportivo»— devuelve cero resultados y esa persona se va. Un buscador con IA entiende la intención, tolera las faltas de ortografía y encuentra lo que había.
+
+El segundo son las dudas que frenan justo antes de pagar, y casi siempre son las mismas cuatro: si le queda, cuándo llega, cuánto cuesta el envío y qué pasa si quiere devolverlo. Sin respuesta, la persona pospone la compra — y posponer una compra en línea equivale a cancelarla. Un agente contesta eso al instante y con el dato real de tu inventario y tu paquetería.
+
+El tercero es el carrito abandonado, que es dinero ya casi cobrado. Siete de cada diez carritos se quedan sin pagar, y una secuencia de recuperación bien armada rescata una parte. La diferencia entre una que funciona y una que molesta está en el tiempo y en el tono: el primer recordatorio a la hora, no a los tres días, y sin descuento inmediato — regalar margen a quien iba a comprar de todos modos es tirar dinero.
+
+Y el cuarto es la recomendación. No la de «también te puede interesar» puesta al azar, sino la que se apoya en lo que esa persona vio y en lo que compraron juntos otros clientes. Bien hecha sube el ticket promedio sin gastar un peso más en publicidad, que es la definición de margen.'],
+                    ],
+                ],
+
                 'imagenes' => [
                     'nombre' => 'Imágenes de la página',
                     'ayuda'  => 'Las fotos que acompañan cada sección.',
@@ -1484,6 +1635,23 @@ function registro_paginas(): array {
                         'support' => ['label' => 'Imagen de support', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'growth' => ['label' => 'Imagen de growth', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
                         'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
+                    ],
+                ],
+
+                'faq' => [
+                    'nombre' => 'Preguntas frecuentes',
+                    'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
+                    'campos' => [
+                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
+                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
+                        'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿Funciona con mi plataforma actual?'],
+                        'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'Con las más usadas —Shopify, WooCommerce, Tiendanube, Magento— la conexión es directa. Con desarrollos a la medida depende de si la tienda permite consultar catálogo e inventario desde fuera; casi siempre se puede, y lo revisamos antes de proponer nada.'],
+                        'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Cuánto puede subir la conversión?'],
+                        'r2' => ['label' => 'Respuesta 2', 'tipo' => 'parrafo', 'def' => 'Depende demasiado del punto de partida como para prometer un número, y desconfía de quien te dé uno sin ver tu tienda. Lo que sí se puede decir es dónde suele estar el margen: en el buscador interno, en las dudas de envío y devolución, y en la recuperación de carritos.'],
+                        'q3' => ['label' => 'Pregunta 3', 'tipo' => 'texto', 'def' => '¿Necesito mucho tráfico para que valga la pena?'],
+                        'r3' => ['label' => 'Respuesta 3', 'tipo' => 'parrafo', 'def' => 'Para que las recomendaciones aprendan sí hace falta cierto volumen de visitas y de compras. Pero la atención automática en el chat y la recuperación de carritos rinden desde el primer mes, incluso en tiendas chicas, porque no dependen de aprender: dependen de contestar a tiempo.'],
+                        'q4' => ['label' => 'Pregunta 4', 'tipo' => 'texto', 'def' => '¿El agente puede procesar pedidos completos?'],
+                        'r4' => ['label' => 'Respuesta 4', 'tipo' => 'parrafo', 'def' => 'Puede tomar el pedido, resolver dudas y llevar a la persona hasta el pago. El cobro se hace en tu pasarela de siempre, no dentro del chat: es más seguro y evita problemas con la conciliación y con las devoluciones.'],
                     ],
                 ],
 

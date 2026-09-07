@@ -365,6 +365,26 @@ else {
     $title = $pages[$path][0]; $desc = $pages[$path][1]; $canonical = $BASE . $path;
     if ($path !== '/servicios-ia' && strpos($path, '/servicios-ia/') === 0) $crumbs[] = ['Servicios de IA', '/servicios-ia'];
     $crumbs[] = [explode(' | ', $title)[0], $path];
+
+    /* Las preguntas, tambien como datos estructurados: es lo que permite que
+       Google las enseñe desplegables en el resultado y que un asistente las
+       cite como respuesta directa. */
+    $mapaIA = ['/servicios-ia/whatsapp' => 'servicios-ia-whatsapp', '/servicios-ia/ventas' => 'servicios-ia-ventas',
+               '/servicios-ia/marketing' => 'servicios-ia-marketing', '/servicios-ia/ecommerce' => 'servicios-ia-ecommerce'];
+    if (isset($mapaIA[$path])) {
+      $fq = $paginas[$mapaIA[$path]]['contenido']['faq'] ?? [];
+      $ent = [];
+      for ($i = 1; $i <= 6; $i++) {
+        if (empty($fq["q{$i}"]) || empty($fq["r{$i}"])) continue;
+        $ent[] = ['@type' => 'Question', 'name' => $fq["q{$i}"],
+                  'acceptedAnswer' => ['@type' => 'Answer', 'text' => $fq["r{$i}"]]];
+      }
+      if ($ent) $schema[] = ['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $ent];
+      $schema[] = ['@context' => 'https://schema.org', '@type' => 'Service',
+                   'name' => explode(' | ', $title)[0], 'description' => $desc,
+                   'provider' => ['@type' => 'Organization', 'name' => $siteName, 'url' => $BASE],
+                   'areaServed' => 'Aguascalientes, México', 'url' => $BASE . $path];
+    }
     /* Lo que lee un buscador o un asistente que no ejecuta JavaScript.
        Antes eran dos líneas para las ocho páginas; ahora cada una vuelca el
        contenido que el cliente ya escribió en el panel. Si una sección se
@@ -374,6 +394,32 @@ else {
         return is_array($paginas[$slug]['contenido'] ?? null) ? $paginas[$slug]['contenido'] : [];
       };
       $h = '<h1>' . e(explode(' | ', $title)[0]) . '</h1><p>' . e($desc) . '</p>';
+
+      /** La definición y el texto largo de una página, si los tiene.
+          Van arriba y en ese orden: un motor de respuestas se queda con los
+          primeros párrafos, y el gancho comercial no contesta «qué es». */
+      $contexto = function(array $d) {
+        $ctx = $d['contexto'] ?? [];
+        $o = '';
+        if (trim((string)($ctx['definicion'] ?? '')) !== '') $o .= '<p>' . e($ctx['definicion']) . '</p>';
+        foreach (preg_split('~\n\s*\n~u', (string)($ctx['texto_largo'] ?? '')) as $parrafo) {
+          $parrafo = trim($parrafo);
+          if ($parrafo !== '') $o .= '<p>' . e($parrafo) . '</p>';
+        }
+        return $o;
+      };
+
+      /** Las preguntas frecuentes de una página de IA. */
+      $preguntas = function(array $d) {
+        $f = $d['faq'] ?? [];
+        if (empty($f['q1'])) return '';
+        $o = '<h2>' . e(trim(($f['titulo_1'] ?? 'Preguntas') . ' ' . ($f['titulo_2'] ?? 'frecuentes'))) . '</h2>';
+        for ($i = 1; $i <= 6; $i++) {
+          if (empty($f["q{$i}"])) continue;
+          $o .= '<h3>' . e($f["q{$i}"]) . '</h3><p>' . e($f["r{$i}"] ?? '') . '</p>';
+        }
+        return $o;
+      };
 
       /** Un bloque de título + texto, si tiene algo. */
       $bloque = function(?string $t, ?string $p) {
@@ -410,6 +456,7 @@ else {
         $d = $c('servicios-ia');
         $sol = $d['soluciones'] ?? []; $tar = $d['tarjetas'] ?? [];
         $por = $d['por_que'] ?? [];    $cif = $d['cifras'] ?? [];
+        $h .= $contexto($d);
         if (!empty($sol['bajada'])) $h .= '<p>' . e($sol['bajada']) . '</p>';
         $h .= '<h2>' . e(trim(($sol['titulo_1'] ?? 'Soluciones') . ' ' . ($sol['titulo_2'] ?? ''))) . '</h2><ul>';
         foreach (['w', 'v', 'm', 'e'] as $k) {
@@ -441,6 +488,7 @@ else {
         $d = $c($mapa[$path] ?? '');
         $ben = $d['beneficios'] ?? []; $inc = $d['incluye'] ?? [];
         $how = $d['como_funciona'] ?? []; $ide = $d['ideal_para'] ?? [];
+        $h .= $contexto($d);
         if (!empty($ben['titulo_2'])) {
           $h .= '<h2>' . e(trim(($ben['titulo_1'] ?? '') . ' ' . $ben['titulo_2'])) . '</h2><ul>';
           for ($i = 1; $i <= 6; $i++) {
@@ -475,6 +523,7 @@ else {
           }
           $h .= '</ul>';
         }
+        $h .= $preguntas($d);
       }
 
       elseif ($path === '/privacidad' || $path === '/terminos') {

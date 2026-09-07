@@ -3,6 +3,7 @@ import { MessageCircle, Clock, Target, Calendar, CheckCircle2, Zap, Users, BarCh
 import { Link } from 'react-router';
 import { GlassCard } from '../components/GlassCard';
 import TopographyCanvas from '../components/TopographyCanvas';
+import { TopoLineas } from '../components/TopoLineas';
 import Floating3DElements from '../components/Floating3DElements';
 import SectionDivider from '../components/SectionDivider';
 import { useApp } from '../context/AppContext';
@@ -19,6 +20,8 @@ export default function AIWhatsAppPage() {
   const tIde = contenido('servicios-ia-whatsapp', 'ideal_para');
   const tImg = contenido('servicios-ia-whatsapp', 'imagenes');
   const tNav = contenido('servicios-ia-whatsapp', 'navegacion');
+  const tCtx = contenido('servicios-ia-whatsapp', 'contexto');
+  const tFaq = contenido('servicios-ia-whatsapp', 'faq');
 
   // Imágenes para las diferentes secciones
   const sectionImages = {
@@ -75,16 +78,13 @@ export default function AIWhatsAppPage() {
 
       {/* Hero Banner con Imagen de Fondo */}
       <section className="relative min-h-[40vh] md:min-h-[50vh] flex items-center justify-center overflow-hidden">
-        {/* Imagen de fondo */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={sectionImages.hero} 
-            alt="IA para WhatsApp"
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black" />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/40 to-[#9933FF]/20 mix-blend-overlay" />
+        {/* El fondo de la casa, no una foto de archivo. Las paginas de
+            servicio ya usan estas lineas; la foto del señor en traje era
+            lo unico que delataba que estas cuatro venian de otra
+            plantilla. */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <TopoLineas className="h-full w-full" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black" />
         </div>
 
         {/* Contenido del Hero */}
@@ -120,10 +120,46 @@ export default function AIWhatsAppPage() {
       </section>
 
       <div className="bg-black">
+        {/* DE QUE SE TRATA — la definicion primero, que es lo que cita un
+            asistente, y despues el texto largo. Antes esta pagina servia
+            poco mas de doscientas palabras y Google no la habia visitado
+            nunca. */}
+        <section className="px-4 pt-10 pb-6 md:pt-14 md:pb-10">
+          <div className="container mx-auto max-w-5xl">
+            <div className="max-w-[68ch] space-y-5">
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.6 }}
+                className="text-[17px] md:text-[19px] leading-[1.75] text-white/85"
+              >
+                {tCtx('definicion', '')}
+              </motion.p>
+              {tCtx('texto_largo', '')
+                .split(/\n\s*\n/)
+                .map((p) => p.trim())
+                .filter(Boolean)
+                .map((parrafo, i) => (
+                  <motion.p
+                    key={i}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.06 }}
+                    className="text-[15.5px] md:text-[16.5px] leading-[1.8] text-white/60"
+                  >
+                    {parrafo}
+                  </motion.p>
+                ))}
+            </div>
+          </div>
+        </section>
+
         {/* QUÉ INCLUYE - Layout: Contenido izquierda, Imagen derecha */}
         <section className="py-6 md:py-10 px-4 bg-white">
-          <div className="container mx-auto max-w-7xl">
-            <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
+          <div className="container mx-auto max-w-5xl">
+            <div>
               {/* Contenido */}
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
@@ -142,7 +178,7 @@ export default function AIWhatsAppPage() {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 }}
-                      className="flex items-start gap-2.5 p-3 md:p-3.5 rounded-lg bg-white/80 border border-gray-200 hover:border-[#7700CE]/30 transition-colors"
+                      className="flex items-start gap-3 border-t border-gray-200 py-3.5 first:border-t-0"
                     >
                       <CheckCircle2 className="text-[#7700CE] flex-shrink-0 mt-0.5" size={18} />
                       <span className="text-gray-700 text-sm md:text-base">{feature}</span>
@@ -151,22 +187,6 @@ export default function AIWhatsAppPage() {
                 </div>
               </motion.div>
 
-              {/* Imagen */}
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative rounded-2xl overflow-hidden order-first lg:order-last"
-              >
-                <div className="aspect-[5/3] relative">
-                  <img 
-                    src={sectionImages.features}
-                    alt="Características del agente de WhatsApp"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </motion.div>
             </div>
           </div>
         </section>
@@ -174,24 +194,8 @@ export default function AIWhatsAppPage() {
         {/* BENEFICIOS - Layout: Imagen izquierda, Contenido derecha */}
         {tBen.visible() && (
         <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
-          <div className="container mx-auto max-w-7xl">
-            <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
-              {/* Imagen */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative rounded-2xl overflow-hidden"
-              >
-                <div className="aspect-[5/3] relative">
-                  <img 
-                    src={sectionImages.support}
-                    alt="Soporte automático 24/7"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </motion.div>
+          <div className="container mx-auto max-w-5xl">
+            <div>
 
               {/* Contenido */}
               <motion.div
@@ -232,7 +236,7 @@ export default function AIWhatsAppPage() {
         {/* CÓMO FUNCIONA - Layout: Contenido + Grid con imagen de fondo */}
         {tHow.visible() && (
         <section className="py-6 md:py-10 px-4 bg-white">
-          <div className="container mx-auto max-w-7xl">
+          <div className="container mx-auto max-w-5xl">
             <div className="text-center mb-6 md:mb-8">
               <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
                 {tHow('titulo_1', 'CÓMO')} <span className="text-[#7700CE]">{tHow('titulo_2', 'FUNCIONA')}</span>
@@ -242,30 +246,7 @@ export default function AIWhatsAppPage() {
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
-              {/* Imagen destacada */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative rounded-2xl overflow-hidden"
-              >
-                <div className="aspect-[5/3] relative">
-                  <img 
-                    src={sectionImages.business}
-                    alt="Proceso de implementación"
-                    className="w-full h-full object-cover"
-                  />
-                  
-                  {/* Badge flotante */}
-                  <div className="absolute top-3 right-3">
-                    <div className="px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-lg">
-                      <span className="text-xs font-bold text-[#7700CE]">{tNav('sello', 'Implementación rápida')}</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+            <div>
 
               {/* Steps del proceso */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -324,6 +305,41 @@ export default function AIWhatsAppPage() {
         </section>
         )}
 
+        {/* PREGUNTAS FRECUENTES — se publican tambien como datos
+            estructurados desde render.php, asi que conviene que digan algo
+            de verdad: son las que un asistente cita como respuesta. */}
+        {tFaq('q1', '') !== '' && (
+          <section className="px-4 py-10 md:py-16">
+            <div className="container mx-auto max-w-5xl">
+              <h2 className="heading mb-8 text-2xl md:text-4xl text-white">
+                {tFaq('titulo_1', 'PREGUNTAS')}{' '}
+                <span className="text-[#CC66FF]">{tFaq('titulo_2', 'FRECUENTES')}</span>
+              </h2>
+              <div className="max-w-[70ch] divide-y divide-white/10 border-t border-white/10">
+                {[1, 2, 3, 4, 5, 6]
+                  .filter((n) => tFaq(`q${n}`, '') !== '')
+                  .map((n) => (
+                    <motion.div
+                      key={n}
+                      initial={{ opacity: 0, y: 14 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-60px' }}
+                      transition={{ duration: 0.5 }}
+                      className="py-6"
+                    >
+                      <h3 className="mb-2.5 text-[16px] md:text-[17px] font-bold text-white">
+                        {tFaq(`q${n}`, '')}
+                      </h3>
+                      <p className="text-[15px] leading-[1.75] text-white/60">
+                        {tFaq(`r${n}`, '')}
+                      </p>
+                    </motion.div>
+                  ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* CTA Final */}
         <section className="py-6 md:py-10 px-4 bg-white">
           <div className="container mx-auto max-w-5xl">
@@ -333,15 +349,9 @@ export default function AIWhatsAppPage() {
               viewport={{ once: true }}
               className="relative rounded-2xl overflow-hidden"
             >
-              {/* Imagen de fondo */}
-              <div className="absolute inset-0">
-                <img 
-                  src={sectionImages.cta}
-                  alt="Comienza ahora"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE]/90 to-[#9933FF]/80" />
-              </div>
+              {/* Bloque de color, no una foto: encima llevaba un degradado al 90%
+                  de opacidad, asi que de la foto no se veia practicamente nada. */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#7700CE] to-[#9933FF]" />
 
               {/* Contenido */}
               <div className="relative z-10 text-center p-6 md:p-10">

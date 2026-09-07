@@ -55,6 +55,7 @@ export default function AIServicesPage() {
   const tTar = contenido('servicios-ia', 'tarjetas');
   const tPor = contenido('servicios-ia', 'por_que');
   const tCie = contenido('servicios-ia', 'cierre');
+  const tCtx = contenido('servicios-ia', 'contexto');
   const { openAssistant } = useApp();
 
   return (
@@ -92,7 +93,7 @@ export default function AIServicesPage() {
             className="heading text-4xl md:text-5xl lg:text-6xl mb-6"
           >
             <span className="block text-white mb-2">{t('titulo_1', 'INTELIGENCIA ARTIFICIAL')}</span>
-            <span className="block bg-gradient-to-r from-[#7700CE] via-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
+            <span className="block text-[#CC66FF]">
               {t('titulo_2', 'QUE HACE CRECER TU NEGOCIO')}
             </span>
           </motion.h1>
@@ -148,6 +149,42 @@ export default function AIServicesPage() {
 
       <SectionDivider />
 
+      {/* DE QUÉ SE TRATA — la definición primero, que es lo que cita un
+          asistente cuando alguien pregunta por la categoría, y después el
+          texto largo. Esta página servía 165 palabras y Google nunca la
+          había visitado. */}
+      <section className="relative px-4 pt-12 pb-4 md:pt-16 md:pb-8">
+        <div className="container mx-auto max-w-6xl">
+          <div className="max-w-[68ch] space-y-5">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.6 }}
+              className="text-[17px] md:text-[19px] leading-[1.75] text-white/85"
+            >
+              {tCtx('definicion', '')}
+            </motion.p>
+            {tCtx('texto_largo', '')
+              .split(/\n\s*\n/)
+              .map((p) => p.trim())
+              .filter(Boolean)
+              .map((parrafo, i) => (
+                <motion.p
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-80px' }}
+                  transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.06 }}
+                  className="text-[15.5px] md:text-[16.5px] leading-[1.8] text-white/60"
+                >
+                  {parrafo}
+                </motion.p>
+              ))}
+          </div>
+        </div>
+      </section>
+
       {/* Services Grid */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <TopographyCanvas />
@@ -163,7 +200,7 @@ export default function AIServicesPage() {
             <h2 className="heading text-3xl md:text-4xl lg:text-5xl mb-4">
               <span className="text-white">{tSol('titulo_1', 'SOLUCIONES IA')}</span>
               <br />
-              <span className="bg-gradient-to-r from-[#7700CE] to-[#9933FF] bg-clip-text text-transparent">
+              <span className="text-[#CC66FF]">
                 {tSol('titulo_2', 'PARA CADA ÁREA')}
               </span>
             </h2>
@@ -244,7 +281,7 @@ export default function AIServicesPage() {
             <h2 className="heading text-3xl md:text-4xl lg:text-5xl mb-4">
               <span className="text-white">{tPor('titulo_1', '¿POR QUÉ')}</span>
               <br />
-              <span className="bg-gradient-to-r from-[#9933FF] to-[#CC66FF] bg-clip-text text-transparent">
+              <span className="text-[#CC66FF]">
                 {tPor('titulo_2', 'INTELIGENCIA ARTIFICIAL?')}
               </span>
             </h2>
@@ -293,7 +330,9 @@ export default function AIServicesPage() {
       {/* Final CTA */}
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 z-10 pointer-events-none">
-          <Floating3DElements variant="orbs" count={4} />
+          {/* «orbs» no es una variante que exista: caía al reparto por defecto
+              en silencio y esta sección llevaba años enseñando otra cosa. */}
+          <Floating3DElements variant="spheres" count={4} />
         </div>
 
         <div className="container mx-auto px-4 max-w-4xl relative z-20 text-center">
@@ -308,7 +347,7 @@ export default function AIServicesPage() {
             <h2 className="heading text-3xl md:text-4xl lg:text-5xl mb-6">
               <span className="text-white">{tCie('titulo_1', 'EMPIEZA A AUTOMATIZAR')}</span>
               <br />
-              <span className="bg-gradient-to-r from-[#7700CE] to-[#9933FF] bg-clip-text text-transparent">
+              <span className="text-[#CC66FF]">
                 {tCie('titulo_2', 'TU NEGOCIO HOY')}
               </span>
             </h2>
