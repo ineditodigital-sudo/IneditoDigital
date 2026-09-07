@@ -5,7 +5,7 @@ import { GlassCard } from '../components/GlassCard';
 import TopographyCanvas from '../components/TopographyCanvas';
 import { TopoLineas } from '../components/TopoLineas';
 import { RecorridoProceso } from '../components/RecorridoProceso';
-import EsferaIA from '../components/EsferaIA';
+import { EscenaMarketing } from '../components/EscenasServicioIA';
 import FAQAccordion from '../components/FAQAccordion';
 import Floating3DElements from '../components/Floating3DElements';
 import SectionDivider from '../components/SectionDivider';
@@ -146,8 +146,9 @@ export default function AIMarketingPage() {
       <div className="bg-black">
         {/* DE QUÉ SE TRATA — la definición al lado de la esfera.
             Aquí había trescientas palabras en dos columnas, que es lo primero
-            que veía alguien después del titular. La esfera es la misma de la
-            portada: gira sola, se arrastra y suelta pulsos al tocarla. */}
+            que veía alguien después del titular. Y la escena es de ESTE
+            servicio: el presupuesto moviéndose hacia lo que sí rinde. Una esfera de
+            red generica decia «inteligencia artificial» y nada mas. */}
         <section className="px-4 py-12 md:py-20">
           <div className="container mx-auto max-w-6xl">
             <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
@@ -170,7 +171,7 @@ export default function AIMarketingPage() {
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className="relative order-first lg:order-last"
               >
-                <EsferaIA className="aspect-square w-full" />
+                <EscenaMarketing />
               </motion.div>
             </div>
           </div>
