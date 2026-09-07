@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../inc/google.php';
+require_once __DIR__ . '/../inc/gsc.php';   // gsc_es_indexada, para el medidor
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     csrf_check();
@@ -156,35 +157,39 @@ $ct=csrf(); $ruri=g_redirect_uri();
 <?php if(!$connected): ?><span class="badge b-draft" style="align-self:center">Google sin conectar</span><?php else: ?><span class="badge b-published" style="align-self:center">Google conectado</span><?php endif; ?></div>
 
 <div class="grid-kpi">
-  <div class="kpi"><div class="l"><?= $source[0]==='G'?'Vistas de página':'Visitas' ?> (30d)</div><div class="v"><?= number_format($visits30) ?></div></div>
-  <div class="kpi"><div class="l"><?= $source[0]==='G'?'Usuarios':'Visitantes únicos' ?></div><div class="v" style="color:#8ea6ff"><?= number_format($uniq30) ?></div></div>
-  <div class="kpi"><div class="l">Sesiones</div><div class="v"><?= number_format($sess30) ?></div></div>
-  <div class="kpi"><div class="l">Páginas / sesión</div><div class="v"><?= $pps ?></div></div>
-  <?php if($bounce!==null): ?><div class="kpi"><div class="l">Rebote</div><div class="v" style="color:#ffcf7a"><?= $bounce ?>%</div></div>
-  <?php else: ?><div class="kpi"><div class="l">Hoy</div><div class="v" style="color:#5fe0a0"><?= number_format($visitsToday) ?></div></div><?php endif; ?>
+  <div class="kpi hero"><div class="l"><?= $source[0]==='G'?'Vistas de página':'Visitas' ?> (30d)</div><div class="v"><?= number_format($visits30) ?></div></div>
+  <div class="kpi hero"><div class="l"><?= $source[0]==='G'?'Usuarios':'Visitantes únicos' ?></div><div class="v" style="color:#8ea6ff"><?= number_format($uniq30) ?></div></div>
+  <div class="kpi hero"><div class="l">Sesiones</div><div class="v"><?= number_format($sess30) ?></div></div>
+  <div class="kpi hero"><div class="l">Páginas / sesión</div><div class="v"><?= $pps ?></div></div>
+  <?php if($bounce!==null): ?><div class="kpi hero"><div class="l">Rebote</div><div class="v" style="color:#ffcf7a"><?= $bounce ?>%</div></div>
+  <?php else: ?><div class="kpi hero"><div class="l">Hoy</div><div class="v" style="color:#5fe0a0"><?= number_format($visitsToday) ?></div></div><?php endif; ?>
 </div>
 
 <!-- El embudo: lo primero que hay que mirar para decidir -->
-<div class="card" style="border-color:#2a2140">
+<div id="tablero">
+
+<div class="card" data-mod="embudo" style="border-color:#2a2140">
   <h3 style="margin:0 0 4px">El embudo · visitar → actuar → dejar datos</h3>
   <p class="muted" style="margin:0 0 18px">Últimos 30 días. Las acciones (asistente, WhatsApp, teléfono) se miden desde el <strong>28 de agosto de 2026</strong>; antes de esa fecha solo existían las vistas.</p>
 
   <?php
     $base = max($uniq30, 1);
+    /* Cada paso lleva su propia trama además de su color: tres barras seguidas
+       distinguidas solo por tono se leen como una sola cosa degradada. */
     $filasEmbudo = [
-      ['Visitantes', $uniq30, '#7700CE', '#9933FF'],
-      ['Hicieron algo (asistente, WhatsApp o teléfono)', $accPersonas, '#8ea6ff', '#59c1ff'],
-      ['Dejaron sus datos (lead)', $leads30, '#2f7d4f', '#5fe0a0'],
+      ['Visitantes', $uniq30, '#7700CE', '#9933FF', 'trama-rayas'],
+      ['Hicieron algo (asistente, WhatsApp o teléfono)', $accPersonas, '#8ea6ff', '#59c1ff', 'trama-puntos'],
+      ['Dejaron sus datos (lead)', $leads30, '#2f7d4f', '#5fe0a0', 'trama-red'],
     ];
   ?>
-  <?php foreach ($filasEmbudo as [$rot, $n, $c1, $c2]): $pct = min(100, round(100 * $n / $base, 1)); ?>
+  <?php foreach ($filasEmbudo as [$rot, $n, $c1, $c2, $trama]): $pct = min(100, round(100 * $n / $base, 1)); ?>
     <div style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px">
         <span><?= e($rot) ?></span>
         <span><strong><?= number_format($n) ?></strong> <span class="mini">(<?= $pct ?>%)</span></span>
       </div>
-      <div style="height:14px;background:#17171f;border-radius:7px;overflow:hidden">
-        <div style="height:100%;width:<?= max($pct, $n > 0 ? 2 : 0) ?>%;background:linear-gradient(90deg,<?= $c1 ?>,<?= $c2 ?>)"></div>
+      <div class="embudo-barra">
+        <span class="<?= $trama ?>" style="width:<?= max($pct, $n > 0 ? 2 : 0) ?>%;background-color:<?= $c2 ?>"></span>
       </div>
     </div>
   <?php endforeach; ?>
@@ -192,12 +197,12 @@ $ct=csrf(); $ruri=g_redirect_uri();
   <div class="grid-kpi" style="margin:18px 0 0">
     <?php foreach ($EVL as $ev => $rot):
       $fila = null; foreach ($accPorTipo as $r) if ($r['evento'] === $ev) { $fila = $r; break; } ?>
-      <div class="kpi"><div class="l"><?= e($rot) ?> (30d)</div>
-        <div class="v"><?= (int)($fila['c'] ?? 0) ?></div>
+      <div class="kpi hero"><div class="l"><?= e($rot) ?> · 30d</div>
+        <div class="v"><?= number_format((int)($fila['c'] ?? 0)) ?></div>
         <div class="mini" style="margin-top:5px"><?= (int)($fila['u'] ?? 0) ?> personas distintas</div></div>
     <?php endforeach; ?>
-    <div class="kpi"><div class="l">Leads del formulario (30d)</div>
-      <div class="v" style="color:#5fe0a0"><?= $leads30 ?></div>
+    <div class="kpi hero"><div class="l">Leads del formulario · 30d</div>
+      <div class="v" style="color:#5fe0a0"><?= number_format($leads30) ?></div>
       <div class="mini" style="margin-top:5px">sin contar pruebas</div></div>
   </div>
 
@@ -211,15 +216,15 @@ $ct=csrf(); $ruri=g_redirect_uri();
   <?php endif; ?>
 </div>
 
-<div class="card"><h3 style="margin:0 0 16px">Visitas por día</h3>
+<div class="card" data-mod="visitas"><h3 style="margin:0 0 16px">Visitas por día</h3>
   <?php if(array_sum($series)==0): ?><p class="muted" style="padding:20px 0;text-align:center">Sin datos en el rango.</p><?php else: ?><div style="height:300px"><canvas id="chVisits"></canvas></div><?php endif; ?></div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div data-mod="fuentes" style="position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px">
   <div class="card"><h3 style="margin:0 0 16px">Adquisición (de dónde llegan)</h3><?php if(!$srcData): ?><p class="muted">Sin datos.</p><?php else: ?><div style="height:260px"><canvas id="chSrc"></canvas></div><?php endif; ?></div>
   <div class="card"><h3 style="margin:0 0 16px">Dispositivos</h3><?php if(!$devData): ?><p class="muted">Sin datos.</p><?php else: ?><div style="height:260px"><canvas id="chDev"></canvas></div><?php endif; ?></div>
 </div>
 
-<div class="card"><h3 style="margin:0 0 16px">Páginas más visitadas</h3>
+<div class="card" data-mod="paginas"><h3 style="margin:0 0 16px">Páginas más visitadas</h3>
   <?php if(!$top): ?><p class="muted">Sin datos.</p><?php else: foreach($top as $t): $pct=round(100*$t['c']/$maxTop); ?>
     <div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:5px"><span><?= e($t['path']) ?></span><span class="muted"><?= number_format($t['c']) ?></span></div>
     <div style="height:8px;background:#17171f;border-radius:6px;overflow:hidden"><div style="height:100%;width:<?= $pct ?>%;background:linear-gradient(90deg,#7700CE,#9933FF)"></div></div></div>
@@ -233,6 +238,62 @@ $ct=csrf(); $ruri=g_redirect_uri();
   .gsc-prog .pista{height:8px;background:#17171f;border-radius:6px;overflow:hidden}
   .gsc-prog .relleno{height:100%;width:0%;background:linear-gradient(90deg,#7700CE,#9933FF);transition:width .4s}
   .gsc-prog .estado{font-size:12.5px;color:var(--mut);margin-top:7px}
+  /* ══════════════════════════════ Tablero: mover los módulos ══════════════
+     Un panel donde no puedes cambiar el orden es un reporte impreso. El orden
+     se guarda por navegador: cada quien mira primero lo suyo. */
+  .card[draggable]{cursor:default}
+  [data-mod] .agarre{position:absolute;top:14px;right:14px;display:flex;gap:3px;
+    padding:6px;border-radius:8px;cursor:grab;opacity:0;transition:opacity .2s,background .2s;
+    background:transparent;z-index:3}
+  [data-mod]:hover .agarre{opacity:.5}
+  [data-mod] .agarre:hover{opacity:1;background:rgba(153,51,255,.12)}
+  [data-mod] .agarre:active{cursor:grabbing}
+  [data-mod] .agarre i{width:3px;height:3px;border-radius:50%;background:var(--mut);
+    box-shadow:0 6px 0 var(--mut),0 12px 0 var(--mut)}
+  [data-mod].arrastrando{opacity:.35;border-color:var(--pur2)}
+  [data-mod].destino{box-shadow:0 -3px 0 0 var(--pur2)}
+  @media(max-width:760px){ [data-mod] .agarre{display:none} }
+
+  /* ══════════════════════════════ Cifras ═════════════════════════════════
+     La cifra manda: Hanson, grande, con su resplandor propio. El rótulo se
+     retira a monoespaciada diminuta, que es donde debe estar. */
+  .kpi.hero{padding:22px 22px 20px}
+  .kpi.hero .l{font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--mut2)}
+  .kpi.hero .v{font-family:var(--f-display);font-size:44px;line-height:1;margin-top:12px;
+    letter-spacing:-.02em;position:relative}
+  .kpi.hero .v::after{content:'';position:absolute;left:0;bottom:6px;width:58%;height:22px;
+    background:radial-gradient(ellipse at left center,rgba(153,51,255,.5),transparent 72%);
+    filter:blur(14px);z-index:-1;pointer-events:none}
+  .kpi.hero{position:relative;isolation:isolate}
+
+  /* ══════════════════════════════ Tramas ═════════════════════════════════
+     Rayas y puntos en vez de relleno plano. Además de verse trabajado,
+     distingue las series sin depender solo del color. */
+  .trama-rayas{background-image:repeating-linear-gradient(-45deg,
+    rgba(255,255,255,.22) 0 1.5px, transparent 1.5px 6px)}
+  .trama-puntos{background-image:radial-gradient(rgba(255,255,255,.3) 1.2px, transparent 1.2px);
+    background-size:7px 7px}
+  .trama-red{background-image:linear-gradient(rgba(255,255,255,.14) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.14) 1px,transparent 1px);background-size:8px 8px}
+
+  /* El embudo estrena trama: cada paso se distingue por textura y no solo por
+     tono, que es lo que pedía tener tres barras moradas seguidas. */
+  .embudo-barra{position:relative;height:16px;border-radius:8px;overflow:hidden;background:#16161f}
+  .embudo-barra > span{position:absolute;inset:0 auto 0 0;border-radius:8px;
+    transition:width 1s cubic-bezier(.16,1,.3,1)}
+  .embudo-barra > span::after{content:'';position:absolute;inset:0;border-radius:8px}
+
+  /* ══════════════════════════════ Medidor ════════════════════════════════
+     El semicírculo de marcas de las referencias. Cada marca es un grado real
+     del dato, no una decoración: se encienden las que corresponden. */
+  .medidor{position:relative;width:100%;max-width:260px;aspect-ratio:2/1;margin:0 auto}
+  .medidor svg{width:100%;height:100%;overflow:visible}
+  .medidor .marca{transition:stroke .5s,opacity .5s}
+  .medidor .cifra{position:absolute;left:0;right:0;bottom:2px;text-align:center;
+    font-family:var(--f-display);font-size:32px;line-height:1;letter-spacing:-.02em}
+  .medidor .pie{position:absolute;left:0;right:0;bottom:-18px;text-align:center;
+    font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut2)}
 
   /* Motores de IA: un orden, no un reparto. Reusa el vocabulario de barra que
      ya existe arriba (pista + relleno) para que no haya dos maneras de dibujar
@@ -257,7 +318,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
   .pt{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
   .lista-urls{font-size:12.5px;color:var(--mut);line-height:1.9}
 </style>
-<div class="card" id="google" style="border-color:#2a2140">
+<div class="card" id="google" data-mod="google" style="border-color:#2a2140">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px">
     <div>
       <h3 style="margin:0 0 4px">Cómo te ve Google</h3>
@@ -279,7 +340,20 @@ $ct=csrf(); $ruri=g_redirect_uri();
   <?php elseif (!$gscHoy): ?>
     <p class="muted" style="margin:14px 0 0">Todavía no hay ninguna foto guardada. Pulsa <em>Actualizar ahora</em>: tarda un par de minutos y aquí mismo verás el avance.</p>
   <?php else: ?>
-    <?php $gIx = (int)$gscHoy['indexadas']; $gFu = (int)$gscHoy['sin_indexar']; $gTt = max($gIx + $gFu, 1); ?>
+    <?php
+      /* El último estado conocido de cada URL, no la foto de un día suelto: la
+         foto se cierra en ceros si ese día no alcanzó a correr la inspección, y
+         el panel enseñaba «0 de 1» teniendo 31 de 50 en la base. */
+      $gIx = $gFu = 0;
+      try {
+        $estado = db()->query("SELECT g.estado FROM gsc_indexacion g
+          JOIN (SELECT url, MAX(fecha) f FROM gsc_indexacion GROUP BY url) m
+            ON m.url = g.url AND m.f = g.fecha")->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($estado as $e) { gsc_es_indexada((string)$e) ? $gIx++ : $gFu++; }
+      } catch (Throwable $e) {}
+      if ($gIx + $gFu === 0) { $gIx = (int)$gscHoy['indexadas']; $gFu = (int)$gscHoy['sin_indexar']; }
+      $gTt = max($gIx + $gFu, 1);
+    ?>
 
     <div class="grid-kpi" style="margin:16px 0 10px">
       <div class="kpi"><div class="l">Páginas indexadas</div><div class="v"><?= $gIx ?> <span style="font-size:15px;color:var(--mut)">de <?= $gTt ?></span></div>
@@ -302,7 +376,38 @@ $ct=csrf(); $ruri=g_redirect_uri();
       </div>
       <div>
         <h4 style="margin:0 0 12px;font-size:14px">El índice de Google</h4>
-        <div style="height:250px"><canvas id="chGscIdx"></canvas></div>
+        <?php
+          /* Un porcentaje se lee en una escala, no en dos gajos. Cada marca es
+             un grado del dato: se encienden las que le corresponden. */
+          $pctIdx = round(100 * $gIx / $gTt);
+          $marcas = 44;
+          $encendidas = (int)round($marcas * $pctIdx / 100);
+        ?>
+        <div style="height:250px;display:flex;align-items:center;justify-content:center">
+          <div class="medidor">
+            <svg viewBox="0 0 200 104" aria-label="<?= $pctIdx ?>% de las páginas conocidas están indexadas">
+              <?php for ($i = 0; $i < $marcas; $i++):
+                $ang = M_PI * ($i / ($marcas - 1));          // de izquierda a derecha
+                $x1 = 100 - cos($ang) * 78; $y1 = 100 - sin($ang) * 78;
+                $x2 = 100 - cos($ang) * 94; $y2 = 100 - sin($ang) * 94;
+                $on = $i < $encendidas; ?>
+                <line class="marca" x1="<?= round($x1,2) ?>" y1="<?= round($y1,2) ?>"
+                      x2="<?= round($x2,2) ?>" y2="<?= round($y2,2) ?>"
+                      stroke="<?= $on ? '#9933FF' : '#2a2a3d' ?>" stroke-width="2.4" stroke-linecap="round"
+                      opacity="<?= $on ? (0.45 + 0.55 * $i / max($encendidas,1)) : 1 ?>"
+                      style="transition-delay:<?= $i * 14 ?>ms"></line>
+              <?php endfor; ?>
+              <?php /* la marca del valor, encendida y con halo */
+                $angV = M_PI * (max($encendidas - 1, 0) / ($marcas - 1)); ?>
+              <line x1="<?= round(100 - cos($angV) * 74, 2) ?>" y1="<?= round(100 - sin($angV) * 74, 2) ?>"
+                    x2="<?= round(100 - cos($angV) * 98, 2) ?>" y2="<?= round(100 - sin($angV) * 98, 2) ?>"
+                    stroke="#fff" stroke-width="2.6" stroke-linecap="round"
+                    style="filter:drop-shadow(0 0 6px rgba(204,102,255,.95))"></line>
+            </svg>
+            <div class="cifra"><?= $pctIdx ?>%</div>
+            <div class="pie"><?= $gIx ?> de <?= $gTt ?> indexadas</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -359,7 +464,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
 </div>
 
 <!-- Posicionamiento en IA (GEO): la métrica que no existía -->
-<div class="card" id="geo" style="border-color:#1c3326">
+<div class="card" id="geo" data-mod="geo" style="border-color:#1c3326">
   <h3 style="margin:0 0 4px">Posicionamiento en IA (GEO)</h3>
   <p class="muted" style="margin:0 0 16px">Dos medidores automáticos: cuánta gente llega al sitio <strong>desde una IA</strong> (ChatGPT, Perplexity, Gemini, Claude, Copilot) y cuánto <strong>leen el sitio los robots de las IAs</strong> — la materia prima para que te recomienden.</p>
 
@@ -420,7 +525,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
 </div>
 
 <!-- Conexión Google -->
-<div class="card">
+<div class="card" data-mod="conexion">
   <h3 style="margin:0 0 6px">Conexión con Google</h3>
   <?php if($connected): ?>
     <p class="muted" style="margin:0 0 12px">Google conectado <?= ($g['ga4_property'] ?? '') !== '' ? ('· propiedad GA4: <code>'.e($g['ga4_property']).'</code>') : '' ?>.</p>
@@ -454,13 +559,158 @@ $ct=csrf(); $ruri=g_redirect_uri();
   <?php endif; ?>
 </div>
 
+</div>
+
 <script>
+/* ════════════════════════════════════════════════ Tramas para Chart.js
+   Un patrón de canvas: rayas diagonales sobre el color de la serie. Chart.js
+   acepta un CanvasPattern donde acepta un color, así que entra sin tocar el
+   resto de la configuración. */
+function tramaRayas(color, fondo, paso){
+  paso = paso || 7;
+  var c = document.createElement('canvas'); c.width = c.height = paso;
+  var x = c.getContext('2d');
+  x.fillStyle = fondo || 'rgba(255,255,255,.04)'; x.fillRect(0,0,paso,paso);
+  x.strokeStyle = color; x.lineWidth = 2.2; x.lineCap = 'round';
+  x.beginPath(); x.moveTo(-1, paso+1); x.lineTo(paso+1, -1); x.stroke();
+  x.beginPath(); x.moveTo(paso-1, paso+1); x.lineTo(paso+1, paso-1); x.stroke();
+  return x.createPattern(c, 'repeat');
+}
+function tramaPuntos(color, fondo, paso){
+  paso = paso || 8;
+  var c = document.createElement('canvas'); c.width = c.height = paso;
+  var x = c.getContext('2d');
+  x.fillStyle = fondo || 'rgba(255,255,255,.04)'; x.fillRect(0,0,paso,paso);
+  x.fillStyle = color;
+  x.beginPath(); x.arc(paso/2, paso/2, 1.5, 0, Math.PI*2); x.fill();
+  return x.createPattern(c, 'repeat');
+}
+
+/* ════════════════════════════════════════════════ Cifras que cuentan
+   Solo la primera vez que se ven. El valor puede traer separadores de miles o
+   un sufijo (%); se anima el número y el resto se respeta tal cual. */
+(function(){
+  var objetivo = document.querySelectorAll('.kpi.hero .v');
+  if (!objetivo.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var io = new IntersectionObserver(function(entradas){
+    entradas.forEach(function(en){
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      var el = en.target, texto = el.textContent.trim();
+      var m = texto.match(/^([\d,.]+)(.*)$/); if (!m) return;
+      var fin = parseFloat(m[1].replace(/,/g,'')); if (!isFinite(fin) || fin === 0) return;
+      var sufijo = m[2], dec = (m[1].split('.')[1] || '').length, t0 = null, dur = 900;
+      function paso(t){
+        if (!t0) t0 = t;
+        var p = Math.min((t - t0) / dur, 1);
+        var v = fin * (1 - Math.pow(1 - p, 3));
+        el.textContent = (dec ? v.toFixed(dec) : Math.round(v)).toLocaleString('es-MX') + sufijo;
+        if (p < 1) requestAnimationFrame(paso);
+      }
+      requestAnimationFrame(paso);
+    });
+  }, {threshold:.4});
+  objetivo.forEach(function(el){ io.observe(el); });
+})();
+
+/* ════════════════════════════════════════════════ Mover los módulos
+   El orden vive en el navegador de quien mira. Un panel donde no puedes subir
+   lo que te importa es un reporte impreso. */
+(function(){
+  var cont = document.getElementById('tablero'); if (!cont) return;
+  var LLAVE = 'panel_orden_analiticas';
+
+  var tarjetas = [].slice.call(cont.querySelectorAll(':scope > [data-mod]'));
+  if (tarjetas.length < 2) return;
+
+  /* Se restaura antes de nada: si el guardado trae un módulo que ya no existe
+     se ignora, y los que no estén en el guardado se quedan donde estaban. */
+  try {
+    var guardado = JSON.parse(localStorage.getItem(LLAVE) || '[]');
+    guardado.forEach(function(id){
+      var el = cont.querySelector(':scope > [data-mod="' + id + '"]');
+      if (el) cont.appendChild(el);
+    });
+  } catch(e){}
+
+  function guardar(){
+    var ids = [].slice.call(cont.querySelectorAll(':scope > [data-mod]'))
+      .map(function(el){ return el.getAttribute('data-mod'); });
+    try { localStorage.setItem(LLAVE, JSON.stringify(ids)); } catch(e){}
+  }
+
+  var arrastrada = null;
+  tarjetas.forEach(function(card){
+    var agarre = document.createElement('div');
+    agarre.className = 'agarre';
+    agarre.title = 'Arrastra para mover este módulo';
+    agarre.setAttribute('aria-hidden','true');
+    agarre.innerHTML = '<i></i><i></i>';
+    card.appendChild(agarre);
+
+    /* draggable solo mientras se toca el agarre: si no, seleccionar texto
+       dentro de una tarjeta empezaría a arrastrarla. */
+    agarre.addEventListener('mousedown', function(){ card.setAttribute('draggable','true'); });
+    document.addEventListener('mouseup', function(){ card.removeAttribute('draggable'); });
+
+    card.addEventListener('dragstart', function(e){
+      arrastrada = card; card.classList.add('arrastrando');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', card.getAttribute('data-mod')); } catch(err){}
+    });
+    card.addEventListener('dragend', function(){
+      card.classList.remove('arrastrando');
+      cont.querySelectorAll('.destino').forEach(function(x){ x.classList.remove('destino'); });
+      card.removeAttribute('draggable');
+      arrastrada = null;
+      guardar();
+    });
+    card.addEventListener('dragover', function(e){
+      if (!arrastrada || arrastrada === card) return;
+      e.preventDefault();
+      var r = card.getBoundingClientRect();
+      var antes = (e.clientY - r.top) < r.height / 2;
+      card.classList.add('destino');
+      cont.insertBefore(arrastrada, antes ? card : card.nextSibling);
+    });
+    card.addEventListener('dragleave', function(){ card.classList.remove('destino'); });
+  });
+})();
+
 (function(){ if(typeof Chart==='undefined')return; Chart.defaults.color='#8a8aa0';Chart.defaults.font.family='Arial,Helvetica,sans-serif';var grid='rgba(255,255,255,.06)';
-  var v=document.getElementById('chVisits'); if(v){var ctx=v.getContext('2d');var g=ctx.createLinearGradient(0,0,0,300);g.addColorStop(0,'rgba(119,0,206,.45)');g.addColorStop(1,'rgba(119,0,206,0)');
-    new Chart(ctx,{type:'line',data:{labels:<?= json_encode($labels) ?>,datasets:[{data:<?= json_encode($series) ?>,borderColor:'#9933FF',backgroundColor:g,fill:true,tension:.35,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:grid},ticks:{precision:0}}}}});}
+  /* El trazo lleva su propio resplandor: se pinta dos veces, la primera con
+     sombra ancha y la segunda limpia encima. Una sombra de caja alrededor del
+     lienzo no ilumina la linea, ilumina el rectangulo. */
+  var brillo = {
+    id:'brillo',
+    beforeDatasetDraw: function(ch, args){
+      if (args.index !== 0) return;
+      var c = ch.ctx; c.save();
+      c.shadowColor = 'rgba(153,51,255,.75)'; c.shadowBlur = 18;
+    },
+    afterDatasetDraw: function(ch, args){ if (args.index === 0) ch.ctx.restore(); }
+  };
+  var v=document.getElementById('chVisits'); if(v){var ctx=v.getContext('2d');var g=ctx.createLinearGradient(0,0,0,300);g.addColorStop(0,'rgba(153,51,255,.38)');g.addColorStop(1,'rgba(119,0,206,0)');
+    var datos=<?= json_encode($series) ?>;
+    new Chart(ctx,{type:'line',plugins:[brillo],data:{labels:<?= json_encode($labels) ?>,datasets:[{
+        data:datos,borderColor:'#CC66FF',backgroundColor:g,fill:true,tension:.38,borderWidth:2.5,
+        /* solo el ultimo dato lleva punto: es el de hoy, el que se mira */
+        pointRadius:datos.map(function(_,i){return i===datos.length-1?5:0}),
+        pointBackgroundColor:'#fff',pointBorderColor:'#CC66FF',pointBorderWidth:2.5,pointHoverRadius:5
+      }]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:900,easing:'easeOutCubic'},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#12121c',borderColor:'#2f2f49',borderWidth:1,padding:10,displayColors:false}},
+      scales:{x:{grid:{display:false},ticks:{maxRotation:0}},y:{beginAtZero:true,grid:{color:grid,drawTicks:false},border:{display:false},ticks:{precision:0,padding:8}}}}});}
   var donut={type:'doughnut',options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true}}}}};var COL=['#7700CE','#9933FF','#5fe0a0','#8ea6ff','#ffcf7a','#ff8fa6','#59c1ff'];
-  var s=document.getElementById('chSrc'); if(s) new Chart(s,Object.assign({},donut,{data:{labels:<?= json_encode($srcLabels) ?>,datasets:[{data:<?= json_encode($srcData) ?>,backgroundColor:COL,borderColor:'#0e0e15',borderWidth:2}]}}));
-  var d=document.getElementById('chDev'); if(d) new Chart(d,Object.assign({},donut,{data:{labels:<?= json_encode($devLabels) ?>,datasets:[{data:<?= json_encode($devData) ?>,backgroundColor:COL,borderColor:'#0e0e15',borderWidth:2}]}}));
+  /* Cada gajo con su trama ademas de su color: se distinguen tambien sin
+     color, que es como se ven en una captura o para quien no distingue tonos. */
+  var TRAMAS = COL.map(function(c,i){
+    return i % 3 === 0 ? tramaRayas(c, 'rgba(255,255,255,.05)')
+         : i % 3 === 1 ? tramaPuntos(c, 'rgba(255,255,255,.05)')
+         : c;
+  });
+  var s=document.getElementById('chSrc'); if(s) new Chart(s,Object.assign({},donut,{data:{labels:<?= json_encode($srcLabels) ?>,datasets:[{data:<?= json_encode($srcData) ?>,backgroundColor:TRAMAS,borderColor:'#0e0e15',borderWidth:2,hoverOffset:8}]}}));
+  var d=document.getElementById('chDev'); if(d) new Chart(d,Object.assign({},donut,{data:{labels:<?= json_encode($devLabels) ?>,datasets:[{data:<?= json_encode($devData) ?>,backgroundColor:TRAMAS,borderColor:'#0e0e15',borderWidth:2,hoverOffset:8}]}}));
 
 <?php if ($gscHoy): ?>
   /* ---- Cómo te ve Google ---- */
@@ -478,9 +728,6 @@ $ct=csrf(); $ruri=g_redirect_uri();
           y:{beginAtZero:true,grid:{color:grid},ticks:{precision:0}},
           y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},ticks:{precision:0,color:'#5fe0a0'}}}}});
   }
-  var idx=document.getElementById('chGscIdx');
-  if(idx) new Chart(idx,Object.assign({},donut,{data:{labels:['Dentro del índice','Fuera del índice'],
-    datasets:[{data:[<?= (int)$gscHoy['indexadas'] ?>,<?= (int)$gscHoy['sin_indexar'] ?>],backgroundColor:['#5fe0a0','#e07b7b'],borderColor:'#0e0e15',borderWidth:2}]}}));
   var cq=document.getElementById('chGscQ');
   if(cq){
     <?php $q10 = array_slice($gscConsultas, 0, 10); ?>
