@@ -125,32 +125,44 @@ export default function AISalesPage() {
             nunca. */}
         <section className="px-4 pt-10 pb-6 md:pt-14 md:pb-10">
           <div className="container mx-auto max-w-5xl">
-            <div className="max-w-[68ch] space-y-5">
-              <motion.p
+            {/* Dos columnas y no una: la definición sostiene la izquierda
+                —se queda fija mientras se lee el resto— y el desarrollo corre
+                por la derecha. En una sola columna esto eran trescientas
+                palabras seguidas, que es un muro y no una página. */}
+            <div className="grid gap-8 lg:grid-cols-12 lg:gap-14">
+              <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.6 }}
-                className="text-[17px] md:text-[19px] leading-[1.75] text-white/85"
+                className="lg:col-span-5"
               >
-                {tCtx('definicion', '')}
-              </motion.p>
-              {tCtx('texto_largo', '')
-                .split(/\n\s*\n/)
-                .map((p) => p.trim())
-                .filter(Boolean)
-                .map((parrafo, i) => (
-                  <motion.p
-                    key={i}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.06 }}
-                    className="text-[15.5px] md:text-[16.5px] leading-[1.8] text-white/60"
-                  >
-                    {parrafo}
-                  </motion.p>
-                ))}
+                <div className="lg:sticky lg:top-28">
+                  <span className="mb-5 block h-[3px] w-14 bg-[#9933FF]" />
+                  <p className="text-[18px] md:text-[21px] leading-[1.6] text-white/90">
+                    {tCtx('definicion', '')}
+                  </p>
+                </div>
+              </motion.div>
+
+              <div className="space-y-5 lg:col-span-7">
+                {tCtx('texto_largo', '')
+                  .split(/\n\s*\n/)
+                  .map((p) => p.trim())
+                  .filter(Boolean)
+                  .map((parrafo, i) => (
+                    <motion.p
+                      key={i}
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-80px' }}
+                      transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.06 }}
+                      className="text-[15.5px] leading-[1.8] text-white/60 md:text-[16.5px]"
+                    >
+                      {parrafo}
+                    </motion.p>
+                  ))}
+              </div>
             </div>
           </div>
         </section>
@@ -160,26 +172,28 @@ export default function AISalesPage() {
           <div className="container mx-auto max-w-5xl">
             <div>
               <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
                   {tInc('titulo_1', 'QUÉ')} <span className="text-[#7700CE]">{tInc('titulo_2', 'INCLUYE')}</span>
                 </h2>
-                <div className="space-y-2.5 md:space-y-3">
+                {/* A dos columnas: seis renglones seguidos a todo el ancho
+                    dejaban una linea de texto de treinta centimetros. */}
+                <div className="grid gap-x-10 md:grid-cols-2">
                   {features.map((feature, i) => (
                     <motion.div
                       key={i}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, y: 14 }}
+                      whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                      className="flex items-start gap-3 border-t border-gray-200 py-3.5 first:border-t-0"
+                      transition={{ delay: Math.min(i, 5) * 0.05 }}
+                      className="flex items-start gap-3 border-t border-gray-200 py-4"
                     >
-                      <CheckCircle2 className="text-[#7700CE] flex-shrink-0 mt-0.5" size={18} />
-                      <span className="text-gray-700 text-sm md:text-base">{feature}</span>
+                      <CheckCircle2 className="mt-0.5 flex-shrink-0 text-[#7700CE]" size={18} />
+                      <span className="text-[15px] leading-relaxed text-gray-700 md:text-base">{feature}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -196,30 +210,45 @@ export default function AISalesPage() {
             <div>
 
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
                   {tBen('titulo_1', 'BENEFICIOS')} <span className="text-[#7700CE]">{tBen('titulo_2', 'PRINCIPALES')}</span>
                 </h2>
-                <div className="space-y-4">
+                {/* El primero ocupa el doble. Seis tarjetas del mismo tamano
+                    apiladas hacen que todo pese igual, que es justo lo que
+                    delata una plantilla. */}
+                <div className="grid gap-4 md:grid-cols-3">
                   {benefits.map((benefit, i) => (
                     <motion.div
                       key={i}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, y: 18 }}
+                      whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                      className="flex items-start gap-3 p-4 rounded-lg bg-white/5 border border-white/10 hover:border-[#7700CE]/40 transition-colors backdrop-blur-sm"
+                      transition={{ delay: Math.min(i, 5) * 0.06 }}
+                      className={i === 0 ? 'md:col-span-2' : ''}
                     >
-                      <div className="w-10 h-10 rounded-xl bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0">
-                        <benefit.icon className="text-[#7700CE]" size={20} />
-                      </div>
-                      <div>
-                        <h3 className="heading text-base md:text-lg text-white mb-1">{benefit.title}</h3>
-                        <p className="text-white/70 text-sm">{benefit.description}</p>
+                      <div
+                        className="h-full rounded-2xl border border-white/10 p-5 transition-colors duration-300 hover:border-[#CC66FF]/40 md:p-6"
+                        style={{
+                          background:
+                            i === 0
+                              ? 'linear-gradient(150deg, rgba(119,0,206,.22), rgba(255,255,255,.02) 60%)'
+                              : 'rgba(255,255,255,.035)',
+                        }}
+                      >
+                        <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-[#CC66FF]/30 bg-[#CC66FF]/12">
+                          <benefit.icon className="text-[#CC66FF]" size={18} />
+                        </span>
+                        <h3 className={`heading mb-1.5 text-white ${i === 0 ? 'text-lg md:text-xl' : 'text-base'}`}>
+                          {benefit.title}
+                        </h3>
+                        <p className={`leading-relaxed text-white/65 ${i === 0 ? 'text-[15px]' : 'text-sm'}`}>
+                          {benefit.description}
+                        </p>
                       </div>
                     </motion.div>
                   ))}
@@ -277,23 +306,22 @@ export default function AISalesPage() {
               </h2>
             </div>
             
-            <div className="space-y-3">
+            {/* Renglones y no tarjetas: son frases cortas, y meter cada una
+                en su caja con borde redondeado era darles un peso que no
+                tienen. El ✓ era un caracter suelto haciendo de icono, con
+                lucide importado tres lineas mas arriba. */}
+            <div className="grid gap-x-10 md:grid-cols-2">
               {idealFor.map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  transition={{ delay: Math.min(i, 5) * 0.05 }}
+                  className="flex items-start gap-3 border-t border-white/10 py-4"
                 >
-                  <div className="p-4 md:p-5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#7700CE]/40 transition-colors">
-                    <div className="flex items-start gap-2.5">
-                      <div className="w-5 h-5 rounded-full bg-[#7700CE]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-[#7700CE] text-xs font-bold">✓</span>
-                      </div>
-                      <span className="text-white/80 text-sm md:text-base">{item}</span>
-                    </div>
-                  </div>
+                  <CheckCircle2 className="mt-0.5 flex-shrink-0 text-[#CC66FF]" size={17} />
+                  <span className="text-[15px] leading-relaxed text-white/75 md:text-base">{item}</span>
                 </motion.div>
               ))}
             </div>
@@ -311,7 +339,7 @@ export default function AISalesPage() {
                 {tFaq('titulo_1', 'PREGUNTAS')}{' '}
                 <span className="text-[#CC66FF]">{tFaq('titulo_2', 'FRECUENTES')}</span>
               </h2>
-              <div className="max-w-[70ch] divide-y divide-white/10 border-t border-white/10">
+              <div className="grid gap-x-12 border-t border-white/10 lg:grid-cols-2">
                 {[1, 2, 3, 4, 5, 6]
                   .filter((n) => tFaq(`q${n}`, '') !== '')
                   .map((n) => (
@@ -321,7 +349,7 @@ export default function AISalesPage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: '-60px' }}
                       transition={{ duration: 0.5 }}
-                      className="py-6"
+                      className="border-b border-white/10 py-6"
                     >
                       <h3 className="mb-2.5 text-[16px] md:text-[17px] font-bold text-white">
                         {tFaq(`q${n}`, '')}
