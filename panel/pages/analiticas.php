@@ -233,6 +233,24 @@ $ct=csrf(); $ruri=g_redirect_uri();
   .gsc-prog .pista{height:8px;background:#17171f;border-radius:6px;overflow:hidden}
   .gsc-prog .relleno{height:100%;width:0%;background:linear-gradient(90deg,#7700CE,#9933FF);transition:width .4s}
   .gsc-prog .estado{font-size:12.5px;color:var(--mut);margin-top:7px}
+
+  /* Motores de IA: un orden, no un reparto. Reusa el vocabulario de barra que
+     ya existe arriba (pista + relleno) para que no haya dos maneras de dibujar
+     lo mismo en la misma pagina. */
+  .motores{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
+           gap:0 30px;margin-top:4px}
+  .motor{padding:11px 0;border-top:1px solid var(--line)}
+  .motor .fila{display:flex;align-items:baseline;justify-content:space-between;
+               gap:12px;margin-bottom:8px}
+  .motor .nom{font-size:13px;color:var(--txt);line-height:1.35}
+  .motor .cif{font-size:12px;color:var(--mut);white-space:nowrap;flex-shrink:0}
+  .motor .cif b{color:var(--txt);font-weight:600}
+  .motor .pista{height:8px;background:#17171f;border-radius:6px;overflow:hidden}
+  .motor .relleno{height:100%;background:var(--pur2);border-radius:6px}
+  .motor.lider .relleno{background:linear-gradient(90deg,#7700CE,#9933FF)}
+  .motor.vivo  .relleno{background:var(--verde)}
+  .motores-tot{float:right;font-size:12px;color:var(--mut);font-weight:400}
+  @media(max-width:760px){ .motores{gap:0} }
   details.est-urls{border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:10px}
   details.est-urls summary{cursor:pointer;font-size:13.5px;display:flex;align-items:center;gap:8px}
   details.est-urls[open] summary{margin-bottom:8px}
@@ -358,16 +376,37 @@ $ct=csrf(); $ruri=g_redirect_uri();
       · Una <strong>visita desde IA</strong> es una persona que llegó porque una IA le enlazó el sitio. Ojo: muchas IAs abren enlaces sin decir de dónde vienen, así que este número siempre subestima — el complemento es el guion de 15 preguntas a ChatGPT, Gemini y Perplexity de la auditoría, que se repite cada trimestre a mano.
     </div>
   <?php else: ?>
-    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:6px">
-      <div>
-        <h4 style="margin:0 0 12px;font-size:14px">Actividad por día</h4>
-        <div style="height:240px"><canvas id="chIaDia"></canvas></div>
-      </div>
-      <div>
-        <h4 style="margin:0 0 12px;font-size:14px">Qué motores te leen</h4>
-        <div style="height:240px"><canvas id="chIaMotor"></canvas></div>
-      </div>
+    <h4 style="margin:0 0 12px;font-size:14px">Actividad por día</h4>
+    <div style="height:240px;margin-bottom:26px"><canvas id="chIaDia"></canvas></div>
+
+    <?php
+      /* Los tres que terminan en «-user» no son rastreadores: los dispara una
+         persona preguntando, y la IA abre la página en ese momento para
+         contestarle. Es la lectura que más se parece a un prospecto, así que
+         va en verde y no revuelta con las demás. */
+      $iaEnVivo = ['chatgpt-user', 'claude-user', 'perplexity-user'];
+      $iaTope   = max(array_map(fn($r) => (int)$r['c'], $iaBotsMotor));
+      $iaVivo30 = array_sum(array_map(fn($r) => in_array($r['bot'], $iaEnVivo, true) ? (int)$r['c'] : 0, $iaBotsMotor));
+    ?>
+    <h4 style="margin:0 0 4px;font-size:14px">Qué motores te leen
+      <span class="motores-tot"><?= number_format($iaLect30) ?> lecturas · <?= count($iaBotsMotor) ?> motores</span></h4>
+    <div class="motores">
+      <?php foreach ($iaBotsMotor as $i => $r): $c = (int)$r['c']; $vivo = in_array($r['bot'], $iaEnVivo, true); ?>
+        <div class="motor<?= $i === 0 ? ' lider' : '' ?><?= $vivo ? ' vivo' : '' ?>">
+          <div class="fila">
+            <span class="nom"><?= e($IA_NOMBRES[$r['bot']] ?? $r['bot']) ?></span>
+            <span class="cif tabular"><b><?= number_format($c) ?></b> · <?= round(100 * $c / max(1, $iaLect30)) ?>%</span>
+          </div>
+          <div class="pista"><div class="relleno" style="width:<?= max(2, round(100 * $c / max(1, $iaTope))) ?>%"></div></div>
+        </div>
+      <?php endforeach; ?>
     </div>
+    <p class="muted" style="margin:16px 0 0;line-height:1.75;font-size:12.5px">
+      En <strong style="color:var(--verde)">verde</strong>, las lecturas que disparó una persona: preguntó algo y la IA
+      abrió la página en ese momento para contestarle — <?= number_format($iaVivo30) ?> de <?= number_format($iaLect30) ?>.
+      El resto son bots que indexan por su cuenta, y ahí el primer lugar mide frecuencia, no preferencia:
+      el que más aparece es el que vuelve a repasar el sitio más seguido.
+    </p>
     <?php if ($iaUrlsLeidas): ?>
       <h4 style="margin:14px 0 8px;font-size:14px">Qué páginas estudian las IAs</h4>
       <table><thead><tr><th>Página</th><th>Lecturas (30d)</th><th>Motores distintos</th></tr></thead><tbody>
@@ -479,10 +518,6 @@ $ct=csrf(); $ruri=g_redirect_uri();
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:14}}},
         scales:{x:{grid:{display:false},stacked:false},y:{beginAtZero:true,grid:{color:grid},ticks:{precision:0}}}}});
   }
-  var iaM=document.getElementById('chIaMotor');
-  if(iaM) new Chart(iaM,Object.assign({},donut,{data:{
-    labels:<?= json_encode(array_map(fn($r) => $IA_NOMBRES[$r['bot']] ?? $r['bot'], $iaBotsMotor)) ?>,
-    datasets:[{data:<?= json_encode(array_map(fn($r) => (int)$r['c'], $iaBotsMotor)) ?>,backgroundColor:COL,borderColor:'#0e0e15',borderWidth:2}]}}));
 <?php endif; ?>
 })();
 
