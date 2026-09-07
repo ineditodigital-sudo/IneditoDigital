@@ -255,6 +255,38 @@ $ct=csrf(); $ruri=g_redirect_uri();
   @media (hover:hover) and (pointer:fine){
     .leyenda li:hover{color:var(--txt)}
   }
+  /* ═══════════════════════ Datos flotantes sobre las barras ═══════════════
+     HTML colocado sobre el lienzo con la proyección de cada barra. No van
+     dibujados dentro: así el texto se selecciona, escala con el zoom del
+     navegador y lo lee un lector de pantalla. */
+  .barras3d{position:relative}
+  .pastillas{position:absolute;inset:0;pointer-events:none}
+  .pastilla{position:absolute;transform:translate(-50%,-100%);
+    display:flex;flex-direction:column;align-items:center;gap:0;
+    transition:opacity 160ms var(--sal)}
+  .pastilla .caja{background:#14141f;border:1px solid var(--line2);border-radius:9px;
+    padding:5px 9px;font-size:12px;color:var(--txt);white-space:nowrap;
+    font-variant-numeric:tabular-nums;line-height:1.25;
+    box-shadow:0 6px 18px rgba(0,0,0,.5);
+    transition:transform 160ms var(--sal),border-color 160ms var(--sal)}
+  .pastilla .caja em{display:block;font-style:normal;font-size:10px;color:var(--mut2);
+    max-width:0;overflow:hidden;opacity:0;
+    transition:max-width 220ms var(--sal),opacity 160ms var(--sal)}
+  .pastilla .hilo{width:1px;flex:1;min-height:10px;background:linear-gradient(var(--line2),transparent)}
+  .pastilla .punto{width:5px;height:5px;border-radius:50%;background:var(--pur3);
+    margin-top:-2px;transition:transform 160ms var(--sal)}
+  .pastilla.activa{z-index:2}
+  .pastilla.activa .caja{transform:translateY(-3px);border-color:var(--pur2)}
+  .pastilla.activa .caja em{max-width:220px;opacity:1;margin-top:2px}
+  .pastilla.activa .punto{transform:scale(1.6)}
+  @media(max-width:760px){
+    /* En un teléfono diez pastillas se pisan. Solo la que se toca. */
+    .pastilla{opacity:0}
+    .pastilla.activa{opacity:1}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .pastilla,.pastilla .caja,.pastilla .caja em,.pastilla .punto{transition-duration:1ms}
+  }
   .barras3d{position:relative;width:100%;height:300px}
   .barras3d canvas{width:100%;height:100%;display:block}
   .lista-consultas{list-style:none;margin:14px 0 0;padding:0;counter-reset:q}
@@ -1002,7 +1034,7 @@ function tramaPuntos(color, fondo, paso){
         li.style.opacity = (n === -1 || i === n) ? '' : '.45';
       });
     };
-    (window.__barras = window.__barras || []).push({lienzo:'chGscQ', datos:impr, colores:cols, alDestacar:marcar});
+    (window.__barras = window.__barras || []).push({lienzo:'chGscQ', datos:impr, colores:cols, alDestacar:marcar, textos:txt});
   })();
 <?php endif; ?>
 
@@ -1134,10 +1166,11 @@ async function donaThree(viejo, datos, colores, alDestacar){
 
   const escena = new T.Scene();
   const camara = new T.PerspectiveCamera(34, caja.width / caja.height, 0.1, 100);
-  /* A 38 grados un disco plano se ve casi como una raya —«acostada»—. A 59 el
-     círculo vuelve a ser círculo y el canto sigue asomando abajo, que es lo
-     que enseña el grosor. */
-  camara.position.set(0, 9.0, 5.4);
+  /* Tres cuartos: ni de frente —que aplana el canto y parece un aro pintado—
+     ni cenital —que lo vuelve un plano de planta—. Elevación 48°, y desplazada
+     de lado para que la pieza no salga simétrica, que es lo que distingue un
+     3/4 de una vista frontal. */
+  camara.position.set(4.1, 7.8, 6.6);
   camara.lookAt(0, 0, 0);
 
   /* Luz de estudio: principal alta a la izquierda, relleno frio enfrente para
@@ -1188,7 +1221,11 @@ async function donaThree(viejo, datos, colores, alDestacar){
   });
 
   /* ── interaccion ───────────────────────────────────────────────────────── */
-  let giroY = 0, giroObj = 0, vel = 0, arrastrando = false, xPrev = 0;
+  /* El reposo manda: el arrastre es una desviación temporal y al soltar la
+     pieza vuelve sola. Eso es lo que hace que el ángulo sea SIEMPRE 3/4 y no
+     «el que quedó la última vez que alguien la movió». */
+  const REPOSO = 0, LIMITE = 0.7;
+  let giroY = REPOSO, giroObj = REPOSO, vel = 0, arrastrando = false, xPrev = 0;
   let destacado = -1, entrada = quieto ? 1 : 0, t0 = null;
   const rayo = new T.Raycaster(), raton = new T.Vector2();
 
@@ -1200,8 +1237,12 @@ async function donaThree(viejo, datos, colores, alDestacar){
   });
   lienzo.addEventListener('pointermove', e => {
     if (arrastrando){
-      const d = (e.clientX - xPrev) * 0.008;
-      giroObj += d; vel = d; xPrev = e.clientX;
+      let d = (e.clientX - xPrev) * 0.008;
+      /* Cerca del tope cuesta más, en vez de chocar contra una pared. */
+      const fuera = Math.max(0, Math.abs(giroObj) - LIMITE * 0.6) / (LIMITE * 0.4);
+      d *= Math.max(0.12, 1 - fuera);
+      giroObj = Math.max(-LIMITE, Math.min(LIMITE, giroObj + d));
+      vel = d; xPrev = e.clientX;
       return;
     }
     if (!conCursor) return;
@@ -1236,7 +1277,11 @@ async function donaThree(viejo, datos, colores, alDestacar){
 
     /* Amortiguacion: al soltar sigue un poco y frena sola. Parar en seco se
        siente como un tope, no como algo con masa. */
-    if (!arrastrando){ giroObj += vel; vel *= 0.94; if (Math.abs(vel) < 1e-4) vel = 0; }
+    if (!arrastrando){
+      giroObj += vel; vel *= 0.92; if (Math.abs(vel) < 1e-4) vel = 0;
+      /* De vuelta al reposo, despacio: se nota que la pieza tiene un sitio. */
+      giroObj += (REPOSO - giroObj) * 0.035;
+    }
     giroY += (giroObj - giroY) * 0.14;
 
     const e = SAL(entrada);
@@ -1294,7 +1339,7 @@ async function donaThree(viejo, datos, colores, alDestacar){
    Mismo material y misma luz que las donas, para que el panel se vea de una
    pieza. El texto va en HTML debajo: diez consultas de sesenta caracteres no
    caben rotadas bajo una barra, y en HTML ademas se seleccionan. */
-async function barras3d(viejo, datos, colores, alDestacar){
+async function barras3d(viejo, datos, colores, alDestacar, textos){
   const T = await libreria();
   const caja = viejo.getBoundingClientRect();
   const tope = Math.max.apply(null, datos) || 1;
@@ -1311,8 +1356,10 @@ async function barras3d(viejo, datos, colores, alDestacar){
 
   const escena = new T.Scene();
   const camara = new T.PerspectiveCamera(30, caja.width / caja.height, 0.1, 100);
-  camara.position.set(0.6, 4.4, 11.5);
-  camara.lookAt(0, 1.1, 0);
+  /* Tres cuartos también aquí: de una barra se ven la cara y un costado, que
+     es lo que le da volumen. De frente serían rectángulos. */
+  camara.position.set(4.8, 5.0, 10.4);
+  camara.lookAt(0, 1.2, 0);
 
   escena.add(new T.AmbientLight(0xffffff, 0.7));
   const clave = new T.DirectionalLight(0xffffff, 2.0);
@@ -1355,7 +1402,8 @@ async function barras3d(viejo, datos, colores, alDestacar){
   });
 
   /* ── interaccion, la misma gramatica que las donas ─────────────────────── */
-  let giroY = 0, giroObj = 0, vel = 0, arrastrando = false, xPrev = 0;
+  const REPOSO = -0.24, LIMITE = 0.55;
+  let giroY = REPOSO, giroObj = REPOSO, vel = 0, arrastrando = false, xPrev = 0;
   let destacado = -1, entrada = quieto ? 1 : 0, t0 = null;
   const rayo = new T.Raycaster(), raton = new T.Vector2();
 
@@ -1366,8 +1414,10 @@ async function barras3d(viejo, datos, colores, alDestacar){
   });
   lienzo.addEventListener('pointermove', e => {
     if (arrastrando){
-      const d = (e.clientX - xPrev) * 0.006;
-      giroObj = Math.max(-0.9, Math.min(0.9, giroObj + d));   // sin darle la vuelta
+      let d = (e.clientX - xPrev) * 0.006;
+      const fuera = Math.max(0, Math.abs(giroObj - REPOSO) - LIMITE * 0.6) / (LIMITE * 0.4);
+      d *= Math.max(0.12, 1 - fuera);
+      giroObj = Math.max(REPOSO - LIMITE, Math.min(REPOSO + LIMITE, giroObj + d));
       vel = d; xPrev = e.clientX; return;
     }
     if (!conCursor) return;
@@ -1377,7 +1427,7 @@ async function barras3d(viejo, datos, colores, alDestacar){
     rayo.setFromCamera(raton, camara);
     const toca = rayo.intersectObjects(piezas, false);
     const n = toca.length ? toca[0].object.userData.i : -1;
-    if (n !== destacado){ destacado = n; if (alDestacar) alDestacar(n); }
+    if (n !== destacado){ destacado = n; marcarPastilla(n); if (alDestacar) alDestacar(n); }
   });
   const soltar = e => {
     if (!arrastrando) return;
@@ -1388,7 +1438,7 @@ async function barras3d(viejo, datos, colores, alDestacar){
   lienzo.addEventListener('pointercancel', soltar);
   lienzo.addEventListener('pointerleave', () => {
     if (destacado === -1) return;
-    destacado = -1; if (alDestacar) alDestacar(-1);
+    destacado = -1; marcarPastilla(-1); if (alDestacar) alDestacar(-1);
   });
 
   let vivo = false, enPantalla = false, cuadro = 0;
@@ -1398,7 +1448,10 @@ async function barras3d(viejo, datos, colores, alDestacar){
     if (t0 === null) t0 = t;
     if (!quieto && entrada < 1) entrada = Math.min((t - t0) / 950, 1);
 
-    if (!arrastrando){ giroObj += vel; vel *= 0.93; if (Math.abs(vel) < 1e-4) vel = 0; }
+    if (!arrastrando){
+      giroObj += vel; vel *= 0.92; if (Math.abs(vel) < 1e-4) vel = 0;
+      giroObj += (REPOSO - giroObj) * 0.035;
+    }
     giroY += (giroObj - giroY) * 0.14;
     grupo.rotation.y = giroY;
 
@@ -1412,12 +1465,46 @@ async function barras3d(viejo, datos, colores, alDestacar){
     });
 
     render.render(escena, camara);
+    colocar();
   }
   function arrancar(){ if (vivo || !enPantalla || document.hidden) return; vivo = true; cuadro = requestAnimationFrame(pintar); }
   function parar(){ vivo = false; cancelAnimationFrame(cuadro); }
 
+  /* Una pastilla por barra, en HTML sobre el lienzo. Se coloca proyectando la
+     punta de cada barra a coordenadas de pantalla en cada cuadro, así sigue
+     pegada aunque la pieza gire. */
+  const capa = document.createElement('div');
+  capa.className = 'pastillas';
+  viejo.parentNode.appendChild(capa);
+  const pastillas = datos.map((v, i) => {
+    const p = document.createElement('div');
+    p.className = 'pastilla';
+    p.innerHTML = '<div class="caja">' + v.toLocaleString('es-MX')
+                + (textos && textos[i] ? '<em>' + textos[i].replace(/</g, '&lt;') + '</em>' : '')
+                + '</div><span class="hilo"></span><span class="punto"></span>';
+    capa.appendChild(p);
+    return p;
+  });
+  function marcarPastilla(n){
+    pastillas.forEach((p, i) => p.classList.toggle('activa', i === n));
+  }
+
+  const puntal = new T.Vector3();
+  function colocar(){
+    const c = lienzo.getBoundingClientRect();
+    piezas.forEach((m, i) => {
+      puntal.set(0, 0, 0);
+      m.localToWorld(puntal);
+      puntal.y = m.position.y + (datos[i] / tope) * alto * m.scale.y;
+      puntal.project(camara);
+      pastillas[i].style.left = ((puntal.x + 1) / 2 * c.width) + 'px';
+      pastillas[i].style.top  = ((-puntal.y + 1) / 2 * c.height - 8) + 'px';
+    });
+  }
+
   piezas.forEach(m => { m.scale.y = quieto ? 1 : 0.001; });
   render.render(escena, camara);
+  colocar();
   lienzo.dataset.barras = String(piezas.length);
   lienzo.dataset.three = T.REVISION;
   viejo.remove();
@@ -1457,7 +1544,7 @@ async function relevarBarra(conf){
   if (!el || el.dataset.relevado) return;
   el.dataset.relevado = '1';
   try {
-    await barras3d(el, conf.datos, conf.colores, conf.alDestacar);
+    await barras3d(el, conf.datos, conf.colores, conf.alDestacar, conf.textos);
   } catch (err){
     console.warn('[panel] three.js no relevó las barras', err);
   }
