@@ -187,7 +187,7 @@ export default function ServiceDetailPage() {
               despues que incluye. */}
           {service.fullDescription && (
             <section className="px-4 pb-16 md:pb-24">
-              <div className="mx-auto max-w-6xl">
+              <div className="container mx-auto max-w-5xl">
                 <div className="max-w-[68ch] space-y-6">
                   {service.fullDescription
                     .split(/\n\s*\n/)
