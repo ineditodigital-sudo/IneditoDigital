@@ -179,6 +179,41 @@ export default function ServiceDetailPage() {
             </div>
           </section>
 
+          {/* ---------- ZONA 0.5 · EL TEXTO LARGO ----------
+              Estaba escrito en el panel desde el principio y no se pintaba en
+              ninguna parte: nueve servicios cargaban entre 228 y 371 palabras
+              que no leia nadie, ni una persona ni un buscador. Va aqui porque
+              es el orden en que se pregunta: que es, por que importa, y solo
+              despues que incluye. */}
+          {service.fullDescription && (
+            <section className="px-4 pb-16 md:pb-24">
+              <div className="mx-auto max-w-6xl">
+                <div className="max-w-[68ch] space-y-6">
+                  {service.fullDescription
+                    .split(/\n\s*\n/)
+                    .map((p) => p.trim())
+                    .filter(Boolean)
+                    .map((parrafo, i) => (
+                      <motion.p
+                        key={i}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.06 }}
+                        className={
+                          i === 0
+                            ? 'text-[17px] leading-[1.75] text-white/85 md:text-[19px]'
+                            : 'text-[15.5px] leading-[1.8] text-white/60 md:text-[16.5px]'
+                        }
+                      >
+                        {parrafo}
+                      </motion.p>
+                    ))}
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* ---------- ZONA 1 · QUÉ INCLUYE (bento asimétrico) ---------- */}
           {service.features.length > 0 && (
             <section className="px-4 pb-16 md:pb-24">

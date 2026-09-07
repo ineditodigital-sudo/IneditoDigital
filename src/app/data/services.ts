@@ -7,6 +7,8 @@ export interface Service {
   shortDescription: string;
   /** Responde "que es" en las primeras palabras. Lo edita el panel. */
   definicion?: string;
+  /** El texto largo: explica el servicio entero. Lo edita el panel. */
+  fullDescription?: string;
   icon: string;
   category: string;
   bannerImage?: string;

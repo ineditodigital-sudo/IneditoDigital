@@ -233,6 +233,14 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
       $h='<h1>'.e($s['title'] ?? '').'</h1>';
       if (!empty($s['definicion'])) $h .= '<p>'.e($s['definicion']).'</p>';
       $h .= '<p>'.e($s['shortDescription'] ?? '').'</p>';
+      // El texto largo. Estaba guardado y no salia ni aqui ni en el sitio, asi
+      // que Google veia la mitad de las paginas que si tienen sustancia.
+      if (!empty($s['fullDescription'])) {
+        foreach (preg_split('~\n\s*\n~u', (string)$s['fullDescription']) as $parrafo) {
+          $parrafo = trim($parrafo);
+          if ($parrafo !== '') $h .= '<p>'.e($parrafo).'</p>';
+        }
+      }
       foreach (['features'=>'Características','benefits'=>'Beneficios','ideal'=>'Ideal para'] as $k=>$lbl) if(!empty($s[$k]) && is_array($s[$k])){ $h.='<h2>'.$lbl.'</h2><ul>'; foreach($s[$k] as $it) $h.='<li>'.e($it).'</li>'; $h.='</ul>'; }
       if(!empty($s['process']) && is_array($s['process'])){ $h.='<h2>Proceso</h2><ol>'; foreach($s['process'] as $p) $h.='<li><strong>'.e($p['title'] ?? '').':</strong> '.e($p['description'] ?? '').'</li>'; $h.='</ol>'; }
       if(!empty($s['faq']) && is_array($s['faq'])){ $h.='<h2>Preguntas frecuentes</h2>'; foreach($s['faq'] as $f) $h.='<h3>'.e($f['question'] ?? '').'</h3><p>'.e($f['answer'] ?? '').'</p>'; }

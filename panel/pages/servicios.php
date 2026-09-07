@@ -36,6 +36,8 @@ crud('servicios', [
                      'help'=>'Una frase. Es lo que se lee en la tarjeta y en el menú.'],
     'full_desc'  => ['label'=>'Definición','type'=>'area','json'=>'definicion','grupo'=>'La página',
                      'help'=>'Abre la página respondiendo «qué es esto». Es de lo primero que citan las IA, así que conviene que empiece nombrando el servicio.'],
+    'texto_largo'=> ['label'=>'Texto largo','type'=>'area','json'=>'fullDescription','col'=>false,'grupo'=>'La página','wide'=>true,
+                     'help'=>'Varios párrafos separados por un renglón en blanco. Es el cuerpo de la página: explica el servicio de verdad, y es de donde salen las frases que una IA cita. Sin él la página se queda en unas 250 palabras, y Google suele no molestarse en indexarla.'],
     'image'      => ['label'=>'Imagen del encabezado','type'=>'imagen','json'=>'bannerImage','grupo'=>'La página'],
     'features'   => ['label'=>'Qué incluye','type'=>'lista','json'=>'features','grupo'=>'La página'],
     'benefits'   => ['label'=>'Beneficios','type'=>'lista','json'=>'benefits','grupo'=>'La página'],
