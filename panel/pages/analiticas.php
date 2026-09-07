@@ -255,6 +255,17 @@ $ct=csrf(); $ruri=g_redirect_uri();
   @media (hover:hover) and (pointer:fine){
     .leyenda li:hover{color:var(--txt)}
   }
+  .barras3d{position:relative;width:100%;height:300px}
+  .barras3d canvas{width:100%;height:100%;display:block}
+  .lista-consultas{list-style:none;margin:14px 0 0;padding:0;counter-reset:q}
+  .lista-consultas li{display:flex;align-items:baseline;gap:10px;padding:8px 4px;
+    border-top:1px solid var(--line);font-size:13px;
+    transition:opacity 160ms var(--sal),background-color 160ms var(--sal)}
+  .lista-consultas li.activo{background:rgba(153,51,255,.08)}
+  .lista-consultas .q{flex:1;min-width:0;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lista-consultas .n{flex-shrink:0;color:var(--mut2);font-size:12px;font-variant-numeric:tabular-nums}
+  .lista-consultas .n b{color:var(--mut)}
+  .lista-consultas .punto{width:9px;height:9px;border-radius:2px;flex-shrink:0;align-self:center}
   .leyenda .punto{width:11px;height:11px;border-radius:3px;flex-shrink:0;
     transition:transform 160ms var(--sal)}
   .leyenda li:hover .punto{transform:scale(1.25)}
@@ -469,7 +480,8 @@ $ct=csrf(); $ruri=g_redirect_uri();
 
     <?php if ($gscConsultas): ?>
       <h4 style="margin:18px 0 12px;font-size:14px">Con qué te encuentran (top 10 por impresiones)</h4>
-      <div style="height:<?= 40 * min(count($gscConsultas), 10) + 60 ?>px"><canvas id="chGscQ"></canvas></div>
+      <div class="barras3d"><canvas id="chGscQ"></canvas></div>
+      <ol class="lista-consultas" id="leyGscQ"></ol>
 
       <details style="margin-top:14px">
         <summary class="muted" style="cursor:pointer">Ver la tabla completa (25 búsquedas)</summary>
@@ -965,19 +977,33 @@ function tramaPuntos(color, fondo, paso){
           y:{beginAtZero:true,grid:{color:grid},ticks:{precision:0}},
           y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},ticks:{precision:0,color:'#5fe0a0'}}}}});
   }
-  var cq=document.getElementById('chGscQ');
-  if(cq){
+  (function(){
+    var cq = document.getElementById('chGscQ'); if(!cq) return;
     <?php $q10 = array_slice($gscConsultas, 0, 10); ?>
-    new Chart(cq,{type:'bar',data:{
-      labels:<?= json_encode(array_map(fn($c) => mb_strlen($c['consulta']) > 34 ? mb_substr($c['consulta'], 0, 33) . '…' : $c['consulta'], $q10)) ?>,
-      datasets:[
-        {label:'Impresiones',data:<?= json_encode(array_map(fn($c) => (int)$c['impresiones'], $q10)) ?>,backgroundColor:'rgba(153,51,255,.75)',borderRadius:5},
-        {label:'Clics',data:<?= json_encode(array_map(fn($c) => (int)$c['clics'], $q10)) ?>,backgroundColor:'rgba(95,224,160,.85)',borderRadius:5}
-      ]},
-      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:14}}},
-        scales:{x:{beginAtZero:true,grid:{color:grid},ticks:{precision:0}},y:{grid:{display:false}}}}});
-  }
+    var impr = <?= json_encode(array_map(fn($c) => (int)$c['impresiones'], $q10)) ?>;
+    var clic = <?= json_encode(array_map(fn($c) => (int)$c['clics'], $q10)) ?>;
+    var txt  = <?= json_encode(array_map(fn($c) => $c['consulta'], $q10)) ?>;
+    var pos  = <?= json_encode(array_map(fn($c) => round((float)$c['posicion'], 1), $q10)) ?>;
+    /* Morado por defecto; verde el que ademas trae clics, que es el unico que
+       de verdad esta trabajando. */
+    var cols = impr.map(function(_, i){ return clic[i] > 0 ? '#5fe0a0' : '#9933FF'; });
+
+    var ley = document.getElementById('leyGscQ');
+    ley.innerHTML = txt.map(function(t, i){
+      return '<li data-i="' + i + '"><span class="punto" style="background:' + cols[i] + '"></span>'
+           + '<span class="q">' + t.replace(/</g,'&lt;') + '</span>'
+           + '<span class="n"><b>' + impr[i].toLocaleString('es-MX') + '</b> impr · '
+           + clic[i] + ' clic' + (clic[i] === 1 ? '' : 's') + ' · #' + pos[i] + '</span></li>';
+    }).join('');
+
+    var marcar = function(n){
+      [].forEach.call(ley.children, function(li, i){
+        li.classList.toggle('activo', n === i);
+        li.style.opacity = (n === -1 || i === n) ? '' : '.45';
+      });
+    };
+    (window.__barras = window.__barras || []).push({lienzo:'chGscQ', datos:impr, colores:cols, alDestacar:marcar});
+  })();
 <?php endif; ?>
 
 <?php if ($iaLect30 > 0 || $iaVis30 > 0): ?>
@@ -1065,6 +1091,28 @@ function libreria(){
   return cargando;
 }
 
+/* ── Sombreado cel ─────────────────────────────────────────────────────────
+   Una rampa de cuatro pasos con filtro NEAREST. Con filtro lineal la rampa se
+   interpola, los pasos desaparecen y vuelve a ser un degradado normal. */
+function rampaToon(T){
+  const pasos = new Uint8Array([70, 132, 200, 255]);
+  const tex = new T.DataTexture(pasos, pasos.length, 1, T.RedFormat);
+  tex.minFilter = tex.magFilter = T.NearestFilter;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+/* El contorno, por casco invertido: la misma malla un poco mas grande, pintada
+   por dentro. Como se ve el interior de la cara trasera, sobresale por el borde
+   y queda una linea. Un draw call, sin post-proceso. */
+function contorno(T, geo, grosor){
+  const m = new T.Mesh(geo, new T.MeshBasicMaterial({
+    color: 0x07070b, side: T.BackSide,
+  }));
+  m.scale.setScalar(1 + (grosor || 0.022));
+  return m;
+}
+
 async function donaThree(viejo, datos, colores, alDestacar){
   const T = await libreria();
   const caja = viejo.getBoundingClientRect();
@@ -1086,7 +1134,10 @@ async function donaThree(viejo, datos, colores, alDestacar){
 
   const escena = new T.Scene();
   const camara = new T.PerspectiveCamera(34, caja.width / caja.height, 0.1, 100);
-  camara.position.set(0, 6.4, 8.2);
+  /* A 38 grados un disco plano se ve casi como una raya —«acostada»—. A 59 el
+     círculo vuelve a ser círculo y el canto sigue asomando abajo, que es lo
+     que enseña el grosor. */
+  camara.position.set(0, 9.0, 5.4);
   camara.lookAt(0, 0, 0);
 
   /* Luz de estudio: principal alta a la izquierda, relleno frio enfrente para
@@ -1102,6 +1153,7 @@ async function donaThree(viejo, datos, colores, alDestacar){
   const grupo = new T.Group();
   escena.add(grupo);
 
+  const rampa = rampaToon(T);
   const R = 2.6, r = 1.42, alto = 0.62, sep = 0.016;   // sep: el corte entre gajos
   let ang = -Math.PI / 2;
   const piezas = [];
@@ -1125,12 +1177,12 @@ async function donaThree(viejo, datos, colores, alDestacar){
     });
     geo.rotateX(-Math.PI / 2);      // la forma se dibuja en XY; el disco vive en XZ
 
-    const mat = new T.MeshPhysicalMaterial({
-      color: new T.Color(colores[i % colores.length]),
-      roughness: 0.32, metalness: 0.05, clearcoat: 0.7, clearcoatRoughness: 0.28,
+    const mat = new T.MeshToonMaterial({
+      color: new T.Color(colores[i % colores.length]), gradientMap: rampa,
     });
     const malla = new T.Mesh(geo, mat);
     malla.userData.i = i;
+    malla.add(contorno(T, geo, 0.018));
     grupo.add(malla);
     piezas.push(malla);
   });
@@ -1189,13 +1241,14 @@ async function donaThree(viejo, datos, colores, alDestacar){
 
     const e = SAL(entrada);
     grupo.rotation.y = giroY;
-    grupo.rotation.x = -0.06;
+    grupo.rotation.x = 0;
     grupo.scale.setScalar(0.86 + 0.14 * e);
 
     piezas.forEach(m => {
       const meta = (m.userData.i === destacado) ? 0.34 : 0;
       m.position.y += (meta - m.position.y) * 0.18;
-      m.material.opacity = e; m.material.transparent = e < 1;
+      /* El fundido va por escala y no por opacidad: con contorno de casco
+         invertido, dos mallas semitransparentes se ven una a traves de la otra. */
     });
 
     render.render(escena, camara);
@@ -1237,6 +1290,156 @@ async function donaThree(viejo, datos, colores, alDestacar){
   return true;
 }
 
+/* ══════════════════════════════════════════════ Barras en 3D
+   Mismo material y misma luz que las donas, para que el panel se vea de una
+   pieza. El texto va en HTML debajo: diez consultas de sesenta caracteres no
+   caben rotadas bajo una barra, y en HTML ademas se seleccionan. */
+async function barras3d(viejo, datos, colores, alDestacar){
+  const T = await libreria();
+  const caja = viejo.getBoundingClientRect();
+  const tope = Math.max.apply(null, datos) || 1;
+
+  const lienzo = document.createElement('canvas');
+  lienzo.style.cssText = 'width:100%;height:100%;display:block';
+  viejo.parentNode.insertBefore(lienzo, viejo);
+
+  const render = new T.WebGLRenderer({ canvas: lienzo, antialias: true, alpha: true });
+  render.setPixelRatio(Math.min(devicePixelRatio, 2));
+  render.setSize(caja.width, caja.height, false);
+  render.toneMapping = T.ACESFilmicToneMapping;
+  render.toneMappingExposure = 1.1;
+
+  const escena = new T.Scene();
+  const camara = new T.PerspectiveCamera(30, caja.width / caja.height, 0.1, 100);
+  camara.position.set(0.6, 4.4, 11.5);
+  camara.lookAt(0, 1.1, 0);
+
+  escena.add(new T.AmbientLight(0xffffff, 0.7));
+  const clave = new T.DirectionalLight(0xffffff, 2.0);
+  clave.position.set(-4, 8, 6); escena.add(clave);
+  const canto = new T.DirectionalLight(0xcc66ff, 1.4);
+  canto.position.set(3, -2, -5); escena.add(canto);
+
+  const grupo = new T.Group();
+  escena.add(grupo);
+
+  const rampa = rampaToon(T);
+  const ancho = 0.52, hueco = 0.28, alto = 3.4;
+  const paso = ancho + hueco;
+  const x0 = -((datos.length - 1) * paso) / 2;
+  const piezas = [];
+
+  datos.forEach((v, i) => {
+    const h = Math.max(0.12, (v / tope) * alto);
+    /* Caja con las esquinas suavizadas: un canto vivo bajo sombreado cel se
+       ve como un error de renderizado y no como una arista. */
+    const forma = new T.Shape();
+    const r = 0.08, a = ancho / 2;
+    forma.moveTo(-a + r, -a);
+    forma.lineTo(a - r, -a); forma.quadraticCurveTo(a, -a, a, -a + r);
+    forma.lineTo(a, a - r);  forma.quadraticCurveTo(a, a, a - r, a);
+    forma.lineTo(-a + r, a); forma.quadraticCurveTo(-a, a, -a, a - r);
+    forma.lineTo(-a, -a + r);forma.quadraticCurveTo(-a, -a, -a + r, -a);
+    const geo = new T.ExtrudeGeometry(forma, { depth: h, bevelEnabled: false, curveSegments: 6 });
+    geo.rotateX(-Math.PI / 2);
+
+    const mat = new T.MeshToonMaterial({
+      color: new T.Color(colores[i % colores.length]), gradientMap: rampa,
+    });
+    const malla = new T.Mesh(geo, mat);
+    malla.position.set(x0 + i * paso, 0, 0);
+    malla.userData.i = i;
+    malla.add(contorno(T, geo, 0.03));
+    grupo.add(malla);
+    piezas.push(malla);
+  });
+
+  /* ── interaccion, la misma gramatica que las donas ─────────────────────── */
+  let giroY = 0, giroObj = 0, vel = 0, arrastrando = false, xPrev = 0;
+  let destacado = -1, entrada = quieto ? 1 : 0, t0 = null;
+  const rayo = new T.Raycaster(), raton = new T.Vector2();
+
+  lienzo.style.cursor = 'grab';
+  lienzo.addEventListener('pointerdown', e => {
+    arrastrando = true; xPrev = e.clientX; vel = 0;
+    lienzo.setPointerCapture(e.pointerId); lienzo.style.cursor = 'grabbing';
+  });
+  lienzo.addEventListener('pointermove', e => {
+    if (arrastrando){
+      const d = (e.clientX - xPrev) * 0.006;
+      giroObj = Math.max(-0.9, Math.min(0.9, giroObj + d));   // sin darle la vuelta
+      vel = d; xPrev = e.clientX; return;
+    }
+    if (!conCursor) return;
+    const c = lienzo.getBoundingClientRect();
+    raton.x = ((e.clientX - c.left) / c.width) * 2 - 1;
+    raton.y = -((e.clientY - c.top) / c.height) * 2 + 1;
+    rayo.setFromCamera(raton, camara);
+    const toca = rayo.intersectObjects(piezas, false);
+    const n = toca.length ? toca[0].object.userData.i : -1;
+    if (n !== destacado){ destacado = n; if (alDestacar) alDestacar(n); }
+  });
+  const soltar = e => {
+    if (!arrastrando) return;
+    arrastrando = false; lienzo.style.cursor = 'grab';
+    try { lienzo.releasePointerCapture(e.pointerId); } catch(_){}
+  };
+  lienzo.addEventListener('pointerup', soltar);
+  lienzo.addEventListener('pointercancel', soltar);
+  lienzo.addEventListener('pointerleave', () => {
+    if (destacado === -1) return;
+    destacado = -1; if (alDestacar) alDestacar(-1);
+  });
+
+  let vivo = false, enPantalla = false, cuadro = 0;
+  function pintar(t){
+    if (!vivo) return;
+    cuadro = requestAnimationFrame(pintar);
+    if (t0 === null) t0 = t;
+    if (!quieto && entrada < 1) entrada = Math.min((t - t0) / 950, 1);
+
+    if (!arrastrando){ giroObj += vel; vel *= 0.93; if (Math.abs(vel) < 1e-4) vel = 0; }
+    giroY += (giroObj - giroY) * 0.14;
+    grupo.rotation.y = giroY;
+
+    piezas.forEach((m, i) => {
+      /* Cada barra crece con su propio retraso: todas a la vez es un bloque
+         subiendo, escalonadas se leen una por una. */
+      const p = Math.max(0, Math.min((entrada - i * 0.045) / 0.55, 1));
+      const e = SAL(p);
+      const meta = (i === destacado) ? 1.08 : 1;
+      m.scale.y += (e * meta - m.scale.y) * 0.25;
+    });
+
+    render.render(escena, camara);
+  }
+  function arrancar(){ if (vivo || !enPantalla || document.hidden) return; vivo = true; cuadro = requestAnimationFrame(pintar); }
+  function parar(){ vivo = false; cancelAnimationFrame(cuadro); }
+
+  piezas.forEach(m => { m.scale.y = quieto ? 1 : 0.001; });
+  render.render(escena, camara);
+  lienzo.dataset.barras = String(piezas.length);
+  lienzo.dataset.three = T.REVISION;
+  viejo.remove();
+
+  new IntersectionObserver(en => {
+    enPantalla = en[0].isIntersecting; enPantalla ? arrancar() : parar();
+  }, { threshold: 0.15 }).observe(lienzo);
+  const vis = lienzo.getBoundingClientRect();
+  if (vis.top < innerHeight && vis.bottom > 0){ enPantalla = true; arrancar(); }
+  document.addEventListener('visibilitychange', () => document.hidden ? parar() : arrancar());
+
+  let temp;
+  addEventListener('resize', () => {
+    clearTimeout(temp);
+    temp = setTimeout(() => {
+      const c = lienzo.getBoundingClientRect();
+      camara.aspect = c.width / c.height; camara.updateProjectionMatrix();
+      render.setSize(c.width, c.height, false);
+    }, 120);
+  });
+}
+
 /* Se reemplaza la version de canvas solo si three.js llega. Si no llega, la de
    canvas ya esta pintada y nadie ve una tarjeta vacia. */
 async function relevar(conf){
@@ -1249,20 +1452,34 @@ async function relevar(conf){
     console.warn('[panel] three.js no relevó; se queda la dona de canvas', err);
   }
 }
-window.__relevarDonas = () => (window.__donas || []).forEach(relevar);
+async function relevarBarra(conf){
+  const el = document.getElementById(conf.lienzo);
+  if (!el || el.dataset.relevado) return;
+  el.dataset.relevado = '1';
+  try {
+    await barras3d(el, conf.datos, conf.colores, conf.alDestacar);
+  } catch (err){
+    console.warn('[panel] three.js no relevó las barras', err);
+  }
+}
+window.__relevarDonas = () => {
+  (window.__donas || []).forEach(relevar);
+  (window.__barras || []).forEach(relevarBarra);
+};
 
-for (const conf of (window.__donas || [])){
+for (const conf of [].concat(window.__donas || [], window.__barras || [])){
   const el = document.getElementById(conf.lienzo);
   if (!el) continue;
+  const arranca = (window.__barras || []).indexOf(conf) >= 0 ? relevarBarra : relevar;
   /* Si ya se ve, se releva ahora. El observador no dispara hasta que el
      navegador compone un cuadro, y esperar a eso para algo que ya esta en
      pantalla es un rodeo. */
   const c = el.getBoundingClientRect();
-  if (c.top < innerHeight + 200 && c.bottom > -200){ relevar(conf); continue; }
+  if (c.top < innerHeight + 200 && c.bottom > -200){ arranca(conf); continue; }
   new IntersectionObserver((en, io) => {
     if (!en[0].isIntersecting) return;
     io.disconnect();
-    relevar(conf);
+    arranca(conf);
   }, { rootMargin: '200px' }).observe(el);
 }
 </script>
