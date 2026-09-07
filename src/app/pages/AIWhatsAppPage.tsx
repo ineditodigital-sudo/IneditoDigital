@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { GlassCard } from '../components/GlassCard';
 import TopographyCanvas from '../components/TopographyCanvas';
 import { TopoLineas } from '../components/TopoLineas';
+import { RecorridoProceso } from '../components/RecorridoProceso';
 import Floating3DElements from '../components/Floating3DElements';
 import SectionDivider from '../components/SectionDivider';
 import { useApp } from '../context/AppContext';
@@ -82,8 +83,30 @@ export default function AIWhatsAppPage() {
             servicio ya usan estas lineas; la foto del señor en traje era
             lo unico que delataba que estas cuatro venian de otra
             plantilla. */}
-        <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
           <TopoLineas className="h-full w-full" />
+          {/* La misma atmósfera de las páginas de servicio: rejilla de puntos
+              enmascarada y dos manchas que derivan. Es lo que le daba
+              profundidad al encabezado y aquí no estaba. */}
+          <div
+            className="absolute inset-0 opacity-[0.15]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, rgba(153,51,255,0.5) 1px, transparent 1px)',
+              backgroundSize: '34px 34px',
+              maskImage: 'radial-gradient(ellipse 75% 45% at 50% 20%, black, transparent)',
+              WebkitMaskImage: 'radial-gradient(ellipse 75% 45% at 50% 20%, black, transparent)',
+            }}
+          />
+          <motion.div
+            className="absolute -top-1/4 left-1/4 h-[30rem] w-[30rem] rounded-full bg-[#7700CE]/20 blur-[130px]"
+            animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
+            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute -bottom-1/4 right-0 h-[24rem] w-[24rem] rounded-full bg-[#9933FF]/14 blur-[120px]"
+            animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black" />
         </div>
 
@@ -169,8 +192,8 @@ export default function AIWhatsAppPage() {
         </section>
 
         {/* QUÉ INCLUYE - Layout: Contenido izquierda, Imagen derecha */}
-        <section className="py-6 md:py-10 px-4 bg-white">
-          <div className="container mx-auto max-w-5xl">
+        <section className="px-4 py-12 md:py-20">
+          <div className="container mx-auto max-w-6xl">
             <div>
               {/* Contenido */}
               <motion.div
@@ -179,23 +202,39 @@ export default function AIWhatsAppPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5 text-black">
-                  {tInc('titulo_1', 'QUÉ')} <span className="text-[#7700CE]">{tInc('titulo_2', 'INCLUYE')}</span>
+                <h2 className="heading mb-8 text-2xl md:text-4xl">
+                  {tInc('titulo_1', 'QUÉ')} <span className="text-[#CC66FF]">{tInc('titulo_2', 'INCLUYE')}</span>
                 </h2>
                 {/* A dos columnas: seis renglones seguidos a todo el ancho
                     dejaban una linea de texto de treinta centimetros. */}
-                <div className="grid gap-x-10 md:grid-cols-2">
+                {/* La rejilla asimétrica de las páginas de servicio: la
+                    primera ocupa el doble y rompe que las seis pesen igual. */}
+                <div className="grid gap-4 md:grid-cols-3">
                   {features.map((feature, i) => (
                     <motion.div
                       key={i}
-                      initial={{ opacity: 0, y: 14 }}
+                      initial={{ opacity: 0, y: 18 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: Math.min(i, 5) * 0.05 }}
-                      className="flex items-start gap-3 border-t border-gray-200 py-4"
+                      transition={{ delay: Math.min(i, 5) * 0.06 }}
+                      className={i === 0 ? 'md:col-span-2' : ''}
                     >
-                      <CheckCircle2 className="mt-0.5 flex-shrink-0 text-[#7700CE]" size={18} />
-                      <span className="text-[15px] leading-relaxed text-gray-700 md:text-base">{feature}</span>
+                      <div
+                        className="group h-full rounded-2xl border border-white/10 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#CC66FF]/40"
+                        style={{
+                          background:
+                            i === 0
+                              ? 'linear-gradient(150deg, rgba(119,0,206,.22), rgba(255,255,255,.02) 60%)'
+                              : 'rgba(255,255,255,.035)',
+                        }}
+                      >
+                        <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-[#CC66FF]/30 bg-[#CC66FF]/12">
+                          <CheckCircle2 size={17} className="text-[#CC66FF]" strokeWidth={2.2} />
+                        </span>
+                        <p className={`leading-relaxed text-white/85 ${i === 0 ? 'text-lg md:text-xl' : 'text-[15px]'}`}>
+                          {feature}
+                        </p>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -207,7 +246,7 @@ export default function AIWhatsAppPage() {
 
         {/* BENEFICIOS - Layout: Imagen izquierda, Contenido derecha */}
         {tBen.visible() && (
-        <section className="py-6 md:py-10 px-4 bg-[#0D0010]">
+        <section className="bg-white px-4 py-14 md:py-20">
           <div className="container mx-auto max-w-5xl">
             <div>
 
@@ -218,40 +257,28 @@ export default function AIWhatsAppPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-4 md:mb-5">
+                <h2 className="heading mb-8 text-2xl text-[#0A0A0A] md:text-4xl">
                   {tBen('titulo_1', 'BENEFICIOS')} <span className="text-[#7700CE]">{tBen('titulo_2', 'PRINCIPALES')}</span>
                 </h2>
-                {/* El primero ocupa el doble. Seis tarjetas del mismo tamano
-                    apiladas hacen que todo pese igual, que es justo lo que
-                    delata una plantilla. */}
-                <div className="grid gap-4 md:grid-cols-3">
+                {/* Sobre blanco, con el icono en un disco y sin caja: es la
+                    ZONA 3 de las páginas de servicio, y es el respiro claro
+                    que parte la página en dos. */}
+                <div className="grid gap-6 sm:grid-cols-2">
                   {benefits.map((benefit, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, y: 18 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: Math.min(i, 5) * 0.06 }}
-                      className={i === 0 ? 'md:col-span-2' : ''}
+                      transition={{ delay: Math.min(i, 5) * 0.07 }}
+                      className="flex items-start gap-4"
                     >
-                      <div
-                        className="h-full rounded-2xl border border-white/10 p-5 transition-colors duration-300 hover:border-[#CC66FF]/40 md:p-6"
-                        style={{
-                          background:
-                            i === 0
-                              ? 'linear-gradient(150deg, rgba(119,0,206,.22), rgba(255,255,255,.02) 60%)'
-                              : 'rgba(255,255,255,.035)',
-                        }}
-                      >
-                        <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-[#CC66FF]/30 bg-[#CC66FF]/12">
-                          <benefit.icon className="text-[#CC66FF]" size={18} />
-                        </span>
-                        <h3 className={`heading mb-1.5 text-white ${i === 0 ? 'text-lg md:text-xl' : 'text-base'}`}>
-                          {benefit.title}
-                        </h3>
-                        <p className={`leading-relaxed text-white/65 ${i === 0 ? 'text-[15px]' : 'text-sm'}`}>
-                          {benefit.description}
-                        </p>
+                      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#7700CE]/12">
+                        <benefit.icon size={17} className="text-[#7700CE]" strokeWidth={2.2} />
+                      </span>
+                      <div>
+                        <h3 className="heading mb-1 text-base text-[#0A0A0A] md:text-lg">{benefit.title}</h3>
+                        <p className="text-[15px] leading-relaxed text-[#0A0A0A]/65">{benefit.description}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -262,42 +289,22 @@ export default function AIWhatsAppPage() {
         </section>
         )}
 
-        {/* CÓMO FUNCIONA - Layout: Contenido + Grid con imagen de fondo */}
+        {/* CÓMO FUNCIONA — el mismo recorrido que las páginas de servicio.
+            Eran cuatro cajitas quietas; ahora el proceso se arma con el scroll
+            y al lado hay un lienzo que gana piezas paso a paso. Es lo que
+            hacía que aquellas se sintieran vivas y a estas les faltaba. */}
         {tHow.visible() && (
-        <section className="py-6 md:py-10 px-4 bg-white">
-          <div className="container mx-auto max-w-5xl">
-            <div className="text-center mb-6 md:mb-8">
-              <h2 className="heading text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-black">
-                {tHow('titulo_1', 'CÓMO')} <span className="text-[#7700CE]">{tHow('titulo_2', 'FUNCIONA')}</span>
-              </h2>
-              <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
-                {tHow('bajada', 'Implementación simple en 4 pasos')}
-              </p>
-            </div>
-
-            <div>
-
-              {/* Steps del proceso */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                {howItWorks.map((step, i) => (
-                  <motion.div
-                    key={step.step}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <div className="h-full p-4 rounded-xl bg-white/80 border border-gray-200 hover:border-[#7700CE]/40 transition-colors backdrop-blur-sm">
-                      <div className="heading text-3xl md:text-4xl text-[#7700CE] mb-2">{step.step.toString().padStart(2, '0')}</div>
-                      <h3 className="heading text-base md:text-lg mb-1.5 text-black">{step.title}</h3>
-                      <p className="text-gray-600 text-xs md:text-sm">{step.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+          <RecorridoProceso
+            slug="servicios-ia-whatsapp"
+            pasos={howItWorks}
+            sello={tHow('bajada', 'Implementación acompañada')}
+            titulo={
+              <>
+                {tHow('titulo_1', 'CÓMO')}{' '}
+                <span className="text-[#CC66FF]">{tHow('titulo_2', 'FUNCIONA')}</span>
+              </>
+            }
+          />
         )}
 
         {/* IDEAL PARA - Layout centrado */}
