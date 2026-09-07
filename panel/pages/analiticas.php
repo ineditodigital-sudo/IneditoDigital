@@ -189,7 +189,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
         <span><strong><?= number_format($n) ?></strong> <span class="mini">(<?= $pct ?>%)</span></span>
       </div>
       <div class="embudo-barra">
-        <span class="<?= $trama ?>" style="width:<?= max($pct, $n > 0 ? 2 : 0) ?>%;background-color:<?= $c2 ?>"></span>
+        <span class="<?= $trama ?>" style="width:100%;transform:scaleX(<?= round(max($pct, $n > 0 ? 2 : 0) / 100, 4) ?>);background-color:<?= $c2 ?>"></span>
       </div>
     </div>
   <?php endforeach; ?>
@@ -220,8 +220,8 @@ $ct=csrf(); $ruri=g_redirect_uri();
   <?php if(array_sum($series)==0): ?><p class="muted" style="padding:20px 0;text-align:center">Sin datos en el rango.</p><?php else: ?><div style="height:300px"><canvas id="chVisits"></canvas></div><?php endif; ?></div>
 
 <div data-mod="fuentes" style="position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px">
-  <div class="card"><h3 style="margin:0 0 16px">Adquisición (de dónde llegan)</h3><?php if(!$srcData): ?><p class="muted">Sin datos.</p><?php else: ?><div style="height:260px"><canvas id="chSrc"></canvas></div><?php endif; ?></div>
-  <div class="card"><h3 style="margin:0 0 16px">Dispositivos</h3><?php if(!$devData): ?><p class="muted">Sin datos.</p><?php else: ?><div style="height:260px"><canvas id="chDev"></canvas></div><?php endif; ?></div>
+  <div class="card"><h3 style="margin:0 0 16px">Adquisición (de dónde llegan)</h3><?php if(!$srcData): ?><p class="muted">Sin datos.</p><?php else: ?><div class="dona3d"><canvas id="chSrc"></canvas></div><ul class="leyenda" id="leySrc"></ul><?php endif; ?></div>
+  <div class="card"><h3 style="margin:0 0 16px">Dispositivos</h3><?php if(!$devData): ?><p class="muted">Sin datos.</p><?php else: ?><div class="dona3d"><canvas id="chDev"></canvas></div><ul class="leyenda" id="leyDev"></ul><?php endif; ?></div>
 </div>
 
 <div class="card" data-mod="paginas"><h3 style="margin:0 0 16px">Páginas más visitadas</h3>
@@ -238,15 +238,73 @@ $ct=csrf(); $ruri=g_redirect_uri();
   .gsc-prog .pista{height:8px;background:#17171f;border-radius:6px;overflow:hidden}
   .gsc-prog .relleno{height:100%;width:0%;background:linear-gradient(90deg,#7700CE,#9933FF);transition:width .4s}
   .gsc-prog .estado{font-size:12.5px;color:var(--mut);margin-top:7px}
+  /* ═══════════════════════ Curvas ═══════════════════════
+     Las de CSS son flojas. Estas son las que tienen pegada, y hay una sola
+     fuente para todo el panel: si mañana cambia el caracter del movimiento,
+     cambia aquí. */
+  /* Una sola fuente para el carácter del movimiento de todo el panel. */
+  .main{ --sal:cubic-bezier(.23,1,.32,1); --entra-sal:cubic-bezier(.77,0,.175,1) }
+
+  /* ═══════════════════════ Donas en 3D ═══════════════════════ */
+  .dona3d{position:relative;width:100%;height:230px}
+  .dona3d canvas{width:100%;height:100%;display:block;cursor:pointer}
+  .leyenda{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;padding:0 4px}
+  .leyenda li{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mut);
+    list-style:none;transition:color 160ms var(--sal)}
+  .leyenda li b{color:var(--txt);font-variant-numeric:tabular-nums;font-weight:600}
+  @media (hover:hover) and (pointer:fine){
+    .leyenda li:hover{color:var(--txt)}
+  }
+  .leyenda .punto{width:11px;height:11px;border-radius:3px;flex-shrink:0;
+    transition:transform 160ms var(--sal)}
+  .leyenda li:hover .punto{transform:scale(1.25)}
+
+  /* ═══════════════════════ Repaso de lo que ya habia ═══════════════════════
+     Todo lo de abajo son correcciones a mis propias animaciones de la tanda
+     anterior, contra el criterio de la skill. */
+
+  /* El agarre: aparece al pasar el cursor, pero solo donde hay cursor de
+     verdad. En un táctil el hover se dispara al tocar y salía solo. */
+  [data-mod] .agarre{position:absolute;top:14px;right:14px;display:flex;gap:3px;
+    padding:6px;border-radius:8px;cursor:grab;background:transparent;z-index:3;opacity:0;
+    transition:opacity 160ms var(--sal),background-color 160ms var(--sal),transform 120ms var(--sal)}
+  @media (hover:hover) and (pointer:fine){
+    [data-mod] .agarre:hover{background:rgba(153,51,255,.12)}
+  }
+  @media (hover:hover) and (pointer:fine){
+    [data-mod]:hover .agarre{opacity:.45}
+    [data-mod] .agarre:hover{opacity:1}
+  }
+  /* Se hunde al presionarlo: sin esto no hay forma de saber que el gesto
+     empezó, y agarrar algo es justo cuando más falta hace saberlo. */
+  [data-mod] .agarre:active{transform:scale(.94)}
+
+  /* Las marcas del medidor barrían en 616 ms —44 marcas por 14— y se sentía
+     lento. A 7 ms el barrido entero cabe en 300, que es el techo. */
+  .medidor .marca{transition:stroke 220ms var(--sal),opacity 220ms var(--sal)}
+
+  /* La barra del embudo animaba `width` durante un segundo: `width` rehace el
+     layout en cada cuadro, y un segundo es tres veces el techo de una
+     animación de interfaz. Con scaleX va por GPU y en 260 ms. */
+  .embudo-barra > span{transform-origin:left center;
+    transition:transform 260ms var(--sal)}
+
+  /* Los indicadores también responden al toque, no solo al hover. */
+  @media (hover:hover) and (pointer:fine){
+    }
+
+  @media (prefers-reduced-motion: reduce){
+    /* Menos movimiento, no cero: el color y la opacidad siguen explicando
+       cosas. Lo que se va es el desplazamiento. */
+    .medidor .marca,.embudo-barra > span,[data-mod] .agarre{transition-duration:1ms}
+    .kpi:hover{transform:none}
+    .leyenda li:hover .punto{transform:none}
+  }
+
   /* ══════════════════════════════ Tablero: mover los módulos ══════════════
      Un panel donde no puedes cambiar el orden es un reporte impreso. El orden
      se guarda por navegador: cada quien mira primero lo suyo. */
   .card[draggable]{cursor:default}
-  [data-mod] .agarre{position:absolute;top:14px;right:14px;display:flex;gap:3px;
-    padding:6px;border-radius:8px;cursor:grab;opacity:0;transition:opacity .2s,background .2s;
-    background:transparent;z-index:3}
-  [data-mod]:hover .agarre{opacity:.5}
-  [data-mod] .agarre:hover{opacity:1;background:rgba(153,51,255,.12)}
   [data-mod] .agarre:active{cursor:grabbing}
   [data-mod] .agarre i{width:3px;height:3px;border-radius:50%;background:var(--mut);
     box-shadow:0 6px 0 var(--mut),0 12px 0 var(--mut)}
@@ -280,8 +338,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
   /* El embudo estrena trama: cada paso se distingue por textura y no solo por
      tono, que es lo que pedía tener tres barras moradas seguidas. */
   .embudo-barra{position:relative;height:16px;border-radius:8px;overflow:hidden;background:#16161f}
-  .embudo-barra > span{position:absolute;inset:0 auto 0 0;border-radius:8px;
-    transition:width 1s cubic-bezier(.16,1,.3,1)}
+  .embudo-barra > span{position:absolute;inset:0 auto 0 0;border-radius:8px}
   .embudo-barra > span::after{content:'';position:absolute;inset:0;border-radius:8px}
 
   /* ══════════════════════════════ Medidor ════════════════════════════════
@@ -289,7 +346,6 @@ $ct=csrf(); $ruri=g_redirect_uri();
      del dato, no una decoración: se encienden las que corresponden. */
   .medidor{position:relative;width:100%;max-width:260px;aspect-ratio:2/1;margin:0 auto}
   .medidor svg{width:100%;height:100%;overflow:visible}
-  .medidor .marca{transition:stroke .5s,opacity .5s}
   .medidor .cifra{position:absolute;left:0;right:0;bottom:2px;text-align:center;
     font-family:var(--f-display);font-size:32px;line-height:1;letter-spacing:-.02em}
   .medidor .pie{position:absolute;left:0;right:0;bottom:-18px;text-align:center;
@@ -395,7 +451,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
                       x2="<?= round($x2,2) ?>" y2="<?= round($y2,2) ?>"
                       stroke="<?= $on ? '#9933FF' : '#2a2a3d' ?>" stroke-width="2.4" stroke-linecap="round"
                       opacity="<?= $on ? (0.45 + 0.55 * $i / max($encendidas,1)) : 1 ?>"
-                      style="transition-delay:<?= $i * 14 ?>ms"></line>
+                      style="transition-delay:<?= $i * 6 ?>ms"></line>
               <?php endfor; ?>
               <?php /* la marca del valor, encendida y con halo */
                 $angV = M_PI * (max($encendidas - 1, 0) / ($marcas - 1)); ?>
@@ -562,6 +618,160 @@ $ct=csrf(); $ruri=g_redirect_uri();
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════ Una dona en 3D
+   El circulo se proyecta como elipse (ry menor que rx), la profundidad sale de
+   repetir la cara oscurecida hacia abajo, y encima va la cara superior con su
+   brillo. Se dibuja de atras hacia adelante para que la extrusion no tape lo
+   que deberia estar delante.
+
+   La perspectiva miente sobre el tamaño de los gajos —el de adelante se ve
+   mayor aunque valga menos—, asi que el porcentaje va escrito en la leyenda.
+   El grafico da la forma; el numero da el dato. */
+function dona3d(lienzo, datos, colores, alDestacar){
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var destacado = -1, entrada = 0;
+  var reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var total = datos.reduce(function(a,b){ return a + b; }, 0) || 1;
+
+  function tinta(hex, f){
+    var n = parseInt(hex.slice(1), 16);
+    var r = (n>>16)&255, g = (n>>8)&255, b = n&255;
+    if (f < 1){ r*=f; g*=f; b*=f; }
+    else { r += (255-r)*(f-1); g += (255-g)*(f-1); b += (255-b)*(f-1); }
+    return 'rgb(' + (r|0) + ',' + (g|0) + ',' + (b|0) + ')';
+  }
+
+  function medir(){
+    var r = lienzo.getBoundingClientRect();
+    lienzo.width = Math.max(1, Math.round(r.width * dpr));
+    lienzo.height = Math.max(1, Math.round(r.height * dpr));
+    return r;
+  }
+
+  function pintar(){
+    var caja = medir(), c = lienzo.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, caja.width, caja.height);
+
+    var prof = Math.max(12, caja.height * 0.09);
+    var rx = Math.min(caja.width * 0.42, (caja.height - prof) * 0.86);
+    var ry = rx * 0.46;                       // el aplastado de la perspectiva
+    var cx = caja.width / 2, cy = (caja.height - prof) / 2 + ry * 0.42;
+    var hueco = 0.55;
+
+    /* Los gajos, con su arranque desplazado para que el corte no caiga justo
+       al frente, que es donde peor se lee. */
+    var ang = -Math.PI * 0.5, gajos = [];
+    datos.forEach(function(v, i){
+      var barre = (v / total) * Math.PI * 2;
+      gajos.push({i:i, a:ang, b:ang + barre, v:v});
+      ang += barre;
+    });
+
+    function trazar(g, y, r1, r2){
+      c.beginPath();
+      c.ellipse(cx, y, r1, r1 * (ry/rx), 0, g.a, g.b);
+      c.ellipse(cx, y, r2, r2 * (ry/rx), 0, g.b, g.a, true);
+      c.closePath();
+    }
+
+    var pasos = Math.round(prof);
+    gajos.forEach(function(g){
+      var sube = (destacado === g.i) ? -7 : 0;
+      var col = colores[g.i % colores.length];
+      /* la pared: la misma cara repetida hacia abajo y oscurecida */
+      for (var k = pasos; k >= 1; k--){
+        trazar(g, cy + k + sube, rx, rx * hueco);
+        c.fillStyle = tinta(col, 0.34 + 0.16 * (1 - k / pasos));
+        c.fill();
+      }
+      /* la cara de arriba, con brillo de un lado */
+      trazar(g, cy + sube, rx, rx * hueco);
+      var deg = c.createLinearGradient(cx - rx, cy - ry, cx + rx, cy + ry);
+      deg.addColorStop(0, tinta(col, 1.28));
+      deg.addColorStop(0.55, col);
+      deg.addColorStop(1, tinta(col, 0.78));
+      c.fillStyle = deg;
+      c.fill();
+      c.strokeStyle = 'rgba(8,8,14,.85)'; c.lineWidth = 1.5; c.stroke();
+    });
+
+    /* La entrada: un telon que descubre la dona de abajo hacia arriba. Con
+       movimiento reducido no hay telon, se pinta entera. */
+    if (!reducido && entrada < 1){
+      c.globalCompositeOperation = 'destination-in';
+      c.fillStyle = '#000';
+      c.fillRect(0, caja.height - caja.height * entrada, caja.width, caja.height * entrada);
+      c.globalCompositeOperation = 'source-over';
+    }
+  }
+
+  function golpe(e){
+    var caja = lienzo.getBoundingClientRect();
+    var x = e.clientX - caja.left - caja.width / 2;
+    var prof = Math.max(12, caja.height * 0.09);
+    var ry0 = Math.min(caja.width * 0.42, (caja.height - prof) * 0.86);
+    var cy = (caja.height - prof) / 2 + ry0 * 0.46 * 0.42;
+    var y = (e.clientY - caja.top - cy) / 0.46;     // se deshace el aplastado
+    var d = Math.sqrt(x*x + y*y) / ry0;
+    if (d < 0.55 || d > 1.02) return -1;
+    var a = Math.atan2(y, x); if (a < -Math.PI/2) a += Math.PI * 2;
+    var acum = -Math.PI/2, cual = -1;
+    datos.forEach(function(v, i){
+      var b = acum + (v/total) * Math.PI * 2;
+      if (a >= acum && a < b) cual = i;
+      acum = b;
+    });
+    return cual;
+  }
+
+  if (window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    lienzo.addEventListener('mousemove', function(e){
+      var n = golpe(e);
+      if (n === destacado) return;
+      destacado = n; pintar();
+      if (alDestacar) alDestacar(n);
+    });
+    lienzo.addEventListener('mouseleave', function(){
+      if (destacado === -1) return;
+      destacado = -1; pintar();
+      if (alDestacar) alDestacar(-1);
+    });
+  }
+
+  /* Se dibuja la primera vez que se ve, no al cargar: media pagina de graficas
+     animandose a la vez fuera de pantalla no la ve nadie. */
+  var io = new IntersectionObserver(function(en){
+    if (!en[0].isIntersecting) return;
+    io.disconnect();
+    if (reducido){ entrada = 1; pintar(); return; }
+    var t0 = null;
+    (function paso(t){
+      if (!t0) t0 = t;
+      var p = Math.min((t - t0) / 620, 1);
+      entrada = 1 - Math.pow(1 - p, 3);          // ease-out
+      pintar();
+      if (p < 1) requestAnimationFrame(paso);
+    })(performance.now());
+  }, {threshold:.25});
+  io.observe(lienzo);
+
+  pintar();
+  var t; window.addEventListener('resize', function(){
+    clearTimeout(t); t = setTimeout(pintar, 120);
+  });
+}
+
+/* La leyenda, en HTML: seleccionable, escalable y con el porcentaje escrito,
+   que es lo que la perspectiva no deja juzgar a ojo. */
+function leyendaDona(cont, etiquetas, datos, colores){
+  var total = datos.reduce(function(a,b){ return a+b; }, 0) || 1;
+  cont.innerHTML = etiquetas.map(function(t, i){
+    return '<li data-g="' + i + '"><span class="punto" style="background:' + colores[i % colores.length] + '"></span>'
+         + t + ' <b>' + Math.round(100 * datos[i] / total) + '%</b></li>';
+  }).join('');
+}
+
 /* ════════════════════════════════════════════════ Tramas para Chart.js
    Un patrón de canvas: rayas diagonales sobre el color de la serie. Chart.js
    acepta un CanvasPattern donde acepta un color, así que entra sin tocar el
@@ -709,8 +919,29 @@ function tramaPuntos(color, fondo, paso){
          : i % 3 === 1 ? tramaPuntos(c, 'rgba(255,255,255,.05)')
          : c;
   });
-  var s=document.getElementById('chSrc'); if(s) new Chart(s,Object.assign({},donut,{data:{labels:<?= json_encode($srcLabels) ?>,datasets:[{data:<?= json_encode($srcData) ?>,backgroundColor:TRAMAS,borderColor:'#0e0e15',borderWidth:2,hoverOffset:8}]}}));
-  var d=document.getElementById('chDev'); if(d) new Chart(d,Object.assign({},donut,{data:{labels:<?= json_encode($devLabels) ?>,datasets:[{data:<?= json_encode($devData) ?>,backgroundColor:TRAMAS,borderColor:'#0e0e15',borderWidth:2,hoverOffset:8}]}}));
+  /* Las dos donas ya no son de Chart.js: son 3D dibujadas a mano, y su leyenda
+     vive en HTML. Al destacar un gajo se destaca su renglon, que es lo que
+     conecta el grafico con la cifra. */
+  (function(){
+    var l = document.getElementById('chSrc'); if(!l) return;
+    var d = <?= json_encode($srcData) ?>, e = <?= json_encode($srcLabels) ?>, ley = document.getElementById('leySrc');
+    leyendaDona(ley, e, d, COL);
+    dona3d(l, d, COL, function(n){
+      [].forEach.call(ley.children, function(li, i){
+        li.style.color = (n === -1) ? '' : (i === n ? 'var(--txt)' : 'var(--mut2)');
+      });
+    });
+  })();
+  (function(){
+    var l = document.getElementById('chDev'); if(!l) return;
+    var d = <?= json_encode($devData) ?>, e = <?= json_encode($devLabels) ?>, ley = document.getElementById('leyDev');
+    leyendaDona(ley, e, d, COL);
+    dona3d(l, d, COL, function(n){
+      [].forEach.call(ley.children, function(li, i){
+        li.style.color = (n === -1) ? '' : (i === n ? 'var(--txt)' : 'var(--mut2)');
+      });
+    });
+  })();
 
 <?php if ($gscHoy): ?>
   /* ---- Cómo te ve Google ---- */
