@@ -926,21 +926,27 @@ function tramaPuntos(color, fondo, paso){
     var l = document.getElementById('chSrc'); if(!l) return;
     var d = <?= json_encode($srcData) ?>, e = <?= json_encode($srcLabels) ?>, ley = document.getElementById('leySrc');
     leyendaDona(ley, e, d, COL);
-    dona3d(l, d, COL, function(n){
+    var marcar = function(n){
       [].forEach.call(ley.children, function(li, i){
         li.style.color = (n === -1) ? '' : (i === n ? 'var(--txt)' : 'var(--mut2)');
       });
-    });
+    };
+    dona3d(l, d, COL, marcar);
+    /* Se publica para que el modulo de three.js la releve si la libreria carga. */
+    (window.__donas = window.__donas || []).push({lienzo:'chSrc', datos:d, colores:COL, alDestacar:marcar});
   })();
   (function(){
     var l = document.getElementById('chDev'); if(!l) return;
     var d = <?= json_encode($devData) ?>, e = <?= json_encode($devLabels) ?>, ley = document.getElementById('leyDev');
     leyendaDona(ley, e, d, COL);
-    dona3d(l, d, COL, function(n){
+    var marcar = function(n){
       [].forEach.call(ley.children, function(li, i){
         li.style.color = (n === -1) ? '' : (i === n ? 'var(--txt)' : 'var(--mut2)');
       });
-    });
+    };
+    dona3d(l, d, COL, marcar);
+    /* Se publica para que el modulo de three.js la releve si la libreria carga. */
+    (window.__donas = window.__donas || []).push({lienzo:'chDev', datos:d, colores:COL, alDestacar:marcar});
   })();
 
 <?php if ($gscHoy): ?>
@@ -1028,4 +1034,235 @@ function tramaPuntos(color, fondo, paso){
     }
   });
 })();
+</script>
+
+<script type="module">
+/*
+ * Las donas del panel, en 3D de verdad.
+ *
+ * Cada gajo es un sector anular extruido con bisel, en material satinado, bajo
+ * tres luces: la principal alta a la izquierda, un relleno frio para que la
+ * sombra no sea negra, y un contraluz morado que dibuja el canto.
+ *
+ * Se puede arrastrar para girarla. El giro lleva amortiguacion —la pieza sigue
+ * un poco despues de soltar y frena sola— porque parar en seco se siente como
+ * un tope y no como algo con masa.
+ *
+ * El bucle solo corre con la pestaña visible y la dona en pantalla. Y con
+ * prefers-reduced-motion no gira sola ni entra animada: se pinta un cuadro y
+ * se queda quieta, girable a mano si alguien quiere.
+ */
+const CDN = 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
+
+const SAL = t => 1 - Math.pow(1 - t, 3);          // ease-out, la de siempre
+const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const conCursor = matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+let THREE = null, cargando = null;
+function libreria(){
+  if (THREE) return Promise.resolve(THREE);
+  if (!cargando) cargando = import(CDN).then(m => (THREE = m));
+  return cargando;
+}
+
+async function donaThree(viejo, datos, colores, alDestacar){
+  const T = await libreria();
+  const caja = viejo.getBoundingClientRect();
+  const total = datos.reduce((a, b) => a + b, 0) || 1;
+
+  /* Lienzo nuevo: el viejo ya entregó un contexto 2D al respaldo, y un canvas
+     con contexto 2D no puede dar uno WebGL. Se inserta al lado y el viejo se
+     retira solo cuando este ya pintó, para que un fallo a medio camino deje
+     la versión plana en su sitio. */
+  const lienzo = document.createElement('canvas');
+  lienzo.style.cssText = 'width:100%;height:100%;display:block';
+  viejo.parentNode.insertBefore(lienzo, viejo);
+
+  const render = new T.WebGLRenderer({ canvas: lienzo, antialias: true, alpha: true });
+  render.setPixelRatio(Math.min(devicePixelRatio, 2));
+  render.setSize(caja.width, caja.height, false);
+  render.toneMapping = T.ACESFilmicToneMapping;   // que los brillos no se quemen
+  render.toneMappingExposure = 1.15;
+
+  const escena = new T.Scene();
+  const camara = new T.PerspectiveCamera(34, caja.width / caja.height, 0.1, 100);
+  camara.position.set(0, 6.4, 8.2);
+  camara.lookAt(0, 0, 0);
+
+  /* Luz de estudio: principal alta a la izquierda, relleno frio enfrente para
+     que la sombra no caiga a negro, y contraluz morado que dibuja el canto. */
+  escena.add(new T.AmbientLight(0xffffff, 0.55));
+  const clave = new T.DirectionalLight(0xffffff, 2.1);
+  clave.position.set(-4, 8, 5); escena.add(clave);
+  const relleno = new T.DirectionalLight(0x9db4ff, 0.75);
+  relleno.position.set(5, 2, 6); escena.add(relleno);
+  const canto = new T.DirectionalLight(0xcc66ff, 1.5);
+  canto.position.set(2, -3, -6); escena.add(canto);
+
+  const grupo = new T.Group();
+  escena.add(grupo);
+
+  const R = 2.6, r = 1.42, alto = 0.62, sep = 0.016;   // sep: el corte entre gajos
+  let ang = -Math.PI / 2;
+  const piezas = [];
+
+  datos.forEach((v, i) => {
+    const barre = (v / total) * Math.PI * 2;
+    const a = ang + sep / 2, b = ang + barre - sep / 2;
+    ang += barre;
+    if (b <= a) return;
+
+    /* El sector anular: arco exterior, salto al interior, arco de vuelta. */
+    const forma = new T.Shape();
+    forma.absarc(0, 0, R, a, b, false);
+    forma.lineTo(Math.cos(b) * r, Math.sin(b) * r);
+    forma.absarc(0, 0, r, b, a, true);
+    forma.closePath();
+
+    const geo = new T.ExtrudeGeometry(forma, {
+      depth: alto, bevelEnabled: true,
+      bevelThickness: 0.045, bevelSize: 0.045, bevelSegments: 3, curveSegments: 64,
+    });
+    geo.rotateX(-Math.PI / 2);      // la forma se dibuja en XY; el disco vive en XZ
+
+    const mat = new T.MeshPhysicalMaterial({
+      color: new T.Color(colores[i % colores.length]),
+      roughness: 0.32, metalness: 0.05, clearcoat: 0.7, clearcoatRoughness: 0.28,
+    });
+    const malla = new T.Mesh(geo, mat);
+    malla.userData.i = i;
+    grupo.add(malla);
+    piezas.push(malla);
+  });
+
+  /* ── interaccion ───────────────────────────────────────────────────────── */
+  let giroY = 0, giroObj = 0, vel = 0, arrastrando = false, xPrev = 0;
+  let destacado = -1, entrada = quieto ? 1 : 0, t0 = null;
+  const rayo = new T.Raycaster(), raton = new T.Vector2();
+
+  lienzo.style.cursor = 'grab';
+  lienzo.addEventListener('pointerdown', e => {
+    arrastrando = true; xPrev = e.clientX; vel = 0;
+    lienzo.setPointerCapture(e.pointerId);
+    lienzo.style.cursor = 'grabbing';
+  });
+  lienzo.addEventListener('pointermove', e => {
+    if (arrastrando){
+      const d = (e.clientX - xPrev) * 0.008;
+      giroObj += d; vel = d; xPrev = e.clientX;
+      return;
+    }
+    if (!conCursor) return;
+    const c = lienzo.getBoundingClientRect();
+    raton.x = ((e.clientX - c.left) / c.width) * 2 - 1;
+    raton.y = -((e.clientY - c.top) / c.height) * 2 + 1;
+    rayo.setFromCamera(raton, camara);
+    const toca = rayo.intersectObjects(piezas, false);
+    const n = toca.length ? toca[0].object.userData.i : -1;
+    if (n !== destacado){ destacado = n; if (alDestacar) alDestacar(n); }
+  });
+  const soltar = e => {
+    if (!arrastrando) return;
+    arrastrando = false; lienzo.style.cursor = 'grab';
+    try { lienzo.releasePointerCapture(e.pointerId); } catch(_){}
+  };
+  lienzo.addEventListener('pointerup', soltar);
+  lienzo.addEventListener('pointercancel', soltar);
+  lienzo.addEventListener('pointerleave', () => {
+    if (destacado === -1) return;
+    destacado = -1; if (alDestacar) alDestacar(-1);
+  });
+
+  /* ── bucle ─────────────────────────────────────────────────────────────── */
+  let vivo = false, enPantalla = false, cuadro = 0;
+  function pintar(t){
+    if (!vivo) return;
+    cuadro = requestAnimationFrame(pintar);
+    if (t0 === null) t0 = t;
+
+    if (!quieto && entrada < 1) entrada = Math.min((t - t0) / 900, 1);
+
+    /* Amortiguacion: al soltar sigue un poco y frena sola. Parar en seco se
+       siente como un tope, no como algo con masa. */
+    if (!arrastrando){ giroObj += vel; vel *= 0.94; if (Math.abs(vel) < 1e-4) vel = 0; }
+    giroY += (giroObj - giroY) * 0.14;
+
+    const e = SAL(entrada);
+    grupo.rotation.y = giroY;
+    grupo.rotation.x = -0.06;
+    grupo.scale.setScalar(0.86 + 0.14 * e);
+
+    piezas.forEach(m => {
+      const meta = (m.userData.i === destacado) ? 0.34 : 0;
+      m.position.y += (meta - m.position.y) * 0.18;
+      m.material.opacity = e; m.material.transparent = e < 1;
+    });
+
+    render.render(escena, camara);
+  }
+  function arrancar(){
+    if (vivo || !enPantalla || document.hidden) return;
+    vivo = true; cuadro = requestAnimationFrame(pintar);
+  }
+  function parar(){ vivo = false; cancelAnimationFrame(cuadro); }
+
+  /* Un cuadro ya, sin esperar al bucle: montar la escena sin fallar es prueba
+     de que WebGL responde, y hasta que no hay 3D pintado no se puede retirar
+     el plano —si no, conviven apilados y la tarjeta mide el doble—. */
+  grupo.scale.setScalar(quieto ? 1 : 0.86);
+  render.render(escena, camara);
+  lienzo.dataset.gajos = String(piezas.length);
+  lienzo.dataset.three = T.REVISION;
+  viejo.remove();
+
+  new IntersectionObserver(en => {
+    enPantalla = en[0].isIntersecting;
+    enPantalla ? arrancar() : parar();
+  }, { threshold: 0.15 }).observe(lienzo);
+  /* Igual que arriba: si ya se ve, no hay que esperar a que componga un cuadro. */
+  const vis = lienzo.getBoundingClientRect();
+  if (vis.top < innerHeight && vis.bottom > 0){ enPantalla = true; arrancar(); }
+  document.addEventListener('visibilitychange', () => document.hidden ? parar() : arrancar());
+
+  let temp;
+  addEventListener('resize', () => {
+    clearTimeout(temp);
+    temp = setTimeout(() => {
+      const c = lienzo.getBoundingClientRect();
+      camara.aspect = c.width / c.height; camara.updateProjectionMatrix();
+      render.setSize(c.width, c.height, false);
+    }, 120);
+  });
+
+  return true;
+}
+
+/* Se reemplaza la version de canvas solo si three.js llega. Si no llega, la de
+   canvas ya esta pintada y nadie ve una tarjeta vacia. */
+async function relevar(conf){
+  const el = document.getElementById(conf.lienzo);
+  if (!el || el.dataset.relevado) return;
+  el.dataset.relevado = '1';
+  try {
+    await donaThree(el, conf.datos, conf.colores, conf.alDestacar);
+  } catch (err){
+    console.warn('[panel] three.js no relevó; se queda la dona de canvas', err);
+  }
+}
+window.__relevarDonas = () => (window.__donas || []).forEach(relevar);
+
+for (const conf of (window.__donas || [])){
+  const el = document.getElementById(conf.lienzo);
+  if (!el) continue;
+  /* Si ya se ve, se releva ahora. El observador no dispara hasta que el
+     navegador compone un cuadro, y esperar a eso para algo que ya esta en
+     pantalla es un rodeo. */
+  const c = el.getBoundingClientRect();
+  if (c.top < innerHeight + 200 && c.bottom > -200){ relevar(conf); continue; }
+  new IntersectionObserver((en, io) => {
+    if (!en[0].isIntersecting) return;
+    io.disconnect();
+    relevar(conf);
+  }, { rootMargin: '200px' }).observe(el);
+}
 </script>
