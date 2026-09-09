@@ -1,8 +1,7 @@
 import { useParams, Link } from 'react-router';
 import { motion } from 'motion/react';
 import {
-  ArrowLeft, ArrowRight, Check, ExternalLink, Gamepad2, Camera, Grid3x3, Sparkles,
-} from 'lucide-react';
+  ArrowLeft, ArrowRight, Check, ExternalLink, Gamepad2, Camera, Grid3x3, Sparkles, Plus,} from 'lucide-react';
 import { TopoLineas } from '../components/TopoLineas';
 import { CatalogoEspectaculares } from '../components/CatalogoEspectaculares';
 import { RecorridoProceso } from '../components/RecorridoProceso';
@@ -180,41 +179,6 @@ export default function ServiceDetailPage() {
             </div>
           </section>
 
-          {/* ---------- ZONA 0.5 · EL TEXTO LARGO ----------
-              Estaba escrito en el panel desde el principio y no se pintaba en
-              ninguna parte: nueve servicios cargaban entre 228 y 371 palabras
-              que no leia nadie, ni una persona ni un buscador. Va aqui porque
-              es el orden en que se pregunta: que es, por que importa, y solo
-              despues que incluye. */}
-          {service.fullDescription && (
-            <section className="px-4 pb-16 md:pb-24">
-              <div className="container mx-auto max-w-5xl">
-                <div className="max-w-[68ch] space-y-6">
-                  {service.fullDescription
-                    .split(/\n\s*\n/)
-                    .map((p) => p.trim())
-                    .filter(Boolean)
-                    .map((parrafo, i) => (
-                      <motion.p
-                        key={i}
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-80px' }}
-                        transition={{ duration: 0.6, delay: Math.min(i, 3) * 0.06 }}
-                        className={
-                          i === 0
-                            ? 'text-[17px] leading-[1.75] text-white/85 md:text-[19px]'
-                            : 'text-[15.5px] leading-[1.8] text-white/60 md:text-[16.5px]'
-                        }
-                      >
-                        {parrafo}
-                      </motion.p>
-                    ))}
-                </div>
-              </div>
-            </section>
-          )}
-
           {/* ---------- CATÁLOGO (solo espectaculares) ----------
               Va aquí y no al final: quien llega buscando «espectacular en tal
               avenida» viene a ver el mapa, no a leer qué incluye el servicio.
@@ -283,28 +247,13 @@ export default function ServiceDetailPage() {
               </div>
             </section>
           )}
-
-          {/* ---------- ZONA 2 · EL PROCESO ---------- */}
-          <RecorridoProceso
-            slug={service.slug}
-            pasos={service.process}
-            sello={tEnc('proceso_sello', 'Proceso comprobado')}
-            titulo={
-              <>
-                {tEnc('proceso_1', 'NUESTRO')}{' '}
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
-                >
-                  {tEnc('proceso_2', 'PROCESO')}
-                </span>
-              </>
-            }
-          />
         </div>
       </div>
 
-      {/* ---------- ZONA 3 · BENEFICIOS, SOBRE BLANCO ---------- */}
+      {/* ---------- LO QUE GANAS, SOBRE BLANCO ----------
+          Sube aquí desde el final. Después de ver qué se compra, lo
+          siguiente que decide una venta es qué se gana; el corte a blanco
+          lo separa del resto sin necesitar un título más grande. */}
       {/* El dato ya existia en el panel y no se mostraba en ninguna parte. */}
       {service.benefits.length > 0 && (
         <section className="bg-white px-4 py-16 md:py-24">
@@ -329,6 +278,29 @@ export default function ServiceDetailPage() {
           </div>
         </section>
       )}
+
+      <div className="relative bg-[#07060B]">
+        <div className="relative z-10">
+
+          {/* ---------- ZONA 2 · EL PROCESO ---------- */}
+          <RecorridoProceso
+            slug={service.slug}
+            pasos={service.process}
+            sello={tEnc('proceso_sello', 'Proceso comprobado')}
+            titulo={
+              <>
+                {tEnc('proceso_1', 'NUESTRO')}{' '}
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
+                >
+                  {tEnc('proceso_2', 'PROCESO')}
+                </span>
+              </>
+            }
+          />
+        </div>
+      </div>
 
       <div className="relative bg-[#07060B]">
         {/* ---------- ZONA 4 · DEMOS (solo activaciones para expo) ---------- */}
@@ -430,6 +402,41 @@ export default function ServiceDetailPage() {
           </section>
         )}
       </div>
+
+        {/* ---------- EL FONDO DEL ASUNTO, PLEGADO ----------
+            Esto abría la página y era un error: nadie lee cuatrocientas
+            palabras antes de saber qué le están vendiendo. Baja aquí, donde
+            quien llegó ya sabe qué se compra y qué gana, y va cerrado: quien
+            quiere el detalle lo abre. En un <details>, que se indexa igual
+            porque el contenido está en el DOM. */}
+        {service.fullDescription && (
+          <section className="px-4 pb-16 md:pb-24">
+            <div className="container mx-auto max-w-5xl">
+              <details className="group border-t border-white/10">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 transition-colors duration-200 hover:text-white [&::-webkit-details-marker]:hidden">
+                  <span className="heading text-xl text-white/85 md:text-2xl">
+                    {tEnc('fondo_1', 'EL FONDO')}{' '}
+                    <span className="text-[#CC66FF]">{tEnc('fondo_2', 'DEL ASUNTO')}</span>
+                  </span>
+                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-white/15 text-white/60 transition-all duration-200 group-open:rotate-45 group-open:border-[#CC66FF]/45 group-open:text-[#CC66FF]">
+                    <Plus size={17} />
+                  </span>
+                </summary>
+                <div className="grid gap-6 pb-2 md:grid-cols-2 md:gap-10">
+                  {service.fullDescription
+                    .split(/\n\s*\n/)
+                    .map((p) => p.trim())
+                    .filter(Boolean)
+                    .map((parrafo, i) => (
+                      <p key={i} className="text-[15px] leading-[1.8] text-white/55">
+                        {parrafo}
+                      </p>
+                    ))}
+                </div>
+              </details>
+            </div>
+          </section>
+        )}
 
       {/* ---------- ZONA 6 · FAQ Y CIERRE, SOBRE BLANCO ---------- */}
       <section className="bg-white px-4 py-16 md:py-24">
