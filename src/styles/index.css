@@ -1,3 +1,29 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* El mapa del catálogo de espectaculares, en oscuro.
+   Las teselas de OpenStreetMap son claras; invertirlas da un negativo azulado
+   y rotar el tono 180° le devuelve el verde a los parques y el azul al agua.
+   Va sobre el panel de teselas y no sobre el mapa: aplicado al mapa entero
+   invertiría también los marcadores, y el verde de «disponible» saldría rosa. */
+.mapa-oscuro .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.94) contrast(0.88) saturate(0.65);
+}
+.mapa-oscuro .leaflet-control-attribution {
+  background: rgba(11, 11, 18, 0.82);
+  color: rgba(255, 255, 255, 0.4);
+}
+.mapa-oscuro .leaflet-control-attribution a { color: rgba(204, 102, 255, 0.75); }
+.mapa-oscuro .leaflet-popup-content-wrapper,
+.mapa-oscuro .leaflet-popup-tip {
+  background: #14141f;
+  color: #f2f0f6;
+  border: 1px solid #2f2f49;
+}
+.mapa-oscuro .leaflet-bar a {
+  background: #14141f;
+  color: #f2f0f6;
+  border-bottom-color: #2f2f49;
+}
+.mapa-oscuro .leaflet-bar a:hover { background: #1d1d2b; }

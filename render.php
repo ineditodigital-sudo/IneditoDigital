@@ -49,6 +49,11 @@ function faqDeArticulo(string $md): array {
 function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); return is_array($o) ? $o : []; }
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
+// El catálogo de espectaculares vive en su propio archivo: solo lo necesita
+// una página y no tiene por qué pesar en el arranque de todas.
+$_espec = __DIR__ . '/panel/inc/espectaculares.php';
+if (is_file($_espec)) { require_once $_espec; }
+
 // ---- cargar datos ----
 $pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = []; $nuevas = []; $miembros = [];
 try {
@@ -227,12 +232,55 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
     $desc = seoDe($s, 'metaDescription') ?: ($primera ?: ($s['shortDescription'] ?? $defaultDesc));
     $canonical = $BASE.'/servicios/'.$s['slug']; $crumbs[]=['Servicios','/servicios']; $crumbs[]=[$s['title'],'/servicios/'.$s['slug']];
     $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical,'dateModified'=>date('Y-m-d', strtotime((string)($s['fecha'] ?: 'now')))];
-    $bodyBuilder = function() use ($s) {
+    $bodyBuilder = function() use ($s, $pdo) {
       // La DEFINICION va primero: un motor de respuestas toma el primer
       // parrafo, y el gancho comercial no responde "que es".
       $h='<h1>'.e($s['title'] ?? '').'</h1>';
       if (!empty($s['definicion'])) $h .= '<p>'.e($s['definicion']).'</p>';
       $h .= '<p>'.e($s['shortDescription'] ?? '').'</p>';
+      // El catalogo de espacios, para quien no ejecuta JavaScript. Sin esto la
+      // pagina no menciona ni una avenida y se pierde justo la busqueda que
+      // trae al cliente: «espectacular en tal avenida».
+      if (($s['slug'] ?? '') === 'anuncios-espectaculares') {
+        $espacios = (function_exists('espec_catalogo') && $pdo) ? espec_catalogo($pdo) : [];
+        if ($espacios) {
+          $porZona = []; $porTipo = []; $libres = 0;
+          foreach ($espacios as $x) {
+            $porZona[$x['zona'] ?: 'SIN ZONA'][] = $x;
+            $porTipo[$x['tipo']] = ($porTipo[$x['tipo']] ?? 0) + 1;
+            if ($x['estatus'] === 'DISPONIBLE') $libres++;
+          }
+          ksort($porZona);
+          arsort($porTipo);
+          $resumen = [];
+          /* Vocal final lleva «s», consonante «es»: unipolares pero puentes. */
+          $plural = function (string $p, int $n): string {
+            $p = mb_strtolower($p, 'UTF-8');
+            if ($n === 1) return $p;
+            return $p . (preg_match('/[aeiou]$/u', $p) ? 's' : 'es');
+          };
+          foreach ($porTipo as $t => $n) $resumen[] = $n . ' ' . $plural($t, $n);
+          $h .= '<h2>Catálogo de espacios en Aguascalientes</h2>';
+          $h .= '<p>' . count($espacios) . ' espacios publicitarios en Aguascalientes: '
+              . e(implode(', ', $resumen)) . '. ' . $libres . ' disponibles hoy.</p>';
+          foreach ($porZona as $zona => $lista) {
+            $h .= '<h3>Zona ' . e(mb_convert_case(mb_strtolower($zona), MB_CASE_TITLE, 'UTF-8'))
+                . ' · ' . count($lista) . ' espacios</h3><ul>';
+            foreach ($lista as $x) {
+              $partes = array_filter([
+                mb_convert_case(mb_strtolower($x['tipo']), MB_CASE_TITLE, 'UTF-8'),
+                $x['direccion'],
+                $x['colonia'] !== '' ? 'Col. ' . mb_convert_case(mb_strtolower($x['colonia']), MB_CASE_TITLE, 'UTF-8') : '',
+                $x['medidas'],
+              ], fn($v) => trim((string)$v) !== '');
+              $h .= '<li>' . e(implode(' · ', $partes))
+                  . ' — ' . ($x['estatus'] === 'DISPONIBLE' ? 'disponible' : 'ocupado') . '</li>';
+            }
+            $h .= '</ul>';
+          }
+        }
+      }
+
       // El texto largo. Estaba guardado y no salia ni aqui ni en el sitio, asi
       // que Google veia la mitad de las paginas que si tienen sustancia.
       if (!empty($s['fullDescription'])) {

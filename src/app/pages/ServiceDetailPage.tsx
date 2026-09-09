@@ -4,6 +4,7 @@ import {
   ArrowLeft, ArrowRight, Check, ExternalLink, Gamepad2, Camera, Grid3x3, Sparkles,
 } from 'lucide-react';
 import { TopoLineas } from '../components/TopoLineas';
+import { CatalogoEspectaculares } from '../components/CatalogoEspectaculares';
 import { RecorridoProceso } from '../components/RecorridoProceso';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
@@ -210,6 +211,25 @@ export default function ServiceDetailPage() {
                       </motion.p>
                     ))}
                 </div>
+              </div>
+            </section>
+          )}
+
+          {/* ---------- CATÁLOGO (solo espectaculares) ----------
+              Va aquí y no al final: quien llega buscando «espectacular en tal
+              avenida» viene a ver el mapa, no a leer qué incluye el servicio.
+              El mismo catálogo va escrito en el HTML que sirve render.php, así
+              que un buscador lo lee sin ejecutar nada de esto. */}
+          {service.slug === 'anuncios-espectaculares' && (
+            <section className="px-4 pb-16 md:pb-24">
+              <div className="container mx-auto max-w-5xl">
+                <motion.h2 {...entra()} className="heading mb-2 text-3xl md:text-5xl">
+                  {tEnc('cat_1', 'EL')}{' '}
+                  <span className="text-[#CC66FF]">{tEnc('cat_2', 'CATÁLOGO')}</span>
+                </motion.h2>
+                <motion.div {...entra(0.06)}>
+                  <CatalogoEspectaculares />
+                </motion.div>
               </div>
             </section>
           )}
