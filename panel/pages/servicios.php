@@ -28,7 +28,7 @@ crud('servicios', [
     'category'   => ['label'=>'Categoría','type'=>'texto','json'=>'category','grupo'=>'Lo esencial',
                      'help'=>'Agrupa el servicio en el menú y en /servicios. «Cobertura» y «Sectores» quedan fuera del menú a propósito.'],
     'icon'       => ['label'=>'Icono del menú','type'=>'texto','json'=>'icon','col'=>false,'grupo'=>'Lo esencial',
-                     'help'=>'Search · Code · Bot · Palette · Sparkles · Mail · TrendingUp · Target · QrCode · Nfc · MapPin · ScanSearch · LayoutDashboard · Linkedin · Megaphone · Route'],
+                     'help'=>'Search · Code · Bot · Palette · Sparkles · Mail · TrendingUp · Target · QrCode · Nfc · MapPin · ScanSearch · LayoutDashboard · Linkedin · Megaphone · Route · Signpost'],
     'order'      => ['label'=>'Orden','type'=>'numero','json'=>'order','col'=>false,'grupo'=>'Lo esencial','help'=>'Menor número, más arriba.'],
     'status'     => ['label'=>'Estado','type'=>'select','grupo'=>'Lo esencial','opts'=>['draft'=>'Borrador','published'=>'Publicado']],
 

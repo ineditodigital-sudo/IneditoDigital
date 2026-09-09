@@ -1,7 +1,7 @@
 import {
   Search, Code, Bot, Palette, Sparkles, Mail, TrendingUp, Target, QrCode,
   Nfc, MapPin, ScanSearch, LayoutGrid, LayoutDashboard, Linkedin, Megaphone,
-  Route, type LucideIcon,
+  Route, Signpost, type LucideIcon,
 } from 'lucide-react';
 
 /*
@@ -16,7 +16,7 @@ import {
  */
 const ICONOS: Record<string, LucideIcon> = {
   Search, Code, Bot, Palette, Sparkles, Mail, TrendingUp, Target, QrCode,
-  Nfc, MapPin, ScanSearch, LayoutDashboard, Linkedin, Megaphone, Route,
+  Nfc, MapPin, ScanSearch, LayoutDashboard, Linkedin, Megaphone, Route, Signpost,
 };
 
 export function IconoServicio({
