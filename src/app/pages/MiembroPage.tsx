@@ -10,6 +10,7 @@ import {
 import { miembro } from '../cms';
 import TopographyCanvas from '../components/TopographyCanvas';
 import NotFoundPage from './NotFoundPage';
+import { tr } from '../idioma';
 
 /**
  * ============================================================
@@ -80,8 +81,8 @@ function Renglon({ f, acento, i }: { f: Fila; acento: string; i: number }) {
       </span>
 
       <span className="flex-1 min-w-0">
-        <span className="block text-[15px] font-semibold text-white leading-snug truncate">{f.titulo}</span>
-        {f.sub && <span className="block text-xs text-white/50 leading-snug truncate mt-0.5">{f.sub}</span>}
+        <span className="block text-[15px] font-semibold text-white leading-snug truncate">{tr(f.titulo)}</span>
+        {f.sub && <span className="block text-xs text-white/50 leading-snug truncate mt-0.5">{tr(f.sub)}</span>}
       </span>
 
       <ChevronRight size={20} className={f.destacado ? 'text-white/70' : 'text-white/25'} />
@@ -403,7 +404,7 @@ export default function MiembroPage() {
         <div className="flex justify-end mb-2">
           <button
             onClick={compartir}
-            aria-label="Compartir esta página"
+            aria-label={tr('Compartir esta página')}
             className="w-10 h-10 rounded-full bg-white/5 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:border-white/25 active:scale-90 transition-all"
           >
             {copiado ? <Check size={17} /> : <Share2 size={17} />}
@@ -501,7 +502,7 @@ export default function MiembroPage() {
               className="w-full flex items-center justify-center gap-2 py-3 text-xs text-white/40 hover:text-white/70 transition-colors"
             >
               <HelpCircle size={14} />
-              ¿No se guardó el contacto?
+              {tr('¿No se guardó el contacto?')}
             </button>
           ) : (
             <motion.div
@@ -510,8 +511,7 @@ export default function MiembroPage() {
               className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 overflow-hidden"
             >
               <p className="text-xs text-white/55 leading-relaxed mb-3">
-                Algunos celulares no abren el archivo solos, sobre todo si llegaste
-                desde Instagram o Facebook. Con esto lo agregas igual.
+                {tr('Algunos celulares no abren el archivo solos, sobre todo si llegaste desde Instagram o Facebook. Con esto lo agregas igual.')}
               </p>
 
               {esAndroid && (
@@ -521,7 +521,7 @@ export default function MiembroPage() {
                   style={{ background: `linear-gradient(100deg, ${acento}, #9933FF)` }}
                 >
                   <UserPlus size={17} />
-                  Abrir Contactos con los datos ya puestos
+                  {tr('Abrir Contactos con los datos ya puestos')}
                 </a>
               )}
 

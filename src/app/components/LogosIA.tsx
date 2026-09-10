@@ -13,6 +13,8 @@
  * Se generan con scripts/logos-ia.py desde los originales de marca/.
  */
 
+import { tr } from '../idioma';
+
 type Props = { alto?: number; className?: string };
 
 type Marca = { archivo: string; nombre: string; proporcion: number };
@@ -59,7 +61,7 @@ export function FranjaLogosIA({ alto = 20, className = '' }: Props) {
   return (
     <span
       className={`inline-flex flex-wrap items-center gap-x-5 gap-y-3 ${className}`}
-      aria-label="ChatGPT, Claude, Gemini y Perplexity"
+      aria-label={tr('ChatGPT, Claude, Gemini y Perplexity')}
     >
       {(['openai', 'claude', 'gemini', 'perplexity'] as const).map((k) => (
         <LogoIA key={k} marca={k} alto={alto} className="opacity-70 transition-opacity hover:opacity-100" />

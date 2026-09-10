@@ -3,6 +3,7 @@ import { Home, ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
 import DynamicSEO from '../components/DynamicSEO';
 import { contenido } from '../cms';
+import { tr } from '../idioma';
 
 export default function NotFoundPage() {
   const t = contenido('error-404', 'contenido');
@@ -30,7 +31,7 @@ export default function NotFoundPage() {
             src={t('video', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/Video-Pagina-404-Inedito-Web.mp4')}
             type="video/mp4" 
           />
-          Tu navegador no soporta videos HTML5.
+          {tr('Tu navegador no soporta videos HTML5.')}
         </video>
 
         {/* Contenido centrado */}

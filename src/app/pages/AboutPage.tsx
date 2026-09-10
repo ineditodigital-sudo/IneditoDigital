@@ -5,6 +5,7 @@ import { contenido } from '../cms';
 import { TopoLineas } from '../components/TopoLineas';
 import { CifraAnimada } from '../components/CifraAnimada';
 import { ShieldCheck, Radar, LineChart, Target, Compass } from 'lucide-react';
+import { tr } from '../idioma';
 
 /* Entrada estandar del sitio: aparecer subiendo, una sola vez. */
 const entra = (retraso = 0) => ({
@@ -67,7 +68,7 @@ export default function AboutPage() {
             {...entra()}
             className="mb-6 font-mono text-[11px] uppercase tracking-[.22em] text-[#AA66FF]"
           >
-            Aguascalientes, México
+            {tr('Aguascalientes, México')}
           </motion.p>
           <motion.h1 {...entra(0.08)} className="heading text-4xl leading-[0.95] md:text-7xl">
             {tEnc('titulo_1', 'SOBRE')}{' '}
@@ -127,7 +128,7 @@ export default function AboutPage() {
               {tVal('titulo', 'NUESTRAS TRES PROMESAS')}
             </motion.h2>
             <motion.p {...entra(0.06)} className="mx-auto mb-14 max-w-xl text-center text-white/60">
-              Lo que sostiene todo lo que hacemos.
+              {tr('Lo que sostiene todo lo que hacemos.')}
             </motion.p>
 
             <div className="grid gap-5 md:grid-cols-3">

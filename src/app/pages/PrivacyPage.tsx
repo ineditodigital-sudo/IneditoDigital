@@ -2,6 +2,7 @@ import SEO from '../components/SEO';
 import { contenido } from '../cms';
 import { GlassCard } from '../components/GlassCard';
 import ApartadosLegales, { Apartado } from '../components/ApartadosLegales';
+import AvisoIdiomaLegal from '../components/AvisoIdiomaLegal';
 
 const APARTADOS: Apartado[] = [
   { titulo: '1. Información que Recopilamos', texto: 'Recopilamos información que nos proporcionas directamente al usar nuestros servicios: nombre, correo electrónico, teléfono, empresa, y cualquier otra información que decidas compartir.', lista: '' },
@@ -30,6 +31,7 @@ export default function PrivacyPage() {
           </h1>
 
           <GlassCard className="prose prose-invert max-w-none">
+            <AvisoIdiomaLegal />
             <p className="text-white/70">{t('fecha', 'Última actualización: Diciembre 16, 2024')}</p>
 
             <ApartadosLegales t={tAp} respaldo={APARTADOS} />

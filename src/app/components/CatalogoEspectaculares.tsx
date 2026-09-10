@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Check } from 'lucide-react';
+import { tr } from '../idioma';
 
 /*
  * El catálogo de espacios publicitarios, con su mapa.
@@ -204,13 +205,13 @@ export function CatalogoEspectaculares() {
 
   if (espacios === null) {
     return (
-      <p className="text-sm text-white/40">Cargando el catálogo de espacios…</p>
+      <p className="text-sm text-white/40">{tr('Cargando el catálogo de espacios…')}</p>
     );
   }
   if (!espacios.length) {
     return (
       <p className="text-sm text-white/50">
-        El catálogo no está disponible en este momento. Escríbenos y te pasamos los espacios libres.
+        {tr('El catálogo no está disponible en este momento. Escríbenos y te pasamos los espacios libres.')}
       </p>
     );
   }
@@ -221,9 +222,10 @@ export function CatalogoEspectaculares() {
     <div>
       {/* el conteo, que es el argumento de venta antes que el mapa */}
       <p className="mb-6 text-[15px] leading-relaxed text-white/60">
-        <strong className="text-white">{espacios.length} espacios</strong> en Aguascalientes,{' '}
-        <strong className="text-[#00E585]">{libres} disponibles</strong> hoy. Filtra por formato y
-        zona, y pide el que te interese por su clave.
+        <strong className="text-white">{espacios.length} {tr('espacios')}</strong>{' '}
+        {tr('en Aguascalientes,')}{' '}
+        <strong className="text-[#00E585]">{libres} {tr('disponibles')}</strong>{' '}
+        {tr('hoy. Filtra por formato y zona, y pide el que te interese por su clave.')}
       </p>
 
       {/* filtros */}
@@ -238,7 +240,7 @@ export function CatalogoEspectaculares() {
                 : 'border-white/12 text-white/55 hover:border-white/25 hover:text-white/80'
             }`}
           >
-            {t === 'TODOS' ? 'Todos los formatos' : caja(t)}
+            {t === 'TODOS' ? tr('Todos los formatos') : caja(t)}
             {t !== 'TODOS' && (
               <span className="ml-1.5 text-white/35">{tipos.find((x) => x[0] === t)?.[1]}</span>
             )}
@@ -257,7 +259,7 @@ export function CatalogoEspectaculares() {
                 : 'border-white/12 text-white/55 hover:border-white/25 hover:text-white/80'
             }`}
           >
-            {z === 'TODAS' ? 'Toda la ciudad' : caja(z)}
+            {z === 'TODAS' ? tr('Toda la ciudad') : caja(z)}
           </button>
         ))}
 
@@ -278,12 +280,12 @@ export function CatalogoEspectaculares() {
       <div
         ref={caja3d}
         className="mb-5 h-[420px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b12]"
-        aria-label="Mapa de los espacios publicitarios en Aguascalientes"
+        aria-label={tr('Mapa de los espacios publicitarios en Aguascalientes')}
       />
 
       <p className="mb-4 text-[13px] text-white/45">
         {filtrados.length === 0
-          ? 'Ningún espacio con esos filtros. Prueba con otra zona o quita «solo disponibles».'
+          ? tr('Ningún espacio con esos filtros. Prueba con otra zona o quita «solo disponibles».')
           : `${filtrados.length} ${filtrados.length === 1 ? 'espacio' : 'espacios'} con estos filtros.`}
       </p>
 

@@ -8,6 +8,7 @@ import { LogoIA } from '../components/LogosIA';
 import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
+import { tr } from '../idioma';
 
 const ProcesoCiclo = lazy(() => import('../components/ProcesoCiclo'));
 
@@ -628,7 +629,7 @@ export default function HomePage() {
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder={tServ('buscador', 'Escribe qué necesita tu empresa…')}
-              aria-label="Cuéntale al asistente qué necesita tu empresa"
+              aria-label={tr('Cuéntale al asistente qué necesita tu empresa')}
               className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/40"
             />
             <button

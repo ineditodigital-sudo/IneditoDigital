@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { tr } from '../idioma';
 
 /*
  * La esfera de red del hero: la pieza abstracta e interactiva de la portada.
@@ -248,7 +249,7 @@ export default function EsferaIA({ className = '' }: { className?: string }) {
   }, []);
 
   return (
-    <div className={`relative ${className}`} role="img" aria-label="Red de inteligencia artificial de Inédito Digital">
+    <div className={`relative ${className}`} role="img" aria-label={tr('Red de inteligencia artificial de Inédito Digital')}>
       {/* el resplandor de fondo */}
       <div
         aria-hidden

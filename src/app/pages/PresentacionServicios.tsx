@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Languages, Moon, Sun, MessageCircle, Mail } from 'lucide-react';
 import { LAMINAS, UI, CONTACTO, type Idioma } from '../components/presentacion/contenido';
+import { idiomaVigente } from '../idioma';
 import { Escena, EscenaOnda } from '../components/presentacion/escenas';
 
 /*
@@ -64,7 +65,10 @@ const TEMAS = {
 
 export default function PresentacionServicios() {
   const [i, setI] = useState(0);
-  const [idioma, setIdioma] = useState<Idioma>('es');
+  /* Arranca en el idioma que el visitante ya eligió en el sitio, pero de ahí
+     en adelante el deck lleva el suyo: cambiarlo desde aquí no debe rehacer
+     el árbol y mandarte de vuelta a la lámina uno a media presentación. */
+  const [idioma, setIdioma] = useState<Idioma>(() => idiomaVigente() as Idioma);
   const [tema, setTema] = useState<'oscuro' | 'claro'>('oscuro');
   const [rumbo, setRumbo] = useState(1);
   const tocaX = useRef(0);

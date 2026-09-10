@@ -3,6 +3,7 @@ import {
   Check, MapPin, Star, TrendingUp, BadgeCheck, Trophy, ScanLine,
   LayoutDashboard, Megaphone, Route, Users,
 } from 'lucide-react';
+import { tr } from '../idioma';
 
 /*
  * La escena que se arma junto al proceso de cada servicio.
@@ -48,7 +49,7 @@ function Distintivo({ activo, texto, Icono = Check }: { activo: number; texto: s
       className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full border border-[#CC66FF]/40 bg-[#CC66FF]/15 px-3 py-1.5 backdrop-blur"
     >
       <Icono size={13} className="text-[#CC66FF]" strokeWidth={3} />
-      <span className="font-mono text-[10px] uppercase tracking-[.14em] text-[#CC66FF]">{texto}</span>
+      <span className="font-mono text-[10px] uppercase tracking-[.14em] text-[#CC66FF]">{tr(texto)}</span>
     </motion.div>
   );
 }
@@ -506,7 +507,7 @@ function EscenaAnuncioIA({ activo }: { activo: number }) {
       <div className="flex h-full flex-col justify-center gap-2.5 px-8 pb-8">
         {/* paso 1: alguien pregunta */}
         <motion.div {...pieza(activo, 0)} className="self-end rounded-2xl rounded-br-sm bg-white/10 px-3.5 py-2">
-          <span className="text-[11px] text-white/70">¿Quién me puede hacer esto en Aguascalientes?</span>
+          <span className="text-[11px] text-white/70">{tr('¿Quién me puede hacer esto en Aguascalientes?')}</span>
         </motion.div>
         {/* paso 2: la IA arranca a contestar */}
         <motion.div
@@ -556,7 +557,7 @@ function EscenaTablero({ activo }: { activo: number }) {
               {...pieza(activo, 0, i * 0.08)}
               className="rounded-lg border border-white/12 bg-white/[.05] px-2.5 py-1.5 text-[9px] text-white/55"
             >
-              {f}
+              {tr(f)}
             </motion.div>
           ))}
         </div>
@@ -618,7 +619,7 @@ function EscenaCanales({ activo }: { activo: number }) {
             {...pieza(activo, 0)}
             className="rounded-lg border border-white/12 bg-white/[.05] px-3 py-2 text-[10px] text-white/60"
           >
-            Tu producto
+            {tr('Tu producto')}
           </motion.div>
           <svg width="40" height="70" className="shrink-0 overflow-visible">
             {[18, 52].map((y, i) => (

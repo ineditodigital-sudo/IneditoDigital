@@ -1,6 +1,7 @@
 import { MessageCircle, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useApp } from '../context/AppContext';
+import { tr } from '../idioma';
 
 interface WhatsAppButtonProps {
   message?: string;
@@ -22,7 +23,7 @@ export default function WhatsAppButton({ message }: WhatsAppButtonProps) {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-      aria-label="Abrir asistente virtual"
+      aria-label={tr('Abrir asistente virtual')}
     >
       <motion.div
         animate={{

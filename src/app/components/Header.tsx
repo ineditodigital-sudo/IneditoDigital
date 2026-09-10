@@ -7,6 +7,7 @@ import { cn } from './ui/utils';
 import { marca } from '../cms';
 import { agruparServicios } from '../data/grupos';
 import { IconoServicio } from './IconoServicio';
+import CambioIdioma from './CambioIdioma';
 
 /*
  * Antes habia dos menus desplegables gemelos: "Servicios" (13 filas en una
@@ -195,8 +196,9 @@ export default function Header() {
             ))}
           </div>
 
-          {/* CTA escritorio */}
-          <div className="hidden lg:block">
+          {/* Idioma + CTA (escritorio) */}
+          <div className="hidden lg:flex items-center gap-3">
+            <CambioIdioma />
             <button
               onClick={() => openAssistant(undefined, 'cotizar servicios de marketing digital')}
               className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] hover:from-[#9933FF] hover:to-[#7700CE] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(119,0,206,0.4)] text-xs font-bold tracking-wider cursor-pointer"
@@ -205,15 +207,20 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Boton de menu movil */}
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setMovilAbierto(!movilAbierto)}
-            className="lg:hidden p-2 text-white"
-            aria-label="Toggle menu"
-          >
-            {movilAbierto ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
+          {/* Idioma + menu (movil). El interruptor va aquí afuera y no dentro
+              del menu: un cambio de idioma que hay que ir a buscar en un
+              acordeón no lo encuentra nadie. */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <CambioIdioma compacto />
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setMovilAbierto(!movilAbierto)}
+              className="p-2 text-white"
+              aria-label="Toggle menu"
+            >
+              {movilAbierto ? <X size={24} /> : <Menu size={24} />}
+            </motion.button>
+          </div>
         </div>
       </nav>
 
@@ -393,7 +400,10 @@ export default function Header() {
                   }}
                   className="mt-3 block w-full cursor-pointer rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-5 py-3 text-center text-xs font-bold tracking-wider text-white"
                 >
-                  {m('boton', 'COTIZAR')} AHORA
+                  {/* Una sola cadena, no el botón más un «AHORA» suelto: ese
+                      AHORA suelto es texto crudo y en inglés se quedaría en
+                      español al lado de la traduccion. */}
+                  {m('boton_movil', 'COTIZAR AHORA')}
                 </button>
               </motion.div>
             </div>

@@ -17,6 +17,8 @@
  *   {t.visible('visible') && <section>…</section>}
  */
 
+import { idiomaVigente, tr } from './idioma';
+
 type CamposSeccion = Record<string, string>;
 type Pagina = Record<string, CamposSeccion>;
 
@@ -50,12 +52,32 @@ export interface LectorSeccion {
 
 export function contenido(pagina: string, seccion: string): LectorSeccion {
   const campos: CamposSeccion = leerTodo()?.[pagina]?.[seccion] ?? {};
+  const en = idiomaVigente() === 'en';
+
+  /** El valor del campo, o null si no hay nada escrito. */
+  const escrito = (campo: string): string | null => {
+    const v = campos[campo];
+    if (typeof v !== 'string') return null;
+    const limpio = v.trim();
+    return limpio === '' ? null : limpio;
+  };
 
   const lector = ((campo: string, respaldo: string): string => {
-    const v = campos[campo];
-    if (typeof v !== 'string') return respaldo;
-    const limpio = v.trim();
-    return limpio === '' ? respaldo : limpio;
+    /*
+     * En inglés manda lo que el cliente haya escrito en el campo «_en» del
+     * panel: si algún día quiere redactar la versión inglesa a mano, gana
+     * sobre el diccionario sin tocar código.
+     *
+     * Si no lo escribió, se traduce el texto que corresponda. Y si ese texto
+     * no está en el diccionario sale tal cual, en español: una frase sin
+     * traducir se entiende, un hueco no.
+     */
+    if (en) {
+      const propio = escrito(campo + '_en');
+      if (propio !== null) return propio;
+      return tr(escrito(campo) ?? respaldo);
+    }
+    return escrito(campo) ?? respaldo;
   }) as LectorSeccion;
 
   lector.visible = (campo = 'visible') => {

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { RouterProvider } from 'react-router';
 import { router } from './routes';
 import { AppProvider } from './context/AppContext';
+import { ProveedorIdioma } from './idioma';
 import { aplicarColoresDeMarca } from './cms';
 import { Toaster } from './components/ui/sonner';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -18,10 +19,12 @@ export default function App() {
       <FontPreloader />
       <FontLoader />
       <Preloader />
-      <AppProvider>
-        <RouterProvider router={router} />
-        <Toaster position="top-right" />
-      </AppProvider>
+      <ProveedorIdioma>
+        <AppProvider>
+          <RouterProvider router={router} />
+          <Toaster position="top-right" />
+        </AppProvider>
+      </ProveedorIdioma>
     </ErrorBoundary>
   );
 }

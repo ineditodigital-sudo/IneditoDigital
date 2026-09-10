@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Check, Clock, TrendingDown, TrendingUp, ShoppingCart } from 'lucide-react';
+import { tr } from '../idioma';
 
 /*
  * Una escena por servicio de IA.
@@ -90,7 +91,7 @@ function Lienzo({
     <div
       ref={caja}
       role="img"
-      aria-label={etiqueta}
+      aria-label={tr(etiqueta)}
       className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/10"
       style={{ background: 'linear-gradient(160deg, rgba(119,0,206,.14), rgba(255,255,255,.02) 62%)' }}
     >
@@ -131,7 +132,7 @@ export function EscenaWhatsApp() {
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-[80%] self-start rounded-2xl rounded-bl-sm bg-white/[.07] px-4 py-3"
       >
-        <p className="text-[13px] leading-snug text-white/80">¿Todavía tienen disponible?</p>
+        <p className="text-[13px] leading-snug text-white/80">{tr('¿Todavía tienen disponible?')}</p>
       </motion.div>
 
       {/* escribiendo… */}
@@ -162,7 +163,7 @@ export function EscenaWhatsApp() {
         style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
       >
         <p className="text-[13px] leading-snug text-white">
-          Sí, quedan tres. ¿Te aparto uno para mañana?
+          {tr('Sí, quedan tres. ¿Te aparto uno para mañana?')}
         </p>
       </motion.div>
 
@@ -172,7 +173,7 @@ export function EscenaWhatsApp() {
         className="mt-1 flex items-center justify-end gap-1.5 text-[11px] text-[#00E585]"
       >
         <Check size={13} strokeWidth={3} />
-        Contestado en 4 segundos
+        {tr('Contestado en 4 segundos')}
       </motion.div>
     </Lienzo>
   );
@@ -197,7 +198,7 @@ export function EscenaVentas() {
   return (
     <Lienzo etiqueta="Una lista de prospectos que se ordena por probabilidad de cierre" caja={caja}>
       <div className="mb-1 text-[11px] uppercase tracking-[.16em] text-white/35">
-        {ordenados ? 'Por probabilidad de cierre' : 'Por orden de llegada'}
+        {tr(ordenados ? 'Por probabilidad de cierre' : 'Por orden de llegada')}
       </div>
 
       <div className="relative flex flex-col gap-2">
@@ -217,7 +218,7 @@ export function EscenaVentas() {
               }`}
             >
               <div className="flex items-center justify-between gap-3">
-                <span className="truncate text-[13px] text-white/85">{p.nombre}</span>
+                <span className="truncate text-[13px] text-white/85">{tr(p.nombre)}</span>
                 <span
                   className={`shrink-0 text-[12px] tabular-nums ${
                     primero ? 'text-[#CC66FF]' : 'text-white/40'
@@ -262,7 +263,7 @@ export function EscenaMarketing() {
   return (
     <Lienzo etiqueta="El presupuesto moviéndose hacia la campaña que sí trae clientes" caja={caja}>
       <div className="mb-2 flex items-center justify-between text-[11px] uppercase tracking-[.16em] text-white/35">
-        <span>Reparto del presupuesto</span>
+        <span>{tr('Reparto del presupuesto')}</span>
         <motion.span
           animate={{ opacity: optimizado ? 1 : 0 }}
           transition={{ duration: 0.4 }}
@@ -280,7 +281,7 @@ export function EscenaMarketing() {
           return (
             <div key={c.nombre}>
               <div className="mb-1.5 flex items-center justify-between gap-2">
-                <span className="truncate text-[12.5px] text-white/70">{c.nombre}</span>
+                <span className="truncate text-[12.5px] text-white/70">{tr(c.nombre)}</span>
                 <span className="flex shrink-0 items-center gap-1 text-[12px] tabular-nums text-white/45">
                   {optimizado && cae && <TrendingDown size={11} className="text-white/30" />}
                   {v}%
@@ -354,7 +355,7 @@ export function EscenaEcommerce() {
         className="mt-3 rounded-xl border border-white/10 bg-white/[.05] px-3.5 py-2.5"
       >
         <p className="text-[12.5px] leading-snug text-white/75">
-          Se quedó algo en tu carrito. ¿Te lo apartamos?
+          {tr('Se quedó algo en tu carrito. ¿Te lo apartamos?')}
         </p>
       </motion.div>
 

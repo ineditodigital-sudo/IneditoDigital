@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Bell, Check, ScanSearch, SlidersHorizontal, Target } from 'lucide-react';
+import { tr } from '../idioma';
 
 /*
  * El ciclo de trabajo contado dentro de una pantalla.
@@ -49,7 +50,7 @@ function PantallaTablero({ activo }: { activo: number }) {
         >
           <Target size={11} className="shrink-0 text-[#7700CE]" />
           <span className="text-[9.5px] font-semibold text-slate-800 sm:text-[10.5px]">
-            Objetivo de dirección: +20% de ventas
+            {tr('Objetivo de dirección: +20% de ventas')}
           </span>
         </motion.div>
         {/* paso 3: la IA revisando */}
@@ -67,7 +68,7 @@ function PantallaTablero({ activo }: { activo: number }) {
         {KPIS.map((k, i) => (
           <motion.div key={k.rotulo} {...pieza(activo, 1, i * 0.09)} className="rounded-lg bg-white p-1.5 shadow-sm sm:p-2">
             <div className="truncate text-[7px] font-medium uppercase tracking-wide text-slate-400 sm:text-[7.5px]">
-              {k.rotulo}
+              {tr(k.rotulo)}
             </div>
             <div className="mt-0.5 flex items-center gap-1 text-[11px] font-bold text-slate-900 sm:text-[13px]">
               {k.valor}
@@ -122,7 +123,7 @@ function PantallaTablero({ activo }: { activo: number }) {
       >
         <SlidersHorizontal size={10} className="text-[#7700CE]" />
         <span className="text-[8.5px] font-medium text-slate-700 sm:text-[9.5px]">
-          Presupuesto movido a lo que sí convierte
+          {tr('Presupuesto movido a lo que sí convierte')}
         </span>
       </motion.div>
     </div>
@@ -179,7 +180,7 @@ export default function ProcesoCiclo({
             <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]/80" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]/80" />
             <span className="ml-3 flex-1 truncate rounded-md bg-white/[.06] px-3 py-1 text-center font-mono text-[9.5px] tracking-wide text-white/45">
-              inedito.digital · tu tablero
+              inedito.digital · {tr('tu tablero')}
             </span>
           </div>
           <div className="aspect-[16/10]">
@@ -209,7 +210,7 @@ export default function ProcesoCiclo({
               <span className="absolute left-1/2 top-1.5 z-10 h-1.5 w-10 -translate-x-1/2 rounded-full bg-black/70" />
               <img
                 src="/tablero-movil.webp"
-                alt="El tablero en un teléfono"
+                alt={tr('El tablero en un teléfono')}
                 width={390}
                 height={800}
                 loading="lazy"
@@ -225,7 +226,7 @@ export default function ProcesoCiclo({
                   <Bell size={10} className="text-white" />
                 </span>
                 <span className="text-[7.5px] font-semibold leading-tight text-slate-800">
-                  Tu reporte del mes está listo
+                  {tr('Tu reporte del mes está listo')}
                 </span>
               </motion.div>
             </div>

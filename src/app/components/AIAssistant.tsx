@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
+import { tr } from '../idioma';
 import { detectarGlobal, buscarServicios, buscarPregunta, buscarExtra } from './asistente/intenciones';
 import { enlaceWhatsApp, construirMensaje, type Requerimiento } from './asistente/mensajeWhatsApp';
 import type { Service } from '../data/services';
@@ -84,17 +85,34 @@ export default function AIAssistant() {
     finRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [mensajes, escribiendo]);
 
+  /*
+   * El idioma del asistente se resuelve aqui, en el unico punto por donde pasan
+   * todos sus mensajes, en vez de envolver ochenta cadenas sueltas una por una.
+   * Lo que no este en el diccionario —el titulo de un servicio que viene de la
+   * base, lo que escribio el visitante— sale tal cual.
+   */
+  const traducirMensaje = (texto: string, extra: Partial<Mensaje>): Partial<Mensaje> => ({
+    ...extra,
+    texto: tr(texto),
+    enlace: extra.enlace
+      ? { ...extra.enlace, titulo: tr(extra.enlace.titulo), sub: tr(extra.enlace.sub) }
+      : undefined,
+    opciones: extra.opciones?.map((o) => ({ ...o, etiqueta: tr(o.etiqueta) })),
+  });
+
   /** Añade un mensaje del bot con la pausa de "escribiendo…". */
   const bot = (texto: string, extra: Partial<Mensaje> = {}, espera = 550) => {
     setEscribiendo(true);
     setTimeout(() => {
       setEscribiendo(false);
-      setMensajes((m) => [...m, { id: nuevoId(), emisor: 'bot', texto, ...extra }]);
+      setMensajes((m) => [...m, { id: nuevoId(), emisor: 'bot', ...traducirMensaje(texto, extra) } as Mensaje]);
     }, espera);
   };
 
+  /* tr() tambien aqui porque varias respuestas del usuario son la etiqueta del
+     boton que pulso, no algo que haya tecleado. */
   const usuario = (texto: string) =>
-    setMensajes((m) => [...m, { id: nuevoId(), emisor: 'user', texto }]);
+    setMensajes((m) => [...m, { id: nuevoId(), emisor: 'user', texto: tr(texto) }]);
 
   /* ---------------- apertura ---------------- */
   useEffect(() => {
@@ -673,7 +691,7 @@ ${extra.pagina.desc}`, {
       const svc = buscarServicios(pregunta, services)[0]?.servicio;
       const extra = buscarExtra(pregunta);
       const respondido =
-        (g && RESUMEN[g]) ||
+        (g && RESUMEN[g] && tr(RESUMEN[g]!)) ||
         (extra && extra.puntos >= 8 ? `me mostró ${extra.pagina.titulo}` : '') ||
         (svc ? `me mostró la ficha de ${svc.title}` : '');
       return { pregunta, respondido: respondido || undefined };
@@ -718,8 +736,8 @@ ${extra.pagina.desc}`, {
                   <button
                     onClick={reiniciar}
                     className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-                    aria-label="Empezar de nuevo"
-                    title="Empezar de nuevo"
+                    aria-label={tr('Empezar de nuevo')}
+                    title={tr('Empezar de nuevo')}
                   >
                     <RotateCcw size={16} />
                   </button>
@@ -807,11 +825,11 @@ ${extra.pagina.desc}`, {
                   <a href={urlWhatsApp} target="_blank" rel="noopener noreferrer" className="block">
                     <Button className="w-full rounded-xl bg-green-600 py-3.5 text-sm font-bold text-white hover:bg-green-700">
                       <MessageCircle className="mr-2 h-5 w-5" />
-                      Enviar por WhatsApp
+                      {tr('Enviar por WhatsApp')}
                     </Button>
                   </a>
                   <p className="text-center text-[10.5px] text-white/40">
-                    Se abre WhatsApp con el mensaje escrito. Solo tienes que enviarlo.
+                    {tr('Se abre WhatsApp con el mensaje escrito. Solo tienes que enviarlo.')}
                   </p>
                 </div>
               ) : (
@@ -823,9 +841,9 @@ ${extra.pagina.desc}`, {
                       onKeyDown={(e) => e.key === 'Enter' && enviar()}
                       placeholder={
                         fase === 'nombre'
-                          ? 'Tu nombre…'
+                          ? tr('Tu nombre…')
                           : fase === 'contacto'
-                          ? 'Correo o teléfono…'
+                          ? tr('Correo o teléfono…')
                           : tVen('placeholder', 'Escribe tu pregunta…')
                       }
                       className="border-white/10 bg-white/5 text-sm text-white placeholder:text-white/40 focus:border-[#9933FF]"
@@ -847,7 +865,7 @@ ${extra.pagina.desc}`, {
                     className="mt-2 flex items-center justify-center gap-1.5 text-[11.5px] text-white/45 transition-colors hover:text-green-400"
                   >
                     <MessageCircle size={13} />
-                    Prefiero escribir por WhatsApp
+                    {tr('Prefiero escribir por WhatsApp')}
                   </a>
                 </>
               )}

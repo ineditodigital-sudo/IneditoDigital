@@ -2,6 +2,7 @@ import SEO from '../components/SEO';
 import { contenido } from '../cms';
 import { GlassCard } from '../components/GlassCard';
 import ApartadosLegales, { Apartado } from '../components/ApartadosLegales';
+import AvisoIdiomaLegal from '../components/AvisoIdiomaLegal';
 
 const APARTADOS: Apartado[] = [
   { titulo: '1. Aceptación de Términos', texto: 'Al acceder y usar los servicios de INÉDITO DIGITAL, aceptas estar sujeto a estos términos y condiciones.', lista: '' },
@@ -31,6 +32,7 @@ export default function TermsPage() {
           </h1>
 
           <GlassCard className="prose prose-invert max-w-none">
+            <AvisoIdiomaLegal />
             <p className="text-white/70">{t('fecha', 'Última actualización: Diciembre 16, 2024')}</p>
 
             <ApartadosLegales t={tAp} respaldo={APARTADOS} />

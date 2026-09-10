@@ -11,6 +11,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { tr } from '../idioma';
 
 // Custom Arrow Components
 const CustomPrevArrow = (props: any) => {
@@ -259,7 +260,7 @@ export default function PortfolioPage() {
               </h2>
               
               <p className="text-white/70 text-base md:text-lg mb-8">
-                Agenda una consultoría gratuita y descubre cómo podemos transformar tu negocio con resultados medibles
+                {tr('Agenda una consultoría gratuita y descubre cómo podemos transformar tu negocio con resultados medibles')}
               </p>
               
               <button

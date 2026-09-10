@@ -25,6 +25,7 @@ import FAQAccordion from '../components/FAQAccordion';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
 import { contenido } from '../cms';
+import { tr } from '../idioma';
 
 /*
  * ESTRUCTURA A PROPOSITO DISTINTA al resto del sitio.
@@ -473,13 +474,13 @@ function StickyJourney() {
                     </div>
                     <span className="heading text-7xl text-white/[0.07]">{Current.n}</span>
                   </div>
-                  <h3 className="heading text-4xl text-white mb-5">{Current.title}</h3>
-                  <p className="text-white/50 text-lg leading-relaxed max-w-md mb-6">{Current.description}</p>
+                  <h3 className="heading text-4xl text-white mb-5">{tr(Current.title)}</h3>
+                  <p className="text-white/50 text-lg leading-relaxed max-w-md mb-6">{tr(Current.description)}</p>
 
                   {/* El beneficio, explicito en cada paso */}
                   <div className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#9933FF]/10 border border-[#9933FF]/30">
                     <Check className="text-[#CC66FF] flex-shrink-0" size={16} strokeWidth={3} />
-                    <span className="text-[#CC66FF] text-sm">{Current.benefit}</span>
+                    <span className="text-[#CC66FF] text-sm">{tr(Current.benefit)}</span>
                   </div>
                 </motion.div>
 
@@ -591,7 +592,7 @@ function StickyJourney() {
                   className="absolute -bottom-12 flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] border border-white/10 whitespace-nowrap"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#CC66FF]" />
-                  <span className="text-white/50 text-[11px] tracking-[0.15em] uppercase">{Current.building}</span>
+                  <span className="text-white/50 text-[11px] tracking-[0.15em] uppercase">{tr(Current.building)}</span>
                 </motion.div>
               </div>
             </div>
@@ -618,11 +619,11 @@ function StickyJourney() {
                 <span className="heading text-2xl text-white/15">{s.n}</span>
                 <s.icon className="text-[#9933FF]" size={18} />
               </div>
-              <h3 className="heading text-lg text-white mb-1.5">{s.title}</h3>
-              <p className="text-white/45 text-sm leading-relaxed mb-3">{s.description}</p>
+              <h3 className="heading text-lg text-white mb-1.5">{tr(s.title)}</h3>
+              <p className="text-white/45 text-sm leading-relaxed mb-3">{tr(s.description)}</p>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#9933FF]/10 border border-[#9933FF]/30">
                 <Check className="text-[#CC66FF] flex-shrink-0" size={16} strokeWidth={3} />
-                <span className="text-[#CC66FF] text-xs">{s.benefit}</span>
+                <span className="text-[#CC66FF] text-xs">{tr(s.benefit)}</span>
               </div>
             </motion.div>
           ))}
@@ -925,15 +926,15 @@ export default function TarjetasDigitalesPage() {
                     <op.icon className="text-white" size={20} />
                   </div>
                   <div>
-                    <div className="heading text-lg text-white">{op.titulo}</div>
-                    <div className="text-white/35 text-xs">{op.sub}</div>
+                    <div className="heading text-lg text-white">{tr(op.titulo)}</div>
+                    <div className="text-white/35 text-xs">{tr(op.sub)}</div>
                   </div>
                 </div>
                 <div className="space-y-3">
                   {op.puntos.map((p) => (
                     <div key={p} className="flex items-start gap-2.5">
                       <Check className="text-[#CC66FF] flex-shrink-0 mt-0.5" size={16} strokeWidth={3} />
-                      <span className="text-white/55 text-sm leading-relaxed">{p}</span>
+                      <span className="text-white/55 text-sm leading-relaxed">{tr(p)}</span>
                     </div>
                   ))}
                 </div>

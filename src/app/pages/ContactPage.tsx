@@ -8,6 +8,7 @@ import { useApp } from '../context/AppContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
+import { tr } from '../idioma';
 
 export default function ContactPage() {
   const tEnc = contenido('contacto', 'encabezado');
@@ -204,7 +205,7 @@ export default function ContactPage() {
 
               <GlassCard>
                 <h3 className="heading text-lg mb-2">{tTar('hor_titulo', 'HORARIO')}</h3>
-                <p className="text-white/60">{settings.businessHours}</p>
+                <p className="text-white/60">{tr(settings.businessHours)}</p>
               </GlassCard>
             </div>
           </div>

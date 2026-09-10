@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
+import { tr } from '../idioma';
 
 /* Entrada estandar del sitio: aparecer subiendo, una sola vez. */
 const entra = (retraso = 0) => ({
@@ -115,7 +116,7 @@ export default function ServicesPage() {
                         <p className="text-[13.5px] italic text-white/65">«{n.promesa}»</p>
                         {n.enlace && (
                           <span className="mt-3 inline-flex items-center gap-1.5 text-sm text-[#AA66FF]">
-                            Empezar por aquí
+                            {tr('Empezar por aquí')}
                             <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
                           </span>
                         )}
@@ -140,7 +141,7 @@ export default function ServicesPage() {
 
           {/* ------------------------------------------------ las fichas */}
           <motion.h2 {...entra()} className="heading mb-10 text-center text-2xl md:text-3xl">
-            TODO LO QUE HACEMOS
+            {tr('TODO LO QUE HACEMOS')}
           </motion.h2>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

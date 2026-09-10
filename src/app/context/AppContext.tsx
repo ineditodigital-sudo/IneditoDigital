@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { SERVICES, Service } from '../data/services';
+import { tr } from '../idioma';
 import { evento, instalarMedicionDeClicks } from '../metricas';
 import { BLOG_POSTS, BlogPost } from '../data/blog';
 import { PORTFOLIO_ITEMS, PortfolioItem } from '../data/portfolio';
@@ -368,10 +369,57 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setInitialContext(null);
   };
 
+  /*
+   * El catálogo de servicios, traducido de golpe al salir del contexto.
+   *
+   * Se traduce la vista, no el estado: lo que se guarda en localStorage sigue
+   * siendo el original en español, así que cambiar de idioma no puede dejar el
+   * catálogo del cliente escrito a medias en inglés. El slug no se toca nunca,
+   * que de ahí cuelgan las direcciones.
+   */
+  const serviciosVistos = useMemo(
+    () => services.map((s) => ({
+      ...s,
+      title: tr(s.title),
+      shortDescription: tr(s.shortDescription),
+      definicion: s.definicion ? tr(s.definicion) : s.definicion,
+      category: tr(s.category),
+      features: (s.features || []).map(tr),
+      benefits: (s.benefits || []).map(tr),
+      ideal: (s.ideal || []).map(tr),
+      process: (s.process || []).map((p) => ({
+        ...p,
+        title: tr(p.title),
+        description: tr(p.description),
+      })),
+      faq: (s.faq || []).map((q) => ({ question: tr(q.question), answer: tr(q.answer) })),
+      /* fullDescription se queda como está: son los textos de dos mil palabras
+         escritos para posicionar en español, y su versión inglesa va por el
+         panel, no por un diccionario que tendría que viajar al navegador. */
+    })),
+    [services],
+  );
+
+  const portafolioVisto = useMemo(
+    () => portfolioItems.map((p) => ({
+      ...p,
+      title: tr(p.title),
+      category: tr(p.category),
+      description: tr(p.description),
+      challenge: tr(p.challenge),
+      solution: tr(p.solution),
+      services: (p.services || []).map(tr),
+      highlights: (p.highlights || []).map(tr),
+      tags: (p.tags || []).map(tr),
+      results: (p.results || []).map((r) => ({ ...r, metric: tr(r.metric) })),
+    })),
+    [portfolioItems],
+  );
+
   const value: AppContextType = {
-    services,
+    services: serviciosVistos,
     blogPosts,
-    portfolioItems,
+    portfolioItems: portafolioVisto,
     leads,
     settings,
     adminUser,

@@ -8,6 +8,7 @@ import SectionDivider from '../components/SectionDivider';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
 import { contenido } from '../cms';
+import { tr } from '../idioma';
 
 const soluciones = (t: (k: string, r: string) => string) => [
   {
@@ -105,8 +106,7 @@ export default function AIServicesPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-base md:text-lg text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed"
           >
-            Automatiza ventas, marketing y atención al cliente con agentes inteligentes que trabajan 24/7. 
-            Sin contratar personal, sin aumentar costos. Solo resultados medibles.
+            {tr('Automatiza ventas, marketing y atención al cliente con agentes inteligentes que trabajan 24/7. Sin contratar personal, sin aumentar costos. Solo resultados medibles.')}
           </motion.p>
 
           {/* Stats */}
