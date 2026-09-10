@@ -8,6 +8,9 @@ Disallow: /api/
 # ellos. Se cierran tambien para los rastreadores de IA, que si no citarian
 # como reales unas cifras que son de ejemplo.
 Disallow: /demo/
+# La presentacion de servicios es un enlace que se manda a un cliente, no una
+# pagina del sitio. No se indexa ni se sigue.
+Disallow: /service-presentation
 
 # Crawlers de IA (bienvenidos — GEO)
 User-agent: GPTBot

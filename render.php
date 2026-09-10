@@ -790,7 +790,7 @@ if ($slugNueva !== null && isset($nuevas[$slugNueva])) {
  * llega por el enlace y nada mas: sin canonical, sin schema, sin sitemap y
  * con X-Robots-Tag ademas del meta, por si algun rastreador ignora robots.txt.
  */
-$privada = strpos($path, '/demo/') === 0;
+$privada = strpos($path, '/demo/') === 0 || $path === '/service-presentation';
 if ($privada) {
   $is404 = false;
   $title = 'Tablero de demostración | ' . $siteName;

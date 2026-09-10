@@ -25,6 +25,10 @@ const RutaLibre = lazy(() => import('./pages/RutaLibre'));
 // es una pantalla de trabajo en blanco, sin la cabecera negra ni el pie.
 const TableroDemo = lazy(() => import('./pages/TableroDemo'));
 
+// La presentacion de servicios. Fuera del RootLayout por lo mismo: es un deck
+// que se manda por enlace, no una pagina del sitio.
+const PresentacionServicios = lazy(() => import('./pages/PresentacionServicios'));
+
 // Redirect pages
 const PatronFlexRedirect = lazy(() => import('./pages/PatronFlexRedirect'));
 const LaBarajaMenuRedirect = lazy(() => import('./pages/LaBarajaMenuRedirect'));
@@ -42,6 +46,9 @@ export const router = createBrowserRouter([
   // la pagina, X-Robots-Tag en render.php y /demo/ cerrado en robots.txt) y
   // no hay ningun enlace hacia aqui desde el sitio.
   { path: '/demo/tablero', Component: TableroDemo },
+  // Enlace privado igual que el de arriba: noindex en la pagina, X-Robots-Tag
+  // en render.php, cerrado en robots.txt y fuera del sitemap.
+  { path: '/service-presentation', Component: PresentacionServicios },
   {
     path: '/',
     Component: RootLayout,
