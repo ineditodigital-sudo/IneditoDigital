@@ -92,8 +92,20 @@ export const PROPS_BASE: PropsEscena = { paleta: OSCURA, idioma: 'es' };
  */
 export const LIENZO = { ancho: 1600, alto: 1000, fps: 30 };
 
-/** Cinco segundos por escena: da para tres tiempos sin que se haga larga. */
-export const DURACION = 150;
+/*
+ * Ocho segundos por escena. Cada una cuenta lo suyo en unos cuatro y medio; el
+ * resto se queda quieta en su conclusión para que alcance a leerse antes de
+ * volver a empezar. Con cinco se reiniciaba justo cuando uno terminaba de leer
+ * el remate.
+ */
+export const DURACION = 240;
+
+/** Un cuadro donde todas ya dijeron todo, antes del fundido: el que se deja
+ *  fijo con prefers-reduced-motion. */
+export const REPOSO = 200;
+
+/** Los últimos cuadros se funden a nada: el reinicio deja de ser un corte. */
+export const FUNDIDO = 16;
 
 /** El ease-out con pegada de la casa, en bezier para Remotion. */
 export const SAL = [0.23, 1, 0.32, 1] as const;

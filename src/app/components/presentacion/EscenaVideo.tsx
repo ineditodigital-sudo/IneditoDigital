@@ -52,31 +52,24 @@ export default function EscenaVideo({
   return (
     <div
       /*
-        En teléfono el ancho lo manda el ALTO de la ventana: 22svh por 1.6 de
-        proporción. Así la escena encoge sola en un teléfono corto y el nombre,
-        la descripción y las tarjetas siempre caben. En escritorio se sueltan el
-        tope, el marco y el fondo.
+        Teléfono y tableta: la caja con marco, tan grande como deje el hueco.
+        Quien la contiene es un size container que ocupa lo que sobra de la
+        lámina, así que el ancho sale del menor de dos: todo el ancho, o el alto
+        disponible por 1.6. Nunca desborda y nunca deja la escena chica si hay
+        sitio.
+
+        Escritorio: sin marco ni fondo, pegada al borde derecho de su columna
+        —el mismo borde donde terminan las tarjetas— y del alto que permita la
+        ventana. Antes sangraba hasta el borde de la pantalla y en monitores
+        anchos quedaba corrida a la derecha, lejos del resto de la lámina.
       */
       className={[
-        'relative mx-auto aspect-[16/10] w-full overflow-hidden',
-        'max-w-[min(100%,calc(22svh*1.6))] rounded-3xl border',
+        'relative aspect-[16/10] shrink-0 overflow-hidden',
+        'w-[min(100cqw,calc(100cqh*1.6))] rounded-3xl border',
         'border-[color:var(--p-linea)] bg-[color:var(--p-caja)]',
-        /*
-          En escritorio el tope es de ALTO, y en dos tramos que no se pisan.
-
-          En pantallas bajas (una laptop de 1280x720 o 1366x768) la escena
-          cede lo que haga falta para que las tarjetas quepan CON su
-          explicación: 410 px es lo que ocupan encabezado, pie y la fila de
-          tarjetas más alta del guion, medido. Ocultar la explicación era la
-          salida fácil y dejaba las tarjetas en puro título justo en la
-          pantalla donde más se va a presentar.
-
-          El reproductor encaja el lienzo dentro de la caja, así que acotarla
-          solo le quita aire alrededor; nunca recorta la escena.
-        */
-        'lg:max-w-none lg:rounded-none lg:border-0 lg:bg-transparent',
-        '[@media(min-width:1024px)_and_(min-height:821px)]:max-h-[50svh]',
-        '[@media(min-width:1024px)_and_(max-height:820px)]:max-h-[calc(100svh-410px)]',
+        'lg:rounded-none lg:border-0 lg:bg-transparent',
+        '[@media(min-width:1024px)_and_(min-height:821px)]:w-[min(100%,calc(50svh*1.6))]',
+        '[@media(min-width:1024px)_and_(max-height:820px)]:w-[min(100%,calc((100svh-410px)*1.6))]',
       ].join(' ')}
     >
       {/* Mientras baja el reproductor queda la caja vacía, no un hueco que

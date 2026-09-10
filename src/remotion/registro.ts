@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { PropsEscena } from './marca';
+import type { NombreEscena } from './nombres';
 import { EscenaLocal, EscenaPosicionamiento, EscenaWeb } from './escenas/presencia';
 import { EscenaAgentes, EscenaEspectaculares, EscenaPublicidad } from './escenas/demanda';
 import { EscenaAuditoria, EscenaTablero, EscenaVentas } from './escenas/negocio';
@@ -15,7 +16,7 @@ import { EscenaTienda } from './escenas/tienda';
  *
  * Las llaves son los `escena` de src/app/components/presentacion/contenido.ts.
  */
-export const ESCENAS: Record<string, React.FC<PropsEscena>> = {
+export const ESCENAS: Record<NombreEscena, React.FC<PropsEscena>> = {
   web: EscenaWeb,
   ecommerce: EscenaTienda,
   posicionamiento: EscenaPosicionamiento,
@@ -28,4 +29,4 @@ export const ESCENAS: Record<string, React.FC<PropsEscena>> = {
   tablero: EscenaTablero,
 };
 
-export type NombreEscena = keyof typeof ESCENAS;
+export type { NombreEscena };

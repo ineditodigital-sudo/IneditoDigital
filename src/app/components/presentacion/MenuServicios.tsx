@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Check, X } from 'lucide-react';
-import { LAMINAS, UI, type Idioma } from './contenido';
+import { UI, type Idioma, type Lamina } from './contenido';
 
 /*
  * El índice de servicios.
@@ -29,12 +29,15 @@ import { LAMINAS, UI, type Idioma } from './contenido';
 const SAL = [0.23, 1, 0.32, 1] as const;
 
 export default function MenuServicios({
+  laminas,
   abierto,
   cerrar,
   ir,
   actual,
   idioma,
 }: {
+  /** Las que se ven, en su orden: las mismas que recorren las flechas. */
+  laminas: Lamina[];
   abierto: boolean;
   cerrar: () => void;
   ir: (n: number) => void;
@@ -113,7 +116,7 @@ export default function MenuServicios({
             </div>
 
             <ul className="max-h-[min(70vh,560px)] overflow-y-auto overscroll-contain py-2">
-              {LAMINAS.map((l, n) => {
+              {laminas.map((l, n) => {
                 const aqui = n === actual;
                 return (
                   <motion.li

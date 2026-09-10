@@ -271,7 +271,7 @@ function reporte_reunir(string $desde, string $hasta): array {
         'servicios'  => (int)rq1("SELECT COUNT(*) FROM services WHERE status='published'"),
         'articulos'  => (int)rq1("SELECT COUNT(*) FROM blog_posts WHERE status='published'"),
         'casos'      => (int)rq1("SELECT COUNT(*) FROM portfolio WHERE status='published'"),
-        'paginas'    => (int)rq1("SELECT COUNT(*) FROM pages WHERE status='published'"),
+        'paginas'    => (int)rq1("SELECT COUNT(*) FROM pages WHERE status='published' AND tipo <> 'presentacion'"),
         'clientes'   => (int)rq1("SELECT COUNT(*) FROM clientes WHERE visible=1"),
         'ultimo_articulo' => rq1("SELECT MAX(publish_date) FROM blog_posts WHERE status='published'", [], null),
     ];

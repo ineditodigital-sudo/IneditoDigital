@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { BASE } from './src/app/components/presentacion/contenido'
 
 
 function figmaAssetResolver() {
@@ -16,6 +17,32 @@ function figmaAssetResolver() {
   }
 }
 
+/*
+ * El respaldo de la presentación, publicado como archivo.
+ *
+ * El editor del panel (PHP) necesita el texto de base para arrancar la primera
+ * vez, antes de que nadie haya publicado nada. En vez de mantener una copia a
+ * mano en PHP —que es justo la trampa en la que ya cayeron los textos de la
+ * portada—, el build escribe /presentacion-base.json desde el mismo
+ * contenido.ts que usa el deck. deploy.sh lo sube con el resto de la raiz de
+ * dist/ y el panel lo lee de ahí.
+ */
+function presentacionBase(): Plugin {
+  const json = () => JSON.stringify(BASE)
+  return {
+    name: 'presentacion-base',
+    configureServer(server) {
+      server.middlewares.use('/presentacion-base.json', (_req, res) => {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8')
+        res.end(json())
+      })
+    },
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'presentacion-base.json', source: json() })
+    },
+  }
+}
+
 export default defineConfig({
   plugins: [
     figmaAssetResolver(),
@@ -23,6 +50,7 @@ export default defineConfig({
     // Tailwind is not being actively used – do not remove them
     react(),
     tailwindcss(),
+    presentacionBase(),
   ],
   resolve: {
     alias: {

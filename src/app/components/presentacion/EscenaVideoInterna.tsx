@@ -1,7 +1,8 @@
 import { Player, type PlayerRef } from '@remotion/player';
 import { useEffect, useRef } from 'react';
-import { CLARA, DURACION, LIENZO, OSCURA, type Idioma } from '../../../remotion/marca';
+import { CLARA, DURACION, LIENZO, OSCURA, REPOSO, type Idioma } from '../../../remotion/marca';
 import { ESCENAS } from '../../../remotion/registro';
+import { hayEscena } from '../../../remotion/nombres';
 
 /*
  * La escena, tocada por el reproductor de Remotion.
@@ -56,7 +57,7 @@ export default function EscenaVideoInterna({
       if (quieto) {
         /* Sin movimiento se deja el último cuadro, que es donde cada escena
            cuenta su conclusión: nadie pierde información por no ver el baile. */
-        p.seekTo(DURACION - 1);
+        p.seekTo(REPOSO);
         p.pause();
         return;
       }
@@ -66,7 +67,7 @@ export default function EscenaVideoInterna({
     return () => cancelAnimationFrame(id);
   }, [nombre, quieto]);
 
-  const Escena = ESCENAS[nombre];
+  const Escena = hayEscena(nombre) ? ESCENAS[nombre] : null;
   if (!Escena) return null;
 
   return (

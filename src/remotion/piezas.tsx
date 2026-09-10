@@ -1,5 +1,6 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion';
+import { DURACION, FUNDIDO } from './marca';
 import type { Paleta } from './marca';
 
 /*
@@ -84,15 +85,39 @@ export function Escenario({
   sangrado?: boolean;
   children: React.ReactNode;
 }) {
+  const frame = useCurrentFrame();
+  /* Al final del ciclo todo se funde: el reinicio se lee como una vuelta a
+     empezar y no como un corte. */
+  const salida = interpolate(frame, [DURACION - FUNDIDO, DURACION - 1], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  /* A sangre no hay marco que contenga la luz: sin esta máscara el resplandor
+     grande de arriba se cortaba en seco en el borde de la caja y se veía el
+     rectángulo de la escena encima de la lámina. Solo se desvanecen los
+     resplandores; el contenido nunca llega a la franja que se funde. */
+  const borde = sangrado
+    ? 'linear-gradient(to right, transparent, #000 14%, #000 86%, transparent), linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent)'
+    : undefined;
+
   return (
     <AbsoluteFill
       style={{
         background: sangrado ? 'transparent' : paleta.fondo,
         overflow: 'hidden',
         fontFamily: LETRA,
+        opacity: salida,
       }}
     >
       {/* el fondo: un degradado y dos blooms que se mueven despacio */}
+      <AbsoluteFill
+        style={{
+          maskImage: borde,
+          WebkitMaskImage: borde,
+          maskComposite: 'intersect',
+          WebkitMaskComposite: 'source-in',
+        }}
+      >
       <AbsoluteFill
         style={{
           background: `radial-gradient(120% 90% at 50% -10%, ${conAlfa(paleta.morado, 0.16)}, transparent 60%)`,
@@ -110,6 +135,7 @@ export function Escenario({
           opacity: 0.6,
         }}
       />
+      </AbsoluteFill>
 
       {rotulo ? (
         <div

@@ -28,13 +28,22 @@ export type Idioma = 'es' | 'en';
 /** Una tarjeta: el beneficio y qué significa. */
 export type Tarjeta = { t: string; d: string };
 
+/** La portada y el cierre van sin escena ni tarjetas; el resto son servicios. */
+export type TipoLamina = 'portada' | 'servicio' | 'cierre';
+
+/** Un enlace opcional bajo la descripción: «Ver el servicio en el sitio». */
+export type Enlace = { texto: Record<Idioma, string>; url: string };
+
 export type Lamina = {
-  id: string;
-  escena: string;                        // qué animación le toca
+  id: string;                            // la dirección: #web, #ecommerce…
+  tipo: TipoLamina;
+  visible: boolean;                      // se oculta sin borrarla
+  escena: string;                        // qué animación le toca ('' = ninguna)
   kicker: Record<Idioma, string>;        // la categoría
   nombre: Record<Idioma, string>;        // EL NOMBRE, en grande
   descripcion: Record<Idioma, string>;   // qué es, en una o dos frases
   tarjetas: Record<Idioma, Tarjeta[]>;   // qué incluye y por qué conviene
+  enlace?: Enlace;
 };
 
 export const UI = {
@@ -60,7 +69,9 @@ export const UI = {
 export const LAMINAS: Lamina[] = [
   {
     id: 'portada',
-    escena: 'portada',
+    tipo: 'portada',
+    visible: true,
+    escena: '',
     kicker: { es: 'Agencia digital · Aguascalientes', en: 'Digital agency · Aguascalientes, MX' },
     nombre: { es: 'CARTA DE\nSERVICIOS', en: 'SERVICE\nCATALOG' },
     descripcion: {
@@ -72,6 +83,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'web',
+    tipo: 'servicio',
+    visible: true,
     escena: 'web',
     kicker: { es: 'Servicio 01', en: 'Service 01' },
     nombre: { es: 'SITIOS WEB', en: 'WEBSITES' },
@@ -113,6 +126,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'ecommerce',
+    tipo: 'servicio',
+    visible: true,
     escena: 'ecommerce',
     kicker: { es: 'Servicio 02', en: 'Service 02' },
     nombre: { es: 'TIENDA EN LÍNEA', en: 'ONLINE STORE' },
@@ -154,6 +169,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'posicionamiento',
+    tipo: 'servicio',
+    visible: true,
     escena: 'posicionamiento',
     kicker: { es: 'Servicio 03', en: 'Service 03' },
     nombre: { es: 'POSICIONAMIENTO\nEN GOOGLE Y EN IA', en: 'GOOGLE AND\nAI VISIBILITY' },
@@ -195,6 +212,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'local',
+    tipo: 'servicio',
+    visible: true,
     escena: 'local',
     kicker: { es: 'Servicio 04', en: 'Service 04' },
     nombre: { es: 'FICHA DE GOOGLE', en: 'GOOGLE BUSINESS\nPROFILE' },
@@ -236,6 +255,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'publicidad',
+    tipo: 'servicio',
+    visible: true,
     escena: 'publicidad',
     kicker: { es: 'Servicio 05', en: 'Service 05' },
     nombre: { es: 'PUBLICIDAD\nDIGITAL', en: 'PAID\nADVERTISING' },
@@ -277,6 +298,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'espectaculares',
+    tipo: 'servicio',
+    visible: true,
     escena: 'espectaculares',
     kicker: { es: 'Servicio 06', en: 'Service 06' },
     nombre: { es: 'ANUNCIOS\nESPECTACULARES', en: 'BILLBOARD\nADVERTISING' },
@@ -318,6 +341,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'agentes',
+    tipo: 'servicio',
+    visible: true,
     escena: 'agentes',
     kicker: { es: 'Servicio 07', en: 'Service 07' },
     nombre: { es: 'AGENTES DE IA\nPARA WHATSAPP', en: 'AI AGENTS\nFOR WHATSAPP' },
@@ -359,6 +384,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'ventas',
+    tipo: 'servicio',
+    visible: true,
     escena: 'ventas',
     kicker: { es: 'Servicio 08', en: 'Service 08' },
     nombre: { es: 'IA PARA\nVENTAS', en: 'AI FOR\nSALES' },
@@ -400,6 +427,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'auditoria',
+    tipo: 'servicio',
+    visible: true,
     escena: 'auditoria',
     kicker: { es: 'Servicio 09', en: 'Service 09' },
     nombre: { es: 'AUDITORÍA\nCON IA', en: 'AI\nAUDIT' },
@@ -441,6 +470,8 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'tablero',
+    tipo: 'servicio',
+    visible: true,
     escena: 'tablero',
     kicker: { es: 'Servicio 10', en: 'Service 10' },
     nombre: { es: 'TABLERO DE\nRESULTADOS', en: 'RESULTS\nDASHBOARD' },
@@ -482,7 +513,9 @@ export const LAMINAS: Lamina[] = [
 
   {
     id: 'cierre',
-    escena: 'cierre',
+    tipo: 'cierre',
+    visible: true,
+    escena: '',
     kicker: { es: 'Siguiente paso', en: 'Next step' },
     nombre: { es: 'EMPECEMOS\nPOR MEDIR', en: 'LET US START\nBY MEASURING' },
     descripcion: {
@@ -493,9 +526,40 @@ export const LAMINAS: Lamina[] = [
   },
 ];
 
-export const CONTACTO = {
+export type Contacto = {
+  whatsapp: string;                      // solo dígitos, con 521: para wa.me y tel:
+  mensaje: Record<Idioma, string>;       // con qué texto se abre el chat ('' = ninguno)
+  telefono: string;                      // cómo se escribe, para anotarlo
+  correo: string;
+  sitio: string;
+};
+
+export const CONTACTO: Contacto = {
   whatsapp: '5214491204353',
+  mensaje: { es: '', en: '' },
   telefono: '+52 1 449 120 4353',
   correo: 'contacto@inedito.digital',
   sitio: 'inedito.digital',
 };
+
+/** Los textos de los botones que llevan a algún lado. */
+export type Botones = Record<'empezar' | 'escribir' | 'correo', Record<Idioma, string>>;
+
+export const BOTONES: Botones = {
+  empezar: { es: UI.empezar.es, en: UI.empezar.en },
+  escribir: { es: UI.escribir.es, en: UI.escribir.en },
+  correo: { es: UI.correo.es, en: UI.correo.en },
+};
+
+/*
+ * Todo lo que se edita desde el panel, junto.
+ *
+ * Esto es el RESPALDO: lo que se ve mientras nadie haya publicado la
+ * presentación desde el panel, o si la base no contesta. En cuanto alguien
+ * publica, manda lo publicado. Vite exporta además esto mismo como
+ * /presentacion-base.json para que el panel arranque con este texto y no con
+ * una copia escrita a mano que se desfase (ver vite.config.ts).
+ */
+export type DatosPresentacion = { contacto: Contacto; botones: Botones; laminas: Lamina[] };
+
+export const BASE: DatosPresentacion = { contacto: CONTACTO, botones: BOTONES, laminas: LAMINAS };

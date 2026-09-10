@@ -38,6 +38,7 @@ $TABS = [
     'portafolio' => ['Portafolio', cn('portfolio')],
     'equipo'     => ['Equipo',     cn('pages', "tipo='miembro'")],
     'mias'       => ['Mis páginas', cn('pages', "tipo='bloques'")],
+    'presentacion' => ['Presentación', 1],
 ];
 if (!isset($TABS[$t])) $t = 'paginas';
 
@@ -91,6 +92,29 @@ if ($t === 'paginas') {
         ]);
     }
     echo '</div>';
+    return;
+}
+
+/* ---------------------------------------------------------------- */
+/* La presentación de servicios                                      */
+/* ---------------------------------------------------------------- */
+if ($t === 'presentacion') {
+    $f = null;
+    try { $f = db()->query("SELECT status, contenido, borrador, updated_at FROM pages WHERE slug='presentacion' AND tipo='presentacion'")->fetch() ?: null; }
+    catch (Throwable $e) { /* sin fila todavía */ }
+    $pub = $f && ($f['status'] ?? '') === 'published';
+    $pendiente = $f && ($f['borrador'] ?? '') !== ($f['contenido'] ?? '');
+    $n = $f ? count((json_decode((string)($f['borrador'] ?: $f['contenido']), true)['laminas'] ?? [])) : 0;
+    echo '<div class="pgrid">' . pcard([
+        'nombre'  => 'Presentación de servicios',
+        'sub'     => '/service-presentation',
+        'href'    => '/panel/?p=presentacion',
+        'ver'     => '/service-presentation',
+        'ayuda'   => 'El deck que se manda a los clientes: láminas, tarjetas, enlaces y orden.',
+        'pie'     => ($n ? $n . ' láminas · ' : '') . hace_txt($f['updated_at'] ?? null),
+        'semilla' => 'presentacion',
+        'badge'   => $pendiente ? '<span class="badge b-draft">Borrador</span>' : ($pub ? '<span class="badge b-published">Publicada</span>' : ''),
+    ]) . '</div>';
     return;
 }
 

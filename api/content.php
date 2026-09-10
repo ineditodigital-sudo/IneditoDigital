@@ -60,7 +60,7 @@ try {
        nunca sale al sitio. */
     $paginas = []; $paginas_nuevas = [];
     try {
-        foreach ($pdo->query("SELECT slug, nombre, tipo, contenido, ruta, seo_title, seo_desc, en_menu FROM pages WHERE status='published'") as $r) {
+        foreach ($pdo->query("SELECT slug, nombre, tipo, contenido, ruta, seo_title, seo_desc, en_menu FROM pages WHERE status='published' AND tipo <> 'presentacion'") as $r) {
             $c = json_decode((string)$r['contenido'], true);
             if (!is_array($c)) continue;
             if ($r['tipo'] === 'bloques') {

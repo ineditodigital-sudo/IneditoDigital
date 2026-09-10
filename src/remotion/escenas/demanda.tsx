@@ -1,4 +1,4 @@
-import { Easing, interpolate, useCurrentFrame } from 'remotion';
+import { Easing, Img, interpolate, staticFile, useCurrentFrame } from 'remotion';
 import { dice, SAL, type PropsEscena } from '../marca';
 import {
   BarraLuz,
@@ -224,18 +224,22 @@ export const EscenaEspectaculares: React.FC<PropsEscena> = ({ paleta, idioma, sa
               opacity: interpolate(frame, [0, 16], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
             }}
           >
-            <span
+            {/* El logo oficial y no la palabra escrita: en la lona va la marca
+                como se imprime. Letras blancas sobre el vidrio oscuro, negras
+                sobre el claro; se enciende de izquierda a derecha. Sin
+                drop-shadow: sobre este SVG el filtro recortado por el clip
+                dejaba rectángulos de luz alrededor del isotipo. La luz ya la
+                pone el halo de la lona. */}
+            <Img
+              src={staticFile(
+                parseInt(paleta.fondo.slice(1, 3), 16) > 128 ? 'marca/inedito-negro.svg' : 'marca/inedito-blanco.svg',
+              )}
               style={{
-                fontSize: 96,
-                fontWeight: 700,
-                letterSpacing: 3,
-                color: '#fff',
-                textShadow: `0 0 ${34 * encendido}px ${conAlfa(paleta.morado2, 0.95)}`,
+                height: 132,
+                width: 'auto',
                 clipPath: `inset(0 ${100 - encendido * 100}% 0 0)`,
               }}
-            >
-              INÉDITO
-            </span>
+            />
           </Vidrio>
           {/* el poste */}
           <div
