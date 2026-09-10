@@ -1,30 +1,51 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Languages, Moon, Sun, MessageCircle, Mail } from 'lucide-react';
-import { LAMINAS, UI, CONTACTO, type Idioma } from '../components/presentacion/contenido';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Languages,
+  Mail,
+  Menu,
+  MessageCircle,
+  Moon,
+  Phone,
+  Sun,
+} from 'lucide-react';
+import { LAMINAS, UI, CONTACTO, type Idioma, type Tarjeta } from '../components/presentacion/contenido';
 import { idiomaVigente } from '../idioma';
 import { Escena, EscenaOnda } from '../components/presentacion/escenas';
+import Logotipo from '../components/presentacion/Logotipo';
+import MenuServicios from '../components/presentacion/MenuServicios';
 
 /*
- * La presentación de servicios: un deck que vive fuera del sitio.
+ * La carta de servicios: un deck que vive fuera del sitio.
  *
  * No está en el menú, no está en el sitemap y lleva noindex. Es un enlace que
  * se manda a un cliente cuando hace falta, no una página del sitio — por eso
  * tampoco usa el layout con encabezado y pie.
  *
- * Tres decisiones que vale la pena dejar dichas:
+ * Cuatro decisiones que vale la pena dejar dichas:
  *
- * El TEXTO no se anima al cambiar de lámina; entra completo y lo que se mueve
- * es el bloque. Un titular que aparece letra por letra se ve bonito una vez y
- * estorba las otras diez, y esto se pasa delante de un cliente.
+ * MANDA EL NOMBRE. Antes cada lámina abría con un titular de autor y había que
+ * leer un párrafo para saber de qué servicio se hablaba. Ahora lo primero que
+ * se ve es SITIOS WEB, y debajo qué incluye. Esto se enseña en una junta, no se
+ * lee en un sillón.
  *
- * Las transiciones van en 260 ms con ease-out. Un deck se navega con flechas,
- * decenas de veces en una junta: por encima de 300 ms empieza a sentirse que
- * la presentación va más lenta que quien la enseña.
+ * CABE EN UN TELÉFONO. Nombre, descripción, escena y tres tarjetas están
+ * dimensionados para entrar en una pantalla de teléfono sin scroll. La escena
+ * es lo que cede: en móvil se recorta a media pantalla. Si aun así no cabe, la
+ * lámina hace scroll interno en vez de cortar contenido, que es el mal menor.
  *
- * Y el tema no se adivina: arranca en oscuro, que es la casa, pero se puede
- * cambiar. Una sala con proyector y luz encendida pide claro, y eso pasa.
+ * EL TEXTO NO SE ANIMA. Entra completo y lo que se mueve es el bloque y las
+ * tarjetas. Un titular que aparece letra por letra se ve bonito una vez y
+ * estorba las otras diez.
+ *
+ * Y LAS TRANSICIONES SON CORTAS: 240 ms con ease-out. Un deck se navega con
+ * flechas decenas de veces en una junta; por encima de 300 ms empieza a
+ * sentirse que la presentación va más lenta que quien la enseña.
  */
+
+const SAL = [0.23, 1, 0.32, 1] as const;
 
 const TEMAS = {
   oscuro: {
@@ -63,15 +84,32 @@ const TEMAS = {
   },
 } as const;
 
+/*
+ * La lámina que pide la dirección: /service-presentation#espectaculares.
+ *
+ * Sirve para mandarle a un cliente el servicio que le interesa sin obligarlo a
+ * pasar seis láminas, y de paso hace que cada una se pueda abrir en frío.
+ */
+function laminaDelHash(): number {
+  const h = decodeURIComponent(location.hash.replace('#', '')).trim().toLowerCase();
+  if (!h) return 0;
+  const porId = LAMINAS.findIndex((l) => l.id === h);
+  if (porId >= 0) return porId;
+  const n = Number(h);
+  return Number.isInteger(n) && n >= 1 && n <= LAMINAS.length ? n - 1 : 0;
+}
+
 export default function PresentacionServicios() {
-  const [i, setI] = useState(0);
+  const [i, setI] = useState(laminaDelHash);
   /* Arranca en el idioma que el visitante ya eligió en el sitio, pero de ahí
      en adelante el deck lleva el suyo: cambiarlo desde aquí no debe rehacer
      el árbol y mandarte de vuelta a la lámina uno a media presentación. */
   const [idioma, setIdioma] = useState<Idioma>(() => idiomaVigente() as Idioma);
   const [tema, setTema] = useState<'oscuro' | 'claro'>('oscuro');
+  const [menu, setMenu] = useState(false);
   const [rumbo, setRumbo] = useState(1);
   const tocaX = useRef(0);
+  const quieto = useReducedMotion();
 
   const total = LAMINAS.length;
   const lamina = LAMINAS[i];
@@ -79,17 +117,19 @@ export default function PresentacionServicios() {
 
   const ir = useCallback(
     (n: number) => {
-      setRumbo(n > i ? 1 : -1);
-      setI(Math.max(0, Math.min(total - 1, n)));
+      const d = Math.max(0, Math.min(total - 1, n));
+      setRumbo(d > i ? 1 : -1);
+      setI(d);
     },
     [i, total],
   );
 
   /* Esto se navega con el teclado en una junta. Sin animación de más y sin
-     capturar teclas que el navegador necesita. */
+     capturar teclas que el navegador necesita. Con el índice abierto las
+     flechas son suyas: navegar por detrás de un panel abierto desorienta. */
   useEffect(() => {
     const alPulsar = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.metaKey || e.ctrlKey || e.altKey || menu) return;
       if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
         e.preventDefault();
         ir(i + 1);
@@ -101,14 +141,21 @@ export default function PresentacionServicios() {
     };
     addEventListener('keydown', alPulsar);
     return () => removeEventListener('keydown', alPulsar);
-  }, [i, ir, total]);
+  }, [i, ir, total, menu]);
+
+  /* La dirección sigue a la lámina. replaceState y no push: el botón de atrás
+     del navegador debe sacarte del deck, no recorrerte las once láminas. */
+  useEffect(() => {
+    const h = `#${LAMINAS[i].id}`;
+    if (location.hash !== h) history.replaceState(null, '', h);
+  }, [i]);
 
   /* Fuera del sitio también quiere decir fuera del índice. */
   useEffect(() => {
     document.title =
       idioma === 'es'
-        ? 'Presentación de servicios · Inédito Digital'
-        : 'Services presentation · Inédito Digital';
+        ? 'Carta de servicios · Inédito Digital'
+        : 'Service catalog · Inédito Digital';
     let m = document.querySelector('meta[name="robots"]');
     if (!m) {
       m = document.createElement('meta');
@@ -126,13 +173,22 @@ export default function PresentacionServicios() {
   const vars = TEMAS[tema] as unknown as React.CSSProperties;
   const portada = lamina.id === 'portada';
   const cierre = lamina.id === 'cierre';
+  const suelta = portada || cierre;          // láminas sin escena ni tarjetas
+  const tarjetas = lamina.tarjetas[idioma];
+
+  /* Con prefers-reduced-motion se apaga el desplazamiento y queda el fundido.
+     Menos movimiento no es cero animación: el fundido sigue explicando que la
+     lámina cambió. */
+  const entra = quieto ? { opacity: 0 } : { opacity: 0, y: rumbo * 16 };
+  const sale = quieto ? { opacity: 0 } : { opacity: 0, y: rumbo * -12 };
 
   return (
     <div
       style={{ ...vars, background: 'var(--p-fondo)', color: 'var(--p-tinta)' }}
-      className="relative flex min-h-[100svh] flex-col overflow-hidden transition-colors duration-300"
+      className="relative flex h-[100svh] flex-col overflow-hidden transition-colors duration-300"
       onTouchStart={(e) => (tocaX.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
+        if (menu) return;
         const d = e.changedTouches[0].clientX - tocaX.current;
         if (Math.abs(d) > 55) ir(i + (d < 0 ? 1 : -1));
       }}
@@ -148,119 +204,138 @@ export default function PresentacionServicios() {
           className="h-full"
           style={{ background: 'var(--p-morado)' }}
           animate={{ width: `${((i + 1) / total) * 100}%` }}
-          transition={{ duration: 0.32, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ duration: 0.3, ease: SAL }}
         />
       </div>
 
-      {/* barra de arriba */}
-      <header className="relative z-10 flex shrink-0 items-center justify-between px-5 py-4 md:px-10 md:py-6">
-        <span
-          className="heading text-[13px] tracking-[.2em] md:text-[15px]"
-          style={{ color: 'var(--p-tinta)' }}
+      {/* barra de arriba: la marca y los mandos que no cambian de lámina */}
+      <header className="relative z-30 flex shrink-0 items-center justify-between px-4 py-2.5 md:px-9 md:py-5">
+        <button
+          onClick={() => ir(0)}
+          title={idioma === 'es' ? 'Volver al inicio' : 'Back to the start'}
+          className="transition-transform duration-150 active:scale-[0.96]"
         >
-          INÉDITO
-        </span>
-        <div className="flex items-center gap-2">
-          <Boton
-            onClick={() => setIdioma((v) => (v === 'es' ? 'en' : 'es'))}
-            titulo={t('idioma')}
-          >
+          <span className="flex md:hidden">
+            <Logotipo escala={0.85} bajada={false} className="flex" />
+          </span>
+          <span className="hidden md:flex">
+            <Logotipo escala={1} className="flex" />
+          </span>
+        </button>
+
+        <div className="flex items-center gap-1.5 md:gap-2">
+          <Boton onClick={() => setIdioma((v) => (v === 'es' ? 'en' : 'es'))} titulo={t('idioma')}>
             <Languages size={15} />
             <span className="text-[12px] font-semibold">{idioma === 'es' ? 'EN' : 'ES'}</span>
           </Boton>
-          <Boton onClick={() => setTema((v) => (v === 'oscuro' ? 'claro' : 'oscuro'))} titulo={t('tema')}>
+          <Boton
+            onClick={() => setTema((v) => (v === 'oscuro' ? 'claro' : 'oscuro'))}
+            titulo={t('tema')}
+          >
             {tema === 'oscuro' ? <Sun size={15} /> : <Moon size={15} />}
+          </Boton>
+          <Boton onClick={() => setMenu(true)} titulo={t('menu')} resaltado>
+            <Menu size={16} />
+            <span className="hidden text-[12px] font-semibold sm:inline">{t('indice')}</span>
           </Boton>
         </div>
       </header>
 
+      <MenuServicios
+        abierto={menu}
+        cerrar={() => setMenu(false)}
+        ir={ir}
+        actual={i}
+        idioma={idioma}
+      />
+
       {/* la lámina */}
-      <main className="relative z-10 flex flex-1 items-center px-5 pb-4 md:px-10">
-        <div className="mx-auto w-full max-w-6xl">
+      <main className="relative z-10 flex min-h-0 flex-1 items-center overflow-y-auto overscroll-contain px-4 pb-2 md:px-9">
+        <div className="mx-auto w-full max-w-6xl py-1 md:py-2">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={lamina.id}
-              initial={{ opacity: 0, y: rumbo * 18 }}
+              initial={entra}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: rumbo * -14 }}
-              transition={{ duration: 0.26, ease: [0.23, 1, 0.32, 1] }}
+              exit={{ ...sale, transition: { duration: 0.14, ease: SAL } }}
+              transition={{ duration: 0.24, ease: SAL }}
               className={
-                portada || cierre
-                  ? 'flex flex-col items-center gap-8 text-center'
-                  : 'grid items-center gap-8 lg:grid-cols-2 lg:gap-14'
+                suelta
+                  ? 'flex flex-col items-center gap-7 text-center'
+                  : 'grid items-center gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,.85fr)] lg:gap-12'
               }
             >
-              <div className={portada || cierre ? 'max-w-3xl' : ''}>
+              {/* ── columna del texto ── */}
+              <div className={suelta ? 'flex max-w-3xl flex-col items-center' : 'min-w-0'}>
                 <p
-                  className="mb-4 font-mono text-[10.5px] uppercase tracking-[.22em] md:text-[11.5px]"
+                  className="mb-2.5 font-mono text-[10px] uppercase tracking-[.24em] md:mb-3.5 md:text-[11.5px]"
                   style={{ color: 'var(--p-morado)' }}
                 >
                   {lamina.kicker[idioma]}
                 </p>
+
+                {/* El nombre manda. clamp() para que no haya un salto entre el
+                    teléfono y el proyector: crece con el ancho, sin escalones. */}
                 <h1
-                  className={`heading whitespace-pre-line leading-[0.98] ${
-                    portada
-                      ? 'text-[38px] sm:text-[52px] lg:text-[68px]'
-                      : 'text-[30px] sm:text-[40px] lg:text-[50px]'
-                  }`}
-                  style={{ color: 'var(--p-tinta)' }}
+                  className="heading whitespace-pre-line leading-[0.94]"
+                  style={{
+                    color: 'var(--p-tinta)',
+                    fontSize: portada
+                      ? 'clamp(34px, 8.2vw, 76px)'
+                      : 'clamp(26px, 7vw, 62px)',
+                  }}
                 >
-                  {lamina.titulo[idioma]}
+                  {lamina.nombre[idioma]}
                 </h1>
+
                 <p
-                  className="mt-5 max-w-[62ch] text-[15px] leading-[1.65] md:text-[16.5px]"
+                  className="mt-2.5 max-w-[58ch] text-[13px] leading-[1.5] md:mt-5 md:text-[16px] md:leading-[1.6]"
                   style={{ color: 'var(--p-suave)' }}
                 >
-                  {lamina.bajada[idioma]}
+                  {lamina.descripcion[idioma]}
                 </p>
 
-                {lamina.puntos[idioma].length > 0 && (
-                  <ul className="mt-7 space-y-3">
-                    {lamina.puntos[idioma].map((p, n) => (
-                      <motion.li
-                        key={p}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.34, delay: 0.1 + n * 0.06, ease: [0.23, 1, 0.32, 1] }}
-                        className="flex items-start gap-3 text-[14px] md:text-[15px]"
-                        style={{ color: 'var(--p-suave)' }}
-                      >
-                        <span
-                          className="mt-[9px] h-[5px] w-[5px] shrink-0 rounded-full"
-                          style={{ background: 'var(--p-morado)' }}
-                        />
-                        {p}
-                      </motion.li>
+                {portada && (
+                  <button
+                    onClick={() => ir(1)}
+                    className="mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[14px] font-bold text-white transition-transform duration-150 active:scale-[0.97]"
+                    style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
+                  >
+                    {t('empezar')}
+                    <ArrowRight size={17} />
+                  </button>
+                )}
+
+                {cierre && <Cierre idioma={idioma} t={t} />}
+
+                {/* ── las tarjetas: qué incluye ── */}
+                {tarjetas.length > 0 && (
+                  <ul className="mt-4 grid gap-2 md:mt-7 md:gap-3">
+                    {tarjetas.map((c, n) => (
+                      <TarjetaIncluye
+                        key={c.t}
+                        tarjeta={c}
+                        n={n}
+                        quieto={!!quieto}
+                      />
                     ))}
                   </ul>
                 )}
-
-                {cierre && (
-                  <div className="mt-9 flex flex-wrap justify-center gap-3">
-                    <a
-                      href={`https://wa.me/${CONTACTO.whatsapp}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[14px] font-bold text-white transition-transform duration-150 active:scale-[0.97]"
-                      style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
-                    >
-                      <MessageCircle size={17} />
-                      {t('escribir')}
-                    </a>
-                    <a
-                      href={`mailto:${CONTACTO.correo}`}
-                      className="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-[14px] font-bold transition-transform duration-150 active:scale-[0.97]"
-                      style={{ borderColor: 'var(--p-linea)', color: 'var(--p-tinta)' }}
-                    >
-                      <Mail size={17} />
-                      {t('correo')}
-                    </a>
-                  </div>
-                )}
               </div>
 
-              {!portada && !cierre && (
-                <div className="w-full">
+              {/* ── columna de la escena ──
+                  En móvil cede: se recorta a media pantalla para que las
+                  tarjetas quepan sin scroll. En pantalla grande recupera su
+                  proporción y es la mitad del argumento. */}
+              {/*
+                En pantalla baja y angosta —un telefono de 640 px, un SE— la
+                escena desaparece. Ahi no caben nombre, descripcion, tres
+                tarjetas Y una animacion, y de las cuatro cosas la animacion es
+                la unica que no vende. Vale mas perderla que obligar a hacer
+                scroll dentro de la diapositiva. Desde 700 px de alto vuelve.
+              */}
+              {!suelta && (
+                <div className="order-first w-full min-w-0 [@media(max-height:700px)_and_(max-width:1023px)]:hidden lg:order-none">
                   <Escena nombre={lamina.escena} activo idioma={idioma} />
                 </div>
               )}
@@ -269,48 +344,134 @@ export default function PresentacionServicios() {
         </div>
       </main>
 
-      {/* mandos */}
-      <footer className="relative z-10 flex shrink-0 items-center justify-between gap-4 px-5 py-5 md:px-10 md:py-7">
-        <span className="font-mono text-[11px]" style={{ color: 'var(--p-mudo)' }}>
-          {String(i + 1).padStart(2, '0')} <span className="opacity-45">/ {String(total).padStart(2, '0')}</span>
-        </span>
-
-        <div className="hidden items-center gap-1.5 sm:flex">
-          {LAMINAS.map((l, n) => (
-            <button
-              key={l.id}
-              onClick={() => ir(n)}
-              aria-label={`${UI.lamina[idioma]} ${n + 1}`}
-              aria-current={n === i}
-              className="h-6 px-[3px] transition-transform duration-150 active:scale-90"
-            >
-              <span
-                className="block h-[3px] rounded-full transition-all duration-300"
-                style={{
-                  width: n === i ? 22 : 9,
-                  background: n === i ? 'var(--p-morado)' : 'var(--p-pistaFuerte)',
-                }}
-              />
-            </button>
-          ))}
+      {/* mandos: dónde estoy, qué estoy viendo y cómo sigo */}
+      <footer
+        className="relative z-20 flex shrink-0 items-center justify-between gap-3 border-t px-4 py-2.5 md:px-9 md:py-4"
+        style={{ borderColor: 'var(--p-linea)' }}
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            className="shrink-0 font-mono text-[12px] tabular-nums md:text-[13px]"
+            style={{ color: 'var(--p-tinta)' }}
+          >
+            {String(i + 1).padStart(2, '0')}
+            <span style={{ color: 'var(--p-mudo)' }}> / {String(total).padStart(2, '0')}</span>
+          </span>
+          <span
+            aria-hidden="true"
+            className="hidden h-4 w-px shrink-0 sm:block"
+            style={{ background: 'var(--p-linea)' }}
+          />
+          <span
+            className="heading hidden truncate text-[12.5px] tracking-wide sm:block"
+            style={{ color: 'var(--p-mudo)' }}
+          >
+            {lamina.nombre[idioma].replace(/\n/g, ' ')}
+          </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <Boton onClick={() => ir(i - 1)} titulo={t('anterior')} apagado={i === 0}>
             <ArrowLeft size={16} />
           </Boton>
-          <Boton onClick={() => ir(i + 1)} titulo={t('siguiente')} apagado={i === total - 1}>
+          <Boton onClick={() => ir(i + 1)} titulo={t('siguiente')} apagado={i === total - 1} resaltado>
+            <span className="hidden text-[12.5px] font-semibold sm:inline">{t('siguiente')}</span>
             <ArrowRight size={16} />
           </Boton>
         </div>
       </footer>
+    </div>
+  );
+}
 
-      <p
-        className="pointer-events-none absolute bottom-[86px] left-0 right-0 z-0 text-center font-mono text-[10px] tracking-wider opacity-40 md:bottom-[104px]"
+/* ───────────────────────────────────────────────────────────────────────── */
+
+/*
+ * Una tarjeta de «qué incluye».
+ *
+ * El número va en mono y morado, el titular en la display y la línea de abajo
+ * en cuerpo: tres pesos distintos dentro de una caja chica, que es lo que
+ * permite leerla de un vistazo desde el otro lado de una mesa.
+ *
+ * Entran escalonadas a 45 ms. Es la diferencia entre tres cajas que aparecen
+ * de golpe y una lista que se arma: cuesta 135 ms en total y no bloquea nada.
+ */
+function TarjetaIncluye({ tarjeta, n, quieto }: { tarjeta: Tarjeta; n: number; quieto: boolean }) {
+  return (
+    <motion.li
+      initial={quieto ? { opacity: 0 } : { opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, delay: 0.07 + n * 0.045, ease: SAL }}
+      className="flex items-start gap-3 rounded-2xl border px-3.5 py-2.5 md:gap-4 md:px-5 md:py-4"
+      style={{ borderColor: 'var(--p-linea)', background: 'var(--p-caja)' }}
+    >
+      <span
+        className="mt-[3px] shrink-0 font-mono text-[11px] tabular-nums md:text-[12px]"
+        style={{ color: 'var(--p-morado)' }}
+      >
+        {String(n + 1).padStart(2, '0')}
+      </span>
+      <div className="min-w-0">
+        <p
+          className="heading text-[13.5px] leading-tight md:text-[16px]"
+          style={{ color: 'var(--p-tinta)' }}
+        >
+          {tarjeta.t}
+        </p>
+        <p
+          className="mt-0.5 text-[11.5px] leading-[1.45] md:mt-1 md:text-[13.5px]"
+          style={{ color: 'var(--p-suave)' }}
+        >
+          {tarjeta.d}
+        </p>
+      </div>
+    </motion.li>
+  );
+}
+
+/* El cierre: la marca en grande y las tres formas de contestar. */
+function Cierre({ idioma, t }: { idioma: Idioma; t: (k: keyof typeof UI) => string }) {
+  return (
+    <div className="mt-8 flex flex-col items-center gap-7">
+      <Logotipo escala={1.9} className="flex" />
+
+      <div className="flex flex-wrap justify-center gap-2.5">
+        <a
+          href={`https://wa.me/${CONTACTO.whatsapp}`}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[14px] font-bold text-white transition-transform duration-150 active:scale-[0.97]"
+          style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
+        >
+          <MessageCircle size={17} />
+          {t('escribir')}
+        </a>
+        <a
+          href={`mailto:${CONTACTO.correo}`}
+          className="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-[14px] font-bold transition-transform duration-150 active:scale-[0.97]"
+          style={{ borderColor: 'var(--p-linea)', color: 'var(--p-tinta)' }}
+        >
+          <Mail size={17} />
+          {t('correo')}
+        </a>
+      </div>
+
+      {/* El número escrito, no solo enlazado: media junta se anota en papel. */}
+      <div
+        className="flex flex-col items-center gap-1.5 font-mono text-[12.5px] md:flex-row md:gap-5"
         style={{ color: 'var(--p-mudo)' }}
       >
-        {i === 0 ? t('navega') : ''}
-      </p>
+        <a
+          href={`tel:${CONTACTO.whatsapp}`}
+          className="inline-flex items-center gap-1.5 transition-colors"
+          style={{ color: 'var(--p-suave)' }}
+        >
+          <Phone size={13} />
+          {CONTACTO.telefono}
+        </a>
+        <span aria-hidden="true" className="hidden md:inline">·</span>
+        <span>{CONTACTO.sitio}</span>
+      </div>
     </div>
   );
 }
@@ -322,11 +483,14 @@ function Boton({
   onClick,
   titulo,
   apagado,
+  resaltado,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   titulo: string;
   apagado?: boolean;
+  /** El que se usa más. Lleva el fondo para que se encuentre sin buscarlo. */
+  resaltado?: boolean;
 }) {
   return (
     <button
@@ -334,8 +498,12 @@ function Boton({
       disabled={apagado}
       title={titulo}
       aria-label={titulo}
-      className="flex h-10 items-center gap-1.5 rounded-full border px-3.5 transition-[transform,opacity,border-color] duration-150 active:scale-[0.94] disabled:opacity-25"
-      style={{ borderColor: 'var(--p-linea)', color: 'var(--p-tinta)' }}
+      className="flex h-10 items-center gap-1.5 rounded-full border px-3.5 transition-[transform,opacity,background-color] duration-150 active:scale-[0.94] disabled:opacity-25"
+      style={{
+        borderColor: resaltado ? 'transparent' : 'var(--p-linea)',
+        background: resaltado ? 'var(--p-moradoSuave)' : 'transparent',
+        color: resaltado ? 'var(--p-morado)' : 'var(--p-tinta)',
+      }}
     >
       {children}
     </button>

@@ -74,7 +74,7 @@ function campos_miembro(): array
             'ayuda'  => 'Con esto se arman solos los botones de arriba. Lo que dejes vacío no aparece.',
             'campos' => [
                 'telefono' => ['label' => 'Teléfono', 'tipo' => 'texto', 'ayuda' => 'Ej. 4495136907'],
-                'whatsapp' => ['label' => 'WhatsApp', 'tipo' => 'texto', 'ayuda' => 'Con lada del país, ej. +52 1 449 583 9229'],
+                'whatsapp' => ['label' => 'WhatsApp', 'tipo' => 'texto', 'ayuda' => 'Con lada del país, ej. +52 1 449 120 4353'],
                 'wa_texto' => ['label' => 'Mensaje con el que abre WhatsApp', 'tipo' => 'texto',
                                'def' => 'Hola, vi tu tarjeta y me gustaría platicar contigo.'],
                 'email'    => ['label' => 'Correo', 'tipo' => 'texto'],

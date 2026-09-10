@@ -687,8 +687,8 @@ export const DICCIONARIO: Record<string, string> = {
   'Tienes derecho a acceder, corregir o eliminar tu información personal. Para ejercer estos derechos, contáctanos en contacto@inedito.digital':
     'You have the right to access, correct or delete your personal information. To exercise these rights, contact us at contacto@inedito.digital',
   '6. Contacto': '6. Contact',
-  'Si tienes preguntas sobre esta política de privacidad, contáctanos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 583 9229':
-    'If you have questions about this privacy policy, contact us:\nEmail: contacto@inedito.digital\nPhone: +52 1 449 583 9229',
+  'Si tienes preguntas sobre esta política de privacidad, contáctanos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 120 4353':
+    'If you have questions about this privacy policy, contact us:\nEmail: contacto@inedito.digital\nPhone: +52 1 449 120 4353',
 
   '1. Aceptación de Términos': '1. Acceptance of Terms',
   'Al acceder y usar los servicios de INÉDITO DIGITAL, aceptas estar sujeto a estos términos y condiciones.':
@@ -713,8 +713,8 @@ export const DICCIONARIO: Record<string, string> = {
   'Proyectos: El anticipo no es reembolsable\nServicios mensuales: Aviso de 30 días':
     'Projects: the deposit is non-refundable\nMonthly services: 30 days’ notice',
   '7. Contacto': '7. Contact',
-  'Para preguntas sobre estos términos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 583 9229':
-    'For questions about these terms:\nEmail: contacto@inedito.digital\nPhone: +52 1 449 583 9229',
+  'Para preguntas sobre estos términos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 120 4353':
+    'For questions about these terms:\nEmail: contacto@inedito.digital\nPhone: +52 1 449 120 4353',
   'Página no encontrada - 404 | INÉDITO DIGITAL': 'Page not found - 404 | INÉDITO DIGITAL',
   'La página que buscas no existe o ha sido movida.':
     'The page you are looking for does not exist or has moved.',

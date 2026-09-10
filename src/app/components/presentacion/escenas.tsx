@@ -63,7 +63,10 @@ function Marco({ children, etiqueta }: { children: React.ReactNode; etiqueta: st
     <div
       role="img"
       aria-label={etiqueta}
-      className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border p-6 md:p-8"
+      /* En movil la escena cede: 16/10 y tope de media pantalla, para que el
+         nombre, la descripcion y las tres tarjetas quepan sin scroll. En
+         pantalla grande recupera su proporcion y su aire. */
+      className="relative aspect-[16/10] max-h-[25svh] w-full overflow-hidden rounded-3xl border p-3.5 sm:max-h-[34svh] sm:p-6 lg:aspect-[4/3] lg:max-h-none lg:p-8"
       style={{
         borderColor: 'var(--p-linea)',
         background: 'var(--p-caja)',
@@ -79,7 +82,18 @@ function Marco({ children, etiqueta }: { children: React.ReactNode; etiqueta: st
           WebkitMaskImage: 'radial-gradient(ellipse 75% 75% at 50% 50%, black, transparent)',
         }}
       />
-      <div aria-hidden="true" className="relative flex h-full flex-col justify-center gap-3">
+      {/*
+        En telefono el contenido se ESCALA, no se recorta.
+        La caja mide 16/10 con tope de 25svh, y las escenas se dibujaron para
+        una de 4/3: sin esto la mitad de cada fila queda fuera del marco. Con
+        122% de ancho y scale(.82) el resultado vuelve a medir justo el 100%
+        —1.22 x 0.82 = 1— y el margen negativo lo recentra. Escalar es una
+        transformacion: no vuelve a maquetar nada y se ve nitido.
+      */}
+      <div
+        aria-hidden="true"
+        className="relative -ml-[11%] flex h-full w-[122%] origin-center flex-col justify-center gap-2.5 [transform:scale(.82)] sm:-ml-[6%] sm:w-[112%] sm:[transform:scale(.893)] lg:ml-0 lg:w-full lg:gap-3 lg:[transform:none]"
+      >
         {children}
       </div>
     </div>
@@ -145,44 +159,73 @@ export function EscenaOnda({ activo }: { activo: boolean }) {
   );
 }
 
-/* ════════════════════════════════ 2 · Premisa: cada herramienta, otra cifra */
+/* ════════════════════════════════ 2 · Auditoría: los hallazgos, priorizados */
 
-export function EscenaPremisa({ activo }: { activo: boolean }) {
+/*
+ * Los hallazgos aparecen de uno en uno con su severidad, y al final la lista
+ * se ordena por impacto. Es literalmente lo que entrega el servicio: no una
+ * lista de avisos, sino un plan con qué se hace primero.
+ */
+export function EscenaAuditoria({ activo }: { activo: boolean }) {
   const d = useD();
-  const paso = usePaso(2, 2400, activo);
-  const fuentes = [
-    { n: '1,284', t: 'Analytics' },
-    { n: '947', t: 'Ads' },
-    { n: '2,110', t: 'Meta' },
+  const paso = usePaso(5, 1400, activo);
+  const hallazgos = [
+    { t: d('Carga en 6.2 s en teléfono', 'Loads in 6.2 s on mobile'), s: 'alta', p: 1 },
+    { t: d('14 páginas fuera del índice', '14 pages outside the index'), s: 'alta', p: 2 },
+    { t: d('Ficha sin categoría principal', 'Listing with no primary category'), s: 'media', p: 3 },
   ];
+  const color = (s: string) => (s === 'alta' ? 'var(--p-ambar)' : 'var(--p-mudo)');
+
   return (
-    <Marco etiqueta={d('Tres herramientas reportando tres cifras distintas del mismo mes', 'Three tools reporting three different figures for the same month')}>
-      <div className="grid grid-cols-3 gap-3">
-        {fuentes.map((f, i) => (
+    <Marco
+      etiqueta={d(
+        'Tres hallazgos con su severidad, ordenados por impacto en un plan de trabajo',
+        'Three findings with their severity, ordered by impact into a work plan',
+      )}
+    >
+      <div className="space-y-2">
+        {hallazgos.map((h, i) => (
           <motion.div
-            key={f.t}
-            className="rounded-2xl border p-3 text-center"
+            key={h.t}
+            className="flex items-center gap-2.5 rounded-xl border px-3 py-2"
             style={{ borderColor: 'var(--p-linea)', background: 'var(--p-caja2)' }}
-            animate={{ y: paso === 1 ? [0, -4, 0][i % 3] : 0 }}
-            transition={{ duration: 0.5, ease: SAL }}
+            animate={{
+              opacity: paso > i ? 1 : 0.12,
+              /* al llegar al último paso se numeran: el plan priorizado */
+              x: paso >= 4 ? 6 : 0,
+            }}
+            transition={{ duration: 0.42, ease: SAL, delay: paso >= 4 ? i * 0.05 : 0 }}
           >
-            <div className="font-mono text-[19px] md:text-[22px]" style={{ color: 'var(--p-tinta)' }}>
-              {f.n}
-            </div>
-            <div className="mt-1 text-[10px] uppercase tracking-[.14em]" style={{ color: 'var(--p-mudo)' }}>
-              {f.t}
-            </div>
+            <motion.span
+              className="h-1.5 w-1.5 shrink-0 rounded-full"
+              style={{ background: color(h.s) }}
+              animate={{ scale: paso === i + 1 ? [1, 1.9, 1] : 1 }}
+              transition={{ duration: 0.5, ease: SAL }}
+            />
+            <span className="flex-1 text-[11px] leading-tight md:text-[12.5px]" style={{ color: 'var(--p-tinta)' }}>
+              {h.t}
+            </span>
+            <motion.span
+              className="shrink-0 font-mono text-[10px] tabular-nums"
+              style={{ color: 'var(--p-morado)' }}
+              animate={{ opacity: paso >= 4 ? 1 : 0 }}
+              transition={{ duration: 0.35, ease: SAL }}
+            >
+              #{h.p}
+            </motion.span>
           </motion.div>
         ))}
       </div>
-      <div className="mt-3 text-center">
+
+      <div className="mt-2 text-center">
         <motion.div
-          animate={{ opacity: paso === 1 ? 1 : 0.25 }}
+          animate={{ opacity: paso >= 4 ? 1 : 0.2 }}
           transition={{ duration: 0.45 }}
-          className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px]"
+          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10.5px]"
           style={{ borderColor: 'var(--p-morado)', color: 'var(--p-morado)' }}
         >
-          {d('¿Cuál es la buena?', 'Which one is right?')}
+          <Check size={11} strokeWidth={3} />
+          {d('Plan ordenado por impacto', 'Plan ordered by impact')}
         </motion.div>
       </div>
     </Marco>
@@ -631,7 +674,7 @@ export function Escena({ nombre, activo, idioma = 'es' }: {
 
 function elegir(nombre: string, activo: boolean) {
   switch (nombre) {
-    case 'premisa':          return <EscenaPremisa activo={activo} />;
+    case 'auditoria':        return <EscenaAuditoria activo={activo} />;
     case 'web':              return <EscenaWeb activo={activo} />;
     case 'posicionamiento':  return <EscenaPosicionamiento activo={activo} />;
     case 'local':            return <EscenaLocal activo={activo} />;

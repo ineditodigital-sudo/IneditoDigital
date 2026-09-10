@@ -10,7 +10,7 @@ const APARTADOS: Apartado[] = [
   { titulo: '3. Protección de Datos', texto: 'Implementamos medidas de seguridad diseñadas para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción.', lista: '' },
   { titulo: '4. Cookies', texto: 'Utilizamos cookies y tecnologías similares para mejorar tu experiencia en nuestro sitio, analizar el tráfico y personalizar contenido.', lista: '' },
   { titulo: '5. Tus Derechos', texto: 'Tienes derecho a acceder, corregir o eliminar tu información personal. Para ejercer estos derechos, contáctanos en contacto@inedito.digital', lista: '' },
-  { titulo: '6. Contacto', texto: 'Si tienes preguntas sobre esta política de privacidad, contáctanos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 583 9229', lista: '' },
+  { titulo: '6. Contacto', texto: 'Si tienes preguntas sobre esta política de privacidad, contáctanos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 120 4353', lista: '' },
 ];
 
 

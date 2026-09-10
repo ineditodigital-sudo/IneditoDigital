@@ -11,7 +11,7 @@ const APARTADOS: Apartado[] = [
   { titulo: '4. Garantías y Resultados', texto: 'Garantizamos esfuerzo máximo y entregas en tiempo. Sin embargo, resultados específicos (rankings, ventas, leads) dependen de múltiples factores externos y no pueden garantizarse.', lista: '' },
   { titulo: '5. Propiedad Intelectual', texto: 'Una vez pagado en su totalidad, el cliente recibe derechos completos sobre el trabajo entregado. Nos reservamos el derecho de mostrar el trabajo en nuestro portafolio.', lista: '' },
   { titulo: '6. Cancelación', texto: 'Los términos de cancelación se especifican en cada contrato. Generalmente:', lista: 'Proyectos: El anticipo no es reembolsable\nServicios mensuales: Aviso de 30 días' },
-  { titulo: '7. Contacto', texto: 'Para preguntas sobre estos términos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 583 9229', lista: '' },
+  { titulo: '7. Contacto', texto: 'Para preguntas sobre estos términos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 120 4353', lista: '' },
 ];
 
 
