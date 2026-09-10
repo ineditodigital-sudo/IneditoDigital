@@ -261,7 +261,7 @@ export default function PresentacionServicios() {
 
               {!portada && !cierre && (
                 <div className="w-full">
-                  <Escena nombre={lamina.escena} activo />
+                  <Escena nombre={lamina.escena} activo idioma={idioma} />
                 </div>
               )}
             </motion.div>

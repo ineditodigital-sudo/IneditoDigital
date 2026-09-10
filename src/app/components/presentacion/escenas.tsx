@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Check, Clock, MapPin, Star, TrendingUp, Zap } from 'lucide-react';
 
@@ -22,6 +22,19 @@ import { Check, Clock, MapPin, Star, TrendingUp, Zap } from 'lucide-react';
  */
 
 const SAL = [0.23, 1, 0.32, 1] as const;   // el ease-out con pegada
+
+/*
+ * El idioma del deck.
+ *
+ * No usa el del sitio: el deck se manda por enlace y su interruptor no debe
+ * remontar nada, asi que lleva el suyo y lo baja por contexto. Con d() cada
+ * escena elige su version sin que haya que pasar una prop por diez firmas.
+ */
+const Lengua = createContext<'es' | 'en'>('es');
+const useD = () => {
+  const i = useContext(Lengua);
+  return (es: string, en: string) => (i === 'en' ? en : es);
+};
 
 /** El paso de un ciclo, o el último si el sistema pide quietud. */
 function usePaso(total: number, ms: number, activo: boolean) {
@@ -73,14 +86,23 @@ function Marco({ children, etiqueta }: { children: React.ReactNode; etiqueta: st
   );
 }
 
+/*
+ * La barra crece con transform, no con width.
+ *
+ * El truco es que el relleno mide siempre el 100% y se desliza desde fuera:
+ * el contenedor recorta lo que sobra por la izquierda y le presta su propio
+ * redondeo, así que se ve igual que animando el ancho —cap redondo incluido—
+ * pero sin volver a maquetar en cada cuadro de los seiscientos y pico
+ * milisegundos, que en una presentación a pantalla completa se nota.
+ */
 const Barra = ({ v, color, retraso = 0 }: { v: number; color: string; retraso?: number }) => (
   <div className="h-2 overflow-hidden rounded-full" style={{ background: 'var(--p-pista)' }}>
     <div
-      className="h-full rounded-full"
+      className="h-full w-full rounded-full"
       style={{
-        width: `${v}%`,
         background: color,
-        transition: `width 620ms cubic-bezier(${SAL.join(',')}) ${retraso}ms`,
+        transform: `translateX(${v - 100}%)`,
+        transition: `transform 620ms cubic-bezier(${SAL.join(',')}) ${retraso}ms`,
       }}
     />
   </div>
@@ -126,6 +148,7 @@ export function EscenaOnda({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 2 · Premisa: cada herramienta, otra cifra */
 
 export function EscenaPremisa({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(2, 2400, activo);
   const fuentes = [
     { n: '1,284', t: 'Analytics' },
@@ -133,7 +156,7 @@ export function EscenaPremisa({ activo }: { activo: boolean }) {
     { n: '2,110', t: 'Meta' },
   ];
   return (
-    <Marco etiqueta="Tres herramientas reportando tres cifras distintas del mismo mes">
+    <Marco etiqueta={d('Tres herramientas reportando tres cifras distintas del mismo mes', 'Three tools reporting three different figures for the same month')}>
       <div className="grid grid-cols-3 gap-3">
         {fuentes.map((f, i) => (
           <motion.div
@@ -159,7 +182,7 @@ export function EscenaPremisa({ activo }: { activo: boolean }) {
           className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px]"
           style={{ borderColor: 'var(--p-morado)', color: 'var(--p-morado)' }}
         >
-          ¿Cuál es la buena?
+          {d('¿Cuál es la buena?', 'Which one is right?')}
         </motion.div>
       </div>
     </Marco>
@@ -169,6 +192,7 @@ export function EscenaPremisa({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 3 · Web: la página se arma y se mide */
 
 export function EscenaWeb({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(5, 700, activo);
   const bloques = [
     'h-6 w-2/5',
@@ -177,7 +201,7 @@ export function EscenaWeb({ activo }: { activo: boolean }) {
     'h-9 w-1/3 rounded-lg',
   ];
   return (
-    <Marco etiqueta="Una página armándose bloque a bloque y su tiempo de carga">
+    <Marco etiqueta={d('Una página armándose bloque a bloque y su tiempo de carga', 'A page assembling block by block, and its load time')}>
       <div
         className="rounded-2xl border p-4"
         style={{ borderColor: 'var(--p-linea)', background: 'var(--p-caja2)' }}
@@ -216,11 +240,12 @@ export function EscenaWeb({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 4 · Posicionamiento: subir y ser citado */
 
 export function EscenaPosicionamiento({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(2, 2600, activo);
   const arriba = paso === 1;
   const filas = [0, 1, 2, 3];
   return (
-    <Marco etiqueta="Un resultado subiendo en la lista y una IA citando la marca">
+    <Marco etiqueta={d('Un resultado subiendo en la lista y una IA citando la marca', 'A result climbing the list and an AI quoting the brand')}>
       <div className="space-y-2">
         {filas.map((i) => {
           const tuyo = arriba ? i === 0 : i === 3;
@@ -245,7 +270,7 @@ export function EscenaPosicionamiento({ activo }: { activo: boolean }) {
               <span className="h-2 flex-1 rounded" style={{ background: 'var(--p-pista)' }} />
               {tuyo && (
                 <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--p-morado)' }}>
-                  Tú
+                  {d('Tú', 'You')}
                 </span>
               )}
             </motion.div>
@@ -259,7 +284,7 @@ export function EscenaPosicionamiento({ activo }: { activo: boolean }) {
         style={{ borderColor: 'var(--p-linea)', background: 'var(--p-caja2)', color: 'var(--p-suave)' }}
       >
         <span className="mr-1.5 font-mono text-[10px]" style={{ color: 'var(--p-morado)' }}>IA</span>
-        …te recomiendo considerar Inédito Digital, en Aguascalientes.
+        {d('…te recomiendo considerar Inédito Digital, en Aguascalientes.', '…I would consider Inédito Digital, in Aguascalientes.')}
       </motion.div>
     </Marco>
   );
@@ -268,9 +293,10 @@ export function EscenaPosicionamiento({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 5 · Local: el mapa decide primero */
 
 export function EscenaLocal({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(3, 1500, activo);
   return (
-    <Marco etiqueta="El bloque de tres negocios en el mapa, por encima de los resultados normales">
+    <Marco etiqueta={d('El bloque de tres negocios en el mapa, por encima de los resultados normales', 'The three-business map block, above the normal results')}>
       <div
         className="relative overflow-hidden rounded-2xl border"
         style={{ borderColor: 'var(--p-linea)', background: 'var(--p-caja2)', height: '52%' }}
@@ -326,15 +352,16 @@ export function EscenaLocal({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 6 · Publicidad: el dinero se mueve */
 
 export function EscenaPublicidad({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(2, 2400, activo);
   const ok = paso === 1;
   const campanas = [
-    { n: 'Búsqueda', a: 34, b: 54 },
+    { n: d('Búsqueda', 'Search'), a: 34, b: 54 },
     { n: 'Display', a: 44, b: 13 },
     { n: 'Video', a: 22, b: 33 },
   ];
   return (
-    <Marco etiqueta="El presupuesto moviéndose de la campaña que no rinde a la que sí">
+    <Marco etiqueta={d('El presupuesto moviéndose de la campaña que no rinde a la que sí', 'Budget moving from the campaign that does not pay to the one that does')}>
       <div className="space-y-4">
         {campanas.map((c, i) => {
           const v = ok ? c.b : c.a;
@@ -361,7 +388,7 @@ export function EscenaPublicidad({ activo }: { activo: boolean }) {
         style={{ color: 'var(--p-verde)' }}
       >
         <TrendingUp size={13} strokeWidth={2.6} />
-        Costo por cliente −38%
+        {d('Costo por cliente −38%', 'Cost per customer −38%')}
       </motion.div>
     </Marco>
   );
@@ -370,6 +397,7 @@ export function EscenaPublicidad({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 7 · Espectaculares: la ciudad se llena */
 
 export function EscenaEspectaculares({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(2, 2800, activo);
   /* Puntos con posición estable: sembrados de una semilla fija para que la
      ciudad se vea igual en cada visita y no baile entre láminas. */
@@ -386,7 +414,7 @@ export function EscenaEspectaculares({ activo }: { activo: boolean }) {
   ).current;
 
   return (
-    <Marco etiqueta="Los espacios publicitarios repartidos por la ciudad">
+    <Marco etiqueta={d('Los espacios publicitarios repartidos por la ciudad', 'The advertising sites spread across the city')}>
       <div
         className="relative flex-1 overflow-hidden rounded-2xl border"
         style={{ borderColor: 'var(--p-linea)', background: 'var(--p-caja2)' }}
@@ -413,7 +441,7 @@ export function EscenaEspectaculares({ activo }: { activo: boolean }) {
           animate={{ opacity: paso >= 1 ? 1 : 0 }}
           transition={{ duration: 0.4 }}
         >
-          317 espacios · 107 libres
+          {d('317 espacios · 107 libres', '317 sites · 107 available')}
         </motion.div>
       </div>
     </Marco>
@@ -423,9 +451,10 @@ export function EscenaEspectaculares({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 8 · Agentes: la hora repetida */
 
 export function EscenaAgentes({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(4, 1300, activo);
   return (
-    <Marco etiqueta="Una consulta a las 23:47 contestada al momento">
+    <Marco etiqueta={d('Una consulta a las 23:47 contestada al momento', 'An enquiry at 23:47, answered on the spot')}>
       <div className="mb-1 flex items-center gap-2 font-mono text-[11px]" style={{ color: 'var(--p-mudo)' }}>
         <Clock size={13} style={{ color: 'var(--p-morado)' }} />
         23:47
@@ -436,7 +465,7 @@ export function EscenaAgentes({ activo }: { activo: boolean }) {
         className="max-w-[82%] self-start rounded-2xl rounded-bl-sm px-4 py-2.5 text-[13px]"
         style={{ background: 'var(--p-caja2)', color: 'var(--p-suave)' }}
       >
-        ¿Todavía tienen disponible?
+        {d('¿Todavía tienen disponible?', 'Do you still have it available?')}
       </motion.div>
       <motion.div
         animate={{ opacity: paso === 1 ? 1 : 0 }}
@@ -459,7 +488,7 @@ export function EscenaAgentes({ activo }: { activo: boolean }) {
         className="max-w-[86%] self-end rounded-2xl rounded-br-sm px-4 py-2.5 text-[13px] text-white"
         style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
       >
-        Sí, quedan tres. ¿Te aparto uno?
+        {d('Sí, quedan tres. ¿Te aparto uno?', 'Yes, three left. Shall I hold one?')}
       </motion.div>
       <motion.div
         animate={{ opacity: paso >= 3 ? 1 : 0 }}
@@ -468,7 +497,7 @@ export function EscenaAgentes({ activo }: { activo: boolean }) {
         style={{ color: 'var(--p-verde)' }}
       >
         <Check size={13} strokeWidth={3} />
-        4 segundos
+        {d('4 segundos', '4 seconds')}
       </motion.div>
     </Marco>
   );
@@ -477,20 +506,21 @@ export function EscenaAgentes({ activo }: { activo: boolean }) {
 /* ════════════════════════════════ 9 · Ventas: la lista se ordena */
 
 const PROSPECTOS = [
-  { n: 'Constructora del Bajío', p: 92 },
-  { n: 'Clínica Santa Fe', p: 74 },
-  { n: 'Contacto sin empresa', p: 21 },
-  { n: 'Distribuidora Norte', p: 58 },
+  { n: 'Constructora del Bajío', en: 'Bajío Construction', p: 92 },
+  { n: 'Clínica Santa Fe', en: 'Santa Fe Clinic', p: 74 },
+  { n: 'Contacto sin empresa', en: 'Lead with no company', p: 21 },
+  { n: 'Distribuidora Norte', en: 'Norte Distribution', p: 58 },
 ];
 
 export function EscenaVentas({ activo }: { activo: boolean }) {
+  const d = useD();
   const paso = usePaso(2, 2400, activo);
   const orden = paso === 0 ? [0, 1, 2, 3] : [0, 1, 3, 2];
   const listo = paso === 1;
   return (
-    <Marco etiqueta="Una lista de prospectos ordenándose por probabilidad de cierre">
+    <Marco etiqueta={d('Una lista de prospectos ordenándose por probabilidad de cierre', 'A list of prospects sorting itself by likelihood of closing')}>
       <div className="mb-1 text-[10px] uppercase tracking-[.16em]" style={{ color: 'var(--p-mudo)' }}>
-        {listo ? 'Por probabilidad' : 'Por orden de llegada'}
+        {listo ? d('Por probabilidad', 'By likelihood') : d('Por orden de llegada', 'In order of arrival')}
       </div>
       <div className="flex flex-col gap-2">
         {PROSPECTOS.map((p, i) => {
@@ -509,7 +539,7 @@ export function EscenaVentas({ activo }: { activo: boolean }) {
               className="rounded-xl border px-3 py-2"
             >
               <div className="mb-1.5 flex items-baseline justify-between gap-2">
-                <span className="truncate text-[12.5px]" style={{ color: 'var(--p-tinta)' }}>{p.n}</span>
+                <span className="truncate text-[12.5px]" style={{ color: 'var(--p-tinta)' }}>{d(p.n, p.en)}</span>
                 <span
                   className="font-mono text-[11.5px]"
                   style={{ color: primero ? 'var(--p-morado)' : 'var(--p-mudo)' }}
@@ -557,14 +587,15 @@ function Cifra({ hasta, sufijo = '', activo }: { hasta: number; sufijo?: string;
 }
 
 export function EscenaTablero({ activo }: { activo: boolean }) {
+  const d = useD();
   const datos = [
-    { l: 'Visitas', v: 4820, s: '' },
-    { l: 'Contactos', v: 137, s: '' },
-    { l: 'Costo x cliente', v: 412, s: '' },
-    { l: 'Cerradas', v: 19, s: '' },
+    { l: d('Visitas', 'Visits'), v: 4820, s: '' },
+    { l: d('Contactos', 'Leads'), v: 137, s: '' },
+    { l: d('Costo x cliente', 'Cost per customer'), v: 412, s: '' },
+    { l: d('Cerradas', 'Closed'), v: 19, s: '' },
   ];
   return (
-    <Marco etiqueta="Un tablero con las cifras del mes en una sola pantalla">
+    <Marco etiqueta={d('Un tablero con las cifras del mes en una sola pantalla', 'A dashboard with the month’s figures on one screen')}>
       <div className="grid grid-cols-2 gap-3">
         {datos.map((d, i) => (
           <motion.div
@@ -590,7 +621,15 @@ export function EscenaTablero({ activo }: { activo: boolean }) {
 
 /* ════════════════════════════════ el repartidor */
 
-export function Escena({ nombre, activo }: { nombre: string; activo: boolean }) {
+export function Escena({ nombre, activo, idioma = 'es' }: {
+  nombre: string;
+  activo: boolean;
+  idioma?: 'es' | 'en';
+}) {
+  return <Lengua.Provider value={idioma}>{elegir(nombre, activo)}</Lengua.Provider>;
+}
+
+function elegir(nombre: string, activo: boolean) {
   switch (nombre) {
     case 'premisa':          return <EscenaPremisa activo={activo} />;
     case 'web':              return <EscenaWeb activo={activo} />;

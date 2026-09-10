@@ -157,7 +157,7 @@ export const LAMINAS: Lamina[] = [
     titulo: { es: 'EL PRESUPUESTO\nSE MUEVE SOLO', en: 'BUDGET THAT\nMOVES ITSELF' },
     bajada: {
       es: 'Google, Meta y ahora ChatGPT Ads. Lo que decide el resultado no es la plataforma: es qué se cuenta como resultado. Una cuenta que optimiza clics es una tienda que mide gente entrando.',
-      en: 'Google, Meta and now ChatGPT Ads. What decides the outcome is not the platform: it is what counts as an outcome. An account optimising for clicks is a store measuring footfall.',
+      en: 'Google, Meta and now ChatGPT Ads. What decides the outcome is not the platform: it is what counts as an outcome. An account optimizing for clicks is a store measuring footfall.',
     },
     puntos: {
       es: [
@@ -180,7 +180,7 @@ export const LAMINAS: Lamina[] = [
     titulo: { es: 'EL ÚNICO MEDIO\nQUE NO SE SALTA', en: 'THE ONE MEDIUM\nYOU CANNOT SKIP' },
     bajada: {
       es: 'No hay «omitir anuncio» en una avenida. 317 espacios en Aguascalientes —espectaculares, unipolares, puentes, vallas y pantallas— elegidos por flujo y ángulo de lectura, no por foto de catálogo.',
-      en: 'There is no “skip ad” on an avenue. 317 spaces across Aguascalientes — billboards, unipoles, pedestrian bridges, hoardings and LED screens — chosen by traffic flow and reading angle, not by a catalogue photo.',
+      en: 'There is no “skip ad” on an avenue. 317 spaces across Aguascalientes — billboards, unipoles, pedestrian bridges, street panels and LED screens — chosen by traffic flow and reading angle, not by a catalog photo.',
     },
     puntos: {
       es: [
@@ -235,8 +235,8 @@ export const LAMINAS: Lamina[] = [
         'El seguimiento que se abandona al tercer intento, sostenido',
       ],
       en: [
-        'Priority by behaviour, not by how long they have waited',
-        'First outreach drafted with each company own details',
+        'Priority by behavior, not by how long they have waited',
+        'First outreach drafted with each company’s own details',
         'The follow-up everyone abandons on the third try, sustained',
       ],
     },
