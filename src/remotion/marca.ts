@@ -13,48 +13,51 @@ export type Idioma = 'es' | 'en';
 
 export type Paleta = {
   fondo: string;
-  caja: string;
-  caja2: string;
-  linea: string;
   tinta: string;
   suave: string;
   mudo: string;
+  /* El morado de la casa y su pareja para los degradados. Una barra de un solo
+     color es una raya; una con dos tonos es luz. */
   morado: string;
-  moradoSuave: string;
+  morado2: string;
+  /* El segundo tono, para los resplandores del fondo y los datos que no son la
+     marca. Cian porque es lo que menos pelea con el morado. */
+  acento: string;
   verde: string;
+  verde2: string;
   ambar: string;
-  pista: string;
+  /* De qué color es la oscuridad debajo de las cosas. En claro no es negro:
+     una sombra negra sobre fondo claro ensucia. */
+  sombra: string;
 };
 
 /** El tema oscuro, que es la casa. Es el que usa el render a video. */
 export const OSCURA: Paleta = {
-  fondo: '#0B0810',
-  caja: 'rgba(255,255,255,.04)',
-  caja2: 'rgba(255,255,255,.07)',
-  linea: 'rgba(255,255,255,.14)',
-  tinta: '#F2F0F6',
-  suave: 'rgba(242,240,246,.72)',
-  mudo: 'rgba(242,240,246,.45)',
-  morado: '#CC66FF',
-  moradoSuave: 'rgba(119,0,206,.28)',
-  verde: '#00E585',
-  ambar: '#FFCF7A',
-  pista: 'rgba(255,255,255,.10)',
+  fondo: '#080611',
+  tinta: '#F4F2F8',
+  suave: 'rgba(244,242,248,.74)',
+  mudo: 'rgba(244,242,248,.46)',
+  morado: '#B44BFF',
+  morado2: '#E48CFF',
+  acento: '#3DD8FF',
+  verde: '#00C97A',
+  verde2: '#5BFFB0',
+  ambar: '#FFB65C',
+  sombra: '#02000A',
 };
 
 export const CLARA: Paleta = {
-  fondo: '#FFFFFF',
-  caja: '#FFFFFF',
-  caja2: '#F1EDF8',
-  linea: 'rgba(10,10,10,.12)',
-  tinta: '#0A0A0A',
-  suave: 'rgba(10,10,10,.68)',
-  mudo: 'rgba(10,10,10,.45)',
+  fondo: '#F7F4FC',
+  tinta: '#120A1C',
+  suave: 'rgba(18,10,28,.70)',
+  mudo: 'rgba(18,10,28,.46)',
   morado: '#7700CE',
-  moradoSuave: 'rgba(119,0,206,.12)',
-  verde: '#00A860',
-  ambar: '#D99B1F',
-  pista: 'rgba(10,10,10,.09)',
+  morado2: '#A34BFF',
+  acento: '#0090C4',
+  verde: '#008750',
+  verde2: '#00B96E',
+  ambar: '#C07A10',
+  sombra: '#3A2A55',
 };
 
 export type PropsEscena = {
