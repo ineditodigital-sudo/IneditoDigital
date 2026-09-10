@@ -6,11 +6,11 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "studio": "remotion studio",
+    "video": "remotion render"
   },
   "dependencies": {
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "7.3.5",
@@ -42,6 +42,7 @@
     "@radix-ui/react-toggle": "1.1.2",
     "@radix-ui/react-toggle-group": "1.1.2",
     "@radix-ui/react-tooltip": "1.1.8",
+    "@remotion/player": "^4.0.523",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
@@ -51,9 +52,11 @@
     "lucide-react": "0.487.0",
     "motion": "12.23.24",
     "next-themes": "0.4.6",
+    "react": "18.3.1",
     "react-day-picker": "8.10.1",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
+    "react-dom": "18.3.1",
     "react-hook-form": "7.55.0",
     "react-popper": "2.3.0",
     "react-resizable-panels": "2.1.7",
@@ -61,6 +64,7 @@
     "react-router": "^7.10.1",
     "react-slick": "0.31.0",
     "recharts": "2.15.2",
+    "remotion": "^4.0.523",
     "slick-carousel": "^1.8.1",
     "sonner": "2.0.3",
     "tailwind-merge": "3.2.0",
@@ -68,6 +72,7 @@
     "vaul": "1.1.2"
   },
   "devDependencies": {
+    "@remotion/cli": "^4.0.523",
     "@tailwindcss/vite": "4.1.12",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",

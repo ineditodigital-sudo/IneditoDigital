@@ -13,7 +13,8 @@ import {
 } from 'lucide-react';
 import { LAMINAS, UI, CONTACTO, type Idioma, type Tarjeta } from '../components/presentacion/contenido';
 import { idiomaVigente } from '../idioma';
-import { Escena, EscenaOnda } from '../components/presentacion/escenas';
+import { EscenaOnda } from '../components/presentacion/escenas';
+import EscenaVideo from '../components/presentacion/EscenaVideo';
 import Logotipo from '../components/presentacion/Logotipo';
 import MenuServicios from '../components/presentacion/MenuServicios';
 
@@ -267,12 +268,23 @@ export default function PresentacionServicios() {
             >
               {/* ── columna del texto ── */}
               <div className={suelta ? 'flex max-w-3xl flex-col items-center' : 'min-w-0'}>
-                <p
-                  className="mb-2.5 font-mono text-[10px] uppercase tracking-[.24em] md:mb-3.5 md:text-[11.5px]"
-                  style={{ color: 'var(--p-morado)' }}
-                >
-                  {lamina.kicker[idioma]}
-                </p>
+                {/* En la portada manda la marca: el logo en grande y sin kicker,
+                    porque el logo ya dice de quien es esto. */}
+                {portada && (
+                  <div className="mb-7 md:mb-9">
+                    <Logotipo escala={2} className="flex md:hidden" />
+                    <Logotipo escala={2.8} className="hidden md:flex" />
+                  </div>
+                )}
+
+                {!portada && (
+                  <p
+                    className="mb-2.5 font-mono text-[10px] uppercase tracking-[.24em] md:mb-3.5 md:text-[11.5px]"
+                    style={{ color: 'var(--p-morado)' }}
+                  >
+                    {lamina.kicker[idioma]}
+                  </p>
+                )}
 
                 {/* El nombre manda. clamp() para que no haya un salto entre el
                     teléfono y el proyector: crece con el ancho, sin escalones. */}
@@ -327,16 +339,14 @@ export default function PresentacionServicios() {
                   En móvil cede: se recorta a media pantalla para que las
                   tarjetas quepan sin scroll. En pantalla grande recupera su
                   proporción y es la mitad del argumento. */}
-              {/*
-                En pantalla baja y angosta —un telefono de 640 px, un SE— la
-                escena desaparece. Ahi no caben nombre, descripcion, tres
-                tarjetas Y una animacion, y de las cuatro cosas la animacion es
-                la unica que no vende. Vale mas perderla que obligar a hacer
-                scroll dentro de la diapositiva. Desde 700 px de alto vuelve.
-              */}
               {!suelta && (
-                <div className="order-first w-full min-w-0 [@media(max-height:700px)_and_(max-width:1023px)]:hidden lg:order-none">
-                  <Escena nombre={lamina.escena} activo idioma={idioma} />
+                <div className="order-first w-full min-w-0 lg:order-none">
+                  <EscenaVideo
+                    nombre={lamina.escena}
+                    idioma={idioma}
+                    tema={tema}
+                    quieto={!!quieto}
+                  />
                 </div>
               )}
             </motion.div>
@@ -418,8 +428,14 @@ function TarjetaIncluye({ tarjeta, n, quieto }: { tarjeta: Tarjeta; n: number; q
         >
           {tarjeta.t}
         </p>
+        {/*
+          En un telefono bajo —un SE, un Android de 720— esta linea se va y
+          quedan los tres titulares. Es lo correcto de las cuatro cosas que
+          compiten por la pantalla: el titular ya dice que incluye, y perder la
+          animacion o meter scroll cuesta mas que perder la aclaracion.
+        */}
         <p
-          className="mt-0.5 text-[11.5px] leading-[1.45] md:mt-1 md:text-[13.5px]"
+          className="mt-0.5 text-[11.5px] leading-[1.45] [@media(max-height:780px)_and_(max-width:1023px)]:hidden md:mt-1 md:text-[13.5px]"
           style={{ color: 'var(--p-suave)' }}
         >
           {tarjeta.d}
