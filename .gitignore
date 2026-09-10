@@ -70,3 +70,10 @@ src/app/components/asistente/__pruebas__/.compilado/
 # Configuracion local de Claude Code: skills, agentes y ajustes
 # de cada maquina. No es codigo del sitio.
 .claude/
+
+# Remotion: la carpeta de videos renderizados y su cache de bundle
+out/
+.remotion/
+
+# El instalador de skills deja esto; no es del proyecto
+.agents/
