@@ -3,6 +3,7 @@ import type { PropsEscena } from './marca';
 import { EscenaLocal, EscenaPosicionamiento, EscenaWeb } from './escenas/presencia';
 import { EscenaAgentes, EscenaEspectaculares, EscenaPublicidad } from './escenas/demanda';
 import { EscenaAuditoria, EscenaTablero, EscenaVentas } from './escenas/negocio';
+import { EscenaTienda } from './escenas/tienda';
 
 /*
  * Qué escena le toca a cada servicio.
@@ -16,6 +17,7 @@ import { EscenaAuditoria, EscenaTablero, EscenaVentas } from './escenas/negocio'
  */
 export const ESCENAS: Record<string, React.FC<PropsEscena>> = {
   web: EscenaWeb,
+  ecommerce: EscenaTienda,
   posicionamiento: EscenaPosicionamiento,
   local: EscenaLocal,
   publicidad: EscenaPublicidad,

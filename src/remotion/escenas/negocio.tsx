@@ -40,7 +40,7 @@ const aliento = (frame: number, periodo = 90) => (Math.sin((frame / periodo) * M
 
 /* ════════════════════ 07 · IA para ventas: la lista se ordena por cierre */
 
-export const EscenaVentas: React.FC<PropsEscena> = ({ paleta, idioma }) => {
+export const EscenaVentas: React.FC<PropsEscena> = ({ paleta, idioma, sangrado }) => {
   const frame = useCurrentFrame();
   const d = dice(idioma);
   const resp = aliento(frame);
@@ -72,6 +72,7 @@ export const EscenaVentas: React.FC<PropsEscena> = ({ paleta, idioma }) => {
   return (
     <Escenario
       paleta={paleta}
+      sangrado={sangrado}
       respira={resp}
       rotulo={
         <Rotulo paleta={paleta} pulso={resp}>
@@ -179,7 +180,7 @@ export const EscenaVentas: React.FC<PropsEscena> = ({ paleta, idioma }) => {
 
 /* ═══════════════════ 08 · Auditoría con IA: hallazgos con evidencia */
 
-export const EscenaAuditoria: React.FC<PropsEscena> = ({ paleta, idioma }) => {
+export const EscenaAuditoria: React.FC<PropsEscena> = ({ paleta, idioma, sangrado }) => {
   const frame = useCurrentFrame();
   const d = dice(idioma);
   const resp = aliento(frame);
@@ -201,6 +202,7 @@ export const EscenaAuditoria: React.FC<PropsEscena> = ({ paleta, idioma }) => {
   return (
     <Escenario
       paleta={paleta}
+      sangrado={sangrado}
       respira={resp}
       rotulo={<Rotulo paleta={paleta} pulso={resp}>{d('Revisión de tu presencia', 'A review of your presence')}</Rotulo>}
       remate={
@@ -295,7 +297,7 @@ export const EscenaAuditoria: React.FC<PropsEscena> = ({ paleta, idioma }) => {
 
 /* ═════════════════════ 09 · Tablero: una pantalla, no cinco pestañas */
 
-export const EscenaTablero: React.FC<PropsEscena> = ({ paleta, idioma }) => {
+export const EscenaTablero: React.FC<PropsEscena> = ({ paleta, idioma, sangrado }) => {
   const frame = useCurrentFrame();
   const d = dice(idioma);
   const resp = aliento(frame);
@@ -337,6 +339,7 @@ export const EscenaTablero: React.FC<PropsEscena> = ({ paleta, idioma }) => {
   return (
     <Escenario
       paleta={paleta}
+      sangrado={sangrado}
       respira={resp}
       rotulo={<Rotulo paleta={paleta} pulso={resp}>{d('Tu tablero · septiembre', 'Your dashboard · September')}</Rotulo>}
       remate={

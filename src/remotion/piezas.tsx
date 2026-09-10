@@ -73,16 +73,25 @@ export function Escenario({
   remate,
   /** 0 a 1: mueve los resplandores del fondo para que nunca esté quieto. */
   respira = 0,
+  /** Sin fondo propio, para fundirse con la lámina del deck. */
+  sangrado,
   children,
 }: {
   paleta: Paleta;
   rotulo?: React.ReactNode;
   remate?: React.ReactNode;
   respira?: number;
+  sangrado?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <AbsoluteFill style={{ background: paleta.fondo, overflow: 'hidden', fontFamily: LETRA }}>
+    <AbsoluteFill
+      style={{
+        background: sangrado ? 'transparent' : paleta.fondo,
+        overflow: 'hidden',
+        fontFamily: LETRA,
+      }}
+    >
       {/* el fondo: un degradado y dos blooms que se mueven despacio */}
       <AbsoluteFill
         style={{
@@ -543,5 +552,72 @@ export function Palomita({ color, tam = 30, grosor = 4 }: { color: string; tam?:
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+/**
+ * Un teléfono, para cuando el aparato ES parte del mensaje.
+ *
+ * Se usa con cuidado: la composición se escala a unos 300 px de ancho en un
+ * teléfono real, así que meter una pantalla dentro de otra pantalla deja el
+ * contenido a la mitad de tamaño. Solo vale la pena cuando lo que se cuenta es
+ * justamente que eso pasa en un móvil —una tienda, una conversación— y el
+ * aparato puede ocupar casi toda la escena.
+ */
+export function Telefono({
+  paleta,
+  ancho = 380,
+  alto = 620,
+  style,
+  children,
+}: {
+  paleta: Paleta;
+  ancho?: number;
+  alto?: number;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: ancho,
+        height: alto,
+        borderRadius: 54,
+        padding: 12,
+        /* el marco: metal con un filo de luz arriba */
+        background: `linear-gradient(160deg, ${conAlfa(paleta.tinta, 0.3)}, ${conAlfa(paleta.tinta, 0.09)})`,
+        boxShadow: `0 40px 90px ${conAlfa(paleta.sombra, 0.7)}, inset 0 1px 0 ${conAlfa('#ffffff', 0.4)}`,
+        ...style,
+      }}
+    >
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          borderRadius: 44,
+          overflow: 'hidden',
+          background: paleta.fondo,
+          boxShadow: `inset 0 0 0 1px ${conAlfa(paleta.tinta, 0.12)}`,
+        }}
+      >
+        {children}
+      </div>
+      {/* la isla de arriba */}
+      <span
+        style={{
+          position: 'absolute',
+          top: 26,
+          left: '50%',
+          translate: '-50% 0',
+          width: 108,
+          height: 26,
+          borderRadius: 999,
+          background: '#000',
+          zIndex: 5,
+        }}
+      />
+    </div>
   );
 }

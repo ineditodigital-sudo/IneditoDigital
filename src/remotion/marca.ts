@@ -63,6 +63,17 @@ export const CLARA: Paleta = {
 export type PropsEscena = {
   paleta: Paleta;
   idioma: Idioma;
+  /*
+   * A sangre: la escena no pinta su propio fondo.
+   *
+   * En escritorio la escena se sale del contenedor hasta el borde de la ventana
+   * y tiene que fundirse con la lámina; si pintara su fondo se veria el
+   * rectangulo. Sus resplandores siguen ahi, que es justo lo que se quiere:
+   * que la luz de la escena se derrame sobre la diapositiva.
+   *
+   * En video va apagado: un MP4 con fondo transparente no existe.
+   */
+  sangrado?: boolean;
 };
 
 export const PROPS_BASE: PropsEscena = { paleta: OSCURA, idioma: 'es' };

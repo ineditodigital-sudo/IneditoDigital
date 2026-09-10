@@ -10,8 +10,10 @@ import {
   Remate,
   Resplandor,
   Rotulo,
+  Telefono,
   Vidrio,
 } from '../piezas';
+import { Chapa, LogoGoogle, LogoIA } from '../logos';
 
 /*
  * Presencia: el sitio, el buscador y el mapa.
@@ -46,19 +48,44 @@ const aliento = (frame: number, periodo = 90) => (Math.sin((frame / periodo) * M
 
 /* ═══════════════════════════════ 01 · Sitios web: la página se arma y se mide */
 
-export const EscenaWeb: React.FC<PropsEscena> = ({ paleta, idioma }) => {
+export const EscenaWeb: React.FC<PropsEscena> = ({ paleta, idioma, sangrado }) => {
   const frame = useCurrentFrame();
   const d = dice(idioma);
   const resp = aliento(frame);
 
-  /* Las medidas están calculadas para que los cuatro bloques quepan dentro del
-     navegador sin recortarse: 4 x 46 + hero + huecos + relleno tiene que caber
-     en lo que deja la banda de en medio menos la fila de la medición. */
+  /*
+   * Dos aparatos, no uno.
+   *
+   * La tarjeta de este servicio promete un sitio veloz en TODOS los
+   * dispositivos, y una sola ventana de navegador no dice eso: dice
+   * "computadora". Con el teléfono al lado, armándose al mismo compás, la
+   * promesa se ve antes de leerse.
+   *
+   * Las alturas van fijadas y no repartidas por flex: la banda de en medio mide
+   * 624 —los 1000 del lienzo menos las dos bandas y su aire—, así que 452 de
+   * aparatos más 40 de hueco deja 132 para la medición. Con eso no hay recorte
+   * a ninguna escala a la que el reproductor lleve la composición.
+   */
+  const ALTO_APARATOS = 452;
+  const ANCHO_TEL = 276;
+
+  /* Los cuatro bloques del navegador. */
   const bloques = [
-    { alto: 44, ancho: '32%', desde: 20 },
-    { alto: 102, ancho: '100%', desde: 28, hero: true },
-    { alto: 44, ancho: '64%', desde: 36 },
-    { alto: 44, ancho: '46%', desde: 44 },
+    { alto: 40, ancho: '32%', desde: 20 },
+    { alto: 96, ancho: '100%', desde: 28, hero: true },
+    { alto: 40, ancho: '64%', desde: 36 },
+    { alto: 40, ancho: '46%', desde: 44 },
+  ];
+
+  /* Los del teléfono: el mismo sitio, apilado. Entran un poco después para que
+     se lea como una consecuencia y no como dos cosas sueltas a la vez. */
+  const bloquesTel = [
+    { alto: 74, ancho: '100%', desde: 34, hero: true },
+    { alto: 30, ancho: '100%', desde: 42 },
+    { alto: 30, ancho: '72%', desde: 48 },
+    { alto: 30, ancho: '86%', desde: 54 },
+    { alto: 30, ancho: '58%', desde: 60 },
+    { alto: 52, ancho: '100%', desde: 66, hero: true },
   ];
 
   const segundos = interpolate(frame, [74, 102], [0, 1.1], {
@@ -67,9 +94,30 @@ export const EscenaWeb: React.FC<PropsEscena> = ({ paleta, idioma }) => {
     easing: sal,
   });
 
+  /* Un solo sitio pintado en dos tamaños: el navegador y el teléfono comparten
+     forma y compás, y solo cambian de medida. */
+  const pinta = (
+    b: { alto: number; ancho: string; desde: number; hero?: boolean },
+    radio: number,
+  ): React.CSSProperties => {
+    const e = entra(frame, b.desde);
+    return {
+      height: b.alto,
+      width: b.ancho,
+      borderRadius: radio,
+      background: b.hero
+        ? `linear-gradient(120deg, ${conAlfa(paleta.morado, 0.6)}, ${conAlfa(paleta.acento, 0.32)})`
+        : `linear-gradient(160deg, ${conAlfa(paleta.tinta, 0.14)}, ${conAlfa(paleta.tinta, 0.05)})`,
+      boxShadow: b.hero ? `0 0 46px ${conAlfa(paleta.morado, 0.35 + resp * 0.16)}` : 'none',
+      opacity: e.opacity,
+      translate: `0 ${e.translate}px`,
+    };
+  };
+
   return (
     <Escenario
       paleta={paleta}
+      sangrado={sangrado}
       respira={resp}
       rotulo={<Rotulo paleta={paleta} pulso={resp}>{d('Tu sitio, armándose', 'Your site, assembling')}</Rotulo>}
       remate={
@@ -83,91 +131,156 @@ export const EscenaWeb: React.FC<PropsEscena> = ({ paleta, idioma }) => {
         </Remate>
       }
     >
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 46, height: '100%' }}>
-        {/* la luz que el navegador derrama sobre el fondo */}
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 40, height: '100%' }}>
+        {/* la luz que los aparatos derraman sobre el fondo */}
         <Resplandor
           color={paleta.morado}
           tam={900}
           opacidad={0.3 + resp * 0.14}
-          style={{ left: '50%', top: -200, translate: '-50% 0' }}
+          style={{ left: '46%', top: -200, translate: '-50% 0' }}
         />
 
-        {/* el navegador, como objeto */}
-        <Vidrio paleta={paleta} style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              padding: '24px 30px',
-              borderBottom: `1px solid ${conAlfa(paleta.tinta, 0.1)}`,
-              opacity: interpolate(frame, [0, 14], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
-            }}
+        <div style={{ display: 'flex', gap: 40, height: ALTO_APARATOS, flexShrink: 0 }}>
+          {/* el navegador */}
+          <Vidrio
+            paleta={paleta}
+            style={{ flex: 1, minWidth: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
           >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                style={{ width: 15, height: 15, borderRadius: 999, background: conAlfa(paleta.tinta, 0.22) }}
-              />
-            ))}
-            <span
+            <div
               style={{
-                marginLeft: 20,
-                flex: 1,
-                height: 38,
-                borderRadius: 999,
-                background: conAlfa(paleta.tinta, 0.07),
-                boxShadow: `inset 0 1px 2px ${conAlfa(paleta.sombra, 0.5)}`,
                 display: 'flex',
                 alignItems: 'center',
-                paddingInline: 22,
-                fontSize: 23,
-                color: paleta.mudo,
+                gap: 14,
+                padding: '22px 28px',
+                borderBottom: `1px solid ${conAlfa(paleta.tinta, 0.1)}`,
+                opacity: interpolate(frame, [0, 14], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
               }}
             >
-              inedito.digital
-            </span>
-          </div>
-
-          <div style={{ flex: 1, padding: 28, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 20 }}>
-            {bloques.map((b, i) => {
-              const e = entra(frame, b.desde);
-              return (
-                <div
+              {[0, 1, 2].map((i) => (
+                <span
                   key={i}
-                  style={{
-                    height: b.alto,
-                    width: b.ancho,
-                    borderRadius: 16,
-                    background: b.hero
-                      ? `linear-gradient(120deg, ${conAlfa(paleta.morado, 0.6)}, ${conAlfa(paleta.acento, 0.32)})`
-                      : `linear-gradient(160deg, ${conAlfa(paleta.tinta, 0.14)}, ${conAlfa(paleta.tinta, 0.05)})`,
-                    boxShadow: b.hero ? `0 0 46px ${conAlfa(paleta.morado, 0.35 + resp * 0.16)}` : 'none',
-                    opacity: e.opacity,
-                    translate: `0 ${e.translate}px`,
-                  }}
+                  style={{ width: 15, height: 15, borderRadius: 999, background: conAlfa(paleta.tinta, 0.22) }}
                 />
-              );
-            })}
-          </div>
-        </Vidrio>
+              ))}
+              <span
+                style={{
+                  marginLeft: 20,
+                  flex: 1,
+                  minWidth: 0,
+                  height: 38,
+                  borderRadius: 999,
+                  background: conAlfa(paleta.tinta, 0.07),
+                  boxShadow: `inset 0 1px 2px ${conAlfa(paleta.sombra, 0.5)}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  paddingInline: 22,
+                  fontSize: 23,
+                  color: paleta.mudo,
+                }}
+              >
+                inedito.digital
+              </span>
+            </div>
+
+            <div
+              style={{
+                flex: 1,
+                padding: 26,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                gap: 18,
+              }}
+            >
+              {bloques.map((b, i) => (
+                <div key={i} style={pinta(b, 16)} />
+              ))}
+            </div>
+          </Vidrio>
+
+          {/* el teléfono, con el mismo sitio apilado */}
+          <Telefono paleta={paleta} ancho={ANCHO_TEL} alto={ALTO_APARATOS} style={{ flexShrink: 0 }}>
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div
+              style={{
+                padding: '58px 18px 14px',
+                borderBottom: `1px solid ${conAlfa(paleta.tinta, 0.1)}`,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                opacity: interpolate(frame, [10, 24], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
+              }}
+            >
+              <span
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  height: 30,
+                  borderRadius: 999,
+                  background: conAlfa(paleta.tinta, 0.07),
+                  display: 'flex',
+                  alignItems: 'center',
+                  paddingInline: 14,
+                  fontSize: 16,
+                  color: paleta.mudo,
+                }}
+              >
+                inedito.digital
+              </span>
+              {/* el botón de menú, tres rayas */}
+              <span style={{ display: 'flex', flexDirection: 'column', gap: 4, flexShrink: 0 }}>
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    style={{ width: 20, height: 2, borderRadius: 2, background: conAlfa(paleta.tinta, 0.4) }}
+                  />
+                ))}
+              </span>
+            </div>
+
+            <div
+              style={{
+                flex: 1,
+                minHeight: 0,
+                padding: 18,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                gap: 14,
+              }}
+            >
+              {bloquesTel.map((b, i) => (
+                <div key={i} style={pinta(b, 12)} />
+              ))}
+            </div>
+            </div>
+          </Telefono>
+        </div>
 
         {/* la medida: un número grande, no una etiqueta */}
-        <div style={{ opacity: interpolate(frame, [66, 82], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }) }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 18 }}>
-            <span style={{ fontSize: 34, color: paleta.suave }}>
+        <div
+          style={{
+            opacity: interpolate(frame, [66, 82], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+            <span style={{ fontSize: 32, color: paleta.suave }}>
               {d('Tiempo hasta que se puede leer', 'Time until it can be read')}
             </span>
-            <Cifra color={paleta.verde} color2={paleta.verde2} tam={72}>
+            <Cifra color={paleta.verde} color2={paleta.verde2} tam={66}>
               {segundos.toFixed(1)}s
             </Cifra>
           </div>
           <BarraLuz
             paleta={paleta}
-            valor={interpolate(frame, [74, 102], [0, 22], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: sal })}
+            valor={interpolate(frame, [74, 102], [0, 22], {
+              extrapolateLeft: 'clamp',
+              extrapolateRight: 'clamp',
+              easing: sal,
+            })}
             color={paleta.verde}
             color2={paleta.verde2}
-            alto={24}
+            alto={22}
           />
         </div>
       </div>
@@ -177,7 +290,7 @@ export const EscenaWeb: React.FC<PropsEscena> = ({ paleta, idioma }) => {
 
 /* ═══════════════════════════ 02 · Posicionamiento: la respuesta te nombra */
 
-export const EscenaPosicionamiento: React.FC<PropsEscena> = ({ paleta, idioma }) => {
+export const EscenaPosicionamiento: React.FC<PropsEscena> = ({ paleta, idioma, sangrado }) => {
   const frame = useCurrentFrame();
   const d = dice(idioma);
   const resp = aliento(frame);
@@ -201,11 +314,12 @@ export const EscenaPosicionamiento: React.FC<PropsEscena> = ({ paleta, idioma })
     easing: sal,
   });
 
-  const preg = entra(frame, 6);
+  const preg = entra(frame, 22);
 
   return (
     <Escenario
       paleta={paleta}
+      sangrado={sangrado}
       respira={resp}
       rotulo={<Rotulo paleta={paleta} pulso={resp}>{d('Alguien le pregunta a una IA', 'Someone asks an AI')}</Rotulo>}
       remate={
@@ -215,7 +329,41 @@ export const EscenaPosicionamiento: React.FC<PropsEscena> = ({ paleta, idioma })
         </Remate>
       }
     >
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 36, height: '100%', justifyContent: 'center' }}>
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 30, height: '100%', justifyContent: 'center' }}>
+        {/* dónde se pregunta: los cinco motores que de verdad usan tus clientes */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 14,
+            opacity: interpolate(frame, [0, 16], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
+          }}
+        >
+          {(['openai', 'gemini', 'claude', 'perplexity'] as const).map((m, i) => (
+            <span
+              key={m}
+              style={{
+                opacity: interpolate(frame, [i * 4, i * 4 + 14], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
+                translate: `0 ${interpolate(frame, [i * 4, i * 4 + 14], [14, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: sal })}px`,
+              }}
+            >
+              <Chapa paleta={paleta} style={{ padding: '12px 22px' }}>
+                <LogoIA marca={m} alto={26} />
+              </Chapa>
+            </span>
+          ))}
+          <span
+            style={{
+              opacity: interpolate(frame, [16, 30], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
+            }}
+          >
+            <Chapa paleta={paleta} style={{ padding: '12px 22px' }}>
+              <LogoGoogle tam={28} />
+              <span style={{ fontSize: 26, fontWeight: 600, color: '#fff' }}>Google</span>
+            </Chapa>
+          </span>
+        </div>
+
         {/* la pregunta */}
         <Vidrio
           paleta={paleta}
@@ -306,7 +454,7 @@ export const EscenaPosicionamiento: React.FC<PropsEscena> = ({ paleta, idioma })
 
 /* ═════════════════════════════ 03 · Ficha de Google: el mapa decide primero */
 
-export const EscenaLocal: React.FC<PropsEscena> = ({ paleta, idioma }) => {
+export const EscenaLocal: React.FC<PropsEscena> = ({ paleta, idioma, sangrado }) => {
   const frame = useCurrentFrame();
   const d = dice(idioma);
   const resp = aliento(frame);
@@ -334,6 +482,7 @@ export const EscenaLocal: React.FC<PropsEscena> = ({ paleta, idioma }) => {
   return (
     <Escenario
       paleta={paleta}
+      sangrado={sangrado}
       respira={resp}
       rotulo={<Rotulo paleta={paleta} pulso={resp}>{d('Búsqueda local · el bloque del mapa', 'Local search · the map block')}</Rotulo>}
       remate={

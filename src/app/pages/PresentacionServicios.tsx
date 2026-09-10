@@ -144,6 +144,20 @@ export default function PresentacionServicios() {
     return () => removeEventListener('keydown', alPulsar);
   }, [i, ir, total, menu]);
 
+  /* Y al revés: si la dirección cambia con el deck abierto —alguien pega
+     #agentes en la barra o sigue un enlace a otra lámina— el deck la sigue.
+     Antes el hash solo se leía al montar, y cambiarlo movía la URL pero no la
+     lámina. replaceState no dispara hashchange, así que esto no hace eco con
+     la sincronización de abajo. */
+  useEffect(() => {
+    const alCambiar = () => {
+      const n = laminaDelHash();
+      if (n !== i) ir(n);
+    };
+    addEventListener('hashchange', alCambiar);
+    return () => removeEventListener('hashchange', alCambiar);
+  }, [i, ir]);
+
   /* La dirección sigue a la lámina. replaceState y no push: el botón de atrás
      del navegador debe sacarte del deck, no recorrerte las once láminas. */
   useEffect(() => {
@@ -260,93 +274,159 @@ export default function PresentacionServicios() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ ...sale, transition: { duration: 0.14, ease: SAL } }}
               transition={{ duration: 0.24, ease: SAL }}
-              className={
-                suelta
-                  ? 'flex flex-col items-center gap-7 text-center'
-                  : 'grid items-center gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,.85fr)] lg:gap-12'
-              }
+              className={suelta ? 'flex flex-col items-center gap-7 text-center' : ''}
             >
-              {/* ── columna del texto ── */}
-              <div className={suelta ? 'flex max-w-3xl flex-col items-center' : 'min-w-0'}>
-                {/* En la portada manda la marca: el logo en grande y sin kicker,
-                    porque el logo ya dice de quien es esto. */}
-                {portada && (
-                  <div className="mb-7 md:mb-9">
-                    <Logotipo escala={2} className="flex md:hidden" />
-                    <Logotipo escala={2.8} className="hidden md:flex" />
-                  </div>
-                )}
+              {suelta ? (
+                /* ── portada y cierre: una sola columna, centrada ── */
+                /*
+                  w-full y containerType van juntos: una caja que se mide a sí
+                  misma (container-type) no puede encogerse al contenido, o
+                  colapsa a cero. Con w-full mide lo que le da la lámina, hasta
+                  768, y el título se escala contra eso.
+                */
+                <div className="flex w-full max-w-3xl flex-col items-center" style={{ containerType: 'inline-size' }}>
+                  {portada && (
+                    <div className="mb-7 md:mb-9">
+                      <Logotipo escala={2} className="flex md:hidden" />
+                      <Logotipo escala={2.8} className="hidden md:flex" />
+                    </div>
+                  )}
 
-                {!portada && (
+                  {!portada && (
+                    <p
+                      className="mb-2.5 font-mono text-[10px] uppercase tracking-[.24em] md:mb-3.5 md:text-[11.5px]"
+                      style={{ color: 'var(--p-morado)' }}
+                    >
+                      {lamina.kicker[idioma]}
+                    </p>
+                  )}
+
+                  {/*
+                    Aquí las líneas vienen partidas a mano («LET US START» /
+                    «BY MEASURING») y deben quedarse así, así que manda la línea
+                    más ancha y no la palabra. La más ancha de las dos láminas,
+                    en los dos idiomas, es «BY MEASURING»: 10.15 px por px de
+                    cuerpo. A 9cqw ocupa el 91 % de la columna. Con 8.2vw y un
+                    mínimo de 34 px partía cada línea en dos y el cierre en
+                    inglés se pasaba 43 px de la lámina.
+
+                    La portada lleva su propio factor porque su línea más ancha
+                    («SERVICIOS», 7.24) deja crecer más el nombre sin romperlo.
+                  */}
+                  <h1
+                    className="heading whitespace-pre-line leading-[0.94]"
+                    style={{
+                      color: 'var(--p-tinta)',
+                      fontSize: portada ? 'clamp(28px, 10.5cqw, 76px)' : 'clamp(22px, 9cqw, 76px)',
+                    }}
+                  >
+                    {lamina.nombre[idioma]}
+                  </h1>
+
                   <p
-                    className="mb-2.5 font-mono text-[10px] uppercase tracking-[.24em] md:mb-3.5 md:text-[11.5px]"
-                    style={{ color: 'var(--p-morado)' }}
+                    className="mt-3 max-w-[58ch] text-[13.5px] leading-[1.55] md:mt-5 md:text-[16px] md:leading-[1.6]"
+                    style={{ color: 'var(--p-suave)' }}
                   >
-                    {lamina.kicker[idioma]}
+                    {lamina.descripcion[idioma]}
                   </p>
-                )}
 
-                {/* El nombre manda. clamp() para que no haya un salto entre el
-                    teléfono y el proyector: crece con el ancho, sin escalones. */}
-                <h1
-                  className="heading whitespace-pre-line leading-[0.94]"
-                  style={{
-                    color: 'var(--p-tinta)',
-                    fontSize: portada
-                      ? 'clamp(34px, 8.2vw, 76px)'
-                      : 'clamp(26px, 7vw, 62px)',
-                  }}
-                >
-                  {lamina.nombre[idioma]}
-                </h1>
+                  {portada && (
+                    <button
+                      onClick={() => ir(1)}
+                      className="mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[14px] font-bold text-white transition-transform duration-150 active:scale-[0.97]"
+                      style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
+                    >
+                      {t('empezar')}
+                      <ArrowRight size={17} />
+                    </button>
+                  )}
 
-                <p
-                  className="mt-2.5 max-w-[58ch] text-[13px] leading-[1.5] md:mt-5 md:text-[16px] md:leading-[1.6]"
-                  style={{ color: 'var(--p-suave)' }}
-                >
-                  {lamina.descripcion[idioma]}
-                </p>
+                  {cierre && <Cierre idioma={idioma} t={t} />}
+                </div>
+              ) : (
+                /*
+                 * ── una lámina de servicio ──
+                 *
+                 * Arriba, el nombre a la izquierda y la escena a la derecha. La
+                 * escena YA NO vive en un recuadro: en escritorio se sale del
+                 * contenedor con un margen negativo hasta el borde de la
+                 * ventana, sin marco y con el fondo transparente, para que sus
+                 * resplandores se mezclen con los de la lámina. Es parte de la
+                 * diapositiva, no una ilustración pegada al lado.
+                 *
+                 * Abajo, las tres tarjetas a lo ancho. En rejilla y no en lista:
+                 * tres tiras horizontales se leen como un menú; tres tarjetas se
+                 * leen como tres argumentos.
+                 */
+                <div className="flex flex-col">
+                  <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-10">
+                    {/*
+                      containerType hace que el nombre se mida contra SU columna
+                      y no contra la ventana. Sin esto, «ESPECTACULARES» a 62 px
+                      se salía de la columna y se metía debajo de la escena.
+                    */}
+                    <div className="min-w-0 lg:order-first" style={{ containerType: 'inline-size' }}>
+                      <p
+                        className="mb-2 font-mono text-[10px] uppercase tracking-[.24em] md:mb-3 md:text-[11.5px]"
+                        style={{ color: 'var(--p-morado)' }}
+                      >
+                        {lamina.kicker[idioma]}
+                      </p>
 
-                {portada && (
-                  <button
-                    onClick={() => ir(1)}
-                    className="mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[14px] font-bold text-white transition-transform duration-150 active:scale-[0.97]"
-                    style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
-                  >
-                    {t('empezar')}
-                    <ArrowRight size={17} />
-                  </button>
-                )}
+                      {/*
+                        7.6cqw no es un numero de gusto: es una medida.
+                        «ESPECTACULARES», que es la palabra mas ancha de todo el
+                        guion, ocupa 12.55 px de ancho por cada px de cuerpo en
+                        Hanson. A 7.6 % de la columna la palabra se come el 95 %
+                        del ancho y nunca lo pasa, ni en un telefono de 320 ni en
+                        una pantalla de 1920. Con 9cqw se salia 83 px por la
+                        derecha y se cortaba la ultima letra.
 
-                {cierre && <Cierre idioma={idioma} t={t} />}
+                        El minimo baja a 18 px por lo mismo: un minimo alto
+                        vuelve a desbordar en cuanto la columna es muy angosta.
+                      */}
+                      <h1
+                        className="heading whitespace-pre-line leading-[0.94]"
+                        style={{ color: 'var(--p-tinta)', fontSize: 'clamp(18px, 7.6cqw, 60px)' }}
+                      >
+                        {lamina.nombre[idioma]}
+                      </h1>
 
-                {/* ── las tarjetas: qué incluye ── */}
-                {tarjetas.length > 0 && (
-                  <ul className="mt-4 grid gap-2 md:mt-7 md:gap-3">
-                    {tarjetas.map((c, n) => (
-                      <TarjetaIncluye
-                        key={c.t}
-                        tarjeta={c}
-                        n={n}
+                      <p
+                        className="mt-2 max-w-[52ch] text-[13px] leading-[1.5] md:mt-4 md:text-[15.5px] md:leading-[1.6]"
+                        style={{ color: 'var(--p-suave)' }}
+                      >
+                        {lamina.descripcion[idioma]}
+                      </p>
+                    </div>
+
+                    {/*
+                      La escena, sangrando hasta el borde de la ventana.
+
+                      El margen negativo vale exactamente el hueco que queda
+                      entre el contenedor y el borde: la mitad de lo que sobra
+                      del max-w-6xl, o el relleno lateral si la ventana es más
+                      angosta que eso. Con un porcentaje no funcionaba —en un
+                      margen se mide contra la columna de la rejilla, no contra
+                      el contenedor— y la escena se salía trescientos píxeles.
+                    */}
+                    <div className="order-first mb-4 min-w-0 lg:order-none lg:mb-0 lg:-mr-[calc(max(2.25rem,(100vw-72rem)/2))]">
+                      <EscenaVideo
+                        nombre={lamina.escena}
+                        idioma={idioma}
+                        tema={tema}
                         quieto={!!quieto}
                       />
-                    ))}
-                  </ul>
-                )}
-              </div>
+                    </div>
+                  </div>
 
-              {/* ── columna de la escena ──
-                  En móvil cede: se recorta a media pantalla para que las
-                  tarjetas quepan sin scroll. En pantalla grande recupera su
-                  proporción y es la mitad del argumento. */}
-              {!suelta && (
-                <div className="order-first w-full min-w-0 lg:order-none">
-                  <EscenaVideo
-                    nombre={lamina.escena}
-                    idioma={idioma}
-                    tema={tema}
-                    quieto={!!quieto}
-                  />
+                  {tarjetas.length > 0 && (
+                    <ul className="mt-3 grid gap-2 md:mt-5 md:gap-4 lg:grid-cols-3">
+                      {tarjetas.map((c, n) => (
+                        <TarjetaIncluye key={c.t} tarjeta={c} n={n} quieto={!!quieto} />
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
             </motion.div>
@@ -409,33 +489,44 @@ export default function PresentacionServicios() {
 function TarjetaIncluye({ tarjeta, n, quieto }: { tarjeta: Tarjeta; n: number; quieto: boolean }) {
   return (
     <motion.li
-      initial={quieto ? { opacity: 0 } : { opacity: 0, y: 10 }}
+      initial={quieto ? { opacity: 0 } : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.28, delay: 0.07 + n * 0.045, ease: SAL }}
-      className="flex items-start gap-3 rounded-2xl border px-3.5 py-2.5 md:gap-4 md:px-5 md:py-4"
-      style={{ borderColor: 'var(--p-linea)', background: 'var(--p-caja)' }}
+      transition={{ duration: 0.3, delay: 0.08 + n * 0.055, ease: SAL }}
+      /*
+       * Tira en teléfono, tarjeta en escritorio.
+       *
+       * Apiladas y a lo alto en una pantalla chica ocupan casi cien píxeles más
+       * cada una y ya no cabe la lámina. En escritorio hay ancho de sobra y tres
+       * tarjetas se leen como tres argumentos; tres tiras se leen como un menú.
+       */
+      className={[
+        'flex items-start gap-3 rounded-2xl border px-3.5 py-2 md:gap-4 md:px-5 md:py-3.5',
+        'lg:flex-col lg:gap-0 lg:px-5 lg:py-4',
+      ].join(' ')}
+      style={{
+        borderColor: 'var(--p-linea)',
+        background: 'linear-gradient(158deg, rgba(255,255,255,.055), rgba(255,255,255,.015))',
+        boxShadow: '0 10px 26px rgba(0,0,0,.28)',
+      }}
     >
       <span
-        className="mt-[3px] shrink-0 font-mono text-[11px] tabular-nums md:text-[12px]"
-        style={{ color: 'var(--p-morado)' }}
+        className={[
+          'mt-[3px] shrink-0 font-mono text-[11px] tabular-nums md:text-[12px]',
+          'lg:mb-2 lg:mt-0 lg:grid lg:h-8 lg:w-8 lg:place-items-center lg:rounded-full lg:text-[12px]',
+        ].join(' ')}
+        style={{ color: 'var(--p-morado)', background: 'var(--p-moradoSuave)' }}
       >
         {String(n + 1).padStart(2, '0')}
       </span>
       <div className="min-w-0">
         <p
-          className="heading text-[13.5px] leading-tight md:text-[16px]"
+          className="heading text-[13.5px] leading-tight md:text-[16px] lg:text-[16.5px]"
           style={{ color: 'var(--p-tinta)' }}
         >
           {tarjeta.t}
         </p>
-        {/*
-          En un telefono bajo —un SE, un Android de 720— esta linea se va y
-          quedan los tres titulares. Es lo correcto de las cuatro cosas que
-          compiten por la pantalla: el titular ya dice que incluye, y perder la
-          animacion o meter scroll cuesta mas que perder la aclaracion.
-        */}
         <p
-          className="mt-0.5 text-[11.5px] leading-[1.45] [@media(max-height:780px)_and_(max-width:1023px)]:hidden md:mt-1 md:text-[13.5px]"
+          className="mt-0.5 text-[11.5px] leading-[1.45] [@media(max-height:780px)_and_(max-width:1023px)]:hidden [@media(max-height:620px)]:hidden md:mt-1 md:text-[13.5px] lg:mt-1.5 lg:text-[12.5px] lg:leading-[1.5]"
           style={{ color: 'var(--p-suave)' }}
         >
           {tarjeta.d}
