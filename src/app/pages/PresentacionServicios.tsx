@@ -277,7 +277,7 @@ function Deck({ datos }: { datos: DatosPresentacion }) {
       </div>
 
       {/* barra de arriba: la marca y los mandos que no cambian de lámina */}
-      <header className="relative z-30 flex shrink-0 items-center justify-between px-4 py-2.5 md:px-9 md:py-5">
+      <header className="relative z-30 flex shrink-0 items-center justify-between px-4 py-2.5 md:px-9 md:py-5 [@media(max-height:500px)]:py-1.5">
         <button
           onClick={() => ir(0)}
           title={idioma === 'es' ? 'Volver al inicio' : 'Back to the start'}
@@ -340,7 +340,7 @@ function Deck({ datos }: { datos: DatosPresentacion }) {
                 */
                 <div className="flex w-full max-w-3xl flex-col items-center" style={{ containerType: 'inline-size' }}>
                   {portada && (
-                    <div className="mb-7 md:mb-9">
+                    <div className="mb-7 md:mb-9 apaisado:mb-3 apaisado:[&_img]:h-[40px]">
                       <Logotipo alto={54} altoMd={84} tema={tema} />
                     </div>
                   )}
@@ -365,7 +365,7 @@ function Deck({ datos }: { datos: DatosPresentacion }) {
                     className="heading whitespace-pre-line leading-[0.94]"
                     style={{
                       color: 'var(--p-tinta)',
-                      fontSize: portada ? 'clamp(28px, 10.5cqw, 76px)' : 'clamp(22px, 9cqw, 76px)',
+                      fontSize: portada ? 'clamp(28px, min(10.5cqw, 9svh), 76px)' : 'clamp(22px, min(9cqw, 8svh), 76px)',
                     }}
                   >
                     {lamina.nombre[idioma]}
@@ -373,7 +373,7 @@ function Deck({ datos }: { datos: DatosPresentacion }) {
 
                   {lamina.descripcion[idioma] && (
                     <p
-                      className="mt-3 max-w-[58ch] text-[13.5px] leading-[1.55] md:mt-5 md:text-[16px] md:leading-[1.6]"
+                      className={`mt-3 max-w-[58ch] text-[13.5px] leading-[1.55] md:mt-5 md:text-[16px] md:leading-[1.6] [@media(max-height:520px)]:line-clamp-3 ${cierre ? 'apaisado:hidden!' : 'apaisado:mt-2 apaisado:line-clamp-2'}`}
                       style={{ color: 'var(--p-suave)' }}
                     >
                       {lamina.descripcion[idioma]}
@@ -385,7 +385,7 @@ function Deck({ datos }: { datos: DatosPresentacion }) {
                   {portada && i < total - 1 && (
                     <button
                       onClick={() => ir(i + 1)}
-                      className="mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[14px] font-bold text-white transition-transform duration-150 active:scale-[0.97]"
+                      className="mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[14px] font-bold text-white transition-transform duration-150 active:scale-[0.97] apaisado:mt-4 apaisado:py-2.5"
                       style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }}
                     >
                       {datos.botones.empezar[idioma]}
@@ -414,7 +414,7 @@ function Deck({ datos }: { datos: DatosPresentacion }) {
 
       {/* mandos: dónde estoy, qué estoy viendo y cómo sigo */}
       <footer
-        className="relative z-20 flex shrink-0 items-center justify-between gap-3 border-t px-4 py-2.5 md:px-9 md:py-4"
+        className="relative z-20 flex shrink-0 items-center justify-between gap-3 border-t px-4 py-2.5 md:px-9 md:py-4 [@media(max-height:500px)]:py-1.5"
         style={{ borderColor: 'var(--p-linea)' }}
       >
         <div className="flex min-w-0 items-center gap-3">
@@ -487,11 +487,20 @@ function LaminaServicio({
   const columnas = tarjetas.length === 3 ? 'lg:grid-cols-3' : tarjetas.length === 2 ? 'lg:grid-cols-2' : '';
 
   return (
-    <div className={`flex flex-1 flex-col ${AIRE} lg:flex-none lg:gap-6`}>
+    <div
+      className={[
+        `flex flex-1 flex-col ${AIRE} lg:flex-none lg:gap-6`,
+        /* Ventana ancha y baja: texto y tarjetas a la izquierda, la escena a
+           la derecha ocupando todo el alto. El envoltorio de en medio se
+           vuelve `contents` para que los tres compartan esta rejilla. */
+        'apaisado:grid apaisado:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] apaisado:grid-rows-[auto_minmax(0,1fr)] apaisado:gap-x-7 apaisado:gap-y-2',
+      ].join(' ')}
+    >
       <div
         className={[
           `flex flex-1 flex-col ${AIRE}`,
           'lg:grid lg:flex-none lg:items-center lg:gap-10',
+          'apaisado:contents',
           conEscena ? 'lg:grid-cols-2' : '',
         ].join(' ')}
       >
@@ -499,9 +508,13 @@ function LaminaServicio({
           containerType hace que el nombre se mida contra SU columna y no
           contra la ventana. 7.6cqw sale de medir la palabra más ancha del
           guion («ESPECTACULARES», 12.55 px por px de cuerpo en Hanson): así
-          ocupa como mucho el 95 % del ancho y nunca se corta.
+          ocupa como mucho el 95 % del ancho y nunca se corta. El 6.2svh es el
+          tope por alto: en una ventana baja el nombre no se come la lámina.
         */}
-        <div className="min-w-0 text-center lg:text-left" style={{ containerType: 'inline-size' }}>
+        <div
+          className="min-w-0 text-center lg:text-left apaisado:col-start-1 apaisado:row-start-1 apaisado:self-end apaisado:text-left"
+          style={{ containerType: 'inline-size' }}
+        >
           {kicker && (
             <p
               className="mb-2 font-mono text-[10px] uppercase tracking-[.24em] md:mb-3 md:text-[11.5px]"
@@ -513,14 +526,14 @@ function LaminaServicio({
 
           <h1
             className="heading whitespace-pre-line leading-[0.94]"
-            style={{ color: 'var(--p-tinta)', fontSize: 'clamp(18px, 7.6cqw, 60px)' }}
+            style={{ color: 'var(--p-tinta)', fontSize: 'clamp(18px, min(7.6cqw, 6.2svh), 60px)' }}
           >
             {lamina.nombre[idioma]}
           </h1>
 
           {lamina.descripcion[idioma] && (
             <p
-              className="mx-auto mt-2.5 max-w-[52ch] text-[13.5px] leading-[1.55] md:mt-4 md:text-[15.5px] md:leading-[1.6] lg:mx-0"
+              className="mx-auto mt-2.5 max-w-[52ch] text-[13.5px] leading-[1.55] md:mt-4 md:text-[15.5px] md:leading-[1.6] lg:mx-0 [@media(max-height:520px)]:line-clamp-2 apaisado:hidden!"
               style={{ color: 'var(--p-suave)' }}
             >
               {lamina.descripcion[idioma]}
@@ -531,14 +544,16 @@ function LaminaServicio({
         </div>
 
         {conEscena && (
-          <div className="flex min-h-[96px] flex-1 items-center justify-center max-lg:[container-type:size] lg:min-h-0 lg:flex-none lg:justify-end">
+          <div className="flex min-h-[96px] flex-1 items-center justify-center max-lg:[container-type:size] lg:min-h-0 lg:flex-none lg:justify-end apaisado:col-start-2 apaisado:row-span-2 apaisado:row-start-1 apaisado:h-full apaisado:min-h-0">
             <EscenaVideo nombre={lamina.escena} idioma={idioma} tema={tema} quieto={quieto} />
           </div>
         )}
       </div>
 
       {tarjetas.length > 0 && (
-        <ul className={`grid gap-2.5 md:gap-4 ${columnas}`}>
+        <ul
+          className={`grid gap-2.5 md:gap-4 ${columnas} apaisado:col-start-1 apaisado:row-start-2 apaisado:grid-cols-1 apaisado:gap-1.5 apaisado:self-start`}
+        >
           {tarjetas.map((c, n) => (
             <TarjetaIncluye
               key={n}
@@ -599,6 +614,9 @@ function TarjetaIncluye({
           'transition-transform duration-150 active:scale-[0.99]',
           'md:pointer-events-none md:flex-row md:items-start md:gap-4 md:px-5 md:text-left',
           'lg:flex-col lg:gap-0 lg:py-4',
+          /* Ventana ancha y baja: tres tarjetas caben en la columna izquierda
+             solo si son compactas. */
+          'apaisado:items-start apaisado:gap-3! apaisado:py-1.5! apaisado:pl-4! apaisado:pr-9! apaisado:text-left md:apaisado:pr-4!',
         ].join(' ')}
       >
         <span
@@ -613,7 +631,7 @@ function TarjetaIncluye({
 
         <span className="min-w-0">
           <span
-            className="heading block text-[14px] leading-tight md:text-[16px] lg:text-[16.5px]"
+            className="heading block text-[14px] leading-tight md:text-[16px] lg:text-[16.5px] apaisado:text-[12px]!"
             style={{ color: 'var(--p-tinta)' }}
           >
             {tarjeta.t}
@@ -686,8 +704,10 @@ function Cierre({
   const tel = contacto.telefono.replace(/\D/g, '');
 
   return (
-    <div className="mt-8 flex flex-col items-center gap-7">
-      <Logotipo alto={46} altoMd={58} tema={tema} />
+    <div className="mt-8 flex flex-col items-center gap-7 apaisado:mt-2 apaisado:gap-2.5">
+      <span className="flex apaisado:[&_img]:h-[32px]">
+        <Logotipo alto={46} altoMd={58} tema={tema} />
+      </span>
 
       {(wa || contacto.correo) && (
         <div className="flex flex-wrap justify-center gap-2.5">

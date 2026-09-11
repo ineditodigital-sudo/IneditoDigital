@@ -2,3 +2,11 @@
 @source '../**/*.{js,ts,jsx,tsx}';
 
 @import 'tw-animate-css';
+
+/*
+ * Una ventana ancha y baja: un teléfono acostado o una laptop con la ventana a
+ * media altura. Ahí una columna no cabe (nombre, escena y tres tarjetas en
+ * ~260 px de alto), así que la presentación pasa a dos: texto y tarjetas a la
+ * izquierda, escena a la derecha. Ver src/app/pages/PresentacionServicios.tsx.
+ */
+@custom-variant apaisado (@media (min-width: 640px) and (max-height: 520px));
