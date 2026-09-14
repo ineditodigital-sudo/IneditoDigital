@@ -54,6 +54,21 @@
     - **Corregido**: buscar una ubicación exacta y después pulsar un formato daba cero resultados con el mapa clavado, porque el buscador no se vaciaba. Ahora el botón de formato vacía la búsqueda **solo si la combinación no dejaría nada**: «siglo xxi» + Unipolar sigue acotando a 28.
   - **Escena propia del proceso** (quinta vuelta): `anuncios-espectaculares` no tenía escena y caía en la de respaldo —una página web construyéndose—, que en el paso 1 se veía como una tarjeta vacía. Ahora hay `EscenaEspectacular`, que cuenta los cuatro pasos reales del servicio: la avenida con su flujo → tres sitios candidatos y la ficha del elegido → el poste sube y la lona se abre con el arte → la medición. El pin elegido se apaga al levantarse la estructura: se convirtió en ella. Sin cifras inventadas, que la prueba social va sin números sin respaldo.
 
+### La imagen al compartir un enlace (14-sep)
+
+Salía un recuadro blanco en WhatsApp y Telegram. No era un fallo, eran **tres a la vez** en la misma imagen: todas las páginas compartían el logotipo, que es un **WEBP** —formato que esos previsualizadores no pintan— de **2818×653** —cuando esperan 1200×630— y con **fondo transparente**, que sobre la tarjeta del chat se ve como un hueco.
+
+Ahora hay `og.php`: dibuja una tarjeta 1200×630 por página con el logotipo, la categoría, el título en Hanson y el dominio. No se guardaron 30 PNG a mano porque servicios, blog, portafolio y las páginas del CMS se editan desde el panel: un archivo por página se queda viejo al primer cambio de título y no existe para lo que den de alta mañana.
+
+- **No acepta texto libre.** Recibe una ruta, la busca en nuestra base y dibuja lo que encuentre. Con el texto por parámetro, cualquiera podría poner lo que quisiera sobre una tarjeta con nuestra marca servida desde nuestro dominio.
+- GD con FreeType ya estaba en producción para el reporte quincenal, así que Hanson y el logotipo ya vivían en el servidor (`panel/inc/reporte/`). No hizo falta subir nada.
+- Cae con gracia: sin base de datos devuelve la tarjeta de la marca; si no puede escribir la caché, dibuja y ya.
+- Caché en `cache-og/`, con el título en la llave: si el cliente lo cambia en el panel, la imagen se rehace sola.
+- Lo explícito sigue mandando: la foto de un integrante o el `seo_image` de una página del CMS ganan a la tarjeta generada. Lo que ya **no** manda es `defaultImage` del panel, porque un ajuste global es menos específico que una tarjeta por página.
+- Comprobado en producción: **36 de 36 rutas** con tarjeta propia, ninguna cayó en la genérica. PNG opaco, RGB sin alfa, 1200×630, ~58 KB.
+
+**Ojo al comprobarlo**: WhatsApp y Facebook guardan la vista previa por URL varios días. Un enlace ya compartido seguirá saliendo en blanco hasta que caduque; para forzarlo, pasar la URL por el depurador de Facebook (developers.facebook.com/tools/debug) y pulsar «Scrape Again».
+
 ### Fichas de servicio: título que no cabe y párrafo que estorba (14-sep)
 
 Dos cosas que afectaban a **las 26 fichas**, no a una:

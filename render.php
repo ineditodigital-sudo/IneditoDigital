@@ -914,7 +914,19 @@ $assetJs='/assets/index-CR3aYFRn.js'; $assetCss='/assets/index-BbJMuNT-.css';
 $idx=@file_get_contents(__DIR__.'/index.html');
 if ($idx) { if(preg_match('/src="(\/assets\/index-[^"]+\.js)"/',$idx,$m))$assetJs=$m[1]; if(preg_match('/href="(\/assets\/index-[^"]+\.css)"/',$idx,$m))$assetCss=$m[1]; }
 
-$ogImg = $GLOBALS['seoImagenPagina'] ?? (($seo['defaultImage'] ?? '') ?: $logo);
+/* La imagen de compartir.
+   Manda lo explicito de la pagina —la foto de un integrante, el seo_image de
+   una pagina del CMS—. Para todo lo demas, la tarjeta que dibuja og.php con el
+   titulo de ESTA pagina. Antes caia en $seo['defaultImage'] o en el logotipo, y
+   ese logotipo sale en blanco en WhatsApp: es un WEBP de 2818x653 con fondo
+   transparente, y esos previsualizadores ni pintan WEBP ni entienden una
+   transparencia sobre su tarjeta. Una imagen por pagina gana a un ajuste
+   global por definicion; si alguna vez hay que volver al de antes, esta en el
+   panel como Imagen por defecto. */
+$ogGenerada = empty($GLOBALS['seoImagenPagina']);
+$ogImg = $ogGenerada
+    ? $BASE . '/og.php?p=' . rawurlencode($path === '' ? '/' : $path)
+    : $GLOBALS['seoImagenPagina'];
 $gaId = $seo['googleAnalytics'] ?? ''; $pixel = $seo['facebookPixel'] ?? ''; $gsv = $seo['googleSiteVerification'] ?? '';
 
 $seo_global = ['siteName'=>$seo['siteName']??'','author'=>$seo['author']??'','defaultImage'=>$seo['defaultImage']??'','twitterHandle'=>$seo['twitterHandle']??'','googleAnalytics'=>$seo['googleAnalytics']??'','facebookPixel'=>$seo['facebookPixel']??'','googleSiteVerification'=>$seo['googleSiteVerification']??'','bingVerification'=>$seo['bingVerification']??''];
@@ -964,6 +976,14 @@ if ($propio): ?>
 <meta property="og:description" content="<?= e($desc) ?>" />
 <meta property="og:url" content="<?= e($canonical) ?>" />
 <meta property="og:image" content="<?= e($ogImg) ?>" />
+<?php if ($ogGenerada): /* Las medidas ahorran al previsualizador ir a buscarlas
+   antes de pintar la tarjeta. Solo se ponen cuando sabemos cuanto mide, o sea
+   cuando la dibujamos nosotros. */ ?>
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:alt" content="<?= e($title) ?>" />
+<?php endif; ?>
 <meta property="og:locale" content="es_MX" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="<?= e($title) ?>" />

@@ -77,3 +77,6 @@ out/
 
 # El instalador de skills deja esto; no es del proyecto
 .agents/
+
+# Las tarjetas de compartir que dibuja og.php. Se rehacen solas.
+cache-og/

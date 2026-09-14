@@ -92,7 +92,7 @@ done
 # render.php va junto con el bundle: si se desfasan, se duplican o se pierden
 # los leads. Ver la tabla en docs/DESPLIEGUE.md.
 step "4/6  Subiendo PHP"
-for f in render.php sitemap.php llms.php llms-full.php; do
+for f in render.php sitemap.php llms.php llms-full.php og.php; do
   fput "$f" "public_html/$f" >/dev/null 2>&1 && ok "$f"
 done
 fput api/.htaccess       public_html/api/.htaccess        >/dev/null 2>&1 && ok "api/.htaccess"
