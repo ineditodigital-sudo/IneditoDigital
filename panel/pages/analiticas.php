@@ -120,11 +120,38 @@ if (!gsc_tabla_existe('ia_bots')) {
 }
 $iaVisDia = q("SELECT DATE(created_at) f, COUNT(*) c FROM pageviews WHERE $D AND source='ia' GROUP BY 1 ORDER BY 1");
 $iaVis30 = array_sum(array_map(fn($r) => (int)$r['c'], $iaVisDia));
+/* Solo se cuentan lecturas de páginas que existen.
+   Quien más pide rutas inexistentes no es una IA leyendo el sitio: son
+   escáneres que se ponen el user-agent de GPTBot o ClaudeBot para que no se
+   les filtre, y van por credenciales (/.env.local) o por agujeros conocidos
+   (/fetch, /__vite_rsc_findSourceMapURL, /403.shtml). Con eso dentro, dos de
+   cada tres «lecturas de IA» eran ruido y las páginas de verdad se caían de
+   la lista. render.php ya dejó de anotarlas; este filtro limpia además lo que
+   quedó guardado antes del arreglo, sin borrar nada.
+   La lista de rutas sale de donde sale el sitemap: si no se puede leer, no se
+   filtra —mejor un tablero con ruido que un tablero vacío—. */
+$rutasSitio = ['/', '/servicios', '/portafolio', '/blog', '/servicios-ia', '/nosotros',
+               '/contacto', '/privacidad', '/terminos'];
+try {
+    foreach (db()->query("SELECT slug FROM services WHERE status='published'") as $r) $rutasSitio[] = '/servicios/' . $r['slug'];
+    foreach (db()->query("SELECT slug FROM portfolio WHERE status='published'") as $r) $rutasSitio[] = '/portafolio/' . $r['slug'];
+    foreach (db()->query("SELECT slug FROM blog_posts WHERE status='published'") as $r) $rutasSitio[] = '/blog/' . $r['slug'];
+    foreach (db()->query("SELECT ruta FROM pages WHERE status='published' AND ruta <> ''") as $r) $rutasSitio[] = $r['ruta'];
+} catch (Throwable $e) { $rutasSitio = []; }
+$iaFiltro = ''; $iaParams = [];
+if ($rutasSitio) {
+    $rutasSitio = array_values(array_unique($rutasSitio));
+    $marcas = [];
+    foreach ($rutasSitio as $i => $ruta) { $marcas[] = ':r' . $i; $iaParams[':r' . $i] = $ruta; }
+    $iaFiltro = ' AND url IN (' . implode(',', $marcas) . ')';
+}
+
 $iaLect30 = 0; $iaBotsDia = []; $iaBotsMotor = []; $iaUrlsLeidas = [];
 if (gsc_tabla_existe('ia_bots')) {
-    $iaBotsDia = q("SELECT fecha f, SUM(hits) c FROM ia_bots WHERE fecha >= (CURDATE() - INTERVAL 29 DAY) GROUP BY 1 ORDER BY 1");
-    $iaBotsMotor = q("SELECT bot, SUM(hits) c FROM ia_bots WHERE fecha >= (CURDATE() - INTERVAL 29 DAY) GROUP BY 1 ORDER BY 2 DESC");
-    $iaUrlsLeidas = q("SELECT url, SUM(hits) c, COUNT(DISTINCT bot) motores FROM ia_bots WHERE fecha >= (CURDATE() - INTERVAL 29 DAY) GROUP BY 1 ORDER BY 2 DESC LIMIT 12");
+    $D29 = "fecha >= (CURDATE() - INTERVAL 29 DAY)" . $iaFiltro;
+    $iaBotsDia = q("SELECT fecha f, SUM(hits) c FROM ia_bots WHERE $D29 GROUP BY 1 ORDER BY 1", $iaParams);
+    $iaBotsMotor = q("SELECT bot, SUM(hits) c FROM ia_bots WHERE $D29 GROUP BY 1 ORDER BY 2 DESC", $iaParams);
+    $iaUrlsLeidas = q("SELECT url, SUM(hits) c, COUNT(DISTINCT bot) motores FROM ia_bots WHERE $D29 GROUP BY 1 ORDER BY 2 DESC LIMIT 12", $iaParams);
     $iaLect30 = array_sum(array_map(fn($r) => (int)$r['c'], $iaBotsMotor));
 }
 // ---- El embudo: visitantes → acciones → leads ----
@@ -620,6 +647,7 @@ $ct=csrf(); $ruri=g_redirect_uri();
         <?php endforeach; ?>
       </tbody></table>
     <?php endif; ?>
+    <p class="mini" style="margin:12px 0 0">Solo se cuentan lecturas de páginas que existen. Rutas inventadas —archivos de configuración, agujeros conocidos, páginas de error— quedan fuera: casi siempre son escáneres que se ponen el nombre de un bot de IA para que no se les filtre, y contarlas inflaba el número.</p>
     <p class="mini" style="margin:12px 0 0">Las visitas desde IA subestiman (muchas IAs no avisan de dónde vienen); las lecturas de bots son el termómetro duro. El complemento trimestral: el guion de 15 preguntas a ChatGPT, Gemini y Perplexity de la auditoría.</p>
   <?php endif; ?>
 </div>

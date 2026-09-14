@@ -9,6 +9,7 @@ import { RecorridoProceso } from '../components/RecorridoProceso';
 import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
+import { tituloServicio } from '../data/services';
 import { contenido } from '../cms';
 
 /*
@@ -69,7 +70,7 @@ export default function ServiceDetailPage() {
   return (
     <>
       <DynamicSEO
-        title={service.seo?.metaTitle || `${service.title} - INÉDITO DIGITAL`}
+        title={service.seo?.metaTitle || tituloServicio(service.title)}
         description={service.seo?.metaDescription || service.shortDescription}
         keywords={
           service.seo?.keywords?.length

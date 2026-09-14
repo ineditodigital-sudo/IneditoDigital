@@ -46,6 +46,30 @@ function faqDeArticulo(string $md): array {
   return $out;
 }
 
+/**
+ * El título de una ficha de servicio.
+ *
+ * Antes era «Servicio | Servicios · INÉDITO DIGITAL»: veintiocho de los
+ * sesenta caracteres que Google muestra se iban en una migaja de navegación
+ * y en una marca que nadie busca, y la palabra por la que sí nos buscan —la
+ * ciudad— no aparecía. La portada, que es la única que lleva
+ * «Aguascalientes» en el título, es también la única que rankea en la
+ * primera plana; las fichas, con la plantilla vieja, andaban del 32 al 79.
+ *
+ * Se corta por prioridad: lo primero que cabe es la ciudad, la marca es lo
+ * que se cae. Lo que una persona escriba en el panel sigue ganando a esto.
+ */
+function tituloServicio(string $nombre, string $siteName): string {
+  $nombre = trim($nombre);
+  if ($nombre === '') return $siteName;
+  // Si el servicio ya nombra la ciudad, no se repite.
+  $local = stripos($nombre, 'Aguascalientes') !== false ? $nombre : $nombre . ' en Aguascalientes';
+  foreach ([$local . ' | ' . $siteName, $local, $nombre] as $t) {
+    if (mb_strlen($t) <= 60) return $t;
+  }
+  return $nombre;
+}
+
 function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); return is_array($o) ? $o : []; }
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
@@ -83,19 +107,6 @@ try {
     foreach ($pdo->query("SELECT nombre, logo, url FROM clientes WHERE visible=1 ORDER BY orden ASC, id ASC") as $r) $clientes[] = $r;
   } catch (Throwable $e) { /* sin tabla todavia: el carrusel usa el portafolio */ }
 } catch (Throwable $ex) { /* si falla la BD, servimos el SPA base */ }
-
-/* GEO medible: cada lectura de un bot de IA queda contada por día, bot y URL.
-   Analíticas la grafica en "Posicionamiento en IA". Silencioso a propósito:
-   registrar la visita jamás puede tirar la página. */
-if ($isBot && $pdo && preg_match(
-    '/(oai-searchbot|gptbot|chatgpt-user|claude-user|claude-web|claudebot|anthropic-ai|perplexity-user|perplexitybot|google-extended|meta-externalagent|bytespider|ccbot|amazonbot|applebot-extended|duckassistbot|mistralai|cohere)/i',
-    $ua, $mIA)) {
-  try {
-    $pdo->prepare("INSERT INTO ia_bots (fecha, bot, url) VALUES (CURDATE(), :b, :u)
-                   ON DUPLICATE KEY UPDATE hits = hits + 1")
-        ->execute([':b' => strtolower($mIA[1]), ':u' => mb_substr($path, 0, 255)]);
-  } catch (Throwable $ex) { /* la tabla la crea el panel; si no está, no pasa nada */ }
-}
 
 $siteName = $seo['siteName'] ?: 'Inédito Digital';
 
@@ -222,7 +233,15 @@ if ($path === '/') {
 elseif ($seg[0] === 'servicios' && isset($seg[1])) {
   $s = $findBySlug($services, $seg[1]);
   if ($s) {
-    $title = seoDe($s, 'metaTitle') ?: ($s['title'] ?? '').' | Servicios · '.$siteName;
+    /* Un metaTitle que es EXACTAMENTE la plantilla vieja —«… | Servicios ·
+       Inédito Digital»— no es la decisión de nadie: es el automático de antes,
+       que se quedó grabado en `data_json` al publicar desde el panel (la misma
+       trampa que ya documentamos: los valores por defecto ganan al publicar).
+       Se ignora para que a esas cuatro fichas les llegue el título nuevo.
+       Cualquier otro texto escrito a mano sigue mandando. */
+    $mt = seoDe($s, 'metaTitle');
+    if ($mt !== '' && preg_match('/\|\s*Servicios\s*·\s*\S/u', $mt)) $mt = '';
+    $title = $mt ?: tituloServicio((string)($s['title'] ?? ''), $siteName);
     $primera = '';
     if (!empty($s['definicion'])) {
       $p = preg_split('~(?<=[.!?])\s~u', (string)$s['definicion'], 2);
@@ -810,6 +829,26 @@ if ($is404) {
   $bodyBuilder = function() {
     return '<h1>Página no encontrada</h1><p>La página que buscas no existe o cambió de dirección.</p>';
   };
+}
+
+/* GEO medible: cada lectura de un bot de IA queda contada por día, bot y URL.
+   Analíticas la grafica en "Posicionamiento en IA". Silencioso a propósito:
+   registrar la visita jamás puede tirar la página.
+
+   Va DESPUÉS de resolver la ruta y a propósito: registrando antes, un 404
+   contaba igual que un artículo. Y quien más pide rutas que no existen no es
+   una IA leyendo el sitio, son escáneres que se ponen el user-agent de GPTBot
+   o ClaudeBot para que no se les filtre —/.env.local, /fetch, /403.shtml—. Con
+   eso dentro, dos de cada tres «lecturas de IA» del tablero eran ruido, y las
+   páginas reales se caían de la lista de las doce más leídas. */
+if (!$is404 && $isBot && $pdo && preg_match(
+    '/(oai-searchbot|gptbot|chatgpt-user|claude-user|claude-web|claudebot|anthropic-ai|perplexity-user|perplexitybot|google-extended|meta-externalagent|bytespider|ccbot|amazonbot|applebot-extended|duckassistbot|mistralai|cohere)/i',
+    $ua, $mIA)) {
+  try {
+    $pdo->prepare("INSERT INTO ia_bots (fecha, bot, url) VALUES (CURDATE(), :b, :u)
+                   ON DUPLICATE KEY UPDATE hits = hits + 1")
+        ->execute([':b' => strtolower($mIA[1]), ':u' => mb_substr($path, 0, 255)]);
+  } catch (Throwable $ex) { /* la tabla la crea el panel; si no está, no pasa nada */ }
 }
 
 function md_html(string $md): string {

@@ -22,6 +22,21 @@ export interface Service {
   seo?: SeoFicha;
 }
 
+/**
+ * El titulo de una ficha de servicio: el de la pestana y el que sale en
+ * Google. Primero cabe la ciudad, la marca es lo que se cae si no entra en
+ * los 60 caracteres que el buscador muestra.
+ *
+ * Mismo criterio que tituloServicio() en render.php, que es el que ve el
+ * robot. Si se cambia aqui, cambiarlo alla.
+ */
+export function tituloServicio(nombre: string, marca = 'INÉDITO DIGITAL'): string {
+  const n = nombre.trim();
+  if (!n) return marca;
+  const local = /aguascalientes/i.test(n) ? n : `${n} en Aguascalientes`;
+  return [`${local} | ${marca}`, local, n].find((t) => t.length <= 60) ?? n;
+}
+
 export const SERVICES: Service[] = [
   {
     id: '1',

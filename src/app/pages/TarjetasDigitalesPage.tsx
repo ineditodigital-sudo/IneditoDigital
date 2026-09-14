@@ -24,6 +24,7 @@ import { Link } from 'react-router';
 import FAQAccordion from '../components/FAQAccordion';
 import { useApp } from '../context/AppContext';
 import DynamicSEO from '../components/DynamicSEO';
+import { tituloServicio } from '../data/services';
 import { contenido } from '../cms';
 import { tr } from '../idioma';
 
@@ -764,7 +765,7 @@ export default function TarjetasDigitalesPage() {
   return (
     <>
       <DynamicSEO
-        title="Tarjetas de Presentación Digital NFC - INÉDITO DIGITAL"
+        title={tituloServicio('Tarjetas de Presentación Digital NFC')}
         description="Tarjetas de presentación digitales con tecnología NFC. Comparte tu contacto, redes y portafolio con un solo toque, sin apps y siempre actualizadas."
         keywords={['tarjeta de presentacion digital', 'tarjeta nfc', 'tarjeta de presentacion nfc aguascalientes', 'business card nfc', 'tarjeta digital de contacto']}
       />
