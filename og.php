@@ -24,6 +24,11 @@
  */
 declare(strict_types=1);
 
+/* Se sube al cambiar el DIBUJO. La llave de la cache la lleva dentro, asi que
+ * una tarjeta ya guardada con el diseño anterior deja de servirse sola. Sin
+ * esto habria que entrar a borrar la carpeta a mano en cada retoque. */
+const OG_VERSION = 2;
+
 const OG_W = 1200;          // el tamaño que esperan todos los previsualizadores
 const OG_H = 630;
 const OG_FONDO = [0x07, 0x06, 0x0b];
@@ -111,10 +116,11 @@ function og_renglones(string $t, float $px, int $max): array
  *  sobresale bastante. */
 const OG_INTERLINEA = 1.18;
 
-function og_ajustar(string $t, int $anchoMax, int $altoMax, float $desde = 88.0): array
+function og_ajustar(string $t, int $anchoMax, int $altoMax, float $desde = 88.0, int $lineasMax = 4): array
 {
     for ($px = $desde; $px >= 28; $px -= 2) {
         $r = og_renglones($t, $px, $anchoMax);
+        if (count($r) > $lineasMax) continue;
         if (count($r) * $px * OG_INTERLINEA > $altoMax) continue;
         /* Y que cada renglon quepa de verdad. Contar renglones no basta:
            og_renglones() no parte palabras, asi que una sola palabra mas ancha
@@ -124,9 +130,36 @@ function og_ajustar(string $t, int $anchoMax, int $altoMax, float $desde = 88.0)
         foreach ($r as $l) { if (og_ancho($l, $px) > $anchoMax) { $cabe = false; break; } }
         if ($cabe) return [$px, $r];
     }
-    $r = og_renglones($t, 28.0, $anchoMax);
-    $caben = max(1, (int)floor($altoMax / (28.0 * OG_INTERLINEA)));
-    return [28.0, array_slice($r, 0, $caben)];
+    /*
+     * No cabe entero. Antes se encogia la letra hasta que entrara, y un titulo
+     * largo de blog acababa en seis renglones a 36 px: eso ya no es un titulo,
+     * es un parrafo, y en una miniatura no se lee ninguno de los seis.
+     *
+     * Asi que se usa el tamano mas grande que permiten los renglones que caben,
+     * se corta y se dice que se corto. El titulo completo viaja igual en
+     * og:title, que es el texto que el chat pinta debajo de la imagen.
+     */
+    $px = max(28.0, min($desde, floor($altoMax / ($lineasMax * OG_INTERLINEA))));
+    /* Y que ninguna palabra suelta se salga a ese tamano. og_renglones() no
+       parte palabras, asi que una mas ancha que el hueco sale en su propio
+       renglon y se derrama; hay que bajar hasta que quepa. Es la tercera vez
+       que este descuido muerde en este proyecto: contar sin medir el ancho. */
+    $r = og_renglones($t, $px, $anchoMax);
+    for (; $px > 20; $px -= 2) {
+        $r = og_renglones($t, $px, $anchoMax);
+        $cabe = true;
+        foreach ($r as $l) { if (og_ancho($l, $px) > $anchoMax) { $cabe = false; break; } }
+        if ($cabe) break;
+    }
+    if (count($r) > $lineasMax) {
+        $r = array_slice($r, 0, $lineasMax);
+        $ult = rtrim($r[$lineasMax - 1], " ,.;:") . '…';
+        while (mb_strlen($ult) > 2 && og_ancho($ult, $px) > $anchoMax) {
+            $ult = rtrim(mb_substr($ult, 0, mb_strlen($ult) - 2), ' ') . '…';
+        }
+        $r[$lineasMax - 1] = $ult;
+    }
+    return [$px, $r];
 }
 
 /* ------------------------------------------------------------------ */
@@ -232,6 +265,22 @@ function og_dibujar(string $rotulo, string $titulo): string
         }
     }
 
+    /*
+     * El area segura: el cuadrado del centro.
+     *
+     * WhatsApp no siempre pinta la tarjeta entera. En su formato compacto
+     * recorta un CUADRADO del centro, y con el texto pegado al margen
+     * izquierdo lo que sale es la mitad de una palabra. Asi que todo lo que
+     * hay que leer vive dentro de esos 630x630 centrados y el resto es aire y
+     * resplandor. En Facebook, LinkedIn o Telegram se ve la tarjeta completa y
+     * el conjunto queda centrado, que es una composicion de toda la vida.
+     */
+    $seguro = OG_H;                       // 630: el lado del cuadrado
+    $x0 = (int)((OG_W - $seguro) / 2);    // donde empieza
+    $anchoSeguro = $seguro - 70;          // con margen dentro, que el texto
+                                          // no toque el borde del recorte
+    $centro = (int)(OG_W / 2);
+
     $M = 72;   // el margen del que cuelga todo
 
     /* El logotipo, arriba. Es el mismo PNG del reporte. */
@@ -239,9 +288,9 @@ function og_dibujar(string $rotulo, string $titulo): string
     $yTexto = $M;
     if (is_file($logo) && ($src = @imagecreatefrompng($logo))) {
         $lw = imagesx($src); $lh = imagesy($src);
-        $alto = 54;
+        $alto = 52;
         $ancho = (int)round($lw * $alto / $lh);
-        imagecopyresampled($im, $src, $M, $M, 0, 0, $ancho, $alto, $lw, $lh);
+        imagecopyresampled($im, $src, $centro - (int)($ancho / 2), $M, 0, 0, $ancho, $alto, $lw, $lh);
         imagedestroy($src);
         $yTexto = $M + $alto;
     }
@@ -250,12 +299,16 @@ function og_dibujar(string $rotulo, string $titulo): string
        tracking, así que se dibuja letra a letra. */
     $rot = mb_strtoupper(trim($rotulo), 'UTF-8');
     if ($rot !== '') {
-        $px = 19.0;
-        $x = $M;
-        $y = $yTexto + 92;
-        foreach (preg_split('//u', $rot, -1, PREG_SPLIT_NO_EMPTY) as $ch) {
+        $px = 18.0;
+        $sep = 7;
+        $letras = preg_split('//u', $rot, -1, PREG_SPLIT_NO_EMPTY);
+        $total = 0;
+        foreach ($letras as $ch) $total += og_ancho($ch, $px) + ($ch === ' ' ? 9 : $sep);
+        $x = $centro - $total / 2;
+        $y = $yTexto + 74;
+        foreach ($letras as $ch) {
             imagettftext($im, $px, 0, (int)$x, (int)$y, og_color($im, OG_PUR3), og_fuente(), $ch);
-            $x += og_ancho($ch, $px) + ($ch === ' ' ? 9 : 7);
+            $x += og_ancho($ch, $px) + ($ch === ' ' ? 9 : $sep);
         }
         $yTexto = $y;
     }
@@ -265,10 +318,9 @@ function og_dibujar(string $rotulo, string $titulo): string
        abajo, y se centra en el. Asi un titulo de una palabra no deja un vacio
        enorme debajo y uno de tres renglones no se come el filete. */
     $tit = mb_strtoupper(trim($titulo), 'UTF-8');
-    $anchoMax = OG_W - $M * 2;
-    $arriba = $yTexto + 40;
-    $abajo  = OG_H - 96 - 40;
-    [$px, $renglones] = og_ajustar($tit, $anchoMax, $abajo - $arriba);
+    $arriba = $yTexto + 34;
+    $abajo  = OG_H - 92;
+    [$px, $renglones] = og_ajustar($tit, $anchoSeguro, $abajo - $arriba, 74.0);
 
     $interlinea = $px * OG_INTERLINEA;
     $alto = count($renglones) * $interlinea;
@@ -276,13 +328,16 @@ function og_dibujar(string $rotulo, string $titulo): string
        mayúscula con su acento para que el primer renglon empiece donde toca. */
     $y = $arriba + ($abajo - $arriba - $alto) / 2 + $px * 0.78;
     foreach ($renglones as $r) {
-        imagettftext($im, $px, 0, $M, (int)round($y), og_color($im, OG_BLANCO), og_fuente(), $r);
+        $x = $centro - og_ancho($r, $px) / 2;
+        imagettftext($im, $px, 0, (int)round($x), (int)round($y), og_color($im, OG_BLANCO), og_fuente(), $r);
         $y += $interlinea;
     }
 
     /* El filete y el dominio, abajo. Cierra la tarjeta y dice de dónde es. */
-    imagefilledrectangle($im, $M, OG_H - 96, $M + 64, OG_H - 93, og_color($im, OG_PUR3));
-    imagettftext($im, 17.0, 0, $M, OG_H - 58, og_color($im, OG_TENUE), og_fuente(), 'inedito.digital');
+    imagefilledrectangle($im, $centro - 32, OG_H - 78, $centro + 32, OG_H - 75, og_color($im, OG_PUR3));
+    $dom = 'inedito.digital';
+    imagettftext($im, 16.0, 0, $centro - (int)(og_ancho($dom, 16.0) / 2), OG_H - 44,
+                 og_color($im, OG_TENUE), og_fuente(), $dom);
 
     ob_start();
     imagepng($im, null, 6);
@@ -319,7 +374,7 @@ if (strlen($ruta) > 200) $ruta = '/';
    imagen se rehace sola. Si la carpeta no se puede escribir, se dibuja y ya:
    vale más una imagen lenta que ninguna. */
 $dir = __DIR__ . '/cache-og';
-$llave = $dir . '/' . md5($rot . '|' . $tit) . '.png';
+$llave = $dir . '/' . md5(OG_VERSION . '|' . $rot . '|' . $tit) . '.png';
 $png = null;
 if (is_file($llave)) {
     $png = @file_get_contents($llave);

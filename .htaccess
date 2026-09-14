@@ -33,6 +33,19 @@ Options -Indexes
   # La tarjeta de contacto de un integrante: /armando-trejo.vcf
   RewriteRule ^([a-z0-9-]+)\.vcf$ /tarjeta.php?m=$1 [L,QSA]
   RewriteRule ^llms-full\.txt$ /llms-full.php [L]
+  # La imagen de compartir de cada pagina: /og/servicios/branding.png
+  #
+  # Termina en .png y no es og.php?p=... por dos motivos medidos, no por
+  # estetica. Uno: Cloudflare trata un .php con parametros como dinamico
+  # —cf-cache-status: DYNAMIC— y lo re-trocea, asi que la respuesta sale con
+  # transfer-encoding chunked y SIN Content-Length; los rastreadores de vista
+  # previa deciden por esa cabecera si se bajan la imagen grande o se conforman
+  # con una miniatura. Dos: con extension estatica Cloudflare si la cachea en
+  # su borde, y deja de golpear el origen en cada enlace compartido.
+  # La barra va literal y no como %2F: en la sustitucion, mod_rewrite lee %2
+  # como una referencia a un RewriteCond anterior, no como un caracter.
+  RewriteRule ^og\.png$ /og.php?p=/ [L]
+  RewriteRule ^og/(.+)\.png$ /og.php?p=/$1 [L]
 
   # ---- 301 de las URLs del sitio WordPress anterior (auditoría IDX-01) ----
   # Google todavía las tiene indexadas y hoy mueren en 404: cada una se manda

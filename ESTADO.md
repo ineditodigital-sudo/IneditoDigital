@@ -67,7 +67,21 @@ Ahora hay `og.php`: dibuja una tarjeta 1200×630 por página con el logotipo, la
 - Lo explícito sigue mandando: la foto de un integrante o el `seo_image` de una página del CMS ganan a la tarjeta generada. Lo que ya **no** manda es `defaultImage` del panel, porque un ajuste global es menos específico que una tarjeta por página.
 - Comprobado en producción: **36 de 36 rutas** con tarjeta propia, ninguna cayó en la genérica. PNG opaco, RGB sin alfa, 1200×630, ~58 KB.
 
-**Ojo al comprobarlo**: WhatsApp y Facebook guardan la vista previa por URL varios días. Un enlace ya compartido seguirá saliendo en blanco hasta que caduque; para forzarlo, pasar la URL por el depurador de Facebook (developers.facebook.com/tools/debug) y pulsar «Scrape Again».
+**Ojo al comprobarlo**: WhatsApp y Facebook guardan la vista previa por URL varios días. Un enlace ya compartido seguirá saliendo con la imagen vieja hasta que caduque; para forzarlo, pasar la URL por el depurador de Facebook (developers.facebook.com/tools/debug) y pulsar «Scrape Again».
+
+#### Segunda vuelta: el recorte cuadrado
+
+WhatsApp sí traía la tarjeta nueva, pero la pintaba en su **formato compacto**, que recorta un **cuadrado del centro** (630×630 de los 1200×630). Con el texto pegado al margen izquierdo, lo que se leía era media palabra: «UNCIOS / ECTACULAR».
+
+Eso no se controla desde aquí —lo decide el cliente de WhatsApp—, así que lo que se hizo fue **que el recorte no importe**: toda la composición (logotipo, categoría, título, filete y dominio) vive centrada dentro de ese cuadrado, y lo de fuera es aire y resplandor. En Facebook, LinkedIn o Telegram se ve la tarjeta completa y queda como una composición centrada de toda la vida.
+
+- **Comprobado sobre las 47 tarjetas reales**, escaneando los PNG pixel a pixel y no reimplementando la fórmula: lo claro ocupa de x=323 a x=880, dentro del recorte (285–915), con 38 px de margen a la izquierda y 35 a la derecha.
+- Título a un máximo de 4 renglones, con puntos suspensivos si no cabe. Antes encogía hasta caber y un título largo de blog acababa en 6 renglones a 36 px: eso ya no es un título. El completo viaja igual en `og:title`, que es el texto que el chat pinta debajo.
+- La ruta pasa a ser `/og/servicios/branding.png` en vez de `og.php?p=…`: Cloudflare trata un `.php` con parámetros como dinámico, lo re-trocea y la respuesta sale **sin `Content-Length`**, que es una de las cosas que mira un rastreador para decidir si se baja la imagen grande.
+- `OG_VERSION` va dentro de la llave de la caché: al cambiar el dibujo, las guardadas dejan de servirse solas sin tener que entrar a borrar nada.
+- Las 55 tarjetas quedaron precalentadas en producción: 0 fallos, ninguna por encima de 900 ms, 181 ms de media ya en caché.
+
+Lo que **no** se puede comprobar desde aquí es el render de WhatsApp. Si en el teléfono sigue saliendo el formato compacto, la tarjeta ahora se ve entera igual; si sale el grande, también.
 
 ### Fichas de servicio: título que no cabe y párrafo que estorba (14-sep)
 

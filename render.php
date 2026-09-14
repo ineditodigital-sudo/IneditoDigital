@@ -925,7 +925,7 @@ if ($idx) { if(preg_match('/src="(\/assets\/index-[^"]+\.js)"/',$idx,$m))$assetJ
    panel como Imagen por defecto. */
 $ogGenerada = empty($GLOBALS['seoImagenPagina']);
 $ogImg = $ogGenerada
-    ? $BASE . '/og.php?p=' . rawurlencode($path === '' ? '/' : $path)
+    ? $BASE . ($path === '' ? '/og.png' : '/og' . $path . '.png')
     : $GLOBALS['seoImagenPagina'];
 $gaId = $seo['googleAnalytics'] ?? ''; $pixel = $seo['facebookPixel'] ?? ''; $gsv = $seo['googleSiteVerification'] ?? '';
 
