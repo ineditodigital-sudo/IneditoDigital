@@ -2,28 +2,59 @@
 @import './tailwind.css';
 @import './theme.css';
 
-/* El mapa del catálogo de espectaculares, en oscuro.
-   Las teselas de OpenStreetMap son claras; invertirlas da un negativo azulado
-   y rotar el tono 180° le devuelve el verde a los parques y el azul al agua.
-   Va sobre el panel de teselas y no sobre el mapa: aplicado al mapa entero
-   invertiría también los marcadores, y el verde de «disponible» saldría rosa. */
-.mapa-oscuro .leaflet-tile-pane {
-  filter: invert(1) hue-rotate(180deg) brightness(0.94) contrast(0.88) saturate(0.65);
+/* El mapa del catálogo de espectaculares, en su color.
+   Antes iba invertido para casar con el fondo oscuro del sitio, y se perdían
+   las referencias que trae quien busca una avenida: el verde de un parque
+   salía morado. Aquí solo se viste el marco —controles, globo y créditos—
+   para que no desentone con el resto de la página. */
+.mapa-catalogo.leaflet-container { background: #e8e4dc; font: inherit; }
+.mapa-catalogo .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.86);
+  color: #5a5268;
+  font-size: 10px;
 }
-.mapa-oscuro .leaflet-control-attribution {
-  background: rgba(11, 11, 18, 0.82);
-  color: rgba(255, 255, 255, 0.4);
+.mapa-catalogo .leaflet-control-attribution a { color: #7700ce; }
+/* Los mas y menos. Los de Leaflet son de 26 px —de 30 en pantalla tactil— y
+   del gris del mapa: encima de una ciudad llena de calles se leen como parte
+   del dibujo, no como botones. Aqui van a 38 px, sobre una tarjeta blanca con
+   sombra, y separados del borde para que no compitan con el marco de la caja.
+   El selector encadena .mapa-catalogo con .leaflet-container —las dos caen en
+   el mismo nodo— porque la hoja de Leaflet se inyecta en caliente, o sea
+   despues de esta, y sus reglas .leaflet-touch pesan lo mismo que las simples:
+   a igualdad de peso ganaba la suya y los botones seguian midiendo 30 px. */
+.mapa-catalogo.leaflet-container .leaflet-top.leaflet-left { margin: 6px 0 0 6px; }
+.mapa-catalogo.leaflet-container .leaflet-bar {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(20, 10, 40, 0.18);
+  overflow: hidden;
 }
-.mapa-oscuro .leaflet-control-attribution a { color: rgba(204, 102, 255, 0.75); }
-.mapa-oscuro .leaflet-popup-content-wrapper,
-.mapa-oscuro .leaflet-popup-tip {
+.mapa-catalogo.leaflet-container .leaflet-bar a {
+  width: 38px;
+  height: 38px;
+  line-height: 36px;
+  font-size: 20px;
+  font-weight: 600;
+  background: #ffffff;
+  color: #2a2438;
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+.mapa-catalogo.leaflet-container .leaflet-bar a:first-child { border-radius: 11px 11px 0 0; }
+.mapa-catalogo.leaflet-container .leaflet-bar a:last-child { border-radius: 0 0 11px 11px; }
+.mapa-catalogo.leaflet-container .leaflet-bar a:hover { background: #f3f0f8; color: #7700ce; }
+.mapa-catalogo.leaflet-container .leaflet-bar a:focus-visible {
+  outline: 2px solid #7700ce;
+  outline-offset: -2px;
+}
+.mapa-catalogo.leaflet-container .leaflet-bar a.leaflet-disabled { color: #b6b0c2; background: #f7f6fa; }
+.mapa-catalogo .leaflet-tooltip {
   background: #14141f;
   color: #f2f0f6;
-  border: 1px solid #2f2f49;
+  border: 1px solid #3a3a56;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  font-size: 11.5px;
+  padding: 4px 8px;
+  white-space: nowrap;
 }
-.mapa-oscuro .leaflet-bar a {
-  background: #14141f;
-  color: #f2f0f6;
-  border-bottom-color: #2f2f49;
-}
-.mapa-oscuro .leaflet-bar a:hover { background: #1d1d2b; }
+.mapa-catalogo .leaflet-tooltip-top::before { border-top-color: #3a3a56; }

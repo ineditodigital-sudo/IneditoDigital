@@ -58,4 +58,19 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  /*
+   * En local no hay PHP, y el catalogo de espectaculares es lo unico que la
+   * pagina no puede dibujar sin el: son 317 registros que solo existen en la
+   * base de produccion. Se apunta ESE archivo, y ninguno mas, al sitio
+   * publicado. Los demas endpoints se quedan sin proxy a proposito: enviar el
+   * formulario desde el escritorio crearia un lead de verdad.
+   */
+  server: {
+    proxy: {
+      '/api/espectaculares.php': {
+        target: 'https://inedito.digital',
+        changeOrigin: true,
+      },
+    },
+  },
 })

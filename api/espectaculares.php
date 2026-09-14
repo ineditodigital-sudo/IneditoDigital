@@ -22,11 +22,22 @@ try {
     $ult = (string)$pdo->query("SELECT MAX(visto) FROM espectaculares")->fetchColumn();
     if ($ult === '') { echo json_encode(['espacios' => [], 'fecha' => null]); exit; }
 
-    $st = $pdo->prepare("SELECT clave,titulo,tipo,colonia,direccion,zona,estatus,
-                                referencia,medidas,altura,lat,lng
-                         FROM espectaculares WHERE visto = :v
-                         ORDER BY FIELD(estatus,'DISPONIBLE') DESC, zona, tipo, clave");
-    $st->execute([':v' => $ult]);
+    /* `extras` es columna nueva. En una base que todavia no ha sincronizado no
+       existe, y pedirla sin mas tumbaria el catalogo entero con un 503 por un
+       campo accesorio. Asi que se intenta con ella y se reintenta sin ella: en
+       cuanto el cron corra y la cree, la primera consulta empieza a funcionar
+       sola y esto deja de hacer nada. */
+    $sql = "SELECT clave,titulo,tipo,colonia,direccion,zona,estatus,
+                   referencia,medidas,%s altura,lat,lng
+            FROM espectaculares WHERE visto = :v
+            ORDER BY FIELD(estatus,'DISPONIBLE') DESC, zona, tipo, clave";
+    try {
+        $st = $pdo->prepare(sprintf($sql, 'extras,'));
+        $st->execute([':v' => $ult]);
+    } catch (PDOException $e) {
+        $st = $pdo->prepare(sprintf($sql, ''));
+        $st->execute([':v' => $ult]);
+    }
 
     $espacios = [];
     foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) {
@@ -40,6 +51,12 @@ try {
             'libre'  => $r['estatus'] === 'DISPONIBLE',
             'ref'    => $r['referencia'],
             'medidas'=> $r['medidas'],
+            /* La ficha tecnica del sitio, tal como la escribe su sistema:
+               paneles, iluminacion, timers, cimentacion y reflectores en un
+               solo texto. Se manda cruda y se ordena en el navegador; partirla
+               aqui obligaria a desplegar el servidor cada vez que cambien una
+               etiqueta. Va vacia mientras el cron no haya sincronizado. */
+            'extras' => (string)($r['extras'] ?? ''),
             'altura' => $r['altura'] !== null ? (float)$r['altura'] : null,
             /* El precio NO sale. Es la tarifa del proveedor y publicarla es una
                decisión comercial de Inédito, no un detalle técnico. */

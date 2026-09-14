@@ -31,6 +31,7 @@ function espec_tabla(): void
       precio      INT          NOT NULL DEFAULT 0,
       referencia  VARCHAR(255) NOT NULL DEFAULT '',
       medidas     VARCHAR(80)  NOT NULL DEFAULT '',
+      extras      TEXT         NULL,
       altura      DECIMAL(8,3) NULL,
       lat         DECIMAL(11,8) NULL,
       lng         DECIMAL(11,8) NULL,
@@ -38,6 +39,22 @@ function espec_tabla(): void
       PRIMARY KEY (clave),
       KEY k_tipo (tipo), KEY k_zona (zona), KEY k_estatus (estatus)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    /* La tabla ya existe en produccion, y CREATE TABLE IF NOT EXISTS no le
+       agrega columnas: se queda tal cual y la de arriba no sirve de nada.
+       Asi que las columnas nuevas se anaden aparte. Se pregunta antes en vez
+       de usar ADD COLUMN IF NOT EXISTS porque eso es de MariaDB y aqui no
+       sabemos cual de los dos hay. Es aditivo: no toca ni un dato. */
+    foreach (['extras' => "TEXT NULL AFTER medidas"] as $col => $def) {
+        $hay = db()->prepare("SELECT COUNT(*) FROM information_schema.COLUMNS
+                              WHERE TABLE_SCHEMA = DATABASE()
+                                AND TABLE_NAME = 'espectaculares'
+                                AND COLUMN_NAME = :c");
+        $hay->execute([':c' => $col]);
+        if (!(int)$hay->fetchColumn()) {
+            db()->exec("ALTER TABLE espectaculares ADD COLUMN `$col` $def");
+        }
+    }
 }
 
 /**
@@ -102,12 +119,13 @@ function espec_sincronizar(): array
     }
 
     $ins = $p->prepare("INSERT INTO espectaculares
-      (clave,vistaid,titulo,tipo,colonia,direccion,ciudad,zona,estatus,precio,referencia,medidas,altura,lat,lng,visto)
-      VALUES (:clave,:vistaid,:titulo,:tipo,:colonia,:dir,:ciudad,:zona,:estatus,:precio,:ref,:med,:alt,:lat,:lng,:visto)
+      (clave,vistaid,titulo,tipo,colonia,direccion,ciudad,zona,estatus,precio,referencia,medidas,extras,altura,lat,lng,visto)
+      VALUES (:clave,:vistaid,:titulo,:tipo,:colonia,:dir,:ciudad,:zona,:estatus,:precio,:ref,:med,:extras,:alt,:lat,:lng,:visto)
       ON DUPLICATE KEY UPDATE
         vistaid=VALUES(vistaid), titulo=VALUES(titulo), tipo=VALUES(tipo), colonia=VALUES(colonia),
         direccion=VALUES(direccion), ciudad=VALUES(ciudad), zona=VALUES(zona), estatus=VALUES(estatus),
         precio=VALUES(precio), referencia=VALUES(referencia), medidas=VALUES(medidas),
+        extras=VALUES(extras),
         altura=VALUES(altura), lat=VALUES(lat), lng=VALUES(lng), visto=VALUES(visto)");
 
     $hoy = date('Y-m-d');
@@ -139,6 +157,10 @@ function espec_sincronizar(): array
             ':precio'  => is_numeric($f['precio'] ?? null) ? (int)$f['precio'] : 0,
             ':ref'     => mb_substr(trim((string)($f['referencia'] ?? '')), 0, 255),
             ':med'     => mb_substr(trim((string)($f['medidas'] ?? '')), 0, 80),
+            /* La ficha tecnica: paneles, iluminacion, timers, cimentacion y
+               reflectores, en un solo texto. Es lo mismo que imprimen ellos en
+               su PDF por sitio, asi que se guarda crudo y se ordena al pintar. */
+            ':extras'  => trim((string)($f['extras'] ?? '')) ?: null,
             ':alt'     => is_numeric($f['alturaestructura'] ?? null) ? (float)$f['alturaestructura'] : null,
             ':lat'     => $c ? $c[0] : null,
             ':lng'     => $c ? $c[1] : null,
@@ -172,11 +194,21 @@ function espec_catalogo(?PDO $pdo = null): array
         if (!$c) return [];
         $ult = (string)$c->query("SELECT MAX(visto) FROM espectaculares")->fetchColumn();
         if ($ult === '') return [];
-        $st = $c->prepare("SELECT clave,titulo,tipo,colonia,direccion,zona,estatus,precio,
-                                  referencia,medidas,altura,lat,lng
-                           FROM espectaculares WHERE visto = :v
-                           ORDER BY FIELD(estatus,'DISPONIBLE') DESC, zona, tipo, clave");
-        $st->execute([':v' => $ult]);
+        /* Lo mismo que en api/espectaculares.php: `extras` es columna nueva y
+           una base sin sincronizar todavia no la tiene. Aqui el catch de
+           afuera devolveria [] y el HTML para buscadores se quedaria sin una
+           sola avenida, que es justo lo que ese bloque existe para evitar. */
+        $sql = "SELECT clave,titulo,tipo,colonia,direccion,zona,estatus,precio,
+                       referencia,medidas,%s altura,lat,lng
+                FROM espectaculares WHERE visto = :v
+                ORDER BY FIELD(estatus,'DISPONIBLE') DESC, zona, tipo, clave";
+        try {
+            $st = $c->prepare(sprintf($sql, 'extras,'));
+            $st->execute([':v' => $ult]);
+        } catch (PDOException $e) {
+            $st = $c->prepare(sprintf($sql, ''));
+            $st->execute([':v' => $ult]);
+        }
         return $st->fetchAll(PDO::FETCH_ASSOC);
     } catch (Throwable $e) {
         return [];

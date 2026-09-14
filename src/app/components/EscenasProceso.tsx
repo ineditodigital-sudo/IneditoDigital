@@ -26,6 +26,7 @@ import { tr } from '../idioma';
  *   bifurca    estrategia-de-canales        dos caminos y se elige uno
  *   perfil     linkedin-de-empresa          el perfil se llena y publica
  *   web        diseno-y-desarrollo-web      la pagina se construye (respaldo)
+ *   espectac.  anuncios-espectaculares      la estructura se levanta y se mide
  *
  * Todas comparten el mismo casco y el mismo contrato: `activo` va de 0 a 3 y
  * cada pieza entra cuando su paso llega. Asi el ritmo es identico entre
@@ -704,6 +705,153 @@ function EscenaPerfil({ activo }: { activo: number }) {
   );
 }
 
+/**
+ * El espectacular levantandose. Sigue los cuatro pasos del servicio:
+ * la avenida y su flujo, los sitios candidatos, la estructura con el arte
+ * puesto, y la medicion. Se eligio contar ESTO y no un mapa porque el mapa ya
+ * esta mas arriba en la misma pagina, con los 317 espacios de verdad.
+ */
+function EscenaEspectacular({ activo }: { activo: number }) {
+  return (
+    <>
+      {/* la avenida: la franja de abajo con su flujo. Es el paso 1 —por donde
+          se mueve la gente— y el suelo sobre el que se para todo lo demas. */}
+      <div className="absolute inset-x-0 bottom-9 h-9 border-y border-white/10 bg-white/[.03]">
+        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 overflow-hidden">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <motion.span
+              key={i}
+              className="absolute top-0 h-px w-8 bg-white/25"
+              animate={{ x: ['-15%', '460%'] }}
+              transition={{ duration: 3.4, repeat: Infinity, ease: 'linear', delay: i * 0.55 }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* paso 1: la zona a la que hay que llegar */}
+      <motion.div
+        {...pieza(activo, 0)}
+        className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[.05] px-2.5 py-1"
+      >
+        <Route size={11} className="text-[#CC66FF]" />
+        <span className="font-mono text-[9px] uppercase tracking-[.14em] text-white/55">
+          {tr('Zona y flujo')}
+        </span>
+      </motion.div>
+
+      {/* paso 2: tres sitios candidatos sobre la avenida. El de en medio es el
+          que se elige, y es justo donde crecera la estructura. */}
+      {[
+        { x: '16%', n: 0 },
+        { x: '50%', n: 1 },
+        { x: '82%', n: 2 },
+      ].map((s) => {
+        /* El elegido se apaga cuando la estructura ya esta de pie: se
+           convirtio en ella. Dejarlo encendido lo cruza con el poste y se ve
+           como dos cosas distintas en el mismo punto. */
+        const elegido = s.n === 1;
+        const fuera = elegido && activo >= 2;
+        return (
+          <motion.div
+            key={s.x}
+            className="absolute bottom-[4.5rem]"
+            style={{ left: s.x, transform: 'translateX(-50%)' }}
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: activo < 1 ? 0 : fuera ? 0 : 1, y: activo < 1 ? -12 : 0 }}
+            transition={{ duration: 0.45, delay: activo === 1 ? s.n * 0.12 : 0, ease: suave }}
+          >
+            <MapPin
+              size={elegido ? 20 : 15}
+              className={elegido ? 'text-[#CC66FF]' : 'text-white/25'}
+              fill={elegido ? 'rgba(204,102,255,.3)' : 'none'}
+            />
+            {elegido && activo === 1 && (
+              <motion.span
+                className="absolute -inset-1.5 rounded-full border border-[#CC66FF]/40"
+                animate={{ scale: [1, 1.8], opacity: [0.7, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+              />
+            )}
+          </motion.div>
+        );
+      })}
+
+      {/* la ficha del sitio elegido: las medidas reales del catalogo */}
+      <motion.div
+        {...pieza(activo, 1, 0.3)}
+        className="absolute right-4 top-4 rounded-lg border border-white/12 bg-[#120018]/95 px-2.5 py-1.5 backdrop-blur"
+      >
+        <span className="block font-mono text-[9px] uppercase tracking-[.12em] text-white/40">
+          {tr('Ficha del sitio')}
+        </span>
+        <span className="mt-0.5 block font-mono text-[10px] text-white/70">12.90 × 7.20 m</span>
+      </motion.div>
+
+      {/* paso 3: la estructura. El poste sube desde la avenida y la lona se
+          abre encima. Crecen de verdad —scaleY y scaleX con origen— para que
+          se lea como un montaje y no como una tarjeta que aparece. */}
+      <motion.div
+        className="absolute bottom-[4.5rem] left-1/2 w-[3px] -translate-x-1/2 origin-bottom bg-gradient-to-t from-white/25 to-white/10"
+        style={{ height: '2.6rem' }}
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: activo >= 2 ? 1 : 0 }}
+        transition={{ duration: 0.5, ease: suave }}
+      />
+      <motion.div
+        className="absolute bottom-[7.1rem] left-1/2 w-[58%] -translate-x-1/2 origin-bottom overflow-hidden rounded-md border border-[#CC66FF]/35"
+        style={{ aspectRatio: '12.9 / 7.2', background: 'linear-gradient(140deg, rgba(119,0,206,.35), rgba(204,102,255,.12))' }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={activo >= 2 ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+        transition={{ duration: 0.55, delay: activo >= 2 ? 0.35 : 0, ease: suave }}
+      >
+        {/* el arte puesto: un titular corto y una linea, que es exactamente lo
+            que cabe en una lona que se lee en cinco segundos */}
+        <div className="flex h-full flex-col justify-center gap-1.5 px-3">
+          <motion.span
+            {...pieza(activo, 2, 0.75)}
+            className="block h-2 w-3/4 rounded-full bg-white/75"
+          />
+          <motion.span
+            {...pieza(activo, 2, 0.85)}
+            className="block h-1.5 w-1/2 rounded-full bg-white/35"
+          />
+        </div>
+      </motion.div>
+
+      {/* Los reflectores encendidos. Van FUERA de la lona: dentro los recortaba
+          su propio overflow-hidden —que esta ahi para el arte— y no se veia
+          justo lo que tiene que desbordar. */}
+      <motion.div
+        {...pieza(activo, 2, 0.95)}
+        className="pointer-events-none absolute bottom-[6.6rem] left-1/2 h-7 w-[66%] -translate-x-1/2 rounded-full bg-[#CC66FF]/25 blur-xl"
+      />
+
+      {/* paso 4: la medicion. Sin cifras inventadas: las barras suben y el
+          sello dice que la campana se mide, que es lo que se promete. */}
+      <motion.div
+        {...pieza(activo, 3)}
+        className="absolute bottom-3 left-4 flex items-end gap-1"
+      >
+        {[0.45, 0.7, 1].map((h, i) => (
+          <motion.span
+            key={i}
+            className="w-1.5 rounded-sm bg-gradient-to-t from-[#7700CE] to-[#CC66FF]"
+            initial={{ height: 2 }}
+            animate={{ height: activo >= 3 ? 20 * h : 2 }}
+            transition={{ duration: 0.5, delay: activo >= 3 ? 0.15 + i * 0.1 : 0, ease: suave }}
+          />
+        ))}
+        <span className="ml-1.5 font-mono text-[9px] uppercase tracking-[.12em] text-white/45">
+          {tr('Búsquedas de marca')}
+        </span>
+      </motion.div>
+
+      <Distintivo activo={activo} texto="Campaña medida" Icono={TrendingUp} />
+    </>
+  );
+}
+
 /** La pagina web construyendose (la escena original, ahora solo para web). */
 function EscenaWeb({ activo }: { activo: number }) {
   return (
@@ -766,6 +914,7 @@ const escenas: Record<string, (p: { activo: number }) => JSX.Element> = {
   'tablero-de-resultados': EscenaTablero,
   'estrategia-de-canales': EscenaCanales,
   'linkedin-de-empresa': EscenaPerfil,
+  'anuncios-espectaculares': EscenaEspectacular,
 };
 
 export function Escena({ slug, activo }: { slug: string; activo: number }) {

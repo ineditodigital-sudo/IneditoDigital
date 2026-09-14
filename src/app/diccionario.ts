@@ -1031,14 +1031,63 @@ export const DICCIONARIO: Record<string, string> = {
   'espacios': 'spaces',
   'en Aguascalientes,': 'in Aguascalientes,',
   'disponibles': 'available',
-  'hoy. Filtra por formato y zona, y pide el que te interese por su clave.':
-    'today. Filter by format and area, and ask for the one you want by its code.',
+  'hoy. Búscalo por calle o por clave, fíltralo por formato y zona, y pídelo por su clave.':
+    'today. Search it by street or code, filter it by format and area, and ask for it by its code.',
   'Todos los formatos': 'All formats',
   'Toda la ciudad': 'The whole city',
-  'Ningún espacio con esos filtros. Prueba con otra zona o quita «solo disponibles».':
-    'No space matches those filters. Try another area, or turn off “available only”.',
   'El catálogo no está disponible en este momento. Escríbenos y te pasamos los espacios libres.':
     'The catalog is not available right now. Write to us and we will send you the free spaces.',
+
+  /* la barra de búsqueda y la lista de anuncios */
+  'Buscar por clave, calle o colonia…': 'Search by code, street or neighborhood…',
+  'Zona': 'Area',
+  'Estatus': 'Status',
+  'Todo estatus': 'Any status',
+  'Todos': 'All',
+  'Disponible': 'Available',
+  'Ocupado': 'Taken',
+  'Resultados': 'Results',
+  'Limpiar filtros': 'Clear filters',
+  'Solo disponibles': 'Available only',
+  'Lista de anuncios': 'Billboard list',
+  'Volver a la lista': 'Back to the list',
+  'Ningún espacio con esos filtros. Prueba con otra zona, otro formato o limpia la búsqueda.':
+    'No space matches those filters. Try another area, another format, or clear the search.',
+  'anuncios en esta ubicación': 'billboards at this location',
+  'Otros anuncios en esta ubicación': 'Other billboards at this location',
+  'Colonia': 'Neighborhood',
+  'Medidas': 'Size',
+  'Altura': 'Height',
+  'Referencia': 'Landmark',
+  'COTIZAR ESTE ESPACIO': 'GET A QUOTE FOR THIS SPACE',
+  /* Los cinco formatos, como los nombra el inventario. La clave con la que se
+     pide el espacio no cambia; esto es solo la etiqueta que se lee. */
+  'Cartelera': 'Billboard',
+  'Unipolar': 'Unipole',
+  'Puente': 'Footbridge',
+  'Valla': 'Hoarding',
+  'Pantalla': 'LED screen',
+  'Acercar': 'Zoom in',
+  'Alejar': 'Zoom out',
+  'Coordenadas': 'Coordinates',
+  'Ver en Maps': 'View on Maps',
+  /* el bloque de definicion del encabezado de cada servicio.
+     «Leer más» ya estaba mas arriba, no se repite. */
+  'Qué es': 'What it is',
+  'Leer menos': 'Read less',
+  /* la escena del proceso de espectaculares */
+  'Zona y flujo': 'Area and traffic',
+  'Ficha del sitio': 'Site sheet',
+  'Búsquedas de marca': 'Brand searches',
+  'Campaña medida': 'Campaign measured',
+  /* La ficha tecnica del sitio, como la manda el sistema del proveedor */
+  'Ficha técnica': 'Technical sheet',
+  'Iluminado': 'Lit',
+  'Sin iluminación': 'Not lit',
+  'Paneles': 'Panels',
+  'Temporizadores': 'Timers',
+  'Cimentación': 'Foundation',
+  'Reflectores': 'Floodlights',
 
   /* ── tarjetas NFC: el armado y los planes ──────────────────────────── */
   'Diseño personalizado a tu identidad de marca': 'A design built to your brand identity',
