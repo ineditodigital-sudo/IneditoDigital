@@ -639,7 +639,9 @@ function StickyJourney() {
 function Comparison({ t }: { t: (k: string, r: string) => string }) {
   const comparison = comparacionDe(t);
   return (
-    <section className="px-4 py-16 md:py-24 bg-white">
+    /* overflow-hidden: la tarjeta de al lado entra desde x:24 y esos 24 px de
+       mas empujaban la pagina entera de lado en telefono. */
+    <section className="overflow-hidden px-4 py-16 md:py-24 bg-white">
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-12">
           <div className="text-[#7700CE] text-[11px] tracking-[0.3em] uppercase mb-4">{t('etiqueta', 'Beneficios')}</div>

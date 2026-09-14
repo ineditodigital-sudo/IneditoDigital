@@ -190,6 +190,33 @@
     line-height: 1.15;
   }
 
+  /*
+   * El titulo de una ficha de servicio.
+   *
+   * Hanson es MUY ancha: su palabra mas larga del catalogo
+   * —«ESPECTACULARES»— mide 12.65 em. Con los saltos fijos de Tailwind
+   * (36 / 60 / 72 px) esa palabra no cabia y la seccion, que lleva
+   * overflow-hidden, la recortaba EN SILENCIO: 167 px a 320, 112 a 375, 23 a
+   * 768 y 15 px en todo el escritorio, porque max-w-4xl (896) es mas estrecho
+   * que la palabra a 72 px (911).
+   *
+   * Aqui el tamano sale de lo que de verdad hay disponible dividido entre esa
+   * anchura, con tope en 4.5rem para no crecer mas que antes en escritorio.
+   * El 13 sale de medir la fuente de verdad con su tracking —la palabra mide
+   * 12.62 em— y dejar un poco de aire por si el navegador todavia esta usando
+   * la tipografia de respaldo cuando pinta el primer cuadro.
+   *
+   * Los guiones y el corte de palabra son la red por debajo: si manana alguien
+   * da de alta desde el panel un servicio con una palabra aun mas larga, se
+   * parte en dos renglones en vez de desaparecer por el borde.
+   */
+  .titulo-servicio {
+    font-size: min(4.5rem, calc(min(1024px, 100vw - 2rem) / 13));
+    line-height: 0.95;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
   h2 {
     font-size: clamp(1.5rem, 3.5vw, 2.75rem);
     line-height: 1.25;

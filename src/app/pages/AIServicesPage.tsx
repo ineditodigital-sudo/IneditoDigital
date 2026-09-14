@@ -91,7 +91,9 @@ export default function AIServicesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="heading text-4xl md:text-5xl lg:text-6xl mb-6"
+            /* Fluido por lo mismo que el titulo de una ficha: a 375 px
+               «INTELIGENCIA» no cabe a 36 px y se recortaba 12 px. */
+            className="heading titulo-servicio mb-6"
           >
             <span className="block text-white mb-2">{t('titulo_1', 'INTELIGENCIA ARTIFICIAL')}</span>
             <span className="block text-[#CC66FF]">

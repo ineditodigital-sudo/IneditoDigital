@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { motion } from 'motion/react';
 import {
@@ -42,6 +43,9 @@ const entra = (retraso = 0) => ({
 export default function ServiceDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { services, settings, openAssistant } = useApp();
+  /* Si la definicion esta desplegada. Solo manda en telefono: de md para
+     arriba el texto se ve entero y el boton no existe. */
+  const [abierto, setAbierto] = useState(false);
 
   const service = services.find((s) => s.slug === slug);
   const tEnc = contenido('servicio-detalle', 'encabezados');
@@ -126,7 +130,7 @@ export default function ServiceDetailPage() {
                 initial={{ opacity: 0, y: 26 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
-                className="heading max-w-4xl text-4xl leading-[0.95] md:text-6xl lg:text-7xl"
+                className="heading titulo-servicio max-w-5xl"
               >
                 {service.title}
               </motion.h1>
@@ -139,20 +143,6 @@ export default function ServiceDetailPage() {
               >
                 {service.shortDescription}
               </motion.p>
-
-              {/* La definicion: responde "que es" en las primeras palabras.
-                  Sirve a quien llega sin saber que es el servicio, y es lo que
-                  un asistente de IA puede citar. */}
-              {service.definicion && (
-                <motion.p
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.18 }}
-                  className="mt-5 max-w-2xl border-l-2 border-[#CC66FF]/40 pl-4 text-[15px] leading-relaxed text-white/65"
-                >
-                  {service.definicion}
-                </motion.p>
-              )}
 
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
@@ -176,6 +166,56 @@ export default function ServiceDetailPage() {
                   WHATSAPP
                 </a>
               </motion.div>
+
+              {/*
+                La definicion, despues de los botones y plegada en telefono.
+
+                Estaba antes de ellos y empujaba «Cotizar» fuera de la primera
+                pantalla: quien ya sabe lo que quiere tenia que leerse un
+                parrafo de 400 caracteres para encontrar el boton.
+
+                No se quita —sigue en la pagina y sigue en el HTML— porque es
+                lo que responde «que es esto» a quien llega sin saberlo y lo que
+                un asistente de IA puede citar. Y porque a los buscadores ya les
+                llega por render.php, que les sirve su propio HTML con esta
+                definicion como PRIMER parrafo bajo el h1: ahi no la movimos ni
+                un milimetro. Dejarla solo ahi seria servir una cosa al robot y
+                otra a la persona, que es justo lo que no se hace; aqui esta
+                para los dos, solo que sin tapar la puerta.
+
+                En telefono se recorta a tres renglones con un boton que la
+                abre. El texto esta en el DOM completo desde el primer momento:
+                lo recorta el CSS, no se esconde.
+              */}
+              {service.definicion && (
+                <motion.div
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.26 }}
+                  className="mt-10 max-w-2xl border-l-2 border-white/12 pl-4"
+                >
+                  <p className="mb-1.5 font-mono text-[10.5px] uppercase tracking-[.2em] text-white/30">
+                    {tEnc('definicion_sello', 'Qué es')}
+                  </p>
+                  <p
+                    className={`text-[14.5px] leading-relaxed text-white/55 ${
+                      abierto ? '' : 'line-clamp-3 md:line-clamp-none'
+                    }`}
+                  >
+                    {service.definicion}
+                  </p>
+                  <button
+                    onClick={() => setAbierto((v) => !v)}
+                    className="mt-2 inline-flex items-center gap-1 text-[12.5px] text-white/45 transition-colors hover:text-white md:hidden"
+                  >
+                    {abierto ? tEnc('definicion_menos', 'Leer menos') : tEnc('definicion_mas', 'Leer más')}
+                    <Plus
+                      size={12}
+                      className={`transition-transform duration-300 ${abierto ? 'rotate-45' : ''}`}
+                    />
+                  </button>
+                </motion.div>
+              )}
             </div>
           </section>
 
@@ -186,7 +226,9 @@ export default function ServiceDetailPage() {
               que un buscador lo lee sin ejecutar nada de esto. */}
           {service.slug === 'anuncios-espectaculares' && (
             <section className="px-4 pb-16 md:pb-24">
-              <div className="container mx-auto max-w-5xl">
+              {/* Mas ancho que el resto de la pagina: la lista va al lado del
+                  mapa y a 1024 px de caja las dos columnas quedan apretadas. */}
+              <div className="container mx-auto max-w-6xl">
                 <motion.h2 {...entra()} className="heading mb-2 text-3xl md:text-5xl">
                   {tEnc('cat_1', 'EL')}{' '}
                   <span className="text-[#CC66FF]">{tEnc('cat_2', 'CATÁLOGO')}</span>
