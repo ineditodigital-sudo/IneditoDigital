@@ -53,7 +53,7 @@ crud('servicios', [
                      'help'=>'El slug de cada uno, tal como aparece arriba.'],
 
     'keywords'   => ['label'=>'Palabras clave','type'=>'lista','json'=>'seo.keywords','sep'=>'comas','grupo'=>'Buscadores'],
-    'meta_title' => ['label'=>'Título para buscadores','type'=>'texto','json'=>'seo.metaTitle','grupo'=>'Buscadores','help'=>'Si lo dejas vacío se usa el nombre del servicio.'],
+    'meta_title' => ['label'=>'Título para buscadores','type'=>'texto','json'=>'seo.metaTitle','grupo'=>'Buscadores','help'=>'Vacío es la mejor opción salvo que tengas un motivo: se arma solo como «Servicio en Aguascalientes | INÉDITO DIGITAL», y si no cabe en los 60 caracteres que Google muestra, se cae la marca antes que la ciudad. Si lo escribes, no pases de 60 y nombra la ciudad.'],
     'meta_desc'  => ['label'=>'Descripción para buscadores','type'=>'texto','json'=>'seo.metaDescription','grupo'=>'Buscadores','wide'=>true],
   ],
 ]);
