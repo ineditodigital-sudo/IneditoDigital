@@ -9,6 +9,12 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Strict-Transport-Security: max-age=31536000');
 $GLOBALS['cfg'] = require __DIR__ . '/../api/config.php';
 
+/* Gemelo de lo que hace api/db.php; el panel abre su propia conexión.
+   Si se cambia una zona, se cambian las dos: el sitio escribe los leads con
+   el reloj de api/ y el panel calcula la antigüedad con este. Cuando no
+   coincidían, «hace 9 h» era en realidad hace unos minutos. */
+date_default_timezone_set('America/Mexico_City');
+
 function db(): PDO {
     static $pdo = null;
     if ($pdo) return $pdo;
@@ -18,6 +24,7 @@ function db(): PDO {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
+    try { $pdo->exec("SET time_zone = '-06:00'"); } catch (Throwable $e) {}
     return $pdo;
 }
 function is_logged(): bool { return !empty($_SESSION['admin_id']); }

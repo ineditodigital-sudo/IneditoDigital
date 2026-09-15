@@ -247,6 +247,9 @@ $esperando = ($counts['new'] ?? 0) + ($counts['contacted'] ?? 0);
   .lead-espera{font-size:12.5px;color:var(--mut2)}
   .lead.sin .lead-espera{color:var(--mut)}
   .lead-espera.urge{color:var(--pur3)}
+  /* La hora exacta va apagada y en cifras tabulares: acompaña a la
+     antigüedad sin competir con ella, que es lo que de verdad se lee. */
+  .lead-hora{margin-left:6px;opacity:.55;font-variant-numeric:tabular-nums}
   .lead-via{font-size:12.5px;color:var(--mut2)}
   .lead-est{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--mut)}
   .lead-est i{width:6px;height:6px;border-radius:50%;background:var(--est);flex:none}
@@ -326,7 +329,12 @@ $esperando = ($counts['new'] ?? 0) + ($counts['contacted'] ?? 0);
     <span class="lead-nom"><?= e($l['name']) ?></span>
     <time class="lead-espera <?= e($urgencia === 'urge' && $sinContestar ? 'urge' : '') ?>"
           datetime="<?= e(date('c', strtotime((string)$l['created_at']))) ?>"
-          title="<?= e(date('d/m/Y H:i', strtotime((string)$l['created_at']))) ?>"><?= e($hace) ?></time>
+          title="<?= e(date('d/m/Y H:i', strtotime((string)$l['created_at']))) ?>"><?= e($hace) ?><?php
+            /* La hora exacta, a la vista y no solo en el title: un tooltip no
+               existe en teléfono, y cuando los relojes del sitio y del panel
+               se desfasaron, el «hace X» se equivocó sin que nada lo delatara.
+               Con la hora al lado, el desfase se ve el mismo día. */
+          ?><span class="lead-hora"><?= e(date('H:i', strtotime((string)$l['created_at']))) ?></span></time>
     <?php if ($via): ?><span class="lead-via"><?= e(implode(' · ', $via)) ?></span><?php endif; ?>
     <span class="lead-est"><i></i><?= e($LB[$l['status']] ?? $l['status']) ?></span>
   </div>
