@@ -9,7 +9,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '')==='POST') {
 $v = settings_all('seo_settings'); $ct=csrf();
 ?>
 <div class="kicker">Posicionamiento</div><h1 class="title">SEO</h1><p class="subt">Configuración de posicionamiento y datos estructurados</p>
-<div class="card" style="border-color:#3a2f12;background:#191305"><div class="mini" style="color:#e0c07a">Se guarda en la base de datos. Aplicar estos valores al sitio público (meta, Analytics, sitemap) es la siguiente fase; los datos ya quedan listos para conectarse.</div></div>
+<?php /*
+  El aviso decía que estos campos «todavía no se aplican al sitio». Dejó de
+  ser cierto hace tiempo: render.php lee las 22 claves de esta pantalla en
+  cada visita. El aviso viejo es, con toda probabilidad, la razón de que el
+  campo de Analytics llevara vacío desde siempre —decía que llenarlo no
+  servía de nada—.
+*/ ?>
+<div class="card" style="border-color:#12331f;background:#07160d"><div class="mini" style="color:#7fe0a8">Esto ya está en vivo. Lo que guardes aquí sale en el sitio en la siguiente visita, sin desplegar nada: las etiquetas de Analytics y del píxel, las verificaciones de dominio, y los datos de la empresa que leen Google y las IA. Si borras un campo, deja de salir.</div></div>
 <form method="post" class="card">
   <input type="hidden" name="csrf" value="<?= $ct ?>">
   <div class="form-sec"><b>General</b><span>Identidad básica del sitio</span></div>
