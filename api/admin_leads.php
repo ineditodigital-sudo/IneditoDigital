@@ -27,12 +27,21 @@ if (!is_array($body)) $body = [];
 require __DIR__ . '/admin_token.php';
 $auth  = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
 $token = (stripos($auth, 'Bearer ') === 0) ? substr($auth, 7) : ($_GET['token'] ?? ($body['token'] ?? ($_POST['token'] ?? null)));
-if (!admin_verify_token($cfg, $token)) {
+$payload = admin_verify_token($cfg, $token);
+if (!$payload) {
     http_response_code(401); echo json_encode(['ok' => false, 'error' => 'No autorizado']); exit;
 }
 
 $action = $body['action'] ?? ($_GET['action'] ?? 'list');
 $idInt  = static fn($v) => (int) preg_replace('/\D/', '', (string)$v); // 'lead_3' -> 3
+
+// Un token de SOLO LECTURA (scope:"readonly", p. ej. el del puente de analítica)
+// puede listar, pero NO mutar leads. Se rechaza antes de tocar la base.
+$accionesEscritura = ['update_status', 'delete'];
+if (in_array($action, $accionesEscritura, true) && admin_token_is_readonly($payload)) {
+    http_response_code(403);
+    echo json_encode(['ok' => false, 'error' => 'Token de solo lectura: escritura no permitida']); exit;
+}
 
 require __DIR__ . '/db.php';
 try {

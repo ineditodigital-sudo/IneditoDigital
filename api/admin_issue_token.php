@@ -14,9 +14,10 @@
  *   php api/admin_issue_token.php 3650 readonly analytics-bot
  *
  * - dias    : caducidad en días (por defecto 3650 ≈ 10 años).
- * - scope   : etiqueta de alcance guardada en el payload firmado
- *             ('readonly' para el puente de analítica). Informativa: el
- *             endpoint admin_analytics.php es de solo lectura por diseño.
+ * - scope   : alcance guardado en el payload firmado ('readonly' para el
+ *             puente de analítica). YA SE HACE CUMPLIR: los endpoints que
+ *             mutan datos (p. ej. admin_leads.php) rechazan con 403 un token
+ *             con scope 'readonly'; la analítica (solo lectura) lo acepta.
  * - usuario : nombre para atribución en el payload (por defecto 'analytics-bot').
  *
  * Imprime EXCLUSIVAMENTE el token en stdout (una línea), para poder capturarlo

@@ -21,3 +21,14 @@ function admin_verify_token(array $cfg, ?string $token): ?array
     if (!is_array($p) || (int)($p['exp'] ?? 0) < time()) return null;
     return $p;
 }
+
+/**
+ * ¿El token es de SOLO LECTURA? (claim `scope:"readonly"` firmado en el payload).
+ * Los endpoints que MUTAN datos deben rechazar (403) un token readonly; los de
+ * solo lectura (analítica) lo aceptan igual. Un token sin scope se trata como
+ * NO readonly, para no romper los tokens de admin existentes.
+ */
+function admin_token_is_readonly(?array $payload): bool
+{
+    return is_array($payload) && ($payload['scope'] ?? '') === 'readonly';
+}
