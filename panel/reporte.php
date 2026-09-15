@@ -29,6 +29,26 @@ try {
 }
 
 while (ob_get_level() > 0) ob_end_clean();
+
+/*
+ * El visor del panel es un <iframe> que apunta aquí, y bootstrap.php manda
+ * `X-Frame-Options: DENY` a todo el panel. DENY prohíbe el marco incluso
+ * desde el propio dominio —esa es la diferencia con SAMEORIGIN—, así que la
+ * vista previa salía siempre como ERR_BLOCKED_BY_RESPONSE: «rechazó la
+ * conexión». El botón de descargar sí funcionaba, porque eso es una
+ * navegación y no un marco.
+ *
+ * Se relaja SOLO aquí y solo a SAMEORIGIN, que es el único sitio del panel
+ * pensado para verse dentro de otra página. El resto sigue en DENY: la
+ * protección que importa —que un sitio ajeno enmarque el panel para robarte
+ * los clics— se mantiene intacta en los dos casos.
+ *
+ * Va acompañado de frame-ancestors, que es lo que miran los navegadores
+ * nuevos y gana a X-Frame-Options cuando están los dos.
+ */
+header('X-Frame-Options: SAMEORIGIN');
+header("Content-Security-Policy: frame-ancestors 'self'");
+
 header('Content-Type: application/pdf');
 header('Content-Length: ' . strlen($pdf));
 /* `inline` para poder verlo dentro del panel; con ?bajar=1 se descarga. */
