@@ -737,7 +737,9 @@ function registro_paginas(): array {
                     'nombre' => 'Portada',
                     'ayuda'  => 'Lo primero que se ve al entrar.',
                     'campos' => [
-                        'seo_titulo' => ['label' => 'Título para buscadores', 'tipo' => 'texto', 'def' => 'Posicionamiento en IA (GEO) en Aguascalientes | INÉDITO DIGITAL'],
+                        /* Sin la marca: con ella eran 63 caracteres y Google corta en ~60.
+                           Lo que se queda es la ciudad y «(GEO)», que es término de búsqueda. */
+                        'seo_titulo' => ['label' => 'Título para buscadores', 'tipo' => 'texto', 'def' => 'Posicionamiento en IA (GEO) en Aguascalientes'],
                         'seo_desc' => ['label' => 'Descripción para buscadores', 'tipo' => 'parrafo', 'def' => 'Logramos que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen bien a tu negocio. Diagnóstico gratuito en Aguascalientes.'],
                         'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'POSICIONAMIENTO GEO'],
                         'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'Tus clientes ya no buscan.'],

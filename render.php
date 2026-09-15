@@ -637,7 +637,9 @@ if ($path === '/servicios/posicionamiento-en-ia') {
   $gs  = $g['servicio'] ?? [];
   $gl  = $g['local'] ?? [];
 
-  $title = ($gp['seo_titulo'] ?? '') ?: 'Posicionamiento en IA (GEO) en Aguascalientes | ' . $siteName;
+  /* Sin la marca: con ella eran 63 caracteres y Google corta en ~60. Lo que
+     se queda es la ciudad y «(GEO)», que es término de búsqueda. */
+  $title = ($gp['seo_titulo'] ?? '') ?: 'Posicionamiento en IA (GEO) en Aguascalientes';
   $desc  = ($gp['seo_desc'] ?? '') ?: 'Logramos que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen bien a tu negocio. Diagnóstico gratuito en Aguascalientes.';
   $canonical = $BASE . $path;
   $crumbs[] = ['Servicios', '/servicios'];

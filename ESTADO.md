@@ -113,7 +113,18 @@ Se revisaron dos tableros: el ranking en Google y «Qué páginas estudian las I
   - El `metaTitle` del panel **sigue ganando** a todo esto. Hay copia gemela en `src/app/data/services.ts` para la pestaña del navegador; si se cambia una, cambiar la otra. Dos fichas tienen página propia y también se cambiaron: `TarjetasDigitalesPage` (lo tenía escrito a mano) y `GeoPage` (ya seguía el patrón).
   - Detalle sin consecuencia: en el navegador, `DynamicSEO` vuelve a pegar la marca cuando el recorte la quitó, así que la pestaña de Tarjetas NFC mide 72. Da igual —el recorte existe para Google, y a Google le llega el HTML de `render.php`, que sí mide 54—.
   - **Al verificar en producción salió un segundo defecto.** Cuatro fichas seguían con el título viejo después de subir: `chatgpt-ads`, `estrategia-de-canales`, `linkedin-de-empresa` y `tablero-de-resultados`. La causa es la trampa que ya está documentada aquí —los valores por defecto ganan al publicar—: la plantilla vieja se había grabado como `metaTitle` en `data_json`, así que el panel le ganaba al código. Eso **no es la decisión de nadie**, es el automático de antes fosilizado. `render.php` ahora ignora un `metaTitle` que sea exactamente esa forma (`… | Servicios · …`) y deja pasar cualquier otro texto escrito a mano. Las cuatro quedaron corregidas y comprobadas en vivo.
-  - **Auditadas las 27 fichas en producción.** Ninguna con la plantilla vieja. Cinco quedan fuera de norma y **son a propósito**, escritas a mano en el panel, así que no se tocaron: cuatro pasan de 60 caracteres —Anuncios Espectaculares (72), Agencia de IA (71), Marketing Educativo (61), Posicionamiento en IA (63)— y Tarjetas NFC (54) no nombra la ciudad. Si se quieren dentro de norma, se editan en el panel; el código ya no las pisa.
+  - **Auditadas las 27 fichas en producción: ninguna pasa de 60 y todas nombran su ciudad.** Los cinco que estaban fuera de norma se corrigieron uno por uno, y no todos vivían en el mismo sitio —vale la pena saberlo antes de buscar el siguiente—:
+
+| Ficha | Dónde vivía | Quedó en |
+|---|---|---|
+| `anuncios-espectaculares` | `metaTitle` en el panel | `Renta de Anuncios Espectaculares en Aguascalientes` (50) |
+| `marketing-educativo` | `metaTitle` en el panel | `Marketing para Escuelas y Academias en Aguascalientes` (53) |
+| `inteligencia-artificial-aguascalientes` | `metaTitle` en el panel | `Agencia de IA en Aguascalientes \| Inteligencia Artificial` (57) |
+| `tarjetas-de-presentacion-digital` | `metaTitle` en el panel | campo **vaciado**: lo arma `tituloServicio()` (54) |
+| `posicionamiento-en-ia` | **no es un servicio**: es una página del CMS | `Posicionamiento en IA (GEO) en Aguascalientes` (45) |
+
+  - La última tenía el título en **tres sitios a la vez**, y hubo que tocar los tres: el respaldo en `render.php`, el `def` en `panel/inc/contenido.php` y el valor ya publicado en la base. Cambiar solo el código no movió nada —otra vez la trampa de que los valores por defecto ganan al publicar—. `GeoPage.tsx` también se alineó; ese entra con el próximo `npm run build`, no se desplegó un bundle nuevo solo por el título de una pestaña.
+  - La ayuda del campo en el panel ahora dice cuál es la norma y que **vacío suele ser mejor**, para que el próximo título a mano no repita esto.
 
 - **Lo que NO se tocó, y por qué.** Dos cosas quedaron señaladas sin diagnóstico firme, porque desde aquí no se pueden comprobar:
   - La regla del `.htaccess` que debería devolver **403** a `.sql`, `.env`, `.bak`, `.zip` **no está disparando**: `/copia.sql` y `/algo.env` llegan hasta `render.php` y contestan 404. Hoy da igual porque esos archivos no existen, pero la regla no protegería si alguna vez se sube un volcado a la raíz. Tampoco cubre `.env.local` ni `.env.production`, que son justo los que sondean. Se descartó que fuera una cadena de `ErrorDocument`: `render.php` ve la ruta original.

@@ -148,7 +148,7 @@ export default function GeoPage() {
   return (
     <>
       <DynamicSEO
-        title={t('seo_titulo', 'Posicionamiento en IA (GEO) en Aguascalientes | INÉDITO DIGITAL')}
+        title={t('seo_titulo', 'Posicionamiento en IA (GEO) en Aguascalientes')}
         description={t('seo_desc', 'Logramos que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen bien a tu negocio. Diagnóstico gratuito en Aguascalientes.')}
       />
 
