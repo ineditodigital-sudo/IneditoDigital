@@ -610,6 +610,13 @@ function registro_paginas(): array {
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'SERVICIOS'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
                                        'def' => 'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Todo conectado a datos reales y medido hasta la venta.'],
+                        /* Los dos botones de arriba. Esta página no tenía ninguno:
+                           lo primero que se podía tocar estaba a 920 px, o sea
+                           debajo de la primera pantalla de un teléfono. */
+                        'cta_gancho' => ['label' => 'Frase encima de los botones', 'tipo' => 'texto',
+                                         'def' => '¿No sabes cuál te toca? Te lo decimos en 30 segundos.'],
+                        'cta_boton'  => ['label' => 'Botón principal', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
+                        'cta_wa'     => ['label' => 'Botón de WhatsApp', 'tipo' => 'texto', 'def' => 'WHATSAPP'],
                     ],
                 ],
 

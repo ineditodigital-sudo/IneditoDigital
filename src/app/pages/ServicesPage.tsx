@@ -19,10 +19,13 @@ export default function ServicesPage() {
   const t = contenido('servicios', 'encabezado');
   const tNiv = contenido('servicios', 'niveles');
   const tTar = contenido('servicios', 'tarjeta');
-  const { services: todosLosServicios } = useApp();
+  const { services: todosLosServicios, settings, openAssistant } = useApp();
   /* El catalogo muestra el que hacemos, no donde lo hacemos: las landings de
      ciudad viven aparte y se llega a ellas desde el bloque de cobertura. */
   const services = todosLosServicios.filter((s) => s.category !== 'Cobertura' && s.category !== 'Sectores');
+  const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+    'Hola, vi sus servicios y quiero saber cuál me conviene'
+  )}`;
 
   /* Los tres niveles del documento de dirección. Antes de la lista de fichas,
      porque la pregunta que trae a la gente no es "qué servicios hay" sino
@@ -78,6 +81,38 @@ export default function ServicesPage() {
             <p className="text-lg leading-relaxed text-white/80 md:text-xl">
               {t('bajada', 'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Todo conectado a datos reales y medido hasta la venta.')}
             </p>
+
+            {/*
+              Los botones, dentro de la primera pantalla.
+
+              Esta página no tenía ninguno. Lo primero que se podía tocar era
+              una tarjeta de servicio a 920 px: en un teléfono, dos pantallas
+              de scroll antes de encontrar una puerta. Y de las tres páginas
+              con más visitas, es la única sin salida a WhatsApp.
+
+              Van aquí y no al final a propósito: quien entra a «servicios»
+              ya sabe que quiere algo, lo que no sabe es cuál.
+            */}
+            <p className="mt-8 text-sm text-white/55">
+              {t('cta_gancho', '¿No sabes cuál te toca? Te lo decimos en 30 segundos.')}
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => openAssistant(undefined, 'elegir el servicio correcto para mi empresa')}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-7 py-3.5 text-sm font-bold tracking-wide text-white transition-transform hover:scale-[1.03]"
+              >
+                {t('cta_boton', 'COTIZAR AHORA')}
+                <ArrowRight size={17} />
+              </button>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 text-sm font-bold tracking-wide text-white transition-colors hover:border-[#CC66FF]/50 hover:bg-white/5"
+              >
+                {t('cta_wa', 'WHATSAPP')}
+              </a>
+            </div>
           </motion.div>
 
           {/* ------------------------------------------------ los tres niveles */}
