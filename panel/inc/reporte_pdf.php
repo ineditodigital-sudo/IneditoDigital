@@ -268,21 +268,43 @@ function reporte_pdf(array $d): string
     $res  = $d['resumenes'] ?? reporte_resumenes($d, null);
     $est  = $d['estatus']   ?? reporte_estatus($d);
 
+    /*
+     * El número de sección lo reparte un contador, no se escribe a mano.
+     *
+     * Iba escrito dentro de cada función, y basta con que una lámina no se
+     * dibuje —el balance y las recomendaciones son condicionales— para que la
+     * numeración salte. Ya pasó: al añadir «En corto» había dos láminas 09.
+     */
+    $seccion = 0;
+    $num = function () use (&$seccion) { return sprintf('%02d', ++$seccion); };
+
+    /*
+     * El orden cuenta una historia, no recorre las tablas de la base.
+     *
+     *   1. la portada
+     *   2. el titular      qué pasó, en una cifra
+     *   3. el recorrido    la cadena entera, de aparecer a que te escriban
+     *   4-8. el detalle    por qué de cada escalón
+     *   9-10. el juicio    qué está bien, qué atender, qué hacer
+     *   11. en corto       todo lo anterior en palabras
+     *   12. dónde estás
+     */
     $laminas = [
         fn($n, $t) => r_portada($pdf, $d, $per),
-        fn($n, $t) => r_titular($pdf, $d, $cmp, $est, $hall, $n, $t),
-        fn($n, $t) => r_visitas($pdf, $d, $cmp, $res, $n, $t),
-        fn($n, $t) => r_buscador($pdf, $d, $cmp, $res, $n, $t),
-        fn($n, $t) => r_palabras($pdf, $d, $res, $n, $t),
-        fn($n, $t) => r_ia($pdf, $d, $cmp, $res, $n, $t),
-        fn($n, $t) => r_embudo($pdf, $d, $res, $n, $t),
+        fn($n, $t) => r_titular($pdf, $d, $cmp, $est, $hall, $num(), $n, $t),
+        fn($n, $t) => r_recorrido($pdf, $d, $num(), $n, $t),
+        fn($n, $t) => r_visitas($pdf, $d, $cmp, $res, $num(), $n, $t),
+        fn($n, $t) => r_buscador($pdf, $d, $cmp, $res, $num(), $n, $t),
+        fn($n, $t) => r_palabras($pdf, $d, $res, $num(), $n, $t),
+        fn($n, $t) => r_ia($pdf, $d, $cmp, $res, $num(), $n, $t),
+        fn($n, $t) => r_embudo($pdf, $d, $res, $num(), $n, $t),
     ];
-    if ($hall['logros'] || $hall['alertas']) $laminas[] = fn($n, $t) => r_balance($pdf, $hall, $n, $t);
-    if ($hall['recomendaciones'])            $laminas[] = fn($n, $t) => r_recomendaciones($pdf, $hall['recomendaciones'], $n, $t);
+    if ($hall['logros'] || $hall['alertas']) $laminas[] = fn($n, $t) => r_balance($pdf, $hall, $num(), $n, $t);
+    if ($hall['recomendaciones'])            $laminas[] = fn($n, $t) => r_recomendaciones($pdf, $hall['recomendaciones'], $num(), $n, $t);
     /* «En corto» va justo antes del cierre: después de los números y antes
        del escalón en el que está cada cosa. */
-    $laminas[] = fn($n, $t) => r_en_corto($pdf, $d, $res, $est, $n, $t);
-    $laminas[] = fn($n, $t) => r_estatus($pdf, $d, $est, $n, $t);
+    $laminas[] = fn($n, $t) => r_en_corto($pdf, $d, $res, $est, $num(), $n, $t);
+    $laminas[] = fn($n, $t) => r_estatus($pdf, $d, $est, $num(), $n, $t);
 
     $total = count($laminas);
     foreach ($laminas as $i => $hacer) $hacer($i + 1, $total);
@@ -313,30 +335,75 @@ function r_portada(Pdf $pdf, array $d, string $per): void
 }
 
 /* --- 01 · el titular --- */
-function r_titular(Pdf $pdf, array $d, ?array $cmp, array $est, array $hall, int $n, int $t): void
+/*
+ * Una cifra manda y las demás la acompañan.
+ *
+ * Antes eran cuatro cifras del mismo tamaño en fila: apariciones, personas,
+ * lecturas de IA y prospectos, con la misma tipografía y el mismo peso. Una
+ * lámina donde todo pesa igual no dice nada, y quien la abre no sabe adónde
+ * mirar primero.
+ *
+ * De esas cuatro, tres son medios y una es el resultado: los prospectos. Lo
+ * demás —que te vean, que entren, que las IA te lean— existe para llegar
+ * ahí. Así que los prospectos van en grande, en la Hanson de la marca, y las
+ * otras tres se quedan a un lado en su tamaño de apoyo.
+ */
+function r_titular(Pdf $pdf, array $d, ?array $cmp, array $est, array $hall, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '01', 'El titular', $est['frase']);
+    /*
+     * Sin resplandor. Se probó y se quitó.
+     *
+     * Una mancha morada detrás de la cifra llegaba hasta los hallazgos de
+     * abajo y les comía el contraste; al encogerla dejaba de molestar y
+     * también de aportar. Con el número a 108 pt en la Hanson de la marca,
+     * la lámina ya tiene jerarquía de sobra: la luz solo era adorno, y el
+     * adorno que no hace nada es lo primero que sobra.
+     *
+     * El resplandor se queda donde sí dice algo: portada, «en corto» y el
+     * cierre, que son las tres láminas que no son de datos.
+     */
+    $y = r_seccion($im, $pdf, $num, 'El titular', $est['frase']);
 
     $v = $d['visitas']; $b = $d['buscador']; $ia = $d['ia']; $e = $d['embudo'];
-    /* Cuatro cifras, no ocho: las que cuentan la cadena entera —te ven, te
-       visitan, te leen las IA, te escriben—. El resto tiene su lámina. */
-    $cifras = [
-        [number_format($b['impresiones']), 'apariciones en Google', $cmp['impresiones'] ?? null, false, ''],
-        [number_format($v['personas']),    'personas en el sitio',  $cmp['personas'] ?? null,    false, ''],
-        [number_format($ia['lecturas']),   'lecturas de IA',        $cmp['ia'] ?? null,          false, count($ia['motores']) . ' motores distintos'],
-        [number_format($e['leads']),       'prospectos',            $cmp['leads'] ?? null,       false, 'formularios enviados'],
+
+    /* --- la cifra que manda --- */
+    $leads = (int)$e['leads'];
+    $alto = r_hanson($im, (string)$leads, R_M, $y + 96, 108, R_TXT);
+    $pdf->texto(R_M, $y + 126, $leads === 1 ? 'prospecto en la quincena' : 'prospectos en la quincena',
+                12, true, R_SUAVE);
+    $dl = $cmp['leads'] ?? null;
+    if ($dl && !empty($dl['hay'])) {
+        $signo = $dl['signo'] > 0 ? '▲' : ($dl['signo'] < 0 ? '▼' : '=');
+        $txt = $dl['pct'] !== null
+            ? $signo . ' ' . abs($dl['pct']) . '% contra la quincena pasada'
+            : $signo . ' ' . number_format(abs($dl['abs'])) . ' contra la quincena pasada';
+        $pdf->texto(R_M, $y + 146, $txt, 9.5, false, $dl['signo'] >= 0 ? R_VERDE : R_AMBAR);
+    }
+
+    /* --- las tres que la sostienen, a un lado y en su sitio --- */
+    $bx = R_M + max(360.0, $alto + 150);
+    $apoyo = [
+        [number_format($b['impresiones']), 'veces te mostró Google',  $cmp['impresiones'] ?? null],
+        [number_format($v['personas']),    'personas entraron',       $cmp['personas'] ?? null],
+        [number_format($ia['lecturas']),   'lecturas de motores de IA', $cmp['ia'] ?? null],
     ];
-    $paso = (Pdf::ANCHO - R_M * 2) / 4;
-    foreach ($cifras as $i => [$val, $rot, $del, $inv, $nota]) {
-        if ($i > 0) r_caja($im, R_M + $i * $paso - 22, $y - 26, 0.7, 72, R_LINEA);
-        r_cifra($im, $pdf, R_M + $i * $paso, $y, $val, $rot, $del, $inv, $nota, 38);
+    foreach ($apoyo as $i => [$val, $rot, $del]) {
+        $py = $y + 18 + $i * 52;
+        r_caja($im, $bx - 20, $py - 12, 2, 34, R_LINEA2);
+        $pdf->texto($bx, $py + 4, $val, 21, true, R_TXT);
+        $pdf->texto($bx + $pdf->ancho($val, 21, true) + 10, $py + 4, $rot, 10, false, R_MUT);
+        if ($del && !empty($del['hay']) && $del['pct'] !== null) {
+            $pdf->texto(Pdf::ANCHO - R_M, $py + 4,
+                ($del['signo'] > 0 ? '▲ ' : '▼ ') . abs($del['pct']) . '%', 9.5, true,
+                $del['signo'] >= 0 ? R_VERDE : R_AMBAR, 'der');
+        }
     }
 
     /* Lo mejor, lo peor y lo primero: una línea cada uno, para que la lámina
        se pueda leer en diez segundos. */
-    $y += 76;
+    $y += 176;
     r_filete($im, R_M, $y, Pdf::ANCHO - R_M * 2);
     $y += 40;
 
@@ -360,11 +427,11 @@ function r_titular(Pdf $pdf, array $d, ?array $cmp, array $est, array $hall, int
 }
 
 /* --- 02 · las visitas --- */
-function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t): void
+function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '02', 'Las visitas', $res['visitas'] ?? '');
+    $y = r_seccion($im, $pdf, $num, 'Las visitas', $res['visitas'] ?? '');
     $v = $d['visitas'];
     $gw = Pdf::ANCHO - R_M * 2;
 
@@ -471,11 +538,11 @@ function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t):
 }
 
 /* --- 03 · el buscador --- */
-function r_buscador(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t): void
+function r_buscador(Pdf $pdf, array $d, ?array $cmp, array $res, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '03', 'El buscador', $res['buscador'] ?? '');
+    $y = r_seccion($im, $pdf, $num, 'El buscador', $res['buscador'] ?? '');
     $b = $d['buscador'];
     $gw = Pdf::ANCHO - R_M * 2;
 
@@ -536,11 +603,11 @@ function r_buscador(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t)
 
 
 /* --- 04 · las palabras clave --- */
-function r_palabras(Pdf $pdf, array $d, array $res, int $n, int $t): void
+function r_palabras(Pdf $pdf, array $d, array $res, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '04', 'Las palabras clave', $res['palabras'] ?? '');
+    $y = r_seccion($im, $pdf, $num, 'Las palabras clave', $res['palabras'] ?? '');
     $pal = $d['palabras'] ?? ['temas' => [], 'declaradas' => 0, 'midiendo' => 0, 'sin_aparecer' => [], 'cuantas_sin' => 0];
     $gw = Pdf::ANCHO - R_M * 2;
     $cw = $gw * 0.56;
@@ -611,11 +678,11 @@ function r_palabras(Pdf $pdf, array $d, array $res, int $n, int $t): void
 }
 
 /* --- 05 · los asistentes de IA --- */
-function r_ia(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t): void
+function r_ia(Pdf $pdf, array $d, ?array $cmp, array $res, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '05', 'Los asistentes de IA', $res['ia'] ?? '');
+    $y = r_seccion($im, $pdf, $num, 'Los asistentes de IA', $res['ia'] ?? '');
     $ia = $d['ia'];
     $gw = Pdf::ANCHO - R_M * 2;
 
@@ -661,11 +728,11 @@ function r_ia(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t): void
 }
 
 /* --- 06 · el embudo --- */
-function r_embudo(Pdf $pdf, array $d, array $res, int $n, int $t): void
+function r_embudo(Pdf $pdf, array $d, array $res, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '06', 'De la visita al cliente', $res['embudo'] ?? '');
+    $y = r_seccion($im, $pdf, $num, 'De la visita al cliente', $res['embudo'] ?? '');
     $v = $d['visitas']; $e = $d['embudo'];
     $gw = Pdf::ANCHO - R_M * 2;
 
@@ -705,12 +772,109 @@ function r_embudo(Pdf $pdf, array $d, array $res, int $n, int $t): void
     r_cerrar($pdf, $im);
 }
 
-/* --- 07 · el balance --- */
-function r_balance(Pdf $pdf, array $hall, int $n, int $t): void
+/**
+ * El recorrido: todo el negocio en una lámina.
+ *
+ * El reporte contaba esto en cuatro láminas separadas —buscador, visitas,
+ * embudo, IA—, que es el orden en que están las tablas en la base, no el
+ * orden en que ocurre. Quien lo lee tiene que ir juntando en la cabeza que
+ * las apariciones de la lámina 3 y los prospectos de la lámina 6 son los dos
+ * extremos de la misma cadena.
+ *
+ * Aquí se ve entera y de un vistazo: cuánta gente hay en cada escalón y qué
+ * porcentaje sobrevive al siguiente. El escalón donde más se cae es dónde
+ * está el trabajo de la quincena que viene.
+ *
+ * Son DOS cadenas y no una, a propósito. Encadenar «1,179 apariciones → 160
+ * personas» sería mentir: la mayoría de esas 160 no vino de Google, llegó
+ * escribiendo la dirección. Se dibujan por separado y se dice en medio
+ * cuántas pasaron de una a la otra.
+ */
+function r_recorrido(Pdf $pdf, array $d, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '07', 'El balance', '');
+    $y = r_seccion($im, $pdf, $num, 'El recorrido',
+        'Cada escalón se queda con una parte. Donde más se cae es donde está el trabajo.');
+
+    $v = $d['visitas']; $b = $d['buscador']; $e = $d['embudo'];
+    $gw = Pdf::ANCHO - R_M * 2;
+
+    /*
+     * La barra de cada escalón mide el porcentaje QUE SOBREVIVE del escalón
+     * anterior, no su valor absoluto. Con valores absolutos, 1,179 contra 3
+     * son cuatrocientos a uno: el último escalón sería un pelo invisible y
+     * justo ese es el que importa. Lo que se quiere leer aquí no es cuánto
+     * hay, es cuánto se pierde.
+     */
+    $cadena = function (float $x, float $ancho, string $rotulo, array $pasos) use ($im, $pdf, &$y) {
+        $pdf->texto($x, $y, $rotulo, 9, true, R_MUT, 'izq', 1.4);
+        $py = $y + 34;
+        $previo = null;
+        foreach ($pasos as $i => [$valor, $etiqueta]) {
+            $pct = $previo === null || $previo <= 0 ? 1.0 : min(1.0, $valor / $previo);
+
+            /* La caída, entre escalón y escalón */
+            if ($previo !== null) {
+                $porcentaje = $previo > 0 ? round($valor / $previo * 100, 1) : 0.0;
+                $sobra = 100 - $porcentaje;
+                $pdf->texto($x + 26, $py - 13,
+                    'pasa el ' . rtrim(rtrim(number_format($porcentaje, 1), '0'), '.') . '%'
+                    . ($sobra > 0 ? '  ·  se pierde el ' . rtrim(rtrim(number_format($sobra, 1), '0'), '.') . '%' : ''),
+                    8.5, false, R_MUT2);
+                /* El bajante: une los dos escalones para que se lean como
+                   uno detrás de otro y no como cifras sueltas. */
+                r_caja($im, $x + 9, $py - 26, 1.5, 22, R_LINEA2);
+            }
+
+            $bw = max(3.0, $ancho * $pct);
+            r_caja($im, $x, $py + 22, $ancho, 10, R_LINEA);
+            r_caja($im, $x, $py + 22, $bw, 10, $i === count($pasos) - 1 ? R_PUR3 : R_PUR2);
+
+            $pdf->texto($x, $py + 12, number_format($valor), 24, true, R_TXT);
+            $pdf->texto($x + $pdf->ancho(number_format($valor), 24, true) + 10, $py + 12,
+                        $etiqueta, 10, false, R_SUAVE);
+
+            $previo = (float)$valor;
+            $py += 78;
+        }
+        return $py;
+    };
+
+    $col = $gw / 2 - 40;
+    $izq = $cadena(R_M, $col, 'EN GOOGLE', [
+        [(int)$b['impresiones'], 'veces apareciste'],
+        [(int)$b['clics'],       'entraron desde ahí'],
+    ]);
+    $der = $cadena(R_M + $gw / 2 + 40, $col, 'YA DENTRO DEL SITIO', [
+        [(int)$v['personas'],  'personas entraron'],
+        [(int)$e['personas'],  'hicieron algo'],
+        [(int)$e['leads'],     'dejaron sus datos'],
+    ]);
+
+    /* La costura entre las dos cadenas, dicha y no dibujada: es la frase que
+       evita leer esto como un embudo único, que sería falso. */
+    $org = (int)($v['fuentes']['organic'] ?? 0);
+    $otros = max(0, (int)$v['personas'] - (int)$b['clics']);
+    $abajo = max($izq, $der) + 6;
+    r_filete($im, R_M, $abajo, $gw);
+    $pdf->parrafo(R_M, $abajo + 24, $gw,
+        'Las dos cadenas no son una sola: de las ' . number_format((int)$v['personas'])
+        . ' personas que entraron, ' . number_format((int)$b['clics']) . ' llegaron desde Google y las otras '
+        . number_format($otros) . ' escribieron la dirección o vinieron por otra vía. '
+        . 'Por eso el buscador se mide aparte: ahí se gana gente nueva, y en el sitio se decide si se queda.',
+        9.5, false, R_MUT, 1.5, 2);
+
+    r_folio($im, $pdf, $n, $t);
+    r_cerrar($pdf, $im);
+}
+
+/* --- 07 · el balance --- */
+function r_balance(Pdf $pdf, array $hall, string $num, int $n, int $t): void
+{
+    $pdf->pagina();
+    $im = r_lienzo();
+    $y = r_seccion($im, $pdf, $num, 'El balance', '');
     $gw = Pdf::ANCHO - R_M * 2;
     $cw = $gw / 2 - 30;
 
@@ -785,11 +949,11 @@ function r_balance(Pdf $pdf, array $hall, int $n, int $t): void
 }
 
 /* --- 08 · qué hacer --- */
-function r_recomendaciones(Pdf $pdf, array $reco, int $n, int $t): void
+function r_recomendaciones(Pdf $pdf, array $reco, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
-    $y = r_seccion($im, $pdf, '08', 'Qué hacer ahora', 'En orden: arriba está lo que más mueve con menos esfuerzo.');
+    $y = r_seccion($im, $pdf, $num, 'Qué hacer ahora', 'En orden: arriba está lo que más mueve con menos esfuerzo.');
     $gw = Pdf::ANCHO - R_M * 2;
 
     $reco = array_slice($reco, 0, 4);
@@ -830,14 +994,14 @@ function r_recomendaciones(Pdf $pdf, array $reco, int $n, int $t): void
  * No repite la de «Dónde está Inédito», que va después: aquella dice en qué
  * escalón está cada cosa, y esta dice qué pasó en la quincena.
  */
-function r_en_corto(Pdf $pdf, array $d, array $res, array $est, int $n, int $t): void
+function r_en_corto(Pdf $pdf, array $d, array $res, array $est, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
     r_resplandor($im, 120, 640, 460, R_PUR3, 0.34);
     $gw = Pdf::ANCHO - R_M * 2;
 
-    $anchoNum = r_hanson($im, '09', R_M, 82, 26, R_PUR3);
+    $anchoNum = r_hanson($im, $num, R_M, 82, 26, R_PUR3);
     r_hanson($im, 'En corto', R_M + $anchoNum + 18, 82, 26, R_TXT);
     $y = 118;
     $y = $pdf->parrafo(R_M, $y, 730, $est['frase'] ?? '', 12.5, false, R_SUAVE, 1.5, 2);
@@ -891,7 +1055,7 @@ function r_en_corto(Pdf $pdf, array $d, array $res, array $est, int $n, int $t):
     r_cerrar($pdf, $im);
 }
 
-function r_estatus(Pdf $pdf, array $d, array $est, int $n, int $t): void
+function r_estatus(Pdf $pdf, array $d, array $est, string $num, int $n, int $t): void
 {
     $pdf->pagina();
     $im = r_lienzo();
@@ -899,7 +1063,7 @@ function r_estatus(Pdf $pdf, array $d, array $est, int $n, int $t): void
        note al llegar. */
     r_resplandor($im, 1090, 660, 540, R_PUR, 0.44);
     /* 10 y no 09: «En corto» se quedó con el 09. */
-    $y = r_seccion($im, $pdf, '10', 'Dónde está Inédito', $est['frase']);
+    $y = r_seccion($im, $pdf, $num, 'Dónde está Inédito', $est['frase']);
     $gw = Pdf::ANCHO - R_M * 2;
 
     $tonos = [0 => R_ROJO, 1 => R_AMBAR, 2 => R_PUR3, 3 => R_VERDE];
