@@ -149,9 +149,15 @@ class Pdf
      * Un párrafo que se parte solo al llegar al ancho. Devuelve la `y` de la
      * línea siguiente, para poder encadenar bloques sin contar a mano.
      */
-    public function parrafo(float $x, float $y, float $ancho, string $txt, float $tam = 11,
-                            bool $negrita = false, string $color = '#FFFFFF', float $interlinea = 1.45,
-                            int $maxLineas = 0): float
+    /**
+     * Cómo queda partido un texto a un ancho dado, sin dibujar nada.
+     *
+     * Existe para poder reservar el sitio ANTES de pintar: sin esto, quien
+     * reparte una lámina tiene que suponer cuántos renglones va a ocupar cada
+     * bloque, y suponer es como se llega a dos párrafos encimados.
+     */
+    public function partir(string $txt, float $ancho, float $tam = 11,
+                           bool $negrita = false, int $maxLineas = 0): array
     {
         $palabras = preg_split('/\s+/u', trim($txt)) ?: [];
         $linea = ''; $lineas = [];
@@ -168,6 +174,21 @@ class Pdf
             $lineas = array_slice($lineas, 0, $maxLineas);
             $lineas[$maxLineas - 1] = rtrim($lineas[$maxLineas - 1], ' .,;') . '…';
         }
+        return $lineas;
+    }
+
+    /** Cuántos renglones ocupa. El atajo de arriba, para repartir el alto. */
+    public function lineas(string $txt, float $ancho, float $tam = 11,
+                           bool $negrita = false, int $maxLineas = 0): int
+    {
+        return count($this->partir($txt, $ancho, $tam, $negrita, $maxLineas));
+    }
+
+    public function parrafo(float $x, float $y, float $ancho, string $txt, float $tam = 11,
+                            bool $negrita = false, string $color = '#FFFFFF', float $interlinea = 1.45,
+                            int $maxLineas = 0): float
+    {
+        $lineas = $this->partir($txt, $ancho, $tam, $negrita, $maxLineas);
         foreach ($lineas as $l) {
             $this->texto($x, $y, $l, $tam, $negrita, $color);
             $y += $tam * $interlinea;

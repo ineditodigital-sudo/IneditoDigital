@@ -279,6 +279,9 @@ function reporte_pdf(array $d): string
     ];
     if ($hall['logros'] || $hall['alertas']) $laminas[] = fn($n, $t) => r_balance($pdf, $hall, $n, $t);
     if ($hall['recomendaciones'])            $laminas[] = fn($n, $t) => r_recomendaciones($pdf, $hall['recomendaciones'], $n, $t);
+    /* «En corto» va justo antes del cierre: después de los números y antes
+       del escalón en el que está cada cosa. */
+    $laminas[] = fn($n, $t) => r_en_corto($pdf, $d, $res, $est, $n, $t);
     $laminas[] = fn($n, $t) => r_estatus($pdf, $d, $est, $n, $t);
 
     $total = count($laminas);
@@ -373,12 +376,26 @@ function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t):
     $nb = max(1, count($serie));
     $bw = $gw / $nb;
     $pdf->texto(R_M, $y - 10, 'Páginas vistas por día', 9, false, R_MUT);
-    $pdf->texto(Pdf::ANCHO - R_M, $y - 10, 'máximo ' . number_format($max) . ' en un día', 9, false, R_MUT2, 'der');
+    /*
+     * Una línea de referencia arriba, con su cifra.
+     *
+     * Antes la gráfica solo decía el máximo en un rótulo suelto a la derecha:
+     * se veía la forma de la quincena pero no se podía leer ningún día, ni
+     * saber contra qué se compara la barra más alta. La línea y su número son
+     * la escala; sin eso esto es un adorno con aspecto de dato.
+     */
+    r_filete($im, R_M, $y, $gw, R_LINEA);
+    $pdf->texto(Pdf::ANCHO - R_M, $y - 10, number_format($max) . ' máx.', 9, false, R_MUT2, 'der');
+    $iMax = array_search($max, $serie, true);
     foreach ($serie as $i => $val) {
         $hh = $val / $max * $gh;
         $bx = R_M + $i * $bw + $bw * 0.18;
         $bwR = $bw * 0.64;
-        if ($hh >= 1) r_degradado($im, $bx, $y + ($gh - $hh), $bwR, $hh, true);
+        /* Barra plana y no degradada: el degradado no codificaba nada —son
+           todas la misma serie— y hacía que se leyeran como dibujo en vez de
+           como medida. El día más alto va en el morado claro; los demás, en
+           el de marca. La única diferencia de color dice algo. */
+        if ($hh >= 1) r_caja($im, $bx, $y + ($gh - $hh), $bwR, $hh, $i === $iMax ? R_PUR3 : R_PUR2);
         else r_caja($im, $bx, $y + $gh - 1, $bwR, 1, R_LINEA2);
     }
     r_filete($im, R_M, $y + $gh + 1, $gw, R_LINEA2);
@@ -395,13 +412,19 @@ function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, int $n, int $t):
        tamaño: si el verde cambia de dueño entre una quincena y otra, la
        gráfica engaña. El verde es del buscador, que es el tráfico que se
        gana; el interno va en gris porque es navegación propia. */
+    /* Ninguna fuente usa el verde, el ámbar ni el rosa: esos tres son JUICIO
+       —va bien, hay que atender, va mal— y aparecen así en el balance, en las
+       posiciones y en el estatus. Antes el verde era «buscador» aquí y «va
+       bien» tres láminas después, y el ámbar era «redes» aquí y «hay que
+       atender» allá. Quien aprendía la leyenda en esta lámina llegaba a la
+       siguiente con el significado cambiado. Un color, un oficio. */
     $fuentes = [
-        'organic'  => ['Buscador',         '#00E585'],
-        'directo'  => ['Directo',          '#9933FF'],
-        'ia'       => ['Asistentes de IA', '#CC66FF'],
-        'referral' => ['Otros sitios',     '#5B8CFF'],
-        'social'   => ['Redes',            '#FFB454'],
-        'email'    => ['Correo',           '#FF7D9C'],
+        'organic'  => ['Buscador',         '#B24BFF'],
+        'directo'  => ['Directo',          '#6E4BFF'],
+        'ia'       => ['Asistentes de IA', '#00A8E8'],
+        'referral' => ['Otros sitios',     '#7C8AF0'],
+        'social'   => ['Redes',            '#D08BFF'],
+        'email'    => ['Correo',           '#8A93C7'],
         'internal' => ['Interno',          '#3B3752'],
     ];
     $pdf->texto(R_M, $y, 'De dónde llegan', 9, false, R_MUT);
@@ -697,6 +720,32 @@ function r_balance(Pdf $pdf, array $hall, int $n, int $t): void
         [R_M,                'Va bien',         R_VERDE, array_slice($hall['logros'], 0, 4)],
         [R_M + $gw / 2 + 30, 'Hay que atender', R_AMBAR, array_slice($hall['alertas'], 0, 4)],
     ];
+
+    /*
+     * Cuando hay poco que decir, el bloque baja hasta el centro.
+     *
+     * Una quincena con un logro y una alerta dejaba dos párrafos arriba y
+     * media lámina en negro debajo: se lee como una página a medio hacer, no
+     * como un balance corto. Se mide lo que de verdad ocupa la columna más
+     * alta y se reparte el sobrante mitad arriba, mitad abajo, con un tope
+     * para que una lámina llena no se mueva de sitio.
+     */
+    $altoMax = 0.0;
+    foreach ($cols as [, , , $items]) {
+        if (!$items) continue;
+        $aireCol = count($items) >= 4 ? 14.0 : 26.0;
+        $h = 0.0;
+        foreach ($items as $it) {
+            $h += $pdf->lineas($it['titulo'], $cw, 11.5, true, 2) * 11.5 * 1.25;
+            $h += 4 + $pdf->lineas($it['texto'], $cw, 9.5, false, 3) * 9.5 * 1.4;
+            if (!empty($it['lista']) && count($items) <= 2) $h += 6 + min(6, count($it['lista'])) * 17;
+            $h += $aireCol;
+        }
+        $altoMax = max($altoMax, $h);
+    }
+    $sobra = (Pdf::ALTO - 70) - ($y + 30 + $altoMax);
+    $y += max(0.0, min(70.0, $sobra / 2));
+
     foreach ($cols as [$x, $rot, $color, $items]) {
         r_caja($im, $x, $y - 18, 26, 2.5, $color);
         $pdf->texto($x, $y - 2, $rot, 9, true, $color, 'izq', 1.4);
@@ -709,8 +758,14 @@ function r_balance(Pdf $pdf, array $hall, int $n, int $t): void
            arriba y media lamina vacia abajo se ve como un descuido. */
         $aire = count($items) >= 4 ? 14.0 : 26.0;
         foreach ($items as $it) {
-            $pdf->texto($x, $fy, $it['titulo'], 11.5, true, R_TXT);
-            $fy = $pdf->parrafo($x, $fy + 18, $cw, $it['texto'], 9.5, false, R_MUT, 1.4, 3);
+            /* El titulo se parte al ancho de SU columna.
+               Iba con texto(), que no mide nada: un titulo largo —«Sales en la
+               primera pagina de Google y practicamente nadie entra al sitio»—
+               se pasaba 13 pt del margen derecho de la lamina, y mucho antes
+               ya se habia metido en la columna de al lado. Medido con el
+               auditor de geometria, no a ojo. */
+            $fy = $pdf->parrafo($x, $fy, $cw, $it['titulo'], 11.5, true, R_TXT, 1.25, 2);
+            $fy = $pdf->parrafo($x, $fy + 4, $cw, $it['texto'], 9.5, false, R_MUT, 1.4, 3);
             /* El desglose, cuando el hallazgo lo trae: son los datos que lo
                sostienen y evitan que haya que creerse el titular. */
             if (!empty($it['lista']) && count($items) <= 2) {
@@ -743,12 +798,18 @@ function r_recomendaciones(Pdf $pdf, array $reco, int $n, int $t): void
         $py = $y + $i * $alto;
         if ($i > 0) r_filete($im, R_M, $py - 16, $gw);
         r_hanson($im, (string)($i + 1), R_M, $py + 20, 24, R_PUR3);
-        $pdf->texto(R_M + 46, $py + 14, $r['titulo'], 13.5, true, R_TXT);
+        /* El titulo se corta antes de llegar a la etiqueta de prioridad, que
+           vive pegada al margen derecho. Iba sin medir, asi que un titulo
+           largo se le montaba encima. Una sola linea a proposito: si no cabe
+           en una linea no es un titulo, es la descripcion de debajo. */
         $etq = ['1' => 'Ahora', '2' => 'Después', '3' => 'Cuando se pueda'][(string)$r['prioridad']] ?? '';
+        $anchoEtq = $etq === '' ? 0 : $pdf->ancho($etq, 8.5, true) + 8.5 * 1.2 + 24;
+        $pdf->parrafo(R_M + 46, $py + 14, $gw - 46 - $anchoEtq, $r['titulo'], 13.5, true, R_TXT, 1.2, 1);
         $pdf->texto(Pdf::ANCHO - R_M, $py + 14, $etq, 8.5, true, $r['prioridad'] === 1 ? R_PUR3 : R_MUT2, 'der', 1.2);
         $yy = $pdf->parrafo(R_M + 46, $py + 34, $gw - 160, $r['texto'], 9.5, false, R_MUT, 1.4, 2);
         if (!empty($r['lista'])) {
-            $pdf->texto(R_M + 46, $yy + 3, implode('   ·   ', array_slice($r['lista'], 0, 2)), 8.5, false, R_MUT2);
+            $pdf->parrafo(R_M + 46, $yy + 3, $gw - 160,
+                implode('   ·   ', array_slice($r['lista'], 0, 2)), 8.5, false, R_MUT2, 1.3, 1);
         }
     }
 
@@ -757,6 +818,79 @@ function r_recomendaciones(Pdf $pdf, array $reco, int $n, int $t): void
 }
 
 /* --- 09 · dónde está Inédito --- */
+/**
+ * En corto: el reporte entero contado sin una sola cifra suelta.
+ *
+ * Las ocho láminas anteriores están llenas de números, y esa es su función.
+ * Pero quien abre esto entre dos juntas no necesita los números: necesita
+ * saber en qué quedó. Esta lámina reúne la lectura que ya encabeza cada
+ * sección —la misma frase, sin reescribirla— para que se pueda entender el
+ * reporte completo leyendo una sola página.
+ *
+ * No repite la de «Dónde está Inédito», que va después: aquella dice en qué
+ * escalón está cada cosa, y esta dice qué pasó en la quincena.
+ */
+function r_en_corto(Pdf $pdf, array $d, array $res, array $est, int $n, int $t): void
+{
+    $pdf->pagina();
+    $im = r_lienzo();
+    r_resplandor($im, 120, 640, 460, R_PUR3, 0.34);
+    $gw = Pdf::ANCHO - R_M * 2;
+
+    $anchoNum = r_hanson($im, '09', R_M, 82, 26, R_PUR3);
+    r_hanson($im, 'En corto', R_M + $anchoNum + 18, 82, 26, R_TXT);
+    $y = 118;
+    $y = $pdf->parrafo(R_M, $y, 730, $est['frase'] ?? '', 12.5, false, R_SUAVE, 1.5, 2);
+    r_filete($im, R_M, $y + 6, $gw);
+    $y += 36;
+
+    /* En el mismo orden y con el mismo número que las láminas, para poder
+       volver a la que interese sin buscarla. */
+    $partes = [
+        ['02', 'Las visitas',          $res['visitas']  ?? ''],
+        ['03', 'El buscador',          $res['buscador'] ?? ''],
+        ['04', 'Las palabras clave',   $res['palabras'] ?? ''],
+        ['05', 'Los asistentes de IA', $res['ia']       ?? ''],
+        ['06', 'De la visita al cliente', $res['embudo'] ?? ''],
+    ];
+    $partes = array_values(array_filter($partes, fn($p) => trim($p[2]) !== ''));
+
+    /*
+     * La medida: 560 pt y no el ancho entero.
+     *
+     * A todo lo ancho, cada renglón pasaba de 140 caracteres y el ojo se
+     * pierde al volver: la línea es tan larga que cuesta encontrar dónde
+     * empieza la siguiente. Aquí caben unos 85, que para un párrafo de tres
+     * renglones se lee de corrido. El hueco que queda a la derecha no es
+     * desperdicio, es el margen que hace legible la columna.
+     */
+    $medida = 560.0;
+
+    /* Cada bloque ocupa lo que necesita y el aire se reparte entre lo que
+       sobra, en vez de dar el mismo alto a todas: «los asistentes de IA» son
+       una línea y «las palabras clave» tres, y con paso fijo la de una línea
+       dejaba un hueco y la de tres quedaba pegada a la siguiente. */
+    $altos = [];
+    foreach ($partes as [$num, $titulo, $texto]) {
+        $lineas = $pdf->lineas($texto, $medida, 10, false, 3);
+        $altos[] = 22 + $lineas * 10 * 1.45;
+    }
+    $aire = (Pdf::ALTO - 64 - $y - array_sum($altos)) / max(1, count($partes) - 1);
+    $aire = max(16.0, min(40.0, $aire));
+
+    $py = $y;
+    foreach ($partes as $i => [$num, $titulo, $texto]) {
+        if ($i > 0) r_filete($im, R_M, $py - $aire / 2, $gw, R_LINEA);
+        $pdf->texto(R_M, $py + 2, $num, 10, true, R_PUR3, 'izq', 1.4);
+        $pdf->texto(R_M + 34, $py + 2, $titulo, 10.5, true, R_TXT);
+        $pdf->parrafo(R_M + 34, $py + 22, $medida, $texto, 10, false, R_SUAVE, 1.45, 3);
+        $py += $altos[$i] + $aire;
+    }
+
+    r_folio($im, $pdf, $n, $t);
+    r_cerrar($pdf, $im);
+}
+
 function r_estatus(Pdf $pdf, array $d, array $est, int $n, int $t): void
 {
     $pdf->pagina();
@@ -764,7 +898,8 @@ function r_estatus(Pdf $pdf, array $d, array $est, int $n, int $t): void
     /* La única lámina de datos con luz: es la conclusión y conviene que se
        note al llegar. */
     r_resplandor($im, 1090, 660, 540, R_PUR, 0.44);
-    $y = r_seccion($im, $pdf, '09', 'Dónde está Inédito', $est['frase']);
+    /* 10 y no 09: «En corto» se quedó con el 09. */
+    $y = r_seccion($im, $pdf, '10', 'Dónde está Inédito', $est['frase']);
     $gw = Pdf::ANCHO - R_M * 2;
 
     $tonos = [0 => R_ROJO, 1 => R_AMBAR, 2 => R_PUR3, 3 => R_VERDE];
