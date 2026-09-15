@@ -294,6 +294,9 @@ function reporte_pdf(array $d): string
         fn($n, $t) => r_titular($pdf, $d, $cmp, $est, $hall, $num(), $n, $t),
         fn($n, $t) => r_recorrido($pdf, $d, $num(), $n, $t),
         fn($n, $t) => r_visitas($pdf, $d, $cmp, $res, $num(), $n, $t),
+        /* «A qué entran» va pegada a «Las visitas»: es la misma pregunta
+           —quién vino— contestada por el otro lado, qué miraron. */
+        fn($n, $t) => r_paginas($pdf, $d, $num(), $n, $t),
         fn($n, $t) => r_buscador($pdf, $d, $cmp, $res, $num(), $n, $t),
         fn($n, $t) => r_palabras($pdf, $d, $res, $num(), $n, $t),
         fn($n, $t) => r_ia($pdf, $d, $cmp, $res, $num(), $n, $t),
@@ -435,8 +438,11 @@ function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, string $num, int
     $v = $d['visitas'];
     $gw = Pdf::ANCHO - R_M * 2;
 
-    /* la forma de la quincena, día a día */
-    $gh = 112;
+    /* La forma de la quincena, día a día.
+       112 pt cuando esta lámina llevaba además las páginas más vistas; ahora
+       que aquello tiene lámina propia, la gráfica se queda con el sitio que
+       le sobraba a la de al lado y las diferencias entre días se notan. */
+    $gh = 168;
     $serie = array_values($v['por_dia']);
     $fechas = array_keys($v['por_dia']);
     $max = max(1, max($serie ?: [1]));
@@ -521,17 +527,10 @@ function r_visitas(Pdf $pdf, array $d, ?array $cmp, array $res, string $num, int
         $lx += $pdf->ancho($etq, 9) + 40;
     }
 
-    /* y qué miran */
-    $y += 78;
-    r_filete($im, R_M, $y, $gw);
-    $pdf->texto(R_M, $y + 24, 'Las páginas más vistas', 9, false, R_MUT);
-    $col = 0; $fila = 0;
-    foreach (array_slice($v['paginas'], 0, 6) as $pg) {
-        $px = R_M + $col * ($gw / 2); $py = $y + 46 + $fila * 20;
-        $pdf->texto($px, $py, r_recorta($pg['path'], 42), 9.5, false, R_SUAVE);
-        $pdf->texto($px + $gw / 2 - 34, $py, number_format($pg['n']), 9.5, true, R_TXT, 'der');
-        if (++$fila >= 3) { $fila = 0; $col++; }
-    }
+    /* «Las páginas más vistas» ya NO vive aquí: tiene lámina propia.
+       Estaba metida al pie, en dos columnas de texto, sin barra con la que
+       comparar y con las rutas cortadas. Era el dato más accionable de la
+       lámina —a qué entra la gente— y el que menos sitio tenía. */
 
     r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
@@ -770,6 +769,114 @@ function r_embudo(Pdf $pdf, array $d, array $res, string $num, int $n, int $t): 
 
     r_folio($im, $pdf, $n, $t);
     r_cerrar($pdf, $im);
+}
+
+/**
+ * A qué entra la gente.
+ *
+ * Esto vivía al pie de «Las visitas», en dos columnas de texto, con la ruta
+ * cortada con puntos suspensivos y la cifra a la derecha. Tres problemas a la
+ * vez: no había con qué comparar 121 contra 58 —son números sueltos, no una
+ * magnitud—, el orden zigzagueaba entre columnas así que no se podía leer el
+ * ranking de un vistazo, y la ruta más larga era justo la que se cortaba.
+ *
+ * Y es el dato más accionable del reporte: dice a qué entra la gente de
+ * verdad, que es lo que decide qué página se trabaja la quincena que viene.
+ * Tenía el peor sitio de la lámina.
+ *
+ * Ahora: una lista sola, ordenada de mayor a menor, con la barra que permite
+ * comparar de un golpe, el porcentaje del total y la ruta entera.
+ */
+function r_paginas(Pdf $pdf, array $d, string $num, int $n, int $t): void
+{
+    $pdf->pagina();
+    $im = r_lienzo();
+    $v = $d['paginas_vistas'] ?? $d['visitas']['paginas'] ?? [];
+    $total = max(1, (int)($d['visitas']['total'] ?? array_sum(array_column($v, 'n'))));
+
+    /* Se ordena aquí y no se da por hecho.
+       La consulta del panel ya trae ORDER BY, pero esta lámina se dibuja
+       también desde reportes CONGELADOS hace meses, y basta con que una foto
+       vieja venga en otro orden para que el ranking salga descolocado y la
+       frase de arriba nombre la página equivocada. Ordenar cuesta una línea. */
+    usort($v, fn($a, $b) => (int)$b['n'] <=> (int)$a['n']);
+
+    $primera = $v[0]['path'] ?? '';
+    /* El porcentaje se limita a 100: si una foto vieja trae las cuentas
+       descuadradas, es mejor un 100 % raro que un 109160 % imposible. */
+    $pctPrimera = min(100.0, ($v[0]['n'] ?? 0) / $total * 100);
+    $y = r_seccion($im, $pdf, $num, 'A qué entran',
+        $v ? 'De las ' . number_format($total) . ' páginas que se vieron, «' . $primera . '» se lleva '
+             . round($pctPrimera) . ' de cada 100. El resto reparte lo que queda.'
+           : 'Todavía no hay páginas registradas en el periodo.');
+
+    $gw = Pdf::ANCHO - R_M * 2;
+    if (!$v) { r_folio($im, $pdf, $n, $t); r_cerrar($pdf, $im); return; }
+
+    /* Ocho y no seis: caben, y la séptima y la octava son justo las que dicen
+       si algo nuevo está empezando a moverse. */
+    $lista = array_slice($v, 0, 8);
+    $max = max(1, max(array_column($lista, 'n')));
+
+    /* La ruta ocupa su columna, la barra la suya y las cifras la última. Con
+       columnas fijas las tres se leen en vertical: se puede recorrer solo la
+       de la barra para ver el ranking, o solo la de la cifra para los datos. */
+    $colRuta = 330.0;
+    $colCifra = 130.0;
+    $anchoBarra = $gw - $colRuta - $colCifra - 30;
+    /* Los renglones se reparten el alto disponible en vez de quedarse
+       apretados arriba: con cinco páginas, un paso fijo dejaba media lámina
+       vacía debajo. El tope evita que con dos se separen tanto que dejen de
+       leerse como una lista. */
+    $paso = min(62.0, (Pdf::ALTO - 76 - $y) / max(1, count($lista)));
+
+    foreach ($lista as $i => $pg) {
+        $py = $y + $i * $paso;
+        $ruta = (string)$pg['path'];
+        $cuenta = (int)$pg['n'];
+        $pct = min(100.0, $cuenta / $total * 100);
+
+        /* La ruta entera si cabe; si no, se recorta por el MEDIO. Cortar por
+           el final se come el nombre del servicio, que es lo que identifica
+           la página: «/servicios/tarjetas-de-presen…» no dice cuál es. */
+        /* La primera fila va en negrita, que es MAS ANCHA que la redonda: si
+           se mide el recorte sin decirlo, la ruta mas larga se mete dentro de
+           la barra. Pasa justo en la fila que mas se mira. */
+        $destacada = $i === 0;
+        $pdf->texto(R_M, $py + 4, r_ruta_corta($pdf, $ruta, $colRuta - 16, 10.5, $destacada),
+                    10.5, $destacada, $destacada ? R_TXT : R_SUAVE);
+
+        $bw = max(2.0, $anchoBarra * $cuenta / $max);
+        r_caja($im, R_M + $colRuta, $py - 4, $anchoBarra, 12, R_LINEA);
+        r_caja($im, R_M + $colRuta, $py - 4, $bw, 12, $i === 0 ? R_PUR3 : R_PUR2);
+
+        $pdf->texto(Pdf::ANCHO - R_M - 54, $py + 4, number_format($cuenta), 11, true, R_TXT, 'der');
+        $pdf->texto(Pdf::ANCHO - R_M, $py + 4, round($pct) . '%', 9.5, false, R_MUT2, 'der');
+    }
+
+    r_folio($im, $pdf, $n, $t);
+    r_cerrar($pdf, $im);
+}
+
+/**
+ * Una ruta que cabe en el ancho dado, recortada por el MEDIO.
+ *
+ * `/servicios/tarjetas-de-presentacion-digital-nfc` cortada por el final
+ * queda en `/servicios/tarjetas-de-presen…`, que no dice de qué servicio
+ * habla. Lo que identifica una página está al principio —la sección— y al
+ * final —el nombre—; lo prescindible está en medio.
+ */
+function r_ruta_corta(Pdf $pdf, string $ruta, float $ancho, float $tam, bool $negrita = false): string
+{
+    if ($pdf->ancho($ruta, $tam, $negrita) <= $ancho) return $ruta;
+    $n = mb_strlen($ruta);
+    for ($quita = 1; $quita < $n - 8; $quita++) {
+        $izq = (int)ceil(($n - $quita) * 0.42);
+        $der = $n - $quita - $izq;
+        $corta = mb_substr($ruta, 0, $izq) . '…' . mb_substr($ruta, -$der);
+        if ($pdf->ancho($corta, $tam, $negrita) <= $ancho) return $corta;
+    }
+    return mb_substr($ruta, 0, 8) . '…';
 }
 
 /**
