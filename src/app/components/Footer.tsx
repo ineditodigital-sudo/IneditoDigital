@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { contenido, marca } from '../cms';
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 /** Enlace del pie: <Link> para rutas del sitio, <a> para destinos externos. */
@@ -142,6 +142,32 @@ export default function Footer() {
                 <Mail size={18} className="flex-shrink-0" />
                 <a href={`mailto:${settings.businessEmail}`} className="hover:text-white transition-colors">
                   {settings.businessEmail}
+                </a>
+              </li>
+              {/*
+                WhatsApp, con el mensaje ya escrito.
+
+                El pie tenía dirección y correo y nada más, en un sitio donde
+                el 79 % de las visitas llega directo: gente que ya conoce la
+                marca y que no necesita que le expliquen nada, necesita por
+                dónde escribir. El correo es un paso caro —abrir el cliente,
+                redactar, esperar—; esto son dos toques.
+
+                El clic se cuenta solo: el listener de metricas.ts marca como
+                evento «whatsapp» cualquier enlace a wa.me, aquí y en el resto
+                del sitio.
+              */}
+              <li className="flex items-center gap-3 text-sm">
+                <MessageCircle size={18} className="flex-shrink-0 text-[#25D366]" />
+                <a
+                  href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+                    p('wa_mensaje', 'Hola, quiero el diagnóstico gratuito de mi presencia digital')
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-white/80 transition-colors hover:text-white"
+                >
+                  {p('wa_gancho', 'Diagnóstico gratis por WhatsApp')}
                 </a>
               </li>
             </ul>

@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ChevronDown, ArrowRight, Sparkles } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight, MessageCircle, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { cn } from './ui/utils';
 import { marca } from '../cms';
 import { agruparServicios } from '../data/grupos';
 import { IconoServicio } from './IconoServicio';
 import CambioIdioma from './CambioIdioma';
+import { tr } from '../idioma';
 
 /*
  * Antes habia dos menus desplegables gemelos: "Servicios" (13 filas en una
@@ -21,7 +22,7 @@ import CambioIdioma from './CambioIdioma';
 
 export default function Header() {
   const location = useLocation();
-  const { services, openAssistant } = useApp();
+  const { services, settings, openAssistant } = useApp();
   const m = marca.menu();
   const mIA = marca.menuIA();
   const mLogo = marca.logo();
@@ -212,6 +213,30 @@ export default function Header() {
               acordeón no lo encuentra nadie. */}
           <div className="flex items-center gap-2 lg:hidden">
             <CambioIdioma compacto />
+            {/*
+              WhatsApp, por el mismo motivo que el interruptor de idioma vive
+              aquí afuera: en teléfono el botón «COTIZAR» está oculto —solo
+              aparece de `lg` para arriba— y el resto de las salidas quedan
+              dentro del acordeón. Es decir: hasta ahora, en el tamaño donde
+              cae la mayor parte de una búsqueda local, no había una sola
+              palabra clicable a la vista.
+
+              El encabezado es fijo, así que esto viaja con el visitante por
+              toda la página. El clic lo cuenta solo el listener de
+              metricas.ts, como cualquier otro enlace a wa.me.
+            */}
+            <a
+              href={`https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
+                m('wa_mensaje', 'Hola, quiero el diagnóstico gratuito de mi presencia digital')
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-3 py-1.5 text-[11px] font-bold tracking-wider text-white transition-colors hover:bg-[#25D366]/20"
+              aria-label={tr('Escribirnos por WhatsApp')}
+            >
+              <MessageCircle size={14} className="text-[#25D366]" />
+              {m('wa_boton', 'WHATSAPP')}
+            </a>
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setMovilAbierto(!movilAbierto)}

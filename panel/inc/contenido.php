@@ -1997,6 +1997,13 @@ Dale al botón de abajo y solo tienes que enviarlo.'],
                         'titulo_serv'  => ['label' => 'Título de la columna de servicios', 'tipo' => 'texto', 'def' => 'SERVICIOS'],
                         'titulo_emp'   => ['label' => 'Título de la columna de empresa', 'tipo' => 'texto', 'def' => 'EMPRESA'],
                         'titulo_cont'  => ['label' => 'Título de la columna de contacto', 'tipo' => 'texto', 'def' => 'CONTACTO'],
+                        /* El gancho de WhatsApp. El 79 % de las visitas llega directo
+                           —gente que ya conoce la marca—; para esa gente el paso más
+                           barato no es leer una página más, es escribir un mensaje. */
+                        'wa_gancho'    => ['label' => 'Gancho de WhatsApp (pie)', 'tipo' => 'texto',
+                                           'def' => 'Diagnóstico gratis por WhatsApp'],
+                        'wa_mensaje'   => ['label' => 'Mensaje con el que abre WhatsApp', 'tipo' => 'texto',
+                                           'def' => 'Hola, quiero el diagnóstico gratuito de mi presencia digital'],
                         'derechos'     => ['label' => 'Aviso de derechos', 'tipo' => 'texto',
                                            'def' => '© 2026 INÉDITO DIGITAL. Todos los derechos reservados.'],
                     ],
