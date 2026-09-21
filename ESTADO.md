@@ -7,9 +7,10 @@
 
 | | |
 |---|---|
-| Último commit de código | `a4653b3` — El menu de servicios en ingles se organiza igual que en español |
-| En producción | El mismo: `assets/index-C1EHxMhJ.js` (verificado en vivo el 21-sep) |
+| Último commit de código | `7509f9c` — Opiniones de Google en la portada y en Nosotros, y las decisiones de contenido |
+| En producción | El mismo: `assets/index-XFShmlC5.js` (verificado en vivo el 21-sep, español e inglés) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
+| Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
 | Desplegar | `npm run build && bash deploy.sh` (detalle en `docs/DESPLIEGUE.md`) |
 | Arquitectura | SPA React + Vite, `render.php` (HTML para bots y puente de datos), panel PHP en `/panel/`, MySQL en cPanel. Ver `README.md` |
 
