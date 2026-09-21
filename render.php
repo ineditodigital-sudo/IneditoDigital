@@ -5,6 +5,8 @@ $cfg = require __DIR__ . '/api/config.php';
 require __DIR__ . '/api/db.php';
 // Solo declara funciones; hace falta para completar los datos del equipo.
 @include_once __DIR__ . '/panel/inc/miembros.php';
+// Las opiniones de Google: solo resenas_publicas(), que no escribe nada.
+@include_once __DIR__ . '/panel/inc/resenas.php';
 
 $BASE = 'https://www.inedito.digital';
 $path = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/');
@@ -73,13 +75,34 @@ function tituloServicio(string $nombre, string $siteName): string {
 function jval($r){ $o = json_decode((string)($r['data_json'] ?? ''), true); return is_array($o) ? $o : []; }
 function lines($s){ $s=trim((string)$s); return $s===''?[]:array_values(array_filter(array_map('trim', preg_split('/\r?\n/', $s)), fn($x)=>$x!=='')); }
 
+/**
+ * Las opiniones de Google para quien lee el HTML sin JavaScript: buscadores y
+ * asistentes. Es la respuesta a «¿qué opinan sus clientes?» con las palabras
+ * de los clientes. Van las más completas, que son las que dicen algo.
+ * Sin schema de Review: Google no acepta reseñas de un negocio sobre sí mismo
+ * y marcarlas se lee como spam.
+ */
+function resenasHtml(?array $r, int $cuantas = 6): string {
+  if (!$r || empty($r['lista'])) return '';
+  $lista = $r['lista'];
+  usort($lista, fn($a, $b) => mb_strlen($b['texto']) <=> mb_strlen($a['texto']));
+  $h = '<h2>Opiniones de clientes en Google</h2>';
+  $h .= '<p>Calificación de ' . number_format((float)$r['promedio'], 1) . ' de 5 con ' . (int)$r['total']
+      . ' opiniones en la <a href="' . e($r['url']) . '">ficha de Google de Inédito Digital</a>.</p>';
+  foreach (array_slice($lista, 0, $cuantas) as $x) {
+    $h .= '<figure><blockquote><p>' . nl2br(e($x['texto']), false) . '</p></blockquote><figcaption>— '
+        . e($x['nombre']) . ', opinión de cinco estrellas en Google</figcaption></figure>';
+  }
+  return $h;
+}
+
 // El catálogo de espectaculares vive en su propio archivo: solo lo necesita
 // una página y no tiene por qué pesar en el arranque de todas.
 $_espec = __DIR__ . '/panel/inc/espectaculares.php';
 if (is_file($_espec)) { require_once $_espec; }
 
 // ---- cargar datos ----
-$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = []; $nuevas = []; $miembros = [];
+$pdo = null; $settings = []; $seo = []; $services = []; $blog = []; $portfolio = []; $paginas = []; $paginasPorRuta = []; $nuevas = []; $miembros = []; $resenas = null;
 try {
   $pdo = db_connect($cfg);
   foreach ($pdo->query("SELECT k,v FROM site_settings") as $r) $settings[$r['k']] = $r['v'];
@@ -106,6 +129,9 @@ try {
   try {
     foreach ($pdo->query("SELECT nombre, logo, url FROM clientes WHERE visible=1 ORDER BY orden ASC, id ASC") as $r) $clientes[] = $r;
   } catch (Throwable $e) { /* sin tabla todavia: el carrusel usa el portafolio */ }
+  /* Las opiniones de Google de cinco estrellas, para el carrusel de la
+     portada y de Nosotros. null si todavia no hay: la seccion no se pinta. */
+  if (function_exists('resenas_publicas')) $resenas = resenas_publicas($pdo, (string)($settings['mapsUrl'] ?? ''));
 } catch (Throwable $ex) { /* si falla la BD, servimos el SPA base */ }
 
 $siteName = $seo['siteName'] ?: 'Inédito Digital';
@@ -181,7 +207,7 @@ if ($path === '/') {
     $GLOBALS['preguntasHome'])];
   $title = 'Agencia de Marketing Digital con IA en Aguascalientes';
   $desc = 'Agencia de marketing digital en Aguascalientes. Conectamos tus campañas con tus ventas reales y cada mes una IA audita si la estrategia está funcionando.';
-  $bodyBuilder = function() use ($services,$settings,$P,$blog) {
+  $bodyBuilder = function() use ($services,$settings,$P,$blog,$resenas) {
     $h = '<h1>Inédito Digital · Agencia de Marketing Digital en Aguascalientes</h1>';
     $h .= '<p>Impulsamos tu negocio con estrategias de marketing digital, diseño web e inteligencia artificial. Diseño y desarrollo web, branding, SEO, Google Ads, embudos de venta, chatbots con IA, WhatsApp y e-commerce. Y como agencia de publicidad en Aguascalientes llevamos campañas en Google Ads, Meta y ChatGPT Ads, siempre conectadas a un tablero de resultados.</p>';
     $h .= '<h2>Nuestros servicios</h2><ul>';
@@ -215,6 +241,7 @@ if ($path === '/') {
     $h .= '<p>Zonas con página propia: <a href="/servicios/marketing-digital-en-celaya">marketing digital en Celaya</a>, <a href="/servicios/marketing-digital-en-guanajuato">Guanajuato y el Bajío</a> y <a href="/servicios/marketing-digital-en-durango">Durango</a>.</p>';
     $h .= '<h2>Por sector</h2>';
     $h .= '<p>Cada giro decide la compra en un lugar distinto, así que el trabajo cambia con él: <a href="/servicios/marketing-para-restaurantes">restaurantes y bares</a>, <a href="/servicios/marketing-inmobiliario">inmobiliarias y desarrollos</a>, <a href="/servicios/marketing-industrial-b2b">industria y proveeduría B2B</a>, <a href="/servicios/marketing-para-ecommerce">comercio y e-commerce</a> y <a href="/servicios/marketing-educativo">escuelas y centros de formación</a>.</p>';
+    $h .= resenasHtml($resenas);
     $h .= '<h2>Preguntas frecuentes sobre empresas de IA y marketing digital en Aguascalientes</h2>';
     foreach ($GLOBALS['preguntasHome'] as $p) $h .= '<h3>' . e($p[0]) . '</h3><p>' . e($p[1]) . '</p>';
 
@@ -482,7 +509,7 @@ else {
        Antes eran dos líneas para las ocho páginas; ahora cada una vuelca el
        contenido que el cliente ya escribió en el panel. Si una sección se
        queda vacía simplemente no se dibuja, igual que en el sitio. */
-    $bodyBuilder = function() use ($title, $desc, $path, $paginas, $settings) {
+    $bodyBuilder = function() use ($title, $desc, $path, $paginas, $settings, $resenas) {
       $c = function(string $slug) use ($paginas): array {
         return is_array($paginas[$slug]['contenido'] ?? null) ? $paginas[$slug]['contenido'] : [];
       };
@@ -551,6 +578,7 @@ else {
           $nums[] = e($cif["c{$i}_valor"]) . ' ' . e($cif["c{$i}_texto"] ?? '');
         }
         if ($nums) $h .= '<p>' . implode(' · ', $nums) . '</p>';
+        $h .= resenasHtml($resenas);
       }
 
       elseif ($path === '/servicios-ia') {
@@ -1156,7 +1184,7 @@ if ($propio): ?>
       : $pg['contenido'];
     $miembrosLS[$sl] = ['slug' => $sl, 'nombre' => $pg['nombre'], 'ruta' => $pg['ruta'], 'datos' => $datos];
   }
-  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas,'inedito_miembros'=>$miembrosLS,'inedito_clientes'=>$clientes];
+  $LS = ['inedito_services'=>$services,'inedito_blog'=>$blog,'inedito_portfolio'=>$portfolio,'inedito_settings'=>$settings,'inedito_seo_global'=>$seo_global,'inedito_seo_schema'=>$seo_schema,'inedito_paginas'=>$contenidoPaginas,'inedito_paginas_nuevas'=>$paginasNuevas,'inedito_miembros'=>$miembrosLS,'inedito_clientes'=>$clientes,'inedito_resenas'=>$resenas];
 ?>
 <script>try{
 <?php foreach($LS as $k=>$v): ?>localStorage.setItem(<?= json_encode($k) ?>, <?= json_encode(json_encode($v, JSON_UNESCAPED_UNICODE), $FL) ?>);

@@ -56,14 +56,15 @@ export function marcaPorNombre(texto: string): keyof typeof MARCAS_IA | null {
   return null;
 }
 
-/** Fila compacta con las cuatro marcas principales, para listas en texto. */
+/** Fila compacta con las marcas principales, para listas en texto. De los
+    seis motores que se miden, AI Overviews no tiene logo propio: es Google. */
 export function FranjaLogosIA({ alto = 20, className = '' }: Props) {
   return (
     <span
       className={`inline-flex flex-wrap items-center gap-x-5 gap-y-3 ${className}`}
-      aria-label={tr('ChatGPT, Claude, Gemini y Perplexity')}
+      aria-label={tr('ChatGPT, Claude, Gemini, Perplexity y Copilot')}
     >
-      {(['openai', 'claude', 'gemini', 'perplexity'] as const).map((k) => (
+      {(['openai', 'claude', 'gemini', 'perplexity', 'copilot'] as const).map((k) => (
         <LogoIA key={k} marca={k} alto={alto} className="opacity-70 transition-opacity hover:opacity-100" />
       ))}
     </span>

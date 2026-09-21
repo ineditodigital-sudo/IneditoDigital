@@ -96,6 +96,10 @@ try {
     }
 } catch (Throwable $e) { /* si la tabla aun no existe, el carrusel usa el portafolio */ }
 
-$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema','paginas','paginas_nuevas','clientes');
+/* Las opiniones de Google del carrusel, igual que las manda render.php. */
+@include_once __DIR__ . '/../panel/inc/resenas.php';
+$resenas = function_exists('resenas_publicas') ? resenas_publicas($pdo, (string)($ss['mapsUrl'] ?? '')) : null;
+
+$payload = compact('services','blog','portfolio','settings','seo_global','seo_schema','paginas','paginas_nuevas','clientes','resenas');
 $sig = md5(json_encode($payload));
 echo json_encode(['ok'=>true,'sig'=>$sig] + $payload);

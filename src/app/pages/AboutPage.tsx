@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { motion } from 'motion/react';
 import { FranjaLogosIA } from '../components/LogosIA';
 import SEO from '../components/SEO';
@@ -6,6 +7,9 @@ import { TopoLineas } from '../components/TopoLineas';
 import { CifraAnimada } from '../components/CifraAnimada';
 import { ShieldCheck, Radar, LineChart, Target, Compass } from 'lucide-react';
 import { tr } from '../idioma';
+
+/* El carrusel de opiniones (con Embla) llega en su propio trozo. */
+const SeccionResenas = lazy(() => import('../components/SeccionResenas'));
 
 /* Entrada estandar del sitio: aparecer subiendo, una sola vez. */
 const entra = (retraso = 0) => ({
@@ -34,7 +38,7 @@ export default function AboutPage() {
     {
       Icono: Radar,
       titulo: tVal('v2_titulo', 'VISIBILIDAD COMPLETA'),
-      texto: tVal('v2_texto', 'No solo Google. También los motores de IA que cada vez más recomiendan proveedores: ChatGPT, Claude, Gemini y Perplexity.'),
+      texto: tVal('v2_texto', 'No solo el buscador de Google. También los seis motores de IA que ya recomiendan proveedores: ChatGPT, Gemini, AI Overviews de Google, Perplexity, Claude y Copilot.'),
     },
     {
       Icono: LineChart,
@@ -188,6 +192,11 @@ export default function AboutPage() {
           </div>
         </motion.div>
       </section>
+
+      {/* ------------------------------------------ opiniones de Google */}
+      <Suspense fallback={null}>
+        <SeccionResenas pagina="nosotros" banda />
+      </Suspense>
     </>
   );
 }

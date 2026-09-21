@@ -249,6 +249,21 @@
     }
   }
 
+  /*
+   * Titulo de tarjeta con el icono a un lado (la vitrina de servicios de la
+   * portada). La tarjeta lleva containerType, asi que 100cqw es su ancho util;
+   * 52 px son el icono y su hueco, y 12.9 em lo que mide «POSICIONAMIENTO» en
+   * Hanson. A 1024 px, con tres columnas, pedia 230 px y tenia 202.
+   */
+  .titulo-tarjeta-icono {
+    font-size: min(1rem, calc((100cqw - 52px) / 12.9));
+  }
+  @media (min-width: 768px) {
+    .titulo-tarjeta-icono {
+      font-size: min(1.125rem, calc((100cqw - 52px) / 12.9));
+    }
+  }
+
   h2 {
     font-size: clamp(1.5rem, 3.5vw, 2.75rem);
     line-height: 1.25;

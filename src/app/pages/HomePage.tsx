@@ -11,6 +11,9 @@ import { contenido } from '../cms';
 import { tr } from '../idioma';
 
 const ProcesoCiclo = lazy(() => import('../components/ProcesoCiclo'));
+/* El carrusel de opiniones (con Embla) va en su propio trozo: la portada
+   pinta sin esperarlo y la seccion esta muy abajo. */
+const SeccionResenas = lazy(() => import('../components/SeccionResenas'));
 
 type Cliente = { nombre: string; logo: string; url?: string };
 
@@ -649,6 +652,9 @@ export default function HomePage() {
               >
                 <Link
                   to={`/servicios/${service.slug}`}
+                  // A 1024 px la tarjeta deja 202 px al título y «POSICIONAMIENTO»
+                  // pide 230: el título se mide contra la tarjeta (.titulo-tarjeta-icono).
+                  style={{ containerType: 'inline-size' }}
                   className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-5
                              transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40 hover:bg-white/[.06] md:p-6"
                 >
@@ -661,7 +667,7 @@ export default function HomePage() {
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#7700CE]/15 transition-colors group-hover:bg-[#7700CE]/30">
                       <Sparkles className="text-[#CC66FF]" size={18} />
                     </div>
-                    <h3 className="heading flex-1 text-base leading-snug transition-colors group-hover:text-[#DDBBFF] md:text-lg">
+                    <h3 className="heading titulo-tarjeta-icono flex-1 leading-snug transition-colors group-hover:text-[#DDBBFF]">
                       {service.title}
                     </h3>
                   </div>
@@ -837,7 +843,7 @@ export default function HomePage() {
               {tCasos('titulo', 'MARCAS QUE YA CONFÍAN')}
             </h2>
             <p className="mx-auto max-w-2xl text-[14.5px] leading-relaxed text-white/70 md:text-base">
-              {tCasos('bajada', 'Trabajamos con empresas de Aguascalientes y de todo México. Por respeto a lo que cada una nos comparte, los resultados se cuentan en números y no en nombres.')}
+              {tCasos('bajada', 'Trabajamos con empresas de Aguascalientes y de todo México, y muchas ya están satisfechas con el rendimiento y las ventas que lograron después de trabajar con Inédito.')}
             </p>
           </div>
 
@@ -846,7 +852,7 @@ export default function HomePage() {
               su columna desaparece. */}
           <div className="mx-auto mb-9 grid max-w-4xl grid-cols-1 gap-7 sm:grid-cols-3 md:mb-12">
             {[1, 2, 3].map((i) => {
-              const cifra = tCasos(`n${i}_cifra`, ['+80%', '4', '100%'][i - 1]);
+              const cifra = tCasos(`n${i}_cifra`, ['+80%', '6', '100%'][i - 1]);
               if (!cifra) return null;
               return (
                 <motion.div
@@ -914,6 +920,12 @@ export default function HomePage() {
         </div>
       </section>
       )}
+
+      {/* ---- Las opiniones de Google: la prueba de lo que la bajada de
+           arriba promete, con las palabras de los clientes ---- */}
+      <Suspense fallback={null}>
+        <SeccionResenas pagina="home" />
+      </Suspense>
 
       {/* ---- La casa: de dónde somos y cómo se siente trabajar aquí ----
            Antes era "TRABAJAMOS CON PASIÓN" con tres tarjetas genéricas. */}

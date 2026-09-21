@@ -208,7 +208,30 @@ Commits `52242c2` y `a4653b3`. Todo ya existía antes; lo destapó la primera pa
 - los párrafos pegados del texto largo en 4 páginas de IA;
 - la casilla del chat.
 
-El valor anterior de cada campo quedó en `.claude/respaldos/2026-09-21-base-antes-de-correcciones.txt`, con el script y su lanzador (`correr_en_servidor.sh`, que lee `deploy.env` sin imprimirlo). **La tarjeta de Armando Trejo no se tocó**: su borrador guarda el 449 583 9229, que podría ser su celular (ver Pendientes).
+El valor anterior de cada campo quedó en `.claude/respaldos/2026-09-21-base-antes-de-correcciones.txt`, con el script y su lanzador (`correr_en_servidor.sh`, que lee `deploy.env` sin imprimirlo). **La tarjeta de Armando Trejo no se tocó** en esa vuelta (se resolvió en la tercera, abajo).
+
+### Tercera vuelta: opiniones de Google y las decisiones del cliente (21-sep)
+
+**Carrusel de opiniones de Google** en la portada (después de «Casos») y al final de Nosotros. Solo cinco estrellas con texto, las más recientes primero, firmadas con nombre e inicial («Nancy S.»), con fecha relativa y enlace a la ficha. En inglés sale la traducción marcada «Translated from Spanish»; si una opinión no tiene traducción, sale la original con «Review in Spanish».
+
+| Pieza | Dónde |
+|---|---|
+| Carrusel (Embla, trozo propio de 11 KB) | `src/app/components/SeccionResenas.tsx` |
+| Tabla, sincronización y lo que ve el sitio | `panel/inc/resenas.php` (tabla `resenas_google`) |
+| Pantalla del panel | Opiniones (`panel/pages/resenas.php`): estado de la conexión, «Sincronizar ahora», agregar a mano, traducción al inglés, ocultar |
+| Sincronización diaria | Al final de `panel/cron/gsc_sync.php`, que ya corre en cPanel. También existe `panel/cron/resenas_sync.php` suelto |
+| Datos al sitio | `render.php` los deja en `localStorage` como `inedito_resenas` (y en el HTML para robots, con 6 opiniones); `api/content.php` también |
+| Textos de la sección | Panel › Contenido › Inicio y Nosotros › «Opiniones de Google (carrusel)» |
+| Prueba | `php scripts/probar_resenas.php` (SQLite y Google simulado) |
+
+**Cómo se llenó hoy:** las 21 opiniones de la ficha (5,0; 18 con texto) se copiaron a mano desde Google Maps y se cargaron como `copiada`, con fecha aproximada («hace un mes» → 21-ago) y su traducción. **Cómo se llena después:** con la API de Perfil de Empresa, que **todavía no está aprobada** (ver Pendientes). En cuanto responda, cada copiada se empareja con su original por autor (Google deja una reseña por cuenta y ficha), toma la fecha exacta y conserva la traducción si el texto no cambió. Las nuevas entran solas; las borradas en Google se retiran.
+
+**Contenido en la base** (script de un solo uso con modo prueba; respaldo del «antes» en `.claude/respaldos/2026-09-21-antes-de-resenas.txt`):
+- Portada: la bajada de «Casos» ya no dice «números y no nombres»; dice que muchos clientes están satisfechos con el rendimiento y las ventas. La cifra de motores de IA pasó de 4 a **6**.
+- **Nosotros** publicado con la versión nueva (las tres promesas, sin «98 % de satisfacción»). La promesa «Visibilidad completa» nombra los seis motores y la franja de logos suma Copilot.
+- **Tarjeta de Armando**: WhatsApp 449 583 9229 (el suyo); llamadas 449 513 6907, que ya estaba.
+
+De paso: el título «POSICIONAMIENTO ORGÁNICO» de la vitrina de la portada se salía 28 px a 1024 de ancho; ahora se mide contra su tarjeta (`.titulo-tarjeta-icono`). Y el regreso de Google en el panel valida el `state` (antes no lo hacía).
 
 ## ⚠️ Revisar primero
 
@@ -226,22 +249,24 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 
 - [ ] Confirmar lo del cierre vacío (arriba).
 - [ ] **Probar el formulario de contacto**: enviarlo y confirmar que llega UN correo y se crea UN lead. Si llegan dos, el puente de `render.php` volvió a duplicar.
-- [ ] **Tarjeta NFC de Armando Trejo** (`pages/armando-trejo`): al corregir el contacto, su WhatsApp quedó con el número de la empresa. Si `449 583 9229` era su celular, hay que devolvérselo; su borrador todavía lo guarda. Además, su botón «Llámame» publica `4495136907`, que es idéntico al ejemplo de ayuda del panel (`panel/inc/miembros.php`): ¿es su número o se guardó el ejemplo?
-- [ ] **Decisiones pendientes** que encontró el revisor de marca (21-sep). Tocan el contenido, así que no se cambiaron:
-  - **Nosotros publicado es la versión vieja**: «Democratizar…», valores TRANSPARENCIA / RESULTADOS («vanity metrics») / PARTNERSHIP y un «98 % de satisfacción del cliente» que nadie puede sostener. El código y los `def` ya traen la nueva («NUESTRAS TRES PROMESAS»). Publicar Nosotros desde el panel la pone.
-  - **`/servicios-ia` muestra «10x Más Eficiencia», «80% Ahorro en Costos» y «100% Automatizado».** Son cifras sin respaldo, y la última contradice que el agente le pasa la conversación a una persona.
-  - **La portada dice «4 motores de IA» y la página GEO «los seis asistentes».** Una de las dos está mal.
-  - **El portafolio nombra clientes con sus cifras**, mientras la portada promete que «los resultados se cuentan en números y no en nombres». O se suaviza la frase, o se anonimiza el portafolio.
-  - **Etiquetas de las tarjetas de `/servicios-ia`**: «Seguimiento auto», «Prospección auto», «Análisis auto» y «Lead scoring».
+- [ ] **Que las opiniones de Google se actualicen solas.** El código ya está; falta lo de Google, que solo puede hacer la cuenta dueña de la ficha:
+  1. Pedir acceso a la API de Perfil de Empresa con el formulario de Google (developers.google.com/my-business/content/prereqs#request-access), con el número del proyecto de Google Cloud donde vive el Client ID del panel. La cuota empieza en 0 hasta que aprueban; suele tardar de días a un par de semanas.
+  2. Ya aprobado, activar en ese proyecto *My Business Account Management API*, *My Business Business Information API* y *Google My Business API*.
+  3. Panel › Opiniones › «Reconectar Google» y aceptar el permiso nuevo (`business.manage`). Hasta que se reconecte, la conexión actual no alcanza para leer reseñas; Search Console y Analytics siguen igual.
+  4. «Sincronizar ahora». Desde ahí va sola con el cron diario de Search Console.
+
+  Mientras tanto, una opinión nueva se agrega a mano en Panel › Opiniones.
+- [ ] **Decisión pendiente** que encontró el revisor de marca (21-sep): las etiquetas de las tarjetas de `/servicios-ia` («Seguimiento auto», «Prospección auto», «Análisis auto» y «Lead scoring»). Las otras cuatro ya se resolvieron (ver «Tercera vuelta» y «Decisiones tomadas»).
+- [ ] Opinión con errata en la ficha: «Muy buena imaginen» (Alexis G.) sale en el carrusel tal cual. Si no se quiere, se apaga en Panel › Opiniones; nunca se corrige el texto.
 - [ ] **Licencia de Remotion**: es gratis para personas y para empresas de hasta 3 empleados. Si Inédito tiene más, necesita la licencia de empresa (remotion.pro).
-- [ ] **Crons en cPanel** (confirmar si ya están puestos). Los tres son diarios: `reporte_quincenal.php`, `gsc_sync.php` y `espectaculares_sync.php`, con el formato `/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/<archivo>.php`. Al 21-sep ya hay fotos diarias de Search Console (19, 20 y 21), o sea que `gsc_sync.php` corre. Falta confirmar los otros dos.
+- [ ] **Crons en cPanel** (confirmar si ya están puestos). Los tres son diarios: `reporte_quincenal.php`, `gsc_sync.php` y `espectaculares_sync.php`, con el formato `/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/<archivo>.php`. Al 21-sep ya hay fotos diarias de Search Console (19, 20 y 21), o sea que `gsc_sync.php` corre; las opiniones de Google van dentro de ese mismo cron. Falta confirmar los otros dos.
 - [ ] **Permiso de Vía Gráfica** para publicar su inventario en el sitio. El catálogo se toma cada día de su API (`spvnet.gruposoldi.mx`). Venía abierto de sesiones anteriores.
 - [ ] **SEO**: la lista completa está en `auditoria/checklist-proximos-pasos.md` (reenviar el sitemap, indexación manual, ficha de Google, reseñas…). Ojo: el punto OFF-04 (nota de prensa de la Feria de San Marcos) **ya no aplica**. El 31 de agosto se decidió no presumir ese proyecto.
 
 ### Técnicos (para la siguiente sesión)
 
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
-- [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal. Además queda el Nosotros viejo que está publicado, pendiente de decisión (ver «Decisiones pendientes»).
+- [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
 - [ ] Archivos sueltos sin trackear: en la raíz, `LOGO CINE KRISTAL.png`, `Logo-blanco.png`, `logo tachis.png` y `x.png`; en `docs/`, `ASISTENTE_REPLICA.md` y `AUDITORIA_TECNICA_SITIO_2026.md`. No se sabe para qué son y no se subieron.
 - [ ] Ideas ofrecidas y no hechas: fotos de producto para el mockup de la tienda (generadas con ChatGPT) y hacer editables desde el panel los remates de las animaciones.
@@ -287,6 +312,8 @@ Reglas:
 - **CLI de Remotion:** la carpeta `auditoria/` lo confunde. Pasa siempre la entrada: `npx remotion still src/remotion/index.ts <escena> out.png --frame=150`.
 - **`deploy.sh` se detiene si algún asset no sube** (el FTP a veces corta la sesión) y no toca nada más. Volver a correrlo es seguro.
 - **Navegador de Claude:** el usuario deja una pestaña de ChatGPT abierta. Pasa siempre el `tabId` de la pestaña de pruebas.
+- **Opiniones de Google: no hay respaldo en el código.** Si `inedito_resenas` no llega (tabla vacía o sin crear), la sección no se pinta. A propósito: una opinión inventada es peor que ninguna. Tampoco va schema de `Review`: Google no acepta reseñas de un negocio sobre sí mismo.
+- **Un barrido de teléfonos en la base debe saltarse `armando-trejo`**: su tarjeta lleva sus números personales (WhatsApp 449 583 9229, llamadas 449 513 6907).
 - **Credenciales fuera del alcance de Claude:** las reglas `deny` bloquean cualquier comando que *nombre* esos archivos (`cat`, `ls`, `sed`, `>`), aunque sea para borrar un señuelo. `deploy.sh` sigue funcionando porque los lee desde su propio proceso. Un script de un solo uso que necesite `deploy.env` tiene que leerlo desde un archivo `.sh` o `.py`, no desde la línea de comandos.
 - **Git Bash convierte rutas**: `/servicios` pasa a `C:/Program Files/Git/servicios` al dárselo a Python o a `claude`. `verificar_vivo.py` ya lo deshace. Con `cmd /c` o rutas que empiezan con `/`, antepón `MSYS_NO_PATHCONV=1`.
 - LiteSpeed ignora las cabeceras de `.htaccess` en respuestas PHP (detalle en `docs/DESPLIEGUE.md`).
@@ -304,9 +331,11 @@ Para eso está la skill `/barrido` (`.claude/skills/barrido/`), que ya descarta 
 
 ## Decisiones tomadas (no se rediscuten)
 
-- Contacto único: **+52 1 449 120 4353** (`5214491204353` en `wa.me` y `tel:`) y **contacto@inedito.digital**.
+- Contacto único: **+52 1 449 120 4353** (`5214491204353` en `wa.me` y `tel:`) y **contacto@inedito.digital**. Única excepción: la tarjeta NFC de Armando (WhatsApp 449 583 9229, llamadas 449 513 6907).
 - «Una IA audita»: nunca Claude como auditor. Los logos de las IA van solo donde se mide presencia.
-- Prueba social anónima: sin casos con nombre ni testimonios, solo cifras verificables.
+- Prueba social anónima: sin casos con nombre ni testimonios, solo cifras verificables. Excepción autorizada (21-sep): el carrusel de opiniones de Google, solo cinco estrellas, tal cual y con nombre e inicial.
+- Los motores de IA principales son **seis**: ChatGPT, Gemini, AI Overviews, Perplexity, Claude y Copilot.
+- Las cifras de `/servicios-ia` (10x, 80 %, 100 %) se quedan: el agente solo toma el lead y lo pasa a una persona real.
 - La Feria de San Marcos no se presume como caso propio.
 - Hanson solo en mayúsculas; las frases van en mono.
 - Copy de venta directo: un título que dice el beneficio y una o dos frases de cómo se cumple.

@@ -69,4 +69,15 @@ if ($fin['anterior']) {
     paso("\n  Primera foto guardada: desde mañana ya se puede comparar.");
 }
 
+/* Las opiniones de Google viajan en este mismo cron: es el que ya está puesto
+   en cPanel y usa la misma conexión. Van al final y aparte: si fallan, lo de
+   Search Console ya quedó guardado. */
+try {
+    require_once $raiz . '/panel/inc/resenas.php';
+    $res = resenas_sincronizar();
+    paso("\nOpiniones de Google: " . ($res['ok'] ? $res['resumen'] : 'pendiente · ' . $res['error']));
+} catch (Throwable $e) {
+    paso("\nOpiniones de Google: error · " . $e->getMessage());
+}
+
 paso("\nListo.");

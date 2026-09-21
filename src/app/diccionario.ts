@@ -523,8 +523,8 @@ export const DICCIONARIO: Record<string, string> = {
   'PORTAFOLIO': 'PORTFOLIO',
   'VER EL PORTAFOLIO': 'SEE THE PORTFOLIO',
   'MARCAS QUE YA CONFÍAN': 'BRANDS THAT ALREADY TRUST US',
-  'Trabajamos con empresas de Aguascalientes y de todo México. Por respeto a lo que cada una nos comparte, los resultados se cuentan en números y no en nombres.':
-    'We work with companies in Aguascalientes and across Mexico. Out of respect for what each one shares with us, results are told in numbers and not in names.',
+  'Trabajamos con empresas de Aguascalientes y de todo México, y muchas ya están satisfechas con el rendimiento y las ventas que lograron después de trabajar con Inédito.':
+    'We work with companies in Aguascalientes and across Mexico, and many are already happy with the performance and sales they achieved after working with Inédito.',
   'QUIÉN ESTÁ DETRÁS': 'WHO IS BEHIND IT',
   'DE AGUASCALIENTES,': 'FROM AGUASCALIENTES,',
   'PARA EMPRESAS QUE VAN EN SERIO': 'FOR COMPANIES THAT MEAN BUSINESS',
@@ -558,8 +558,8 @@ export const DICCIONARIO: Record<string, string> = {
     'That companies in Aguascalientes show up not only on Google, but in the answers AI assistants give when somebody asks for a supplier. Almost nobody in this market is working on that yet.',
   'Tableros conectados a datos reales y, cuando tu ERP lo permite, cruce directo entre campañas y ventas cerradas. No clics ni likes.':
     'Dashboards wired to real data and, when your ERP allows it, a direct match between campaigns and closed sales. Not clicks or likes.',
-  'No solo Google. También los motores de IA que cada vez más recomiendan proveedores: ChatGPT, Claude, Gemini y Perplexity.':
-    'Not just Google. Also the AI engines that increasingly recommend suppliers: ChatGPT, Claude, Gemini and Perplexity.',
+  'No solo el buscador de Google. También los seis motores de IA que ya recomiendan proveedores: ChatGPT, Gemini, AI Overviews de Google, Perplexity, Claude y Copilot.':
+    'Not just Google search. Also the six AI engines that already recommend providers: ChatGPT, Gemini, Google\'s AI Overviews, Perplexity, Claude and Copilot.',
   'Cuando alguien busca a tu empresa, encuentra un negocio serio: presencia cuidada, datos consistentes en todas partes y soporte real detrás.':
     'When somebody looks your company up, they find a serious business: a presence that has been looked after, consistent details everywhere and real support behind it.',
   'Proyectos exitosos': 'Successful projects',
@@ -1155,7 +1155,7 @@ export const DICCIONARIO: Record<string, string> = {
   'Reparto del presupuesto': 'Budget split',
   'Red de inteligencia artificial de Inédito Digital':
     'Inédito Digital artificial intelligence network',
-  'ChatGPT, Claude, Gemini y Perplexity': 'ChatGPT, Claude, Gemini and Perplexity',
+  'ChatGPT, Claude, Gemini, Perplexity y Copilot': 'ChatGPT, Claude, Gemini, Perplexity and Copilot',
   'El tablero en un teléfono': 'The dashboard on a phone',
   'Lun-Vie: 9:00-18:00': 'Mon–Fri: 9:00–18:00',
 
@@ -1289,4 +1289,18 @@ export const DICCIONARIO: Record<string, string> = {
     'Interactive tic-tac-toe with prizes. Play the AI and win. Guaranteed fun that pulls visitors into your booth.',
   /* /servicios/linkedin-de-empresa */
   '240 seguidores del sector': '240 industry followers',
+  /* El carrusel de opiniones de Google (SeccionResenas) */
+  'OPINIONES EN GOOGLE': 'GOOGLE REVIEWS',
+  'LO QUE DICEN NUESTROS CLIENTES': 'WHAT OUR CLIENTS SAY',
+  'Ver todas en Google': 'See all on Google',
+  'opiniones en Google': 'reviews on Google',
+  'Cinco estrellas': 'Five stars',
+  'Leer completa': 'Read more',
+  'Ver menos': 'Show less',
+  'Traducida del español': 'Translated from Spanish',
+  'Reseña en español': 'Review in Spanish',
+  'carrusel': 'carousel',
+  'opinión': 'review',
+  'Opinión anterior': 'Previous review',
+  'Siguiente opinión': 'Next review',
 };
