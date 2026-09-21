@@ -7,8 +7,8 @@
 
 | | |
 |---|---|
-| Último commit de código | `7509f9c` — Opiniones de Google en la portada y en Nosotros, y las decisiones de contenido |
-| En producción | El mismo: `assets/index-XFShmlC5.js` (verificado en vivo el 21-sep, español e inglés) |
+| Último commit de código | `acc16a6` — Etiquetas claras en las tarjetas de /servicios-ia |
+| En producción | El mismo: `assets/index-DeBihEBq.js` (verificado en vivo el 21-sep, español e inglés) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
 | Desplegar | `npm run build && bash deploy.sh` (detalle en `docs/DESPLIEGUE.md`) |
