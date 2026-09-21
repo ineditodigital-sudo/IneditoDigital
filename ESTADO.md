@@ -1,15 +1,15 @@
 # Estado del sitio · inedito.digital
 
-> Corte: **11 de septiembre de 2026**. Escrito para retomar en otra sesión.
+> Corte: **21 de septiembre de 2026**. Escrito para retomar en otra sesión.
 > Antes de confiar en esto, compáralo con `git log -1` y con el bundle que sirve el sitio. Si no coinciden, algo cambió después de este corte.
 
 ## En una mirada
 
 | | |
 |---|---|
-| Último commit | `40d21c4` — La presentación también cabe en teléfono acostado y ventanas bajas |
-| En producción | El mismo: `assets/index-ZrqbvlsA.js` (verificado el 11-sep) |
-| Sin commit | Nada de código. Solo 3 PNG sueltos en la raíz (ver Pendientes) |
+| Último commit de código | `6561af4` — Las cinco paginas de Servicios IA usan la misma ficha que los demas servicios |
+| En producción | El mismo: `assets/index-BIf4IOhB.js` (verificado en vivo el 21-sep) |
+| Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Desplegar | `npm run build && bash deploy.sh` (detalle en `docs/DESPLIEGUE.md`) |
 | Arquitectura | SPA React + Vite, `render.php` (HTML para bots y puente de datos), panel PHP en `/panel/`, MySQL en cPanel. Ver `README.md` |
 
@@ -130,6 +130,33 @@ Se revisaron dos tableros: el ranking en Google y «Qué páginas estudian las I
   - La regla del `.htaccess` que debería devolver **403** a `.sql`, `.env`, `.bak`, `.zip` **no está disparando**: `/copia.sql` y `/algo.env` llegan hasta `render.php` y contestan 404. Hoy da igual porque esos archivos no existen, pero la regla no protegería si alguna vez se sube un volcado a la raíz. Tampoco cubre `.env.local` ni `.env.production`, que son justo los que sondean. Se descartó que fuera una cadena de `ErrorDocument`: `render.php` ve la ruta original.
   - Las 177 impresiones locales en posición #6–9 con 2 clics **no son un problema del sitio**: encima de la 6 hay anuncios y el paquete de mapas. Ese clic se gana en la ficha de Google, no en el `<title>`. Hace falta ver un SERP real desde Aguascalientes.
 
+## Lo último (21 de septiembre)
+
+### Servicios IA: la misma ficha que los demás servicios
+
+Las cinco páginas del menú «Servicios IA» —WhatsApp, Ventas, Marketing, E-commerce y Posicionamiento en IA— tenían cada una su propio diseño. Ahora **todas las fichas salen de una sola plantilla**, `src/app/components/FichaServicio.tsx`, con el mismo orden: portada (nombre, cotizar y WhatsApp) → qué es → qué incluye → lo que ganas → el proceso con su escena → ideal para → el fondo del asunto (plegado) → preguntas → cierre.
+
+| Páginas | Adaptador | De dónde sale el contenido |
+|---|---|---|
+| Las 26 de `/servicios/…` | `ServiceDetailPage.tsx` | Panel › Servicios. El catálogo de espectaculares y las demos de activaciones entran por `trasPortada` y `trasProceso` |
+| Las 4 de `/servicios-ia/…` | `PaginaServicioIA.tsx`; cada página es un envoltorio de 57 líneas con su SEO y sus respaldos | Panel › Contenido › «IA para WhatsApp», etc. |
+| `/servicios/posicionamiento-en-ia` | `GeoPage.tsx` | Panel › Contenido › «Posicionamiento en IA (GEO)» |
+
+- **Los títulos de sección** (QUÉ INCLUYE, LO QUE GANAS, NUESTRO PROCESO…) son los mismos para todas y se editan en Panel › Contenido › «Plantilla de página de servicio» › «Títulos de las secciones». Ahí también están «Volver a Servicios IA» y la categoría «IA».
+- **Salieron del panel los campos que ya no se ven**: los eslóganes de portada («AGENTE INTELIGENTE QUE VENDE 24/7», «VENDE MÁS CON MENOS ESFUERZO», «MARKETING QUE PIENSA POR TI», «CONVIERTE MÁS VISITAS EN VENTAS» y «Tus clientes ya no buscan. Preguntan.»), los títulos propios de cada sección, imágenes, navegación y el bloque «diagnóstico» de posicionamiento. El diagnóstico sin costo lo siguen ofreciendo el botón de la portada y el cierre. El sitio ya no lee esos campos.
+- **Cada una tiene su escena** en el proceso; antes caían en la de la página web. Son `EscenaChat`, `EscenaProspectos`, `EscenaPresupuesto`, `EscenaCarrito` y `EscenaRespuestaIA`, en `EscenasProceso.tsx`. `EscenasServicioIA.tsx` se borró porque ya no la usaba nadie.
+- **`render.php`** sirve a los robots las cinco en el mismo orden que la página, con el nombre del servicio como H1 y la definición como primer párrafo. El FAQPage lleva hasta 8 preguntas.
+- **Tres desbordes corregidos**, los tres por lo ancha que es Hanson. El título ahora se mide contra su caja (`cqw`) con un tope:
+  - el cierre de las fichas, que se salía 58 px a 375;
+  - el paso «CONCEPTUALIZACIÓN» de branding, 4 px a 375 (ya existía);
+  - la demo «PHOTO OPPORTUNITY» de activaciones, 11 px a 768 (ya existía).
+- Comprobado:
+  - el texto de los 25 servicios de la colección quedó idéntico al de antes;
+  - las 5 páginas de IA y los 26 servicios no tienen desbordes en los 9 tamaños ni en los 2 idiomas.
+- **Desplegado el 21 de septiembre** (`assets/index-BIf4IOhB.js`). En vivo se comprobó:
+  - lo que ven los robots en las cinco: H1 con el nombre, la definición primero y el mismo orden de secciones;
+  - la página real a 375, 768 y 1440, sin desbordes, con cada una montando su propia escena.
+
 ## ⚠️ Revisar primero
 
 **El cierre de la presentación en español está vacío en lo publicado.** Alguien publicó desde el panel con la etiqueta, el título y la descripción del cierre en blanco. En inglés sigue completo. Así, el cierre en español muestra solo el logo y los botones de contacto.
@@ -148,15 +175,16 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 - [ ] **Probar el formulario de contacto**: enviarlo y confirmar que llega UN correo y se crea UN lead. Si llegan dos, el puente de `render.php` volvió a duplicar.
 - [ ] **Tarjeta NFC de Armando Trejo** (`pages/armando-trejo`): al corregir el contacto, su WhatsApp quedó con el número de la empresa. Si `449 583 9229` era su celular, hay que devolvérselo.
 - [ ] **Licencia de Remotion**: es gratis para personas y para empresas de hasta 3 empleados. Si Inédito tiene más, necesita la licencia de empresa (remotion.pro).
-- [ ] **Crons en cPanel** (confirmar si ya están puestos). Los tres son diarios: `reporte_quincenal.php`, `gsc_sync.php` y `espectaculares_sync.php`, con el formato `/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/<archivo>.php`.
+- [ ] **Crons en cPanel** (confirmar si ya están puestos). Los tres son diarios: `reporte_quincenal.php`, `gsc_sync.php` y `espectaculares_sync.php`, con el formato `/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/<archivo>.php`. Al 21-sep ya hay fotos diarias de Search Console (19, 20 y 21), o sea que `gsc_sync.php` corre. Falta confirmar los otros dos.
 - [ ] **Permiso de Vía Gráfica** para publicar su inventario en el sitio. El catálogo se toma cada día de su API (`spvnet.gruposoldi.mx`). Venía abierto de sesiones anteriores.
 - [ ] **SEO**: la lista completa está en `auditoria/checklist-proximos-pasos.md` (reenviar el sitemap, indexación manual, ficha de Google, reseñas…). Ojo: el punto OFF-04 (nota de prensa de la Feria de San Marcos) **ya no aplica**. El 31 de agosto se decidió no presumir ese proyecto.
 
 ### Técnicos (para la siguiente sesión)
 
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
+- [ ] **Inglés de las cuatro páginas de IA.** En la versión en inglés, la definición, el texto largo y las preguntas de WhatsApp, Ventas, Marketing y E-commerce salen en español: nunca tuvieron traducción en `diccionario.ts`. Ya estaba así antes del 21-sep. Posicionamiento sí sale completo. Ojo: el diccionario se busca por el texto en español **tal como está publicado en la base**, no por el `def` del registro.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
-- [ ] Tres PNG sueltos sin trackear en la raíz: `LOGO CINE KRISTAL.png`, `Logo-blanco.png` y `logo tachis.png`. No se sabe para qué son y no se subieron.
+- [ ] Archivos sueltos sin trackear: en la raíz, `LOGO CINE KRISTAL.png`, `Logo-blanco.png`, `logo tachis.png` y `x.png`; en `docs/`, `ASISTENTE_REPLICA.md` y `AUDITORIA_TECNICA_SITIO_2026.md`. No se sabe para qué son y no se subieron.
 - [ ] Ideas ofrecidas y no hechas: fotos de producto para el mockup de la tienda (generadas con ChatGPT) y hacer editables desde el panel los remates de las animaciones.
 - [ ] Queda 1 px de scroll en la lámina Posicionamiento a 667×375 (iPhone SE acostado, español). No se nota.
 
@@ -193,6 +221,7 @@ Reglas:
 ## Trampas conocidas
 
 - **Los `def` del panel ganan al publicar.** Si cambias un texto en `HomePage.tsx`, cambia también su `def` en `panel/inc/contenido.php`.
+- **Una plantilla para todas las fichas.** Lo que se cambie en `FichaServicio.tsx` se ve en los 26 servicios, las 4 de IA y posicionamiento. Mide los tres tipos antes de entregar, y en la de espectaculares y la de activaciones, que traen bloques propios.
 - **Dos copias** en `services`, `blog_posts` y `portfolio`: el sitio lee `data_json`, y `crud()` escribe las dos. Corre `php scripts/probar_crud.php` antes de desplegar cambios del panel.
 - **`render.php` va junto con el bundle.** Se despliegan juntos; si se desfasan, los leads se duplican o se pierden.
 - **CLI de Remotion:** la carpeta `auditoria/` lo confunde. Pasa siempre la entrada: `npx remotion still src/remotion/index.ts <escena> out.png --frame=150`.
