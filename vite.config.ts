@@ -72,5 +72,19 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    /*
+     * El servidor de desarrollo sirve CUALQUIER archivo de la carpeta del
+     * proyecto, y en la raiz viven credenciales que git ignora pero que
+     * siguen en disco: localhost:5173/deploy.env devolvia la llave del FTP.
+     * Las primeras cuatro son las que Vite trae por defecto; declarar la
+     * lista la reemplaza entera, asi que van repetidas.
+     */
+    fs: {
+      deny: [
+        '.env', '.env.*', '*.{crt,pem}', '**/.git/**',
+        'deploy.env', '*CLAVES*', '*claves*', '*credencial*', '*client_secret*',
+        '**/api/config.php', '**/panel/config.php',
+      ],
+    },
   },
 })

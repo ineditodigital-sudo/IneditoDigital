@@ -157,6 +157,34 @@ Las cinco páginas del menú «Servicios IA» —WhatsApp, Ventas, Marketing, E-
   - lo que ven los robots en las cinco: H1 con el nombre, la definición primero y el mismo orden de secciones;
   - la página real a 375, 768 y 1440, sin desbordes, con cada una montando su propia escena.
 
+### Automatizaciones de Claude Code (21-sep)
+
+Todo vive en `.claude/`, que el repo ignora a propósito («configuración de cada máquina»): **existe solo en esta máquina**. Para versionarlo: `git add -f` de los archivos, como ya se hizo con `launch.json`.
+
+| Qué | Dónde | Para qué |
+|---|---|---|
+| Skill `/barrido` | `.claude/skills/barrido/` | Mide desbordes en 9 tamaños y 2 idiomas con el contenido real (`sembrar.mjs` baja `api/content.php` a `.cache/`, nunca a `public/`). `__fugas` lista el español que se cuela en inglés |
+| Skill `/publicar` (solo la invoca el usuario) | `.claude/skills/publicar/` | Revisa (`tipos.mjs`: solo errores de TS nuevos; `defs.mjs`: respaldos contra `def`), compila, sube y verifica en vivo (`verificar_vivo.py`) |
+| Hook `php -l` | `.claude/hooks/php-lint.mjs` | Tras cada edición de un `.php`. Local es 8.4 y producción 8.3 |
+| Candado de `deploy.sh` | `.claude/hooks/candado-deploy.mjs` | No deja publicar con `public/__*`, cambios sin commit en lo que se sube o `dist/` viejo. Solo se activa si el comando EJECUTA `deploy.sh` |
+| Reglas `deny` | `.claude/settings.json` | Claude no puede leer `deploy.env`, `CLAVES*`, `credenciales*`, `client_secret*.json` ni los `config.php`. Aplica también a `cat`, `ls`, `sed` y redirecciones en Bash |
+| Agentes | `.claude/agents/revisor-de-marca.md` y `auditor-de-traduccion.md` | Reglas de marca contra el copy nuevo; traducciones que faltan |
+| MCP `playwright` (este proyecto) y `context7` (todos) | `~/.claude.json` | Navegador sin ventana que siempre pinta; documentación vigente de librerías |
+| Plugin `security-guidance` | `enabledPlugins` en `.claude/settings.json` | Revisión de seguridad. En su primer arranque crea un venv en `~/.claude/security/` e instala el Agent SDK. Usa el modelo al cerrar turnos con cambios y en cada commit. Para apagarlo: `SECURITY_GUIDANCE_DISABLE=1`; solo la revisión por turno: `ENABLE_STOP_REVIEW=0` |
+
+**Hueco de seguridad corregido de paso**: el servidor de desarrollo (`localhost:5173`) servía cualquier archivo de la carpeta, credenciales incluidas (`/deploy.env` daba 200). Ahora `server.fs.deny` en `vite.config.ts` las bloquea con 403. El riesgo era bajo, porque escucha solo en localhost y Vite 6.3.5 no acepta orígenes ajenos por CORS, pero bastaba cualquier proceso local.
+
+**Lo que destaparon las herramientas nuevas (todo ya existía; nada se tocó):**
+
+- **Portada, título cortado en teléfono.** «DE AGUASCALIENTES, PARA EMPRESAS QUE VAN EN SERIO» va a 30 px. «AGUASCALIENTES,» sola mide 387 px en una columna de 343, y la sección lleva `overflow-hidden`: se recorta de 375 a 414 px de ancho. Se arregla como los de hoy (`cqw`).
+- **11 respaldos que no coinciden con su `def`** (`defs.mjs`). Al publicar desde el panel, esas páginas cambiarían solas:
+  - 5 textos del asistente cuyo `def` escribe el salto de línea como `\n` dentro de comillas simples de PHP. El chat mostraría «\n\n» tal cual.
+  - 2 del asistente distintos: título «Asistente de Inédito» contra «ASISTENTE IA», y el texto de la caja de escribir.
+  - 4 de las demos de activaciones.
+  - Aparte, 2 respaldos vacíos en `/servicios-ia`.
+- **35 campos que el código lee y el panel no ofrece.** Por ejemplo «Qué es», «Leer más» y «EL FONDO DEL ASUNTO» de la plantilla, y las tarjetas de `/servicios-ia`. Nadie puede editarlos desde el panel.
+- **HTML para robots de los servicios normales**: usa otros títulos y otro orden que la página («Características · Beneficios · Ideal para · Proceso · Preguntas frecuentes»). Las cinco de IA ya quedaron alineadas.
+
 ## ⚠️ Revisar primero
 
 **El cierre de la presentación en español está vacío en lo publicado.** Alguien publicó desde el panel con la etiqueta, el título y la descripción del cierre en blanco. En inglés sigue completo. Así, el cierre en español muestra solo el logo y los botones de contacto.
@@ -182,7 +210,16 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 ### Técnicos (para la siguiente sesión)
 
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
-- [ ] **Inglés de las cuatro páginas de IA.** En la versión en inglés, la definición, el texto largo y las preguntas de WhatsApp, Ventas, Marketing y E-commerce salen en español: nunca tuvieron traducción en `diccionario.ts`. Ya estaba así antes del 21-sep. Posicionamiento sí sale completo. Ojo: el diccionario se busca por el texto en español **tal como está publicado en la base**, no por el `def` del registro.
+- [ ] **Traducciones cortas que faltan en inglés** (medido el 21-sep con `__fugas`). Los textos largos de «El fondo del asunto» van en español **a propósito** (lo explica `diccionario.catalogo.ts`) y no cuentan. Lo que sí falta:
+  - las 4 de IA: definición y preguntas;
+  - Nosotros: 7 textos (misión, visión, valores);
+  - `/servicios`: 2;
+  - la portada: 6, que parecen las tarjetas del blog;
+  - `/servicios-ia`: 2;
+  - LinkedIn: 1.
+
+  Para atacarlo está el agente `auditor-de-traduccion`. Ojo: el diccionario se busca por el texto **tal como está publicado en la base**, no por el `def`.
+- [ ] **Título de la portada cortado en teléfono** y **11 respaldos distintos de su `def`**: ver «Lo que destaparon las herramientas nuevas», arriba.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
 - [ ] Archivos sueltos sin trackear: en la raíz, `LOGO CINE KRISTAL.png`, `Logo-blanco.png`, `logo tachis.png` y `x.png`; en `docs/`, `ASISTENTE_REPLICA.md` y `AUDITORIA_TECNICA_SITIO_2026.md`. No se sabe para qué son y no se subieron.
 - [ ] Ideas ofrecidas y no hechas: fotos de producto para el mockup de la tienda (generadas con ChatGPT) y hacer editables desde el panel los remates de las animaciones.
@@ -227,6 +264,8 @@ Reglas:
 - **CLI de Remotion:** la carpeta `auditoria/` lo confunde. Pasa siempre la entrada: `npx remotion still src/remotion/index.ts <escena> out.png --frame=150`.
 - **`deploy.sh` se detiene si algún asset no sube** (el FTP a veces corta la sesión) y no toca nada más. Volver a correrlo es seguro.
 - **Navegador de Claude:** el usuario deja una pestaña de ChatGPT abierta. Pasa siempre el `tabId` de la pestaña de pruebas.
+- **Credenciales fuera del alcance de Claude:** las reglas `deny` bloquean cualquier comando que *nombre* esos archivos (`cat`, `ls`, `sed`, `>`), aunque sea para borrar un señuelo. `deploy.sh` sigue funcionando porque los lee desde su propio proceso. Un script de un solo uso que necesite `deploy.env` tiene que leerlo desde un archivo `.sh` o `.py`, no desde la línea de comandos.
+- **Git Bash convierte rutas**: `/servicios` pasa a `C:/Program Files/Git/servicios` al dárselo a Python o a `claude`. `verificar_vivo.py` ya lo deshace. Con `cmd /c` o rutas que empiezan con `/`, antepón `MSYS_NO_PATHCONV=1`.
 - LiteSpeed ignora las cabeceras de `.htaccess` en respuestas PHP (detalle en `docs/DESPLIEGUE.md`).
 
 ## Antes de entregar un cambio visual
@@ -237,6 +276,8 @@ Revisa todas las láminas o páginas en español **e** inglés, en estos tamaño
 - Acostado: 667×375, 844×390 y 932×430.
 
 Busca scroll de más, texto cortado (`scrollWidth > clientWidth`) y elementos encimados. Hay que medir, no solo mirar: un título se puede salir de su caja aunque la caja se vea bien.
+
+Para eso está la skill `/barrido` (`.claude/skills/barrido/`), que ya descarta los falsos positivos conocidos. Con el panel del navegador oculto la ventana mide 0 px y todo parece desbordar: emula el tamaño o usa el MCP de Playwright.
 
 ## Decisiones tomadas (no se rediscuten)
 
