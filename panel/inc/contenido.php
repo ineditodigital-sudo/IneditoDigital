@@ -1816,6 +1816,13 @@ Dale al botón de abajo y solo tienes que enviarlo.'],
                         'nosotros'    => ['label' => 'Nombre de «Nosotros»', 'tipo' => 'texto', 'def' => 'Nosotros'],
                         'contacto'    => ['label' => 'Nombre de «Contacto»', 'tipo' => 'texto', 'def' => 'Contacto'],
                         'boton'       => ['label' => 'Texto del botón del menú', 'tipo' => 'texto', 'def' => 'COTIZAR'],
+                        // Los leia el menu y el panel no los ofrecia (21-sep).
+                        'grupo_1'     => ['label' => 'Menú de servicios · primera columna', 'tipo' => 'texto', 'def' => 'Marketing y presencia digital'],
+                        'grupo_2'     => ['label' => 'Menú de servicios · segunda columna', 'tipo' => 'texto', 'def' => 'Diseño y desarrollo'],
+                        'mega_pie'    => ['label' => 'Menú de servicios · frase de abajo', 'tipo' => 'texto', 'def' => 'Construir, mejorar o vender: el servicio se adapta a tu punto de partida'],
+                        'wa_boton'    => ['label' => 'Botón de WhatsApp de la barra', 'tipo' => 'texto', 'def' => 'WHATSAPP'],
+                        'wa_mensaje'  => ['label' => 'Mensaje que abre ese botón de WhatsApp', 'tipo' => 'texto', 'def' => 'Hola, quiero el diagnóstico gratuito de mi presencia digital'],
+                        'boton_movil' => ['label' => 'Botón de cotizar en el menú del teléfono', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
                     ],
                 ],
 

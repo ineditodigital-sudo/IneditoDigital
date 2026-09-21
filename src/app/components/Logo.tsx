@@ -11,7 +11,7 @@ export default function Logo({ className = '', alt }: LogoProps) {
   const m = marca.logo();
 
   const logoUrl = m('imagen', 'https://imagenes.inedito.digital/INEDITO%20DIGITAL/LOGO%20INEDITO%20MORADO%20Y%20BLANCO.webp');
-  const textoAlt = alt ?? m('alt', 'INÉDITO DIGITAL');
+  const textoAlt = alt ?? m('alt', 'INÉDITO DIGITAL - Agencia de Marketing Digital en Aguascalientes');
 
   // Fallback SVG logo
   const fallbackLogo = (

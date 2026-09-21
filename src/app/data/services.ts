@@ -11,6 +11,12 @@ export interface Service {
   fullDescription?: string;
   icon: string;
   category: string;
+  /**
+   * La categoria original, en español, aunque `category` venga traducida.
+   * Agrupar y filtrar se hace con esta: comparar contra la traducida hacia que
+   * en ingles el menu saliera revuelto y con las paginas de ciudad (21-sep).
+   */
+  categoriaBase?: string;
   bannerImage?: string;
   features: string[];
   benefits: string[];

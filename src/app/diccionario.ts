@@ -1191,6 +1191,11 @@ export const DICCIONARIO: Record<string, string> = {
   '¿A quién me recomiendas en Aguascalientes?': 'Who do you recommend in Aguascalientes?',
   'Tu negocio': 'Your business',
   'Te recomiendan': 'You get recommended',
+  /* las columnas del menu de servicios, y su enlace de abajo tal como esta
+     publicado (con la flecha; el menu la quita y pinta la suya) */
+  'Marketing y presencia digital': 'Marketing and digital presence',
+  'Diseño y desarrollo': 'Design and development',
+  'Ver todos los servicios →': 'See all services →',
   /* 21-sep: textos cortos que salian en español en la version en ingles
      (lo encontro el barrido con __fugas). Las llaves son el texto publicado. */
   /* / */

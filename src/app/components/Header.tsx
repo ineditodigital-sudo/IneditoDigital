@@ -25,6 +25,10 @@ export default function Header() {
   const { services, settings, openAssistant } = useApp();
   const m = marca.menu();
   const mIA = marca.menuIA();
+  /* En el panel el texto trae su flecha («Ver todos los servicios →») y el
+     menu ya pinta una: se quita la escrita para que no salgan dos. Ademas asi
+     la llave del diccionario es la del texto publicado, flecha incluida. */
+  const verTodos = mIA('ver_todos', 'Ver todos los servicios →').replace(/\s*→\s*$/, '');
   const mLogo = marca.logo();
 
   /*
@@ -337,7 +341,7 @@ export default function Header() {
                     to="/servicios"
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-[#CC66FF] transition-colors hover:text-white"
                   >
-                    {mIA('ver_todos', 'Ver todos los servicios')}
+                    {verTodos}
                     <ArrowRight size={13} />
                   </Link>
                 </div>
@@ -406,7 +410,7 @@ export default function Header() {
                     ))}
                   </div>
                   <Link to="/servicios" className="block px-2 py-1.5 text-xs font-bold text-[#CC66FF]">
-                    {mIA('ver_todos', 'Ver todos los servicios')} →
+                    {verTodos} →
                   </Link>
                 </div>
               )}

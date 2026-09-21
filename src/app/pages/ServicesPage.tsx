@@ -6,6 +6,7 @@ import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
 import { tr } from '../idioma';
+import { esCobertura } from '../data/grupos';
 
 /* Entrada estandar del sitio: aparecer subiendo, una sola vez. */
 const entra = (retraso = 0) => ({
@@ -22,7 +23,7 @@ export default function ServicesPage() {
   const { services: todosLosServicios, settings, openAssistant } = useApp();
   /* El catalogo muestra el que hacemos, no donde lo hacemos: las landings de
      ciudad viven aparte y se llega a ellas desde el bloque de cobertura. */
-  const services = todosLosServicios.filter((s) => s.category !== 'Cobertura' && s.category !== 'Sectores');
+  const services = todosLosServicios.filter((s) => !esCobertura(s));
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     'Hola, vi sus servicios y quiero saber cuál me conviene'
   )}`;

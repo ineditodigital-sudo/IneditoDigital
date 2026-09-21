@@ -383,6 +383,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       title: tr(s.title),
       shortDescription: tr(s.shortDescription),
       definicion: s.definicion ? tr(s.definicion) : s.definicion,
+      categoriaBase: s.categoriaBase ?? s.category,
       category: tr(s.category),
       features: (s.features || []).map(tr),
       benefits: (s.benefits || []).map(tr),
