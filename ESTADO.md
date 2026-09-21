@@ -7,8 +7,8 @@
 
 | | |
 |---|---|
-| Último commit de código | `6561af4` — Las cinco paginas de Servicios IA usan la misma ficha que los demas servicios |
-| En producción | El mismo: `assets/index-BIf4IOhB.js` (verificado en vivo el 21-sep) |
+| Último commit de código | `a4653b3` — El menu de servicios en ingles se organiza igual que en español |
+| En producción | El mismo: `assets/index-C1EHxMhJ.js` (verificado en vivo el 21-sep) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Desplegar | `npm run build && bash deploy.sh` (detalle en `docs/DESPLIEGUE.md`) |
 | Arquitectura | SPA React + Vite, `render.php` (HTML para bots y puente de datos), panel PHP en `/panel/`, MySQL en cPanel. Ver `README.md` |
@@ -174,16 +174,41 @@ Todo vive en `.claude/`, que el repo ignora a propósito («configuración de ca
 
 **Hueco de seguridad corregido de paso**: el servidor de desarrollo (`localhost:5173`) servía cualquier archivo de la carpeta, credenciales incluidas (`/deploy.env` daba 200). Ahora `server.fs.deny` en `vite.config.ts` las bloquea con 403. El riesgo era bajo, porque escucha solo en localhost y Vite 6.3.5 no acepta orígenes ajenos por CORS, pero bastaba cualquier proceso local.
 
-**Lo que destaparon las herramientas nuevas (todo ya existía; nada se tocó):**
+Los MCP pueden desconectarse a media sesión; siguen configurados (`claude mcp list`) y vuelven al abrir otra.
 
-- **Portada, título cortado en teléfono.** «DE AGUASCALIENTES, PARA EMPRESAS QUE VAN EN SERIO» va a 30 px. «AGUASCALIENTES,» sola mide 387 px en una columna de 343, y la sección lleva `overflow-hidden`: se recorta de 375 a 414 px de ancho. Se arregla como los de hoy (`cqw`).
-- **11 respaldos que no coinciden con su `def`** (`defs.mjs`). Al publicar desde el panel, esas páginas cambiarían solas:
-  - 5 textos del asistente cuyo `def` escribe el salto de línea como `\n` dentro de comillas simples de PHP. El chat mostraría «\n\n» tal cual.
-  - 2 del asistente distintos: título «Asistente de Inédito» contra «ASISTENTE IA», y el texto de la caja de escribir.
-  - 4 de las demos de activaciones.
-  - Aparte, 2 respaldos vacíos en `/servicios-ia`.
-- **35 campos que el código lee y el panel no ofrece.** Por ejemplo «Qué es», «Leer más» y «EL FONDO DEL ASUNTO» de la plantilla, y las tarjetas de `/servicios-ia`. Nadie puede editarlos desde el panel.
-- **HTML para robots de los servicios normales**: usa otros títulos y otro orden que la página («Características · Beneficios · Ideal para · Proceso · Preguntas frecuentes»). Las cinco de IA ya quedaron alineadas.
+### Segunda vuelta: lo que encontraron las herramientas, corregido (21-sep)
+
+Commits `52242c2` y `a4653b3`. Todo ya existía antes; lo destapó la primera pasada completa con las herramientas.
+
+- **Desbordes** (barrido de 61 rutas × 9 tamaños × 2 idiomas):
+  - el H1 de 4 artículos del blog y del caso OFITODO empujaba la página de lado en teléfono (hasta 482 px en 375);
+  - el título de sección de la portada se recortaba («AGUASCALIENTES,»);
+  - los títulos de las tarjetas de `/servicios`, `/servicios-ia` y `/nosotros` se salían en tablet y laptop.
+
+  Clases nuevas `.titulo-seccion`, `.titulo-articulo` y `.titulo-caso` junto a `.titulo-servicio`, más `cqw` por tarjeta. Solo cambia el teléfono.
+- **Marca** (revisor-de-marca sobre todo el sitio):
+  - Claude como auditor en 3 servicios y en `llms.php` pasó a «IA»;
+  - la Feria de San Marcos salió del caso 1828, en los dos idiomas;
+  - la visión de Nosotros ya no nombra «ChatGPT, Claude y Gemini» sin logotipos.
+- **Textos del panel** (`defs.mjs`, que ahora sigue lectores pasados como parámetro y los atajos `marca.*()`):
+  - 10 `def` con `\n` literal pasaron a saltos reales;
+  - la clave `saludo` estaba duplicada;
+  - la casilla del chat dice «Escribe tu pregunta…»;
+  - las demos de activaciones y el `alt` del logotipo se alinearon con lo publicado;
+  - 13 campos que el código leía ahora se editan en el panel.
+
+  Queda en 485 comparados y 0 distintos.
+- **Inglés:** 50 textos cortos traducidos (auditor-de-traduccion) y el menú de servicios, que en inglés salía revuelto y con las páginas de ciudad. Agrupaba comparando la categoría traducida contra nombres en español; ahora usa `categoriaBase` (ver Trampas).
+- **Robots:** las fichas de servicio usan los mismos títulos y el mismo orden que la página.
+
+**Corregido en la base de producción** (script de un solo uso, con modo prueba antes; 21 columnas, cada copia: `contenido` y `borrador`, columna y `data_json`):
+- el teléfono ajeno y 10 `\n` literales en Privacidad y Términos, que la página mostraba tal cual;
+- Claude en los tres servicios;
+- la Feria en el caso 1828 (también sale ya de `llms-full.txt`);
+- los párrafos pegados del texto largo en 4 páginas de IA;
+- la casilla del chat.
+
+El valor anterior de cada campo quedó en `.claude/respaldos/2026-09-21-base-antes-de-correcciones.txt`, con el script y su lanzador (`correr_en_servidor.sh`, que lee `deploy.env` sin imprimirlo). **La tarjeta de Armando Trejo no se tocó**: su borrador guarda el 449 583 9229, que podría ser su celular (ver Pendientes).
 
 ## ⚠️ Revisar primero
 
@@ -201,7 +226,13 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 
 - [ ] Confirmar lo del cierre vacío (arriba).
 - [ ] **Probar el formulario de contacto**: enviarlo y confirmar que llega UN correo y se crea UN lead. Si llegan dos, el puente de `render.php` volvió a duplicar.
-- [ ] **Tarjeta NFC de Armando Trejo** (`pages/armando-trejo`): al corregir el contacto, su WhatsApp quedó con el número de la empresa. Si `449 583 9229` era su celular, hay que devolvérselo.
+- [ ] **Tarjeta NFC de Armando Trejo** (`pages/armando-trejo`): al corregir el contacto, su WhatsApp quedó con el número de la empresa. Si `449 583 9229` era su celular, hay que devolvérselo; su borrador todavía lo guarda. Además, su botón «Llámame» publica `4495136907`, que es idéntico al ejemplo de ayuda del panel (`panel/inc/miembros.php`): ¿es su número o se guardó el ejemplo?
+- [ ] **Decisiones pendientes** que encontró el revisor de marca (21-sep). Tocan el contenido, así que no se cambiaron:
+  - **Nosotros publicado es la versión vieja**: «Democratizar…», valores TRANSPARENCIA / RESULTADOS («vanity metrics») / PARTNERSHIP y un «98 % de satisfacción del cliente» que nadie puede sostener. El código y los `def` ya traen la nueva («NUESTRAS TRES PROMESAS»). Publicar Nosotros desde el panel la pone.
+  - **`/servicios-ia` muestra «10x Más Eficiencia», «80% Ahorro en Costos» y «100% Automatizado».** Son cifras sin respaldo, y la última contradice que el agente le pasa la conversación a una persona.
+  - **La portada dice «4 motores de IA» y la página GEO «los seis asistentes».** Una de las dos está mal.
+  - **El portafolio nombra clientes con sus cifras**, mientras la portada promete que «los resultados se cuentan en números y no en nombres». O se suaviza la frase, o se anonimiza el portafolio.
+  - **Etiquetas de las tarjetas de `/servicios-ia`**: «Seguimiento auto», «Prospección auto», «Análisis auto» y «Lead scoring».
 - [ ] **Licencia de Remotion**: es gratis para personas y para empresas de hasta 3 empleados. Si Inédito tiene más, necesita la licencia de empresa (remotion.pro).
 - [ ] **Crons en cPanel** (confirmar si ya están puestos). Los tres son diarios: `reporte_quincenal.php`, `gsc_sync.php` y `espectaculares_sync.php`, con el formato `/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/<archivo>.php`. Al 21-sep ya hay fotos diarias de Search Console (19, 20 y 21), o sea que `gsc_sync.php` corre. Falta confirmar los otros dos.
 - [ ] **Permiso de Vía Gráfica** para publicar su inventario en el sitio. El catálogo se toma cada día de su API (`spvnet.gruposoldi.mx`). Venía abierto de sesiones anteriores.
@@ -210,16 +241,7 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 ### Técnicos (para la siguiente sesión)
 
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
-- [ ] **Traducciones cortas que faltan en inglés** (medido el 21-sep con `__fugas`). Los textos largos de «El fondo del asunto» van en español **a propósito** (lo explica `diccionario.catalogo.ts`) y no cuentan. Lo que sí falta:
-  - las 4 de IA: definición y preguntas;
-  - Nosotros: 7 textos (misión, visión, valores);
-  - `/servicios`: 2;
-  - la portada: 6, que parecen las tarjetas del blog;
-  - `/servicios-ia`: 2;
-  - LinkedIn: 1.
-
-  Para atacarlo está el agente `auditor-de-traduccion`. Ojo: el diccionario se busca por el texto **tal como está publicado en la base**, no por el `def`.
-- [ ] **Título de la portada cortado en teléfono** y **11 respaldos distintos de su `def`**: ver «Lo que destaparon las herramientas nuevas», arriba.
+- [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal. Además queda el Nosotros viejo que está publicado, pendiente de decisión (ver «Decisiones pendientes»).
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
 - [ ] Archivos sueltos sin trackear: en la raíz, `LOGO CINE KRISTAL.png`, `Logo-blanco.png`, `logo tachis.png` y `x.png`; en `docs/`, `ASISTENTE_REPLICA.md` y `AUDITORIA_TECNICA_SITIO_2026.md`. No se sabe para qué son y no se subieron.
 - [ ] Ideas ofrecidas y no hechas: fotos de producto para el mockup de la tienda (generadas con ChatGPT) y hacer editables desde el panel los remates de las animaciones.
@@ -258,6 +280,7 @@ Reglas:
 ## Trampas conocidas
 
 - **Los `def` del panel ganan al publicar.** Si cambias un texto en `HomePage.tsx`, cambia también su `def` en `panel/inc/contenido.php`.
+- **Agrupar servicios por la categoría ORIGINAL.** En inglés `service.category` llega traducida; para agrupar o filtrar se usa `categoriaBase` (o `esCobertura()` de `data/grupos.ts`). Comparar contra la traducida revolvió el menú en inglés y metió las páginas de ciudad en `/servicios`.
 - **Una plantilla para todas las fichas.** Lo que se cambie en `FichaServicio.tsx` se ve en los 26 servicios, las 4 de IA y posicionamiento. Mide los tres tipos antes de entregar, y en la de espectaculares y la de activaciones, que traen bloques propios.
 - **Dos copias** en `services`, `blog_posts` y `portfolio`: el sitio lee `data_json`, y `crud()` escribe las dos. Corre `php scripts/probar_crud.php` antes de desplegar cambios del panel.
 - **`render.php` va junto con el bundle.** Se despliegan juntos; si se desfasan, los leads se duplican o se pierden.
