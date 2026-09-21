@@ -166,11 +166,14 @@ export function RecorridoProceso({
                     </span>
                     {i < pasos.length - 1 && <span className="mt-2 w-px flex-1 bg-white/10" />}
                   </div>
-                  <div className="pb-2">
+                  {/* Hanson no parte palabras: «CONCEPTUALIZACIÓN» mide 15 veces
+                      su tamaño de letra, así que el título se encoge con la
+                      columna en vez de empujar la página hacia los lados. */}
+                  <div className="min-w-0 flex-1 pb-2" style={{ containerType: 'inline-size' }}>
                     <span className="heading mb-1 block text-xs tracking-[.2em] text-[#CC66FF]">
                       {String(p.step).padStart(2, '0')}
                     </span>
-                    <h3 className="heading mb-2 text-xl leading-tight">{p.title}</h3>
+                    <h3 className="heading mb-2 leading-tight" style={{ fontSize: 'min(20px, 6.5cqw)' }}>{p.title}</h3>
                     <p className="text-[15px] leading-relaxed text-white/75">{p.description}</p>
                   </div>
                 </motion.div>

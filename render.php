@@ -441,7 +441,7 @@ else {
     if (isset($mapaIA[$path])) {
       $fq = $paginas[$mapaIA[$path]]['contenido']['faq'] ?? [];
       $ent = [];
-      for ($i = 1; $i <= 6; $i++) {
+      for ($i = 1; $i <= 8; $i++) {
         if (empty($fq["q{$i}"]) || empty($fq["r{$i}"])) continue;
         $ent[] = ['@type' => 'Question', 'name' => $fq["q{$i}"],
                   'acceptedAnswer' => ['@type' => 'Answer', 'text' => $fq["r{$i}"]]];
@@ -476,16 +476,24 @@ else {
         return $o;
       };
 
+      /** Los títulos de sección de la plantilla de servicio, que desde el
+          21-sep-2026 también usan las páginas de IA: las dos se ven igual y
+          se leen igual. */
+      $encabezado = function(string $k1, string $d1, string $k2, string $d2) use ($c): string {
+        $enc = $c('servicio-detalle')['encabezados'] ?? [];
+        $a = trim((string)($enc[$k1] ?? '')); $b = trim((string)($enc[$k2] ?? ''));
+        return trim(($a !== '' ? $a : $d1) . ' ' . ($b !== '' ? $b : $d2));
+      };
+
       /** Las preguntas frecuentes de una página de IA. */
-      $preguntas = function(array $d) {
+      $preguntas = function(array $d) use ($encabezado) {
         $f = $d['faq'] ?? [];
-        if (empty($f['q1'])) return '';
-        $o = '<h2>' . e(trim(($f['titulo_1'] ?? 'Preguntas') . ' ' . ($f['titulo_2'] ?? 'frecuentes'))) . '</h2>';
-        for ($i = 1; $i <= 6; $i++) {
-          if (empty($f["q{$i}"])) continue;
-          $o .= '<h3>' . e($f["q{$i}"]) . '</h3><p>' . e($f["r{$i}"] ?? '') . '</p>';
+        $o = '';
+        for ($i = 1; $i <= 8; $i++) {
+          if (empty($f["q{$i}"]) || empty($f["r{$i}"])) continue;
+          $o .= '<h3>' . e($f["q{$i}"]) . '</h3><p>' . e($f["r{$i}"]) . '</p>';
         }
-        return $o;
+        return $o === '' ? '' : '<h2>' . e($encabezado('faq_1', 'PREGUNTAS', 'faq_2', 'FRECUENTES')) . '</h2>' . $o;
       };
 
       /** Un bloque de título + texto, si tiene algo. */
@@ -553,43 +561,56 @@ else {
         $mapa = ['/servicios-ia/whatsapp' => 'servicios-ia-whatsapp', '/servicios-ia/ventas' => 'servicios-ia-ventas',
                  '/servicios-ia/marketing' => 'servicios-ia-marketing', '/servicios-ia/ecommerce' => 'servicios-ia-ecommerce'];
         $d = $c($mapa[$path] ?? '');
-        $ben = $d['beneficios'] ?? []; $inc = $d['incluye'] ?? [];
+        $por = $d['portada'] ?? []; $ctx = $d['contexto'] ?? [];
+        $inc = $d['incluye'] ?? []; $ben = $d['beneficios'] ?? [];
         $how = $d['como_funciona'] ?? []; $ide = $d['ideal_para'] ?? [];
-        $h .= $contexto($d);
-        if (!empty($ben['titulo_2'])) {
-          $h .= '<h2>' . e(trim(($ben['titulo_1'] ?? '') . ' ' . $ben['titulo_2'])) . '</h2><ul>';
+
+        /* El mismo orden que ve la persona, que es el de cualquier ficha de
+           servicio: el nombre, la definición, la bajada y luego las secciones.
+           La definición va antes que la bajada por lo mismo que en las fichas:
+           un motor de respuestas se queda con el primer párrafo, y el gancho
+           comercial no contesta «qué es». */
+        $nombre = trim((string)($por['etiqueta'] ?? ''));
+        $h = '<h1>' . e($nombre !== '' ? $nombre : explode(' | ', $title)[0]) . '</h1>';
+        if (trim((string)($ctx['definicion'] ?? '')) !== '') $h .= '<p>' . e($ctx['definicion']) . '</p>';
+        $bajada = trim((string)($por['bajada'] ?? ''));
+        $h .= '<p>' . e($bajada !== '' ? $bajada : $desc) . '</p>';
+
+        $lis = '';
+        for ($i = 1; $i <= 8; $i++) if (!empty($inc["f{$i}"])) $lis .= '<li>' . e($inc["f{$i}"]) . '</li>';
+        if ($lis !== '') $h .= '<h2>' . e($encabezado('inc_1', 'QUÉ', 'inc_2', 'INCLUYE')) . '</h2><ul>' . $lis . '</ul>';
+
+        if (($ben['visible'] ?? '1') !== '0') {
+          $lis = '';
           for ($i = 1; $i <= 6; $i++) {
             if (empty($ben["b{$i}_titulo"])) continue;
-            $h .= '<li><strong>' . e($ben["b{$i}_titulo"]) . '</strong>: ' . e($ben["b{$i}_texto"] ?? '') . '</li>';
+            $lis .= '<li><strong>' . e($ben["b{$i}_titulo"]) . '</strong>: ' . e($ben["b{$i}_texto"] ?? '') . '</li>';
           }
-          $h .= '</ul>';
+          if ($lis !== '') $h .= '<h2>' . e($encabezado('ben_1', 'LO QUE', 'ben_2', 'GANAS')) . '</h2><ul>' . $lis . '</ul>';
         }
-        if (!empty($inc['titulo_2'])) {
-          $h .= '<h2>' . e(trim(($inc['titulo_1'] ?? '') . ' ' . $inc['titulo_2'])) . '</h2><ul>';
-          for ($i = 1; $i <= 8; $i++) {
-            if (empty($inc["f{$i}"])) continue;
-            $h .= '<li>' . e($inc["f{$i}"]) . '</li>';
-          }
-          $h .= '</ul>';
-        }
-        if (!empty($how['titulo_2'])) {
-          $h .= '<h2>' . e(trim(($how['titulo_1'] ?? '') . ' ' . $how['titulo_2'])) . '</h2>';
-          if (!empty($how['bajada'])) $h .= '<p>' . e($how['bajada']) . '</p>';
-          $h .= '<ol>';
+
+        if (($how['visible'] ?? '1') !== '0') {
+          $lis = '';
           for ($i = 1; $i <= 4; $i++) {
             if (empty($how["p{$i}_titulo"])) continue;
-            $h .= '<li><strong>' . e($how["p{$i}_titulo"]) . '</strong>: ' . e($how["p{$i}_texto"] ?? '') . '</li>';
+            $lis .= '<li><strong>' . e($how["p{$i}_titulo"]) . '</strong>: ' . e($how["p{$i}_texto"] ?? '') . '</li>';
           }
-          $h .= '</ol>';
+          if ($lis !== '') $h .= '<h2>' . e($encabezado('proceso_1', 'NUESTRO', 'proceso_2', 'PROCESO')) . '</h2><ol>' . $lis . '</ol>';
         }
-        if (!empty($ide['titulo_2'])) {
-          $h .= '<h2>' . e(trim(($ide['titulo_1'] ?? '') . ' ' . $ide['titulo_2'])) . '</h2><ul>';
-          for ($i = 1; $i <= 8; $i++) {
-            if (empty($ide["i{$i}"])) continue;
-            $h .= '<li>' . e($ide["i{$i}"]) . '</li>';
-          }
-          $h .= '</ul>';
+
+        if (($ide['visible'] ?? '1') !== '0') {
+          $lis = '';
+          for ($i = 1; $i <= 8; $i++) if (!empty($ide["i{$i}"])) $lis .= '<li>' . e($ide["i{$i}"]) . '</li>';
+          if ($lis !== '') $h .= '<h2>' . e($encabezado('ideal_1', 'IDEAL', 'ideal_2', 'PARA')) . '</h2><ul>' . $lis . '</ul>';
         }
+
+        $fondo = '';
+        foreach (preg_split('~\n\s*\n~u', (string)($ctx['texto_largo'] ?? '')) as $parrafo) {
+          $parrafo = trim($parrafo);
+          if ($parrafo !== '') $fondo .= '<p>' . e($parrafo) . '</p>';
+        }
+        if ($fondo !== '') $h .= '<h2>' . e($encabezado('fondo_1', 'EL FONDO', 'fondo_2', 'DEL ASUNTO')) . '</h2>' . $fondo;
+
         $h .= $preguntas($d);
       }
 
@@ -688,30 +709,79 @@ if ($path === '/servicios/posicionamiento-en-ia') {
                  'description' => 'Diagnóstico de posicionamiento en IA sin costo'],
   ];
 
-  // Y esto es lo que lee quien no ejecuta JavaScript
-  $bodyBuilder = function() use ($gp, $gs, $gf, $gl, $g) {
-    $h  = '<h1>' . e(trim(($gp['titulo_1'] ?? 'Tus clientes ya no buscan.') . ' ' . ($gp['titulo_2'] ?? 'Preguntan.'))) . '</h1>';
+  // Y esto es lo que lee quien no ejecuta JavaScript. Mismo orden que la
+  // página, que desde el 21-sep-2026 es el de cualquier ficha de servicio.
+  $bodyBuilder = function() use ($gp, $gs, $gf, $gl, $g, $paginas) {
+    $vis = fn(array $sec) => ($sec['visible'] ?? '1') !== '0';
+    $enc = $paginas['servicio-detalle']['contenido']['encabezados'] ?? [];
+    $tit = function(string $k1, string $d1, string $k2, string $d2) use ($enc): string {
+      $a = trim((string)($enc[$k1] ?? '')); $b = trim((string)($enc[$k2] ?? ''));
+      return trim(($a !== '' ? $a : $d1) . ' ' . ($b !== '' ? $b : $d2));
+    };
+    /* El «Qué es». Mismo texto de respaldo que src/app/pages/GeoPage.tsx y que
+       el registro del panel. */
+    $defGeo = 'El posicionamiento en inteligencia artificial —GEO, por Generative Engine Optimization— es el trabajo de lograr que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen correctamente a tu negocio cuando alguien les pregunta por lo que vendes. Es el equivalente al SEO, pero para las respuestas de los asistentes en vez de la lista de resultados azules.';
+
+    $nombre = trim((string)($gp['etiqueta'] ?? ''));
+    $h  = '<h1>' . e($nombre !== '' ? $nombre : 'POSICIONAMIENTO GEO') . '</h1>';
+    $def = trim((string)($gp['definicion'] ?? ''));
+    $h .= '<p>' . e($def !== '' ? $def : $defGeo) . '</p>';
     $h .= '<p>' . e($gp['bajada'] ?? '') . '</p>';
 
     $mot = $g['motores'] ?? [];
-    $lista = [];
-    for ($i = 1; $i <= 6; $i++) if (!empty($mot['m' . $i])) $lista[] = $mot['m' . $i];
-    if ($lista) $h .= '<h2>' . e(trim(($mot['titulo_1'] ?? '') . ' ' . ($mot['titulo_2'] ?? ''))) . '</h2><ul><li>' . implode('</li><li>', array_map('e', $lista)) . '</li></ul>';
-
-    $h .= '<h2>' . e(trim(($gs['titulo_1'] ?? 'Qué') . ' ' . ($gs['titulo_2'] ?? 'hacemos'))) . '</h2><ul>';
-    for ($i = 1; $i <= 6; $i++) {
-      if (empty($gs['s' . $i . '_t'])) continue;
-      $h .= '<li><strong>' . e($gs['s' . $i . '_t']) . '</strong>: ' . e($gs['s' . $i . '_d'] ?? '') . '</li>';
-    }
-    $h .= '</ul>';
-
-    $h .= '<h2>Preguntas frecuentes</h2>';
-    for ($i = 1; $i <= 12; $i++) {
-      if (empty($gf['q' . $i])) continue;
-      $h .= '<h3>' . e($gf['q' . $i]) . '</h3><p>' . e($gf['r' . $i] ?? '') . '</p>';
+    if ($vis($mot)) {
+      $lista = [];
+      for ($i = 1; $i <= 6; $i++) if (!empty($mot['m' . $i])) $lista[] = $mot['m' . $i];
+      if ($lista) $h .= '<h2>' . e(trim(($mot['titulo_1'] ?? 'DÓNDE') . ' ' . ($mot['titulo_2'] ?? 'TE BUSCAMOS'))) . '</h2><ul><li>' . implode('</li><li>', array_map('e', $lista)) . '</li></ul>';
     }
 
-    if (!empty($gl['titulo'])) $h .= '<h2>' . e($gl['titulo']) . '</h2><p>' . e($gl['texto'] ?? '') . '</p>';
+    if ($vis($gs)) {
+      $lis = '';
+      for ($i = 1; $i <= 6; $i++) {
+        if (empty($gs['s' . $i . '_t'])) continue;
+        $lis .= '<li><strong>' . e($gs['s' . $i . '_t']) . '</strong>: ' . e($gs['s' . $i . '_d'] ?? '') . '</li>';
+      }
+      if ($lis !== '') $h .= '<h2>' . e($tit('inc_1', 'QUÉ', 'inc_2', 'INCLUYE')) . '</h2><ul>' . $lis . '</ul>';
+    }
+
+    $cmp = $g['comparacion'] ?? [];
+    if ($vis($cmp)) {
+      $sin = trim((string)($cmp['antes'] ?? '')) ?: 'Sin trabajo de GEO';
+      $lis = '';
+      for ($i = 1; $i <= 3; $i++) {
+        if (empty($cmp['d' . $i])) continue;
+        $lis .= '<li><strong>' . e($cmp['d' . $i]) . '</strong>'
+              . (!empty($cmp['a' . $i]) ? ' (' . e(mb_strtolower($sin, 'UTF-8')) . ': ' . e($cmp['a' . $i]) . ')' : '') . '</li>';
+      }
+      if ($lis !== '') $h .= '<h2>' . e($tit('ben_1', 'LO QUE', 'ben_2', 'GANAS')) . '</h2><ul>' . $lis . '</ul>';
+    }
+
+    $pas = $g['proceso'] ?? [];
+    if ($vis($pas)) {
+      $lis = '';
+      for ($i = 1; $i <= 4; $i++) {
+        if (empty($pas['p' . $i . '_t'])) continue;
+        $lis .= '<li><strong>' . e($pas['p' . $i . '_t']) . '</strong>: ' . e($pas['p' . $i . '_d'] ?? '') . '</li>';
+      }
+      if ($lis !== '') $h .= '<h2>' . e($tit('proceso_1', 'NUESTRO', 'proceso_2', 'PROCESO')) . '</h2><ol>' . $lis . '</ol>';
+    }
+
+    $fondo = '';
+    foreach ([$g['problema'] ?? [], $gl] as $sec) {
+      if (!$vis($sec) || (empty($sec['titulo']) && empty($sec['texto']))) continue;
+      if (!empty($sec['titulo'])) $fondo .= '<h3>' . e($sec['titulo']) . '</h3>';
+      if (!empty($sec['texto'])) $fondo .= '<p>' . e($sec['texto']) . '</p>';
+    }
+    if ($fondo !== '') $h .= '<h2>' . e($tit('fondo_1', 'EL FONDO', 'fondo_2', 'DEL ASUNTO')) . '</h2>' . $fondo;
+
+    if ($vis($gf)) {
+      $o = '';
+      for ($i = 1; $i <= 12; $i++) {
+        if (empty($gf['q' . $i]) || empty($gf['r' . $i])) continue;
+        $o .= '<h3>' . e($gf['q' . $i]) . '</h3><p>' . e($gf['r' . $i]) . '</p>';
+      }
+      if ($o !== '') $h .= '<h2>' . e($tit('faq_1', 'PREGUNTAS', 'faq_2', 'FRECUENTES')) . '</h2>' . $o;
+    }
     return $h;
   };
 }

@@ -1178,4 +1178,17 @@ export const DICCIONARIO: Record<string, string> = {
   'Perplexity': 'Perplexity',
   'Copilot': 'Copilot',
   'AI Overviews': 'AI Overviews',
+
+  /* ── páginas de IA con la plantilla de servicio (21-sep-2026) ──────── */
+  'El posicionamiento en inteligencia artificial —GEO, por Generative Engine Optimization— es el trabajo de lograr que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen correctamente a tu negocio cuando alguien les pregunta por lo que vendes. Es el equivalente al SEO, pero para las respuestas de los asistentes en vez de la lista de resultados azules.':
+    'Generative engine optimization (GEO) is the work of getting ChatGPT, Gemini, Perplexity and Google’s AI summaries to find, understand and correctly quote your business when somebody asks them about what you sell. It is the equivalent of SEO, but for the assistants’ answers instead of the list of blue links.',
+  /* las escenas del proceso */
+  'Prioridad clara': 'Clear priorities',
+  'Presupuesto que rinde': 'Budget that pays off',
+  'Abandonado': 'Abandoned',
+  'Te guardé tu carrito. ¿Te lo envío hoy?': 'I saved your cart. Want it shipped today?',
+  'Venta recuperada': 'Sale recovered',
+  '¿A quién me recomiendas en Aguascalientes?': 'Who do you recommend in Aguascalientes?',
+  'Tu negocio': 'Your business',
+  'Te recomiendan': 'You get recommended',
 };

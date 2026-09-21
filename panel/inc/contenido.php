@@ -737,7 +737,7 @@ function registro_paginas(): array {
         'posicionamiento-ia' => [
             'nombre'    => 'Posicionamiento en IA (GEO)',
             'ruta'      => '/servicios/posicionamiento-en-ia',
-            'ayuda'     => 'La página que vende el posicionamiento en inteligencias artificiales. Sus preguntas frecuentes son lo que más citan los asistentes, así que conviene mantenerlas claras y verificables.',
+            'ayuda'     => 'La página que vende el posicionamiento en inteligencias artificiales, con el diseño de cualquier servicio. Sus preguntas frecuentes son lo que más citan los asistentes, así que conviene mantenerlas claras y verificables.',
             'secciones' => [
 
                 'portada' => [
@@ -748,17 +748,15 @@ function registro_paginas(): array {
                            Lo que se queda es la ciudad y «(GEO)», que es término de búsqueda. */
                         'seo_titulo' => ['label' => 'Título para buscadores', 'tipo' => 'texto', 'def' => 'Posicionamiento en IA (GEO) en Aguascalientes'],
                         'seo_desc' => ['label' => 'Descripción para buscadores', 'tipo' => 'parrafo', 'def' => 'Logramos que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen bien a tu negocio. Diagnóstico gratuito en Aguascalientes.'],
-                        'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'POSICIONAMIENTO GEO'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'Tus clientes ya no buscan.'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'Preguntan.'],
+                        'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'POSICIONAMIENTO GEO'],
                         'bajada' => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Cuando alguien le pregunta a una inteligencia artificial por un servicio como el tuyo en Aguascalientes, la respuesta menciona a unos cuantos negocios. Nuestro trabajo es que estés en esa lista, con tus datos correctos y sin que te confundan con nadie.'],
                         'boton_1' => ['label' => 'Botón principal', 'tipo' => 'texto', 'def' => 'DIAGNÓSTICO GRATUITO'],
-                        'boton_2' => ['label' => 'Botón secundario', 'tipo' => 'texto', 'def' => 'CÓMO FUNCIONA'],
+                        'definicion' => ['label' => 'Qué es (la definición bajo los botones)', 'tipo' => 'parrafo', 'def' => 'El posicionamiento en inteligencia artificial —GEO, por Generative Engine Optimization— es el trabajo de lograr que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen correctamente a tu negocio cuando alguien les pregunta por lo que vendes. Es el equivalente al SEO, pero para las respuestas de los asistentes en vez de la lista de resultados azules.'],
                     ],
                 ],
 
                 'problema' => [
-                    'nombre' => 'Por qué ahora',
+                    'nombre' => 'El fondo del asunto · por qué ahora',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
                         'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'El buscador dejó de ser la primera parada'],
@@ -767,7 +765,7 @@ function registro_paginas(): array {
                 ],
 
                 'motores' => [
-                    'nombre' => 'Los seis asistentes',
+                    'nombre' => 'Los seis asistentes (bloque bajo la portada)',
                     'ayuda'  => 'Dónde se revisa la marca. Cambia los nombres si algún día conviene otra lista.',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
@@ -790,7 +788,7 @@ function registro_paginas(): array {
                 ],
 
                 'comparacion' => [
-                    'nombre' => 'Antes y después',
+                    'nombre' => 'Lo que ganas (antes y después)',
                     'ayuda'  => 'Las dos columnas que comparan cómo responde la IA.',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
@@ -800,16 +798,13 @@ function registro_paginas(): array {
                         'd1' => ['label' => 'Con Inédito · punto 1', 'tipo' => 'texto', 'def' => 'Te nombra con tu giro y tu ciudad, sin confundirte'],
                         'd2' => ['label' => 'Con Inédito · punto 2', 'tipo' => 'texto', 'def' => 'Usa los datos que tú publicas y que puede verificar'],
                         'd3' => ['label' => 'Con Inédito · punto 3', 'tipo' => 'texto', 'def' => 'Te incluye cuando alguien pregunta por tu servicio en tu zona'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'LO QUE CAMBIA'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'EN LA RESPUESTA'],
                         'antes' => ['label' => 'Encabezado de la columna izquierda', 'tipo' => 'texto', 'def' => 'SIN TRABAJO DE GEO'],
-                        'despues' => ['label' => 'Encabezado de la columna derecha', 'tipo' => 'texto', 'def' => 'CON INÉDITO'],
                         'nota' => ['label' => 'Nota al pie', 'tipo' => 'texto', 'def' => 'Ejemplos de lo que encontramos con más frecuencia. Lo tuyo lo vemos en el diagnóstico.'],
                     ],
                 ],
 
                 'servicio' => [
-                    'nombre' => 'Qué hacemos',
+                    'nombre' => 'Qué incluye',
                     'ayuda'  => 'Los seis frentes del servicio.',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
@@ -825,14 +820,11 @@ function registro_paginas(): array {
                         's5_d' => ['label' => 'Frente 5 · descripción', 'tipo' => 'parrafo', 'def' => 'Rastreamos de dónde salen los datos desactualizados que aparecen sobre ti y trabajamos en la fuente, que es el único lugar donde se arreglan de verdad.'],
                         's6_t' => ['label' => 'Frente 6 · título', 'tipo' => 'texto', 'def' => 'Medición mes con mes'],
                         's6_d' => ['label' => 'Frente 6 · descripción', 'tipo' => 'parrafo', 'def' => 'Un reporte que se entiende: en qué preguntas apareces, en cuáles no, qué cambió y qué sigue. Sin métricas inventadas.'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'HACEMOS'],
-                        'bajada' => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Seis frentes concretos. Todos se pueden revisar y medir.'],
                     ],
                 ],
 
                 'proceso' => [
-                    'nombre' => 'Cómo trabajamos',
+                    'nombre' => 'El proceso',
                     'ayuda'  => 'Los cuatro pasos.',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
@@ -844,22 +836,9 @@ function registro_paginas(): array {
                         'p3_d' => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Creamos el contenido que faltaba para responder esas preguntas mejor que nadie en tu zona.'],
                         'p4_t' => ['label' => 'Paso 4 · título', 'tipo' => 'texto', 'def' => 'Medimos'],
                         'p4_d' => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Volvemos a preguntar cada mes, comparamos contra el punto de partida y ajustamos lo que no movió.'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'TRABAJAMOS'],
                     ],
                 ],
 
-                'diagnostico' => [
-                    'nombre' => 'Diagnóstico gratuito',
-                    'ayuda'  => 'El bloque que pide el diagnóstico.',
-                    'campos' => [
-                        'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'etiqueta' => ['label' => 'Etiqueta pequeña', 'tipo' => 'texto', 'def' => 'SIN COSTO'],
-                        'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿Qué dicen las IAs de tu negocio hoy?'],
-                        'texto' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Le preguntamos por ti a los seis asistentes y te mandamos las respuestas tal cual salen, junto con lo que habría que corregir. Sin compromiso y sin letra chica: si con eso te arreglas solo, qué bueno.'],
-                        'boton' => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'PEDIR MI DIAGNÓSTICO'],
-                    ],
-                ],
 
                 'preguntas' => [
                     'nombre' => 'Preguntas frecuentes',
@@ -880,24 +859,16 @@ function registro_paginas(): array {
                         'r6' => ['label' => 'Pregunta 6 · respuesta', 'tipo' => 'parrafo', 'def' => 'Casi nunca. Buena parte del trabajo se hace sobre lo que ya tienes. Si tu sitio no se puede editar o los rastreadores no lo pueden leer, te lo decimos en el diagnóstico y lo tratamos aparte, sin meterlo en el mismo paquete.'],
                         'q7' => ['label' => 'Pregunta 7 · pregunta', 'tipo' => 'texto', 'def' => '¿Cuánto cuesta?'],
                         'r7' => ['label' => 'Pregunta 7 · respuesta', 'tipo' => 'parrafo', 'def' => 'Depende del tamaño de tu marca y de qué tan dispersa esté hoy tu información, así que se cotiza después del diagnóstico. El diagnóstico no tiene costo y no compromete a nada.'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
                     ],
                 ],
 
                 'local' => [
-                    'nombre' => 'Aguascalientes',
+                    'nombre' => 'El fondo del asunto · Aguascalientes',
                     'ayuda'  => 'El bloque que ancla el servicio a la ciudad.',
                     'campos' => [
                         'visible' => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
                         'titulo' => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'Posicionamiento GEO en Aguascalientes'],
                         'texto' => ['label' => 'Texto', 'tipo' => 'parrafo', 'def' => 'Somos una agencia de marketing digital con base en Aguascalientes, y trabajamos el posicionamiento en inteligencia artificial para negocios de la ciudad y del Bajío. Conocer el mercado local importa: cuando alguien pregunta por un servicio en Aguascalientes, las respuestas se arman con fuentes de aquí, y saber cuáles son es la mitad del trabajo.'],
-                        'enlace_1_url' => ['label' => 'Enlace 1 · destino', 'tipo' => 'enlace', 'def' => '/servicios'],
-                        'enlace_1' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Todos nuestros servicios'],
-                        'enlace_2_url' => ['label' => 'Enlace 2 · destino', 'tipo' => 'enlace', 'def' => '/servicios-ia'],
-                        'enlace_2' => ['label' => 'Enlace 2 · texto', 'tipo' => 'texto', 'def' => 'Soluciones de IA'],
-                        'enlace_3_url' => ['label' => 'Enlace 3 · destino', 'tipo' => 'enlace', 'def' => '/contacto'],
-                        'enlace_3' => ['label' => 'Enlace 3 · texto', 'tipo' => 'texto', 'def' => 'Hablar con nosotros'],
                     ],
                 ],
 
@@ -923,6 +894,8 @@ function registro_paginas(): array {
                     'nombre' => 'Títulos de las secciones',
                     'campos' => [
                         'volver'        => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a servicios'],
+                        'volver_ia'     => ['label' => 'Enlace de regreso en las páginas de IA', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
+                        'categoria_ia'  => ['label' => 'Categoría en las páginas de IA', 'tipo' => 'texto', 'def' => 'IA'],
                         'no_encontrado' => ['label' => 'Aviso si el servicio no existe', 'tipo' => 'texto', 'def' => 'Servicio no encontrado'],
                         'inc_1'         => ['label' => 'Qué incluye · primera palabra', 'tipo' => 'texto', 'def' => 'QUÉ'],
                         'inc_2'         => ['label' => 'Qué incluye · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
@@ -1098,13 +1071,12 @@ Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del pa
         'servicios-ia-whatsapp' => [
             'nombre' => 'IA para WhatsApp',
             'ruta'   => '/servicios-ia/whatsapp',
-            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'ayuda'  => 'Se ve igual que cualquier página de servicio: portada, qué incluye, lo que ganas, el proceso, ideal para, el fondo del asunto, preguntas y cierre. Los títulos de las secciones son los de la plantilla de servicio.',
             'secciones' => [
                 'portada' => [
                     'nombre' => 'Portada',
                     'campos' => [
-                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA PARA WHATSAPP'],
-                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'AGENTE INTELIGENTE QUE VENDE 24/7'],
+                        'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA PARA WHATSAPP'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Tu mejor vendedor, siempre disponible. Atiende, califica y da seguimiento automático por WhatsApp.'],
                     ],
                 ],
@@ -1112,8 +1084,6 @@ Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del pa
                 'incluye' => [
                     'nombre' => 'Qué incluye',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
                         'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Conversaciones naturales con IA entrenada en tu negocio'],
                         'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Integración con CRM, calendarios y sistemas de pago'],
                         'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Calificación automática de leads con scoring inteligente'],
@@ -1124,11 +1094,9 @@ Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del pa
                 ],
 
                 'beneficios' => [
-                    'nombre' => 'Beneficios principales',
+                    'nombre' => 'Lo que ganas',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
                         'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Respuestas Inmediatas'],
                         'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Atiende a tus clientes las 24 horas, los 7 días de la semana, sin perder ninguna oportunidad.'],
                         'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Calificación de Prospectos'],
@@ -1141,23 +1109,16 @@ Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del pa
                 ],
 
                 'como_funciona' => [
-                    'nombre' => 'Cómo funciona',
+                    'nombre' => 'El proceso',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
-                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Configuración'],
-                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos tu número de WhatsApp Business y definimos qué puede resolver el agente y qué no.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Entrenamos la IA con información de tu negocio y flujos de conversación.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Integración'],
-                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Lo enlazamos con lo que ya usas: catálogo, calendario, CRM o la hoja donde llevas los pedidos.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos el agente a tu WhatsApp Business en minutos.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
-                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se entrena con tus precios, tus políticas y tus preguntas reales, y empieza a contestar solo.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'El agente empieza a atender, calificar y dar seguimiento automáticamente.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
-                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Cada semana se revisan las conversaciones que se le complicaron y se le enseña a resolverlas.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Mejora continua basada en datos reales y comportamiento de usuarios.'],
                     ],
                 ],
@@ -1166,8 +1127,6 @@ Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del pa
                     'nombre' => 'Ideal para',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
                         'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Clínicas y consultorios médicos que necesitan agendar citas 24/7'],
                         'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'Inmobiliarias que califican prospectos y coordinan visitas'],
                         'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'E-commerce que procesa pedidos y resuelve dudas de productos'],
@@ -1182,7 +1141,7 @@ Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del pa
                     'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
                     'campos' => [
                         'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'Un agente de IA en WhatsApp es un programa que atiende el chat de tu negocio con lenguaje normal: lee lo que te escriben, responde con la información real de tu empresa —precios, horarios, disponibilidad— y pasa la conversación a una persona cuando hace falta. Vive en tu número de siempre, así que el cliente no nota ningún cambio.'],
-                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'En México, WhatsApp no es un canal de atención más: es el canal. La gente no llama, no manda correo y muchas veces ni siquiera entra al sitio — busca el número y escribe. Ahí es donde se decide la venta, y ahí es donde se pierde: alguien pregunta a las diez de la noche, un domingo, o justo cuando el equipo está atendiendo a otro cliente.
+                        'texto_largo' => ['label' => 'Texto largo (va plegado en «El fondo del asunto»)', 'tipo' => 'area', 'def' => 'En México, WhatsApp no es un canal de atención más: es el canal. La gente no llama, no manda correo y muchas veces ni siquiera entra al sitio — busca el número y escribe. Ahí es donde se decide la venta, y ahí es donde se pierde: alguien pregunta a las diez de la noche, un domingo, o justo cuando el equipo está atendiendo a otro cliente.
 
 Lo que más sorprende al medirlo es que el problema casi nunca es el precio ni el producto. Es el tiempo. Quien contesta primero se lleva la venta, y contestar «primero» significa minutos, no horas. Un negocio que responde al día siguiente está compitiendo contra dos que ya cotizaron.
 
@@ -1194,24 +1153,11 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                     ],
                 ],
 
-                'imagenes' => [
-                    'nombre' => 'Imágenes de la página',
-                    'ayuda'  => 'Las fotos que acompañan cada sección.',
-                    'campos' => [
-                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1659355893994-bddb1ba8e3a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxlcyUyMHRlYW0lMjBzbWFydHBob25lJTIwYnVzaW5lc3N8ZW58MXx8fHwxNzY3NzMxMjQwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1611746872915-64382b5c76da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmclMjBkaXNjdXNzaW9ufGVufDF8fHx8MTc2NzYxNjIzN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'support' => ['label' => 'Imagen de support', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'business' => ['label' => 'Imagen de business', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                    ],
-                ],
 
                 'faq' => [
                     'nombre' => 'Preguntas frecuentes',
                     'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
                         'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿Mis clientes se van a dar cuenta de que hablan con una IA?'],
                         'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'Se lo decimos desde el primer mensaje, y es lo correcto: engañar a alguien sobre eso se nota y molesta. Lo que sí notan es que les contestan al instante y con información correcta, que es lo que buscaban. La molestia con los bots viene de los que no resuelven nada, no de saber que es un bot.'],
                         'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Qué pasa si el agente no sabe responder?'],
@@ -1232,26 +1178,18 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                     ],
                 ],
 
-                'navegacion' => [
-                    'nombre' => 'Navegación y sellos',
-                    'campos' => [
-                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
-                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Implementación rápida'],
-                    ],
-                ],
             ],
         ],
 
         'servicios-ia-ventas' => [
             'nombre' => 'IA de Ventas',
             'ruta'   => '/servicios-ia/ventas',
-            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'ayuda'  => 'Se ve igual que cualquier página de servicio: portada, qué incluye, lo que ganas, el proceso, ideal para, el fondo del asunto, preguntas y cierre. Los títulos de las secciones son los de la plantilla de servicio.',
             'secciones' => [
                 'portada' => [
                     'nombre' => 'Portada',
                     'campos' => [
-                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA DE VENTAS'],
-                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'VENDE MÁS CON MENOS ESFUERZO'],
+                        'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA DE VENTAS'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Sistema de IA que automatiza prospección, califica leads y optimiza cada etapa de tu proceso comercial.'],
                     ],
                 ],
@@ -1259,8 +1197,6 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                 'incluye' => [
                     'nombre' => 'Qué incluye',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
                         'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Enriquecimiento automático de datos de prospectos'],
                         'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Integración con LinkedIn, CRM y bases de datos comerciales'],
                         'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Análisis predictivo de comportamiento de compra'],
@@ -1271,11 +1207,9 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                 ],
 
                 'beneficios' => [
-                    'nombre' => 'Beneficios principales',
+                    'nombre' => 'Lo que ganas',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
                         'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Prospección Inteligente'],
                         'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica y prioriza automáticamente leads con mayor probabilidad de conversión.'],
                         'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Lead Scoring Automático'],
@@ -1288,23 +1222,16 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                 ],
 
                 'como_funciona' => [
-                    'nombre' => 'Cómo funciona',
+                    'nombre' => 'El proceso',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
-                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Análisis'],
-                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Revisamos tu proceso de venta actual y definimos qué señales indican que un prospecto está listo.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA analiza tu histórico de ventas y perfil de cliente ideal.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Prospección'],
-                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos el CRM, el sitio y los canales por donde te contactan, para que todo caiga en un solo lugar.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Busca y califica prospectos automáticamente en múltiples fuentes.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Contacto'],
-                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se ordena la lista por probabilidad de cierre y se preparan los primeros contactos y los recordatorios.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Ejecuta secuencias personalizadas de email, LinkedIn y llamadas.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
-                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Con los cierres reales de cada mes el sistema aprende qué prospecto sí valía y ajusta el criterio.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Aprende de cada interacción para mejorar continuamente los resultados.'],
                     ],
                 ],
@@ -1313,8 +1240,6 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                     'nombre' => 'Ideal para',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
                         'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Equipos de ventas B2B que necesitan calificar leads rápidamente'],
                         'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'Empresas SaaS con ciclos de venta complejos'],
                         'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'Consultorías y agencias que prospectan empresas'],
@@ -1329,7 +1254,7 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                     'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
                     'campos' => [
                         'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'La IA de ventas es el uso de inteligencia artificial para que un equipo comercial deje de gastar su tiempo en prospectos que nunca iban a comprar. Ordena la lista por probabilidad real, escribe el primer contacto con el dato de cada empresa y sostiene el seguimiento que normalmente se abandona al tercer intento.'],
-                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'En casi todos los equipos comerciales pasa lo mismo, y rara vez se dice en voz alta: la mayor parte del tiempo del vendedor no se va vendiendo. Se va buscando datos, escribiendo correos que nadie abre, llenando el CRM y persiguiendo prospectos que jamás iban a comprar. La parte que de verdad genera ingresos —hablar con alguien que sí tiene el problema, el presupuesto y la urgencia— ocupa una fracción de la semana.
+                        'texto_largo' => ['label' => 'Texto largo (va plegado en «El fondo del asunto»)', 'tipo' => 'area', 'def' => 'En casi todos los equipos comerciales pasa lo mismo, y rara vez se dice en voz alta: la mayor parte del tiempo del vendedor no se va vendiendo. Se va buscando datos, escribiendo correos que nadie abre, llenando el CRM y persiguiendo prospectos que jamás iban a comprar. La parte que de verdad genera ingresos —hablar con alguien que sí tiene el problema, el presupuesto y la urgencia— ocupa una fracción de la semana.
 
 El primer frente es a quién llamar. Un vendedor con doscientos contactos y sin criterio los atiende por orden de llegada, que es el peor orden posible. Con los datos que ya tienes —de dónde llegó, qué páginas vio, cuánto tardó en contestar, qué tan grande es la empresa— se puede ordenar esa lista por probabilidad real de cierre. El equipo empieza por arriba y la misma semana rinde distinto.
 
@@ -1341,24 +1266,11 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                     ],
                 ],
 
-                'imagenes' => [
-                    'nombre' => 'Imágenes de la página',
-                    'ayuda'  => 'Las fotos que acompañan cada sección.',
-                    'campos' => [
-                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1545535408-2b4d520cbd88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwc2FsZXN8ZW58MXx8fHwxNzY3NzI4ODU1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1759752394755-1241472b589d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBhbmFseXRpY3MlMjBkYXNoYm9hcmR8ZW58MXx8fHwxNzY3Njc3NzA2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'collaboration' => ['label' => 'Imagen de collaboration', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1496180470114-6ef490f3ff22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMG1lZXRpbmd8ZW58MXx8fHwxNzY3NjI2NDE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'growth' => ['label' => 'Imagen de growth', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                    ],
-                ],
 
                 'faq' => [
                     'nombre' => 'Preguntas frecuentes',
                     'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
                         'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿Esto reemplaza a mi equipo de ventas?'],
                         'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'No, y quien lo prometa está exagerando. La venta la cierra una persona, sobre todo con ticket alto. Lo que se automatiza es lo que rodea a la venta: buscar datos, redactar el primer contacto, recordar el seguimiento, llenar el CRM. Un vendedor gasta ahí buena parte de su semana.'],
                         'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Necesito tener un CRM antes de empezar?'],
@@ -1379,26 +1291,18 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                     ],
                 ],
 
-                'navegacion' => [
-                    'nombre' => 'Navegación y sellos',
-                    'campos' => [
-                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
-                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Sistema probado'],
-                    ],
-                ],
             ],
         ],
 
         'servicios-ia-marketing' => [
             'nombre' => 'IA para Marketing',
             'ruta'   => '/servicios-ia/marketing',
-            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'ayuda'  => 'Se ve igual que cualquier página de servicio: portada, qué incluye, lo que ganas, el proceso, ideal para, el fondo del asunto, preguntas y cierre. Los títulos de las secciones son los de la plantilla de servicio.',
             'secciones' => [
                 'portada' => [
                     'nombre' => 'Portada',
                     'campos' => [
-                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA PARA MARKETING DIGITAL'],
-                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'MARKETING QUE PIENSA POR TI'],
+                        'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA PARA MARKETING DIGITAL'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Automatiza contenido, optimiza campañas y multiplica resultados con inteligencia artificial.'],
                     ],
                 ],
@@ -1406,8 +1310,6 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                 'incluye' => [
                     'nombre' => 'Qué incluye',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
                         'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Generación de contenido para redes sociales con IA'],
                         'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Optimización automática de campañas de Google y Meta Ads'],
                         'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'A/B testing inteligente de creatividades y copy'],
@@ -1418,11 +1320,9 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                 ],
 
                 'beneficios' => [
-                    'nombre' => 'Beneficios principales',
+                    'nombre' => 'Lo que ganas',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
                         'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Análisis Predictivo'],
                         'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica qué campañas funcionarán antes de gastar presupuesto. Decisiones basadas en datos.'],
                         'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Automatización Total'],
@@ -1435,23 +1335,16 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                 ],
 
                 'como_funciona' => [
-                    'nombre' => 'Cómo funciona',
+                    'nombre' => 'El proceso',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
-                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Conexión'],
-                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Revisamos qué se está midiendo hoy y qué cuenta como resultado, que casi nunca es lo mismo.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Integramos tus cuentas de ads, redes sociales y analytics.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Análisis'],
-                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos las plataformas de campañas, la analítica y el sitio en un solo tablero.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA estudia tu histórico y performance actual.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
-                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se generan variantes de anuncio, se reparte el presupuesto y saltan alertas cuando algo cae.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Genera contenido, optimiza campañas y segmenta audiencias.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Mejora Continua'],
-                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Cada mes se revisa qué trajo clientes de verdad y se mueve el dinero hacia ahí.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Aprende de resultados y ajusta estrategia automáticamente.'],
                     ],
                 ],
@@ -1460,8 +1353,6 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                     'nombre' => 'Ideal para',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
                         'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Agencias de marketing que manejan múltiples clientes simultáneamente'],
                         'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'E-commerce con presupuesto publicitario mensual mayor a $20,000 MXN'],
                         'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'Empresas SaaS que necesitan generación constante de leads'],
@@ -1476,7 +1367,7 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                     'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
                     'campos' => [
                         'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'La IA aplicada a marketing es usar inteligencia artificial para decidir dónde poner el presupuesto, producir el contenido que hace falta y detectar lo que no está funcionando antes de que se gaste el mes. No es publicar más rápido: es dejar de gastar en lo que no devuelve nada.'],
-                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'La mayoría de las áreas de marketing no tiene un problema de ideas: tiene un problema de evidencia. Se publica, se pauta y se reporta alcance, pero nadie puede decir con certeza qué campaña trajo clientes y cuál solo gastó. Cuando llega el momento de recortar, se recorta por intuición o por lo que menos defienda alguien en la junta.
+                        'texto_largo' => ['label' => 'Texto largo (va plegado en «El fondo del asunto»)', 'tipo' => 'area', 'def' => 'La mayoría de las áreas de marketing no tiene un problema de ideas: tiene un problema de evidencia. Se publica, se pauta y se reporta alcance, pero nadie puede decir con certeza qué campaña trajo clientes y cuál solo gastó. Cuando llega el momento de recortar, se recorta por intuición o por lo que menos defienda alguien en la junta.
 
 El primer uso serio de la IA aquí es de lectura, no de creación. Una cuenta de campañas genera más datos de los que un humano alcanza a revisar cada semana: combinaciones de anuncio, público, horario, dispositivo y ubicación. Un sistema los recorre completos y encuentra los patrones que se pierden a ojo — que el anuncio que peor rinde en general es el mejor los fines de semana, o que un público chico y aburrido está trayendo la mitad de los clientes reales.
 
@@ -1488,24 +1379,11 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                     ],
                 ],
 
-                'imagenes' => [
-                    'nombre' => 'Imágenes de la página',
-                    'ayuda'  => 'Las fotos que acompañan cada sección.',
-                    'campos' => [
-                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1495055154266-57bbdeada43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc2NTEwNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1767355272538-e7177d16f979?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwc2NyZWVuJTIwYXV0b21hdGlvbnxlbnwxfHx8fDE3Njc3Mjk0MjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'analytics' => ['label' => 'Imagen de analytics', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlY2hub2xvZ3klMjBkYXRhfGVufDF8fHx8MTc2NzcyODg1N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'team' => ['label' => 'Imagen de team', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1739298061707-cefee19941b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMG9mZmljZXxlbnwxfHx8fDE3Njc2Nzg4ODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                    ],
-                ],
 
                 'faq' => [
                     'nombre' => 'Preguntas frecuentes',
                     'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
                         'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿La IA va a escribir todo mi contenido?'],
                         'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'Puede, y no lo recomendamos. El contenido escrito completo por una IA suena a contenido escrito por una IA, y la gente lo distingue cada vez mejor. Sirve muy bien para producir variantes de un mensaje que ya decidiste, para adaptar un texto a cada canal y para salir del renglón en blanco.'],
                         'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Sirve si mi presupuesto de publicidad es chico?'],
@@ -1526,26 +1404,18 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                     ],
                 ],
 
-                'navegacion' => [
-                    'nombre' => 'Navegación y sellos',
-                    'campos' => [
-                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
-                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Integración completa'],
-                    ],
-                ],
             ],
         ],
 
         'servicios-ia-ecommerce' => [
             'nombre' => 'IA para E-commerce',
             'ruta'   => '/servicios-ia/ecommerce',
-            'ayuda'  => 'El encabezado de esta página de servicio de IA.',
+            'ayuda'  => 'Se ve igual que cualquier página de servicio: portada, qué incluye, lo que ganas, el proceso, ideal para, el fondo del asunto, preguntas y cierre. Los títulos de las secciones son los de la plantilla de servicio.',
             'secciones' => [
                 'portada' => [
                     'nombre' => 'Portada',
                     'campos' => [
-                        'etiqueta' => ['label' => 'Etiqueta pequeña de arriba', 'tipo' => 'texto', 'def' => 'IA PARA E-COMMERCE'],
-                        'titulo'   => ['label' => 'Título principal', 'tipo' => 'texto', 'def' => 'CONVIERTE MÁS VISITAS EN VENTAS'],
+                        'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA PARA E-COMMERCE'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Asistente inteligente dentro de tu tienda que recupera carritos, recomienda productos y atiende 24/7.'],
                     ],
                 ],
@@ -1553,8 +1423,6 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                 'incluye' => [
                     'nombre' => 'Qué incluye',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'QUÉ'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
                         'f1' => ['label' => 'Punto 1', 'tipo' => 'texto', 'def' => 'Chat inteligente que guía desde duda hasta compra'],
                         'f2' => ['label' => 'Punto 2', 'tipo' => 'texto', 'def' => 'Upsell y cross-sell automático en momento ideal'],
                         'f3' => ['label' => 'Punto 3', 'tipo' => 'texto', 'def' => 'Personalización 1:1 basada en comportamiento'],
@@ -1565,11 +1433,9 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                 ],
 
                 'beneficios' => [
-                    'nombre' => 'Beneficios principales',
+                    'nombre' => 'Lo que ganas',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'BENEFICIOS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PRINCIPALES'],
                         'b1_titulo' => ['label' => 'Beneficio 1 · título', 'tipo' => 'texto', 'def' => 'Recuperación de Carrito'],
                         'b1_texto'  => ['label' => 'Beneficio 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Identifica compradores que abandonaron y los contacta automáticamente con ofertas personalizadas.'],
                         'b2_titulo' => ['label' => 'Beneficio 2 · título', 'tipo' => 'texto', 'def' => 'Recomendaciones Inteligentes'],
@@ -1582,23 +1448,16 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                 ],
 
                 'como_funciona' => [
-                    'nombre' => 'Cómo funciona',
+                    'nombre' => 'El proceso',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'CÓMO'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FUNCIONA'],
-                        'bajada'   => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Implementación simple en 4 pasos'],
                         'p1_titulo' => ['label' => 'Paso 1 · nombre', 'tipo' => 'texto', 'def' => 'Instalación'],
-                        'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Revisamos la tienda con los números en la mano: dónde entra la gente y en qué paso se cae.'],
                         'p1_texto'  => ['label' => 'Paso 1 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos la IA a tu tienda en minutos, sin código.'],
                         'p2_titulo' => ['label' => 'Paso 2 · nombre', 'tipo' => 'texto', 'def' => 'Entrenamiento'],
-                        'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'Conectamos catálogo, inventario y paquetería, para que las respuestas salgan del dato real.'],
                         'p2_texto'  => ['label' => 'Paso 2 · descripción', 'tipo' => 'parrafo', 'def' => 'La IA aprende tu catálogo, políticas y tono de voz.'],
                         'p3_titulo' => ['label' => 'Paso 3 · nombre', 'tipo' => 'texto', 'def' => 'Automatización'],
-                        'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Se activan búsqueda inteligente, recomendaciones, atención en el chat y recuperación de carritos.'],
                         'p3_texto'  => ['label' => 'Paso 3 · descripción', 'tipo' => 'parrafo', 'def' => 'Empieza a asistir, recomendar y recuperar carritos.'],
                         'p4_titulo' => ['label' => 'Paso 4 · nombre', 'tipo' => 'texto', 'def' => 'Optimización'],
-                        'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Se mide qué recomendación vende y qué mensaje recupera, y se ajusta con las ventas del mes.'],
                         'p4_texto'  => ['label' => 'Paso 4 · descripción', 'tipo' => 'parrafo', 'def' => 'Mejora continua basada en conversiones reales.'],
                     ],
                 ],
@@ -1607,8 +1466,6 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                     'nombre' => 'Ideal para',
                     'campos' => [
                         'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'IDEAL'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'PARA'],
                         'i1' => ['label' => 'Caso 1', 'tipo' => 'texto', 'def' => 'Tiendas online con más de 100 visitas diarias que necesitan vender más'],
                         'i2' => ['label' => 'Caso 2', 'tipo' => 'texto', 'def' => 'Marcas propias (DTC) enfocadas en reducir costo de adquisición'],
                         'i3' => ['label' => 'Caso 3', 'tipo' => 'texto', 'def' => 'Shopify Stores con instalación en minutos sin código'],
@@ -1623,7 +1480,7 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                     'ayuda'  => 'El texto que explica el servicio de verdad. De aquí salen las frases que cita un asistente de IA, y sin esto la página se queda demasiado corta para que Google se moleste en indexarla.',
                     'campos' => [
                         'definicion'  => ['label' => 'Definición', 'tipo' => 'parrafo', 'def' => 'La IA para e-commerce es el conjunto de sistemas que trabajan sobre las visitas que tu tienda ya recibe: recomiendan el producto correcto, responden las dudas que frenan la compra y recuperan los carritos abandonados. No traen más gente — hacen que compre más de la que ya está entrando.'],
-                        'texto_largo' => ['label' => 'Texto largo', 'tipo' => 'area', 'def' => 'En una tienda en línea la cuenta que casi nadie mira es esta: de cada cien personas que entran, entre una y tres compran. Todo el esfuerzo suele irse en traer más gente, cuando el margen más barato está en las noventa y siete que ya llegaron y se fueron.
+                        'texto_largo' => ['label' => 'Texto largo (va plegado en «El fondo del asunto»)', 'tipo' => 'area', 'def' => 'En una tienda en línea la cuenta que casi nadie mira es esta: de cada cien personas que entran, entre una y tres compran. Todo el esfuerzo suele irse en traer más gente, cuando el margen más barato está en las noventa y siete que ya llegaron y se fueron.
 
 El primer frente es la búsqueda dentro de la tienda, que es donde se pierde la venta más fácil de todas. Quien usa el buscador ya decidió comprar y solo quiere encontrar. Un buscador que exige la palabra exacta —que no entiende «tenis para correr» si el producto se llama «calzado deportivo»— devuelve cero resultados y esa persona se va. Un buscador con IA entiende la intención, tolera las faltas de ortografía y encuentra lo que había.
 
@@ -1635,24 +1492,11 @@ Y el cuarto es la recomendación. No la de «también te puede interesar» puest
                     ],
                 ],
 
-                'imagenes' => [
-                    'nombre' => 'Imágenes de la página',
-                    'ayuda'  => 'Las fotos que acompañan cada sección.',
-                    'campos' => [
-                        'hero' => ['label' => 'Imagen de hero', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1658297063569-162817482fb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBvbmxpbmUlMjBzaG9wcGluZ3xlbnwxfHx8fDE3Njc3MjEzNTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'features' => ['label' => 'Imagen de features', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1648544365218-188e3d07dcac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaG9wcGluZyUyMGJhZ3MlMjByZXRhaWx8ZW58MXx8fHwxNzY3Njc2NDc0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'support' => ['label' => 'Imagen de support', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1712159018726-4564d92f3ec2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHNlcnZpY2UlMjBzdXBwb3J0fGVufDF8fHx8MTc2NzYxNjI2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'growth' => ['label' => 'Imagen de growth', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1630344745908-ed5ffd73199a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGdyb3d0aCUyMHN1Y2Nlc3N8ZW58MXx8fHwxNzY3NjU2OTk5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                        'cta' => ['label' => 'Imagen de cta', 'tipo' => 'imagen', 'def' => 'https://images.unsplash.com/photo-1603219950587-b4f3f7ee87e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc2NzcwOTAzOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'],
-                    ],
-                ],
 
                 'faq' => [
                     'nombre' => 'Preguntas frecuentes',
                     'ayuda'  => 'Estas preguntas se publican también como datos estructurados, así que Google y los asistentes de IA pueden citarlas directas. Conviene que respondan de verdad, no que vendan.',
                     'campos' => [
-                        'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'PREGUNTAS'],
-                        'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'FRECUENTES'],
                         'q1' => ['label' => 'Pregunta 1', 'tipo' => 'texto', 'def' => '¿Funciona con mi plataforma actual?'],
                         'r1' => ['label' => 'Respuesta 1', 'tipo' => 'parrafo', 'def' => 'Con las más usadas —Shopify, WooCommerce, Tiendanube, Magento— la conexión es directa. Con desarrollos a la medida depende de si la tienda permite consultar catálogo e inventario desde fuera; casi siempre se puede, y lo revisamos antes de proponer nada.'],
                         'q2' => ['label' => 'Pregunta 2', 'tipo' => 'texto', 'def' => '¿Cuánto puede subir la conversión?'],
@@ -1673,13 +1517,6 @@ Y el cuarto es la recomendación. No la de «también te puede interesar» puest
                     ],
                 ],
 
-                'navegacion' => [
-                    'nombre' => 'Navegación y sellos',
-                    'campos' => [
-                        'volver' => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
-                        'sello'  => ['label' => 'Sello sobre la foto del proceso', 'tipo' => 'texto', 'def' => 'Instalación rápida'],
-                    ],
-                ],
             ],
         ],
 

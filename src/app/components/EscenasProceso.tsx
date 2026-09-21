@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import {
   Check, MapPin, Star, TrendingUp, BadgeCheck, Trophy, ScanLine,
-  LayoutDashboard, Megaphone, Route, Users,
+  LayoutDashboard, Megaphone, Route, Users, ShoppingCart,
 } from 'lucide-react';
 import { tr } from '../idioma';
 
@@ -27,6 +27,11 @@ import { tr } from '../idioma';
  *   perfil     linkedin-de-empresa          el perfil se llena y publica
  *   web        diseno-y-desarrollo-web      la pagina se construye (respaldo)
  *   espectac.  anuncios-espectaculares      la estructura se levanta y se mide
+ *   chat       servicios-ia-whatsapp        la misma conversacion que cierra venta
+ *   prospectos servicios-ia-ventas          la lista se ordena por probabilidad
+ *   presupuesto servicios-ia-marketing      el dinero se va a lo que rinde
+ *   carrito    servicios-ia-ecommerce       el carrito abandonado que vuelve
+ *   respuesta  posicionamiento-en-ia        la respuesta de la IA te nombra
  *
  * Todas comparten el mismo casco y el mismo contrato: `activo` va de 0 a 3 y
  * cada pieza entra cuando su paso llega. Asi el ritmo es identico entre
@@ -895,6 +900,247 @@ function EscenaWeb({ activo }: { activo: number }) {
 }
 
 /* ================================================================== */
+/* Las páginas de IA y la de posicionamiento                           */
+/* ================================================================== */
+
+/*
+ * Estas cuatro pasaban por el respaldo —una página web armándose— porque su
+ * slug no estaba en el mapa: la IA de ventas enseñaba un sitio construyéndose.
+ * Cuentan lo mismo que las escenas grandes que tenían esas páginas, pero con
+ * el contrato de aquí: cada pieza entra con su paso.
+ */
+
+const PROSPECTOS_PROCESO = [
+  { pts: 34, ancho: '62%' },
+  { pts: 81, ancho: '46%' },
+  { pts: 57, ancho: '70%' },
+  { pts: 92, ancho: '54%' },
+];
+
+/** La lista de prospectos se ordena por probabilidad de cierre. */
+function EscenaProspectos({ activo }: { activo: number }) {
+  const ordenados = activo >= 2;
+  const rango = PROSPECTOS_PROCESO.map((_, i) => i).sort(
+    (a, b) => PROSPECTOS_PROCESO[b].pts - PROSPECTOS_PROCESO[a].pts,
+  );
+  return (
+    <>
+      <div className="mb-3 font-mono text-[9.5px] uppercase tracking-[.16em] text-white/40">
+        {tr(ordenados ? 'Por probabilidad de cierre' : 'Por orden de llegada')}
+      </div>
+      <div className="flex flex-col gap-2">
+        {PROSPECTOS_PROCESO.map((p, i) => {
+          const pos = ordenados ? rango.indexOf(i) : i;
+          const primero = ordenados && pos === 0;
+          return (
+            /* El salto de lugar sale de cambiar el `order` del flex; `layout`
+               mide antes y después y anima el cambio. */
+            <motion.div
+              key={i}
+              layout
+              transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+              style={{ order: pos }}
+            >
+              <motion.div
+                {...pieza(activo, 0, i * 0.06)}
+                className={`rounded-xl border px-3 py-2 transition-colors duration-500 ${
+                  primero ? 'border-[#CC66FF]/45 bg-[#7700CE]/20' : 'border-white/10 bg-white/[.04]'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="h-1.5 rounded-full bg-white/30" style={{ width: p.ancho }} />
+                  <motion.span
+                    {...pieza(activo, 1, i * 0.05)}
+                    className={`font-mono text-[10px] tabular-nums ${primero ? 'text-[#CC66FF]' : 'text-white/40'}`}
+                  >
+                    {p.pts}
+                  </motion.span>
+                </div>
+                <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/[.07]">
+                  <motion.div
+                    className="h-full rounded-full"
+                    style={{ background: primero ? '#CC66FF' : 'rgba(255,255,255,.28)' }}
+                    initial={{ width: '0%' }}
+                    animate={{ width: activo >= 1 ? `${p.pts}%` : '0%' }}
+                    transition={{ duration: 0.6, delay: i * 0.06, ease: suave }}
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })}
+      </div>
+      <Distintivo activo={activo} texto="Prioridad clara" Icono={Trophy} />
+    </>
+  );
+}
+
+const CAMPANAS_PROCESO = [
+  { antes: 33, despues: 52, rinde: true },
+  { antes: 34, despues: 14, rinde: false },
+  { antes: 33, despues: 34, rinde: true },
+];
+
+/** El presupuesto se va de la campaña que no rinde a las que sí. */
+function EscenaPresupuesto({ activo }: { activo: number }) {
+  const movido = activo >= 2;
+  return (
+    <>
+      <div className="mb-5 flex items-center justify-between">
+        <span className="font-mono text-[9.5px] uppercase tracking-[.16em] text-white/40">
+          {tr('Reparto del presupuesto')}
+        </span>
+        <motion.span
+          {...pieza(activo, 2)}
+          className="rounded-full bg-[#4ADE80]/15 px-2 py-0.5 font-mono text-[9px] text-[#4ADE80]"
+        >
+          ROI ↑
+        </motion.span>
+      </div>
+      <div className="flex flex-col gap-5">
+        {CAMPANAS_PROCESO.map((c, i) => {
+          const v = movido ? c.despues : c.antes;
+          const cae = movido && !c.rinde;
+          return (
+            <motion.div key={i} {...pieza(activo, 0, i * 0.07)}>
+              <div className="mb-1.5 flex items-center justify-between gap-2">
+                <span className="h-1.5 w-2/5 rounded-full bg-white/25" />
+                <span className="flex items-center gap-2">
+                  {/* paso 2: se mide qué rinde */}
+                  <motion.span
+                    {...pieza(activo, 1, i * 0.08)}
+                    className={`font-mono text-[10px] ${c.rinde ? 'text-[#4ADE80]' : 'text-white/35'}`}
+                  >
+                    {c.rinde ? '▲' : '▼'}
+                  </motion.span>
+                  <span className="font-mono text-[10px] tabular-nums text-white/45">{v}%</span>
+                </span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-white/[.06]">
+                <motion.div
+                  className="h-full rounded-full transition-colors duration-500"
+                  style={{
+                    background: cae ? 'rgba(255,255,255,.22)' : 'linear-gradient(90deg,#7700CE,#CC66FF)',
+                  }}
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${v}%` }}
+                  transition={{ duration: 0.8, delay: i * 0.08, ease: suave }}
+                />
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+      <Distintivo activo={activo} texto="Presupuesto que rinde" Icono={TrendingUp} />
+    </>
+  );
+}
+
+/** El carrito que se iba y vuelve con un mensaje a tiempo. */
+function EscenaCarrito({ activo }: { activo: number }) {
+  /* Se apaga mientras está abandonado y vuelve a encenderse al recuperarse. */
+  const abandonado = activo === 1 || activo === 2;
+  return (
+    <>
+      <motion.div {...pieza(activo, 0)}>
+        <div
+          className="rounded-xl border border-white/12 bg-white/[.04] p-3 transition-opacity duration-500"
+          style={{ opacity: abandonado ? 0.45 : 1 }}
+        >
+          <div className="mb-2.5 flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <ShoppingCart size={14} className="text-white/60" />
+              <span className="h-1.5 w-16 rounded-full bg-white/30" />
+            </span>
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#CC66FF] font-mono text-[9px] text-white">
+              2
+            </span>
+          </div>
+          {[0, 1].map((i) => (
+            <div key={i} className="mb-2 flex items-center gap-2.5 rounded-lg bg-white/[.05] p-2">
+              <span
+                className="h-7 w-7 shrink-0 rounded-md"
+                style={{ background: 'linear-gradient(140deg, rgba(119,0,206,.5), rgba(61,216,255,.25))' }}
+              />
+              <span className="flex-1">
+                <span className="mb-1 block h-1.5 w-3/4 rounded-full bg-white/30" />
+                <span className="block h-1.5 w-1/3 rounded-full bg-white/15" />
+              </span>
+            </div>
+          ))}
+          <div className="mt-1 h-6 rounded-full opacity-80" style={{ background: 'linear-gradient(120deg,#7700CE,#9933FF)' }} />
+        </div>
+      </motion.div>
+
+      {/* paso 2: la persona se va */}
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: abandonado ? 1 : 0 }}
+        transition={{ duration: 0.4 }}
+        className="absolute right-6 top-6 rounded-full bg-black/45 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[.14em] text-white/60"
+      >
+        {tr('Abandonado')}
+      </motion.span>
+
+      {/* paso 3: el mensaje que la trae de vuelta */}
+      <motion.div
+        {...pieza(activo, 2)}
+        className="absolute bottom-14 right-5 w-[62%] rounded-2xl rounded-br-sm p-2.5"
+        style={{ background: 'linear-gradient(140deg, rgba(119,0,206,.6), rgba(153,51,255,.4))' }}
+      >
+        <span className="block text-[10.5px] leading-snug text-white/90">
+          {tr('Te guardé tu carrito. ¿Te lo envío hoy?')}
+        </span>
+      </motion.div>
+
+      <Distintivo activo={activo} texto="Venta recuperada" Icono={ShoppingCart} />
+    </>
+  );
+}
+
+/** Alguien le pregunta a una IA y la respuesta te nombra. */
+function EscenaRespuestaIA({ activo }: { activo: number }) {
+  return (
+    <>
+      <div className="flex h-full flex-col justify-center gap-2.5 px-6 pb-8">
+        {/* paso 1: alguien pregunta */}
+        <motion.div {...pieza(activo, 0)} className="self-end rounded-2xl rounded-br-sm bg-white/10 px-3.5 py-2">
+          <span className="text-[11px] text-white/70">{tr('¿A quién me recomiendas en Aguascalientes?')}</span>
+        </motion.div>
+        {/* paso 2: la IA arma su lista; paso 3: tú entras en ella */}
+        <motion.div
+          {...pieza(activo, 1)}
+          className="w-[86%] space-y-2 self-start rounded-2xl rounded-bl-sm bg-white/[.06] px-3.5 py-3"
+        >
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex h-5 items-center gap-2">
+              <span className="font-mono text-[9px] text-white/35">{i + 1}.</span>
+              {i === 1 ? (
+                <motion.span
+                  {...pieza(activo, 2)}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-[#CC66FF]/45 bg-[#7700CE]/25 px-2 py-0.5"
+                >
+                  <BadgeCheck size={11} className="text-[#CC66FF]" />
+                  <span className="text-[10.5px] font-semibold text-white">{tr('Tu negocio')}</span>
+                </motion.span>
+              ) : (
+                <motion.span
+                  className="block h-1.5 rounded-full bg-white/20"
+                  initial={{ width: 0 }}
+                  animate={activo >= 1 ? { width: i === 0 ? 92 : 68 } : { width: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 + i * 0.12, ease: suave }}
+                />
+              )}
+            </div>
+          ))}
+        </motion.div>
+      </div>
+      <Distintivo activo={activo} texto="Te recomiendan" Icono={BadgeCheck} />
+    </>
+  );
+}
+
+/* ================================================================== */
 /* El casco comun y el selector por servicio                           */
 /* ================================================================== */
 
@@ -915,6 +1161,11 @@ const escenas: Record<string, (p: { activo: number }) => JSX.Element> = {
   'estrategia-de-canales': EscenaCanales,
   'linkedin-de-empresa': EscenaPerfil,
   'anuncios-espectaculares': EscenaEspectacular,
+  'servicios-ia-whatsapp': EscenaChat,
+  'servicios-ia-ventas': EscenaProspectos,
+  'servicios-ia-marketing': EscenaPresupuesto,
+  'servicios-ia-ecommerce': EscenaCarrito,
+  'posicionamiento-en-ia': EscenaRespuestaIA,
 };
 
 export function Escena({ slug, activo }: { slug: string; activo: number }) {
