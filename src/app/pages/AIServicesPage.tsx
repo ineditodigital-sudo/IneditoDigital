@@ -18,7 +18,7 @@ const soluciones = (t: (k: string, r: string) => string) => [
     description: t('w_texto', 'Tu mejor vendedor, disponible siempre. Agente inteligente que atiende, califica y da seguimiento automático.'),
     href: t('w_url', '/servicios-ia/whatsapp'),
     color: '#7700CE',
-    benefits: [t('w_e1', 'Atiende 24/7'), t('w_e2', 'Califica leads'), t('w_e3', 'Seguimiento auto')]
+    benefits: [t('w_e1', 'Atiende 24/7'), t('w_e2', 'Califica leads'), t('w_e3', 'Seguimiento automático')]
   },
   {
     icon: Target,
@@ -27,7 +27,7 @@ const soluciones = (t: (k: string, r: string) => string) => [
     description: t('v_texto', 'Automatiza prospección, califica leads y optimiza tu proceso comercial con inteligencia artificial.'),
     href: t('v_url', '/servicios-ia/ventas'),
     color: '#9933FF',
-    benefits: [t('v_e1', 'Prospección auto'), t('v_e2', 'Lead scoring'), t('v_e3', 'Optimización')]
+    benefits: [t('v_e1', 'Prospección automática'), t('v_e2', 'Prioriza leads'), t('v_e3', 'Optimización')]
   },
   {
     icon: TrendingUp,
@@ -36,7 +36,7 @@ const soluciones = (t: (k: string, r: string) => string) => [
     description: t('m_texto', 'Marketing que piensa por ti. Analiza campañas, genera contenido y optimiza resultados automáticamente.'),
     href: t('m_url', '/servicios-ia/marketing'),
     color: '#CC66FF',
-    benefits: [t('m_e1', 'Análisis auto'), t('m_e2', 'Contenido IA'), t('m_e3', 'ROI optimizado')]
+    benefits: [t('m_e1', 'Análisis automático'), t('m_e2', 'Contenido IA'), t('m_e3', 'ROI optimizado')]
   },
   {
     icon: ShoppingCart,

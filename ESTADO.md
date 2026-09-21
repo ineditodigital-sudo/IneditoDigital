@@ -232,6 +232,8 @@ El valor anterior de cada campo quedó en `.claude/respaldos/2026-09-21-base-ant
 - **Nosotros** publicado con la versión nueva (las tres promesas, sin «98 % de satisfacción»). La promesa «Visibilidad completa» nombra los seis motores y la franja de logos suma Copilot.
 - **Tarjeta de Armando**: WhatsApp 449 583 9229 (el suyo); llamadas 449 513 6907, que ya estaba.
 
+Después, a pedido del cliente: la opinión «Muy buena imaginen» (Alexis G.) quedó apagada en el carrusel (sigue contando en el total: el carrusel muestra 17), y las cuatro etiquetas de las tarjetas de `/servicios-ia` que eran abreviatura o inglés pasaron a «Seguimiento automático», «Prospección automática», «Prioriza leads» y «Análisis automático» (código, `def`, diccionario y base; respaldo en `.claude/respaldos/2026-09-21-antes-de-etiquetas-ia.txt`). Con eso no queda ninguna decisión pendiente del revisor de marca.
+
 De paso: el título «POSICIONAMIENTO ORGÁNICO» de la vitrina de la portada se salía 28 px a 1024 de ancho; ahora se mide contra su tarjeta (`.titulo-tarjeta-icono`). Y el regreso de Google en el panel valida el `state` (antes no lo hacía).
 
 ## ⚠️ Revisar primero
@@ -257,8 +259,6 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
   4. «Sincronizar ahora». Desde ahí va sola con el cron diario de Search Console.
 
   Mientras tanto, una opinión nueva se agrega a mano en Panel › Opiniones.
-- [ ] **Decisión pendiente** que encontró el revisor de marca (21-sep): las etiquetas de las tarjetas de `/servicios-ia` («Seguimiento auto», «Prospección auto», «Análisis auto» y «Lead scoring»). Las otras cuatro ya se resolvieron (ver «Tercera vuelta» y «Decisiones tomadas»).
-- [ ] Opinión con errata en la ficha: «Muy buena imaginen» (Alexis G.) sale en el carrusel tal cual. Si no se quiere, se apaga en Panel › Opiniones; nunca se corrige el texto.
 - [ ] **Licencia de Remotion**: es gratis para personas y para empresas de hasta 3 empleados. Si Inédito tiene más, necesita la licencia de empresa (remotion.pro).
 - [ ] **Crons en cPanel** (confirmar si ya están puestos). Los tres son diarios: `reporte_quincenal.php`, `gsc_sync.php` y `espectaculares_sync.php`, con el formato `/usr/local/bin/ea-php83 /home/inedito/public_html/panel/cron/<archivo>.php`. Al 21-sep ya hay fotos diarias de Search Console (19, 20 y 21), o sea que `gsc_sync.php` corre; las opiniones de Google van dentro de ese mismo cron. Falta confirmar los otros dos.
 - [ ] **Permiso de Vía Gráfica** para publicar su inventario en el sitio. El catálogo se toma cada día de su API (`spvnet.gruposoldi.mx`). Venía abierto de sesiones anteriores.
