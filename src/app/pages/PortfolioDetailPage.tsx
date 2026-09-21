@@ -39,7 +39,7 @@ export default function PortfolioDetailPage() {
               )}
               <span className="inline-block px-3 py-1 rounded-full bg-[#7700CE]/20 text-[#7700CE] text-sm">{item.category}</span>
             </div>
-            <h1 className="heading text-4xl md:text-6xl mb-4">{item.title}</h1>
+            <h1 className="heading titulo-caso mb-4">{item.title}</h1>
             <p className="text-xl text-white/70">{item.client} · {item.year}</p>
           </div>
 

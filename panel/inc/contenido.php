@@ -349,7 +349,7 @@ function registro_paginas(): array {
                                             'def' => 'Que cada peso que una empresa invierte en digital se pueda medir contra ventas reales. Conectamos los objetivos de dirección con Search Console, Analytics y las campañas en un solo tablero, y revisamos periódicamente si la estrategia está funcionando.'],
                         'vision_titulo' => ['label' => 'Título de la visión', 'tipo' => 'texto', 'def' => 'NUESTRA VISIÓN'],
                         'vision_texto'  => ['label' => 'Texto de la visión', 'tipo' => 'parrafo',
-                                            'def' => 'Que las empresas de Aguascalientes no solo aparezcan en Google, sino también en las respuestas que dan ChatGPT, Claude y Gemini cuando alguien pregunta por un proveedor. Casi nadie en el mercado está trabajando eso todavía.'],
+                                            'def' => 'Que las empresas de Aguascalientes no solo aparezcan en Google, sino también en las respuestas que dan los asistentes de inteligencia artificial cuando alguien pregunta por un proveedor. Casi nadie en el mercado está trabajando eso todavía.'],
                     ],
                 ],
                 'valores' => [
@@ -896,6 +896,14 @@ function registro_paginas(): array {
                         'volver'        => ['label' => 'Enlace de regreso', 'tipo' => 'texto', 'def' => 'Volver a servicios'],
                         'volver_ia'     => ['label' => 'Enlace de regreso en las páginas de IA', 'tipo' => 'texto', 'def' => 'Volver a Servicios IA'],
                         'categoria_ia'  => ['label' => 'Categoría en las páginas de IA', 'tipo' => 'texto', 'def' => 'IA'],
+                        // Los leia el codigo y el panel no los ofrecia (21-sep): no se podian editar.
+                        'definicion_sello' => ['label' => 'Etiqueta de la definición', 'tipo' => 'texto', 'def' => 'Qué es'],
+                        'definicion_mas'   => ['label' => 'Botón para desplegar la definición (teléfono)', 'tipo' => 'texto', 'def' => 'Leer más'],
+                        'definicion_menos' => ['label' => 'Botón para plegar la definición (teléfono)', 'tipo' => 'texto', 'def' => 'Leer menos'],
+                        'fondo_1'       => ['label' => 'El fondo del asunto, primera parte', 'tipo' => 'texto', 'def' => 'EL FONDO'],
+                        'fondo_2'       => ['label' => 'El fondo del asunto, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'DEL ASUNTO'],
+                        'cat_1'         => ['label' => 'Catálogo de espectaculares, primera parte', 'tipo' => 'texto', 'def' => 'EL'],
+                        'cat_2'         => ['label' => 'Catálogo de espectaculares, segunda parte (resaltada)', 'tipo' => 'texto', 'def' => 'CATÁLOGO'],
                         'no_encontrado' => ['label' => 'Aviso si el servicio no existe', 'tipo' => 'texto', 'def' => 'Servicio no encontrado'],
                         'inc_1'         => ['label' => 'Qué incluye · primera palabra', 'tipo' => 'texto', 'def' => 'QUÉ'],
                         'inc_2'         => ['label' => 'Qué incluye · segunda palabra (en morado)', 'tipo' => 'texto', 'def' => 'INCLUYE'],
@@ -1546,7 +1554,7 @@ Y el cuarto es la recomendación. No la de «también te puede interesar» puest
                         'a2_ver'    => ['label' => 'Apartado 2 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a2_titulo' => ['label' => 'Apartado 2 · título', 'tipo' => 'texto', 'def' => '2. Uso de la Información'],
                         'a2_texto'  => ['label' => 'Apartado 2 · texto', 'tipo' => 'parrafo', 'def' => 'Utilizamos la información recopilada para:'],
-                        'a2_lista'  => ['label' => 'Apartado 2 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => 'Proporcionar y mejorar nuestros servicios\nComunicarnos contigo sobre nuestros servicios\nEnviar información relevante de marketing (con tu consentimiento)\nAnalizar el uso de nuestro sitio web'],
+                        'a2_lista'  => ['label' => 'Apartado 2 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => 'Proporcionar y mejorar nuestros servicios' . "\n" . 'Comunicarnos contigo sobre nuestros servicios' . "\n" . 'Enviar información relevante de marketing (con tu consentimiento)' . "\n" . 'Analizar el uso de nuestro sitio web'],
                         'a3_ver'    => ['label' => 'Apartado 3 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a3_titulo' => ['label' => 'Apartado 3 · título', 'tipo' => 'texto', 'def' => '3. Protección de Datos'],
                         'a3_texto'  => ['label' => 'Apartado 3 · texto', 'tipo' => 'parrafo', 'def' => 'Implementamos medidas de seguridad diseñadas para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción.'],
@@ -1561,7 +1569,7 @@ Y el cuarto es la recomendación. No la de «también te puede interesar» puest
                         'a5_lista'  => ['label' => 'Apartado 5 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
                         'a6_ver'    => ['label' => 'Apartado 6 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a6_titulo' => ['label' => 'Apartado 6 · título', 'tipo' => 'texto', 'def' => '6. Contacto'],
-                        'a6_texto'  => ['label' => 'Apartado 6 · texto', 'tipo' => 'parrafo', 'def' => 'Si tienes preguntas sobre esta política de privacidad, contáctanos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 120 4353'],
+                        'a6_texto'  => ['label' => 'Apartado 6 · texto', 'tipo' => 'parrafo', 'def' => 'Si tienes preguntas sobre esta política de privacidad, contáctanos:' . "\n" . 'Email: contacto@inedito.digital' . "\n" . 'Teléfono: +52 1 449 120 4353'],
                         'a6_lista'  => ['label' => 'Apartado 6 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
                         'a7_ver'    => ['label' => 'Apartado 7 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a7_titulo' => ['label' => 'Apartado 7 · título (libre)', 'tipo' => 'texto', 'def' => ''],
@@ -1610,7 +1618,7 @@ Y el cuarto es la recomendación. No la de «también te puede interesar» puest
                         'a3_ver'    => ['label' => 'Apartado 3 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a3_titulo' => ['label' => 'Apartado 3 · título', 'tipo' => 'texto', 'def' => '3. Pagos y Facturación'],
                         'a3_texto'  => ['label' => 'Apartado 3 · texto', 'tipo' => 'parrafo', 'def' => 'Los términos de pago se especificarán en cada propuesta comercial. Generalmente requerimos:'],
-                        'a3_lista'  => ['label' => 'Apartado 3 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => '50% de anticipo para iniciar el proyecto\n50% restante contra entrega\nServicios recurrentes: pago mensual anticipado'],
+                        'a3_lista'  => ['label' => 'Apartado 3 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => '50% de anticipo para iniciar el proyecto' . "\n" . '50% restante contra entrega' . "\n" . 'Servicios recurrentes: pago mensual anticipado'],
                         'a4_ver'    => ['label' => 'Apartado 4 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a4_titulo' => ['label' => 'Apartado 4 · título', 'tipo' => 'texto', 'def' => '4. Garantías y Resultados'],
                         'a4_texto'  => ['label' => 'Apartado 4 · texto', 'tipo' => 'parrafo', 'def' => 'Garantizamos esfuerzo máximo y entregas en tiempo. Sin embargo, resultados específicos (rankings, ventas, leads) dependen de múltiples factores externos y no pueden garantizarse.'],
@@ -1622,10 +1630,10 @@ Y el cuarto es la recomendación. No la de «también te puede interesar» puest
                         'a6_ver'    => ['label' => 'Apartado 6 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a6_titulo' => ['label' => 'Apartado 6 · título', 'tipo' => 'texto', 'def' => '6. Cancelación'],
                         'a6_texto'  => ['label' => 'Apartado 6 · texto', 'tipo' => 'parrafo', 'def' => 'Los términos de cancelación se especifican en cada contrato. Generalmente:'],
-                        'a6_lista'  => ['label' => 'Apartado 6 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => 'Proyectos: El anticipo no es reembolsable\nServicios mensuales: Aviso de 30 días'],
+                        'a6_lista'  => ['label' => 'Apartado 6 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => 'Proyectos: El anticipo no es reembolsable' . "\n" . 'Servicios mensuales: Aviso de 30 días'],
                         'a7_ver'    => ['label' => 'Apartado 7 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a7_titulo' => ['label' => 'Apartado 7 · título', 'tipo' => 'texto', 'def' => '7. Contacto'],
-                        'a7_texto'  => ['label' => 'Apartado 7 · texto', 'tipo' => 'parrafo', 'def' => 'Para preguntas sobre estos términos:\nEmail: contacto@inedito.digital\nTeléfono: +52 1 449 120 4353'],
+                        'a7_texto'  => ['label' => 'Apartado 7 · texto', 'tipo' => 'parrafo', 'def' => 'Para preguntas sobre estos términos:' . "\n" . 'Email: contacto@inedito.digital' . "\n" . 'Teléfono: +52 1 449 120 4353'],
                         'a7_lista'  => ['label' => 'Apartado 7 · puntos (uno por línea)', 'tipo' => 'parrafo', 'def' => ''],
                         'a8_ver'    => ['label' => 'Apartado 8 · mostrar', 'tipo' => 'switch', 'def' => '1'],
                         'a8_titulo' => ['label' => 'Apartado 8 · título (libre)', 'tipo' => 'texto', 'def' => ''],
@@ -1657,20 +1665,22 @@ Y el cuarto es la recomendación. No la de «también te puede interesar» puest
                     'campos' => [
                         'titulo'      => ['label' => 'Nombre en la barra', 'tipo' => 'texto', 'def' => 'ASISTENTE IA'],
                         'estado'      => ['label' => 'Texto del punto verde', 'tipo' => 'texto', 'def' => 'En línea'],
-                        'placeholder' => ['label' => 'Texto de la casilla de escritura', 'tipo' => 'texto', 'def' => 'Escribe tu respuesta...'],
+                        'placeholder' => ['label' => 'Texto de la casilla de escritura', 'tipo' => 'texto', 'def' => 'Escribe tu pregunta…'],
                     ],
                 ],
 
                 'conversacion' => [
                     'nombre' => 'Lo que dice el asistente',
                     'campos' => [
-                        'saludo'        => ['label' => 'Saludo inicial', 'tipo' => 'parrafo', 'def' => '¡Hola! 👋 Soy el asistente virtual de INÉDITO DIGITAL. Estoy aquí para ayudarte a encontrar la solución perfecta para hacer crecer tu negocio.'],
+                        // 'saludo' estaba dos veces en esta seccion: PHP se quedaba con la
+                        // segunda. Queda una sola, en el lugar de la primera y con la
+                        // segunda (la vigente), con saltos de linea reales.
+                        'saludo'        => ['label' => 'Saludo inicial', 'tipo' => 'area', 'def' => 'Hola 👋 Soy el asistente de Inédito.' . "\n\n" . 'Pregúntame lo que quieras sobre nuestros servicios, o dime qué necesitas para tu negocio.'],
                         'que_servicio'  => ['label' => 'Pregunta por el servicio', 'tipo' => 'texto', 'def' => '¿Qué servicio te interesa más?'],
                         'entiendo'      => ['label' => 'Respuesta cuando describe su necesidad', 'tipo' => 'texto', 'def' => '¡Entiendo perfectamente! Esto es justo lo que hacemos. 🎯'],
                         'pedir_datos'   => ['label' => 'Aviso antes de pedir los datos', 'tipo' => 'parrafo', 'def' => 'Déjame capturar tus datos para prepararte una cotización personalizada.'],
                         'pedir_datos_2' => ['label' => 'Aviso antes de pedir los datos (tras describir el proyecto)', 'tipo' => 'parrafo', 'def' => 'Déjame capturar tus datos para que un especialista revise tu proyecto a detalle y te prepare una propuesta personalizada.'],
-                        'saludo' => ['label' => 'Saludo inicial', 'tipo' => 'area', 'def' => 'Hola 👋 Soy el asistente de Inédito.\n\nPregúntame lo que quieras sobre nuestros servicios, o dime qué necesitas para tu negocio.'],
-                        'saludo_ctx' => ['label' => 'Saludo al pulsar Cotizar', 'tipo' => 'area', 'def' => 'Hola 👋 Con gusto te ayudo a cotizar.\n\n¿Qué necesitas? Escríbelo con tus palabras, o elige una opción.'],
+                        'saludo_ctx' => ['label' => 'Saludo al pulsar Cotizar', 'tipo' => 'area', 'def' => 'Hola 👋 Con gusto te ayudo a cotizar.' . "\n" . '' . "\n" . '¿Qué necesitas? Escríbelo con tus palabras, o elige una opción.'],
                         'p_nombre_corto' => ['label' => 'Pedir el nombre', 'tipo' => 'texto', 'def' => 'Perfecto. ¿Cómo te llamas?'],
                         'r_identidad' => ['label' => 'Respuesta · quién eres', 'tipo' => 'area', 'def' => 'Soy el asistente del sitio de Inédito Digital 🤖
 
@@ -1691,14 +1701,14 @@ Lo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes 
                         'r_listo' => ['label' => 'Mensaje final antes de WhatsApp', 'tipo' => 'area', 'def' => 'Listo. Te preparé el mensaje con todo lo que consultaste.
 
 Dale al botón de abajo y solo tienes que enviarlo.'],
-                        'r_precio' => ['label' => 'Respuesta · precios', 'tipo' => 'area', 'def' => 'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.\n\nLo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.'],
+                        'r_precio' => ['label' => 'Respuesta · precios', 'tipo' => 'area', 'def' => 'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.' . "\n" . '' . "\n" . 'Lo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.'],
                         'r_portafolio' => ['label' => 'Respuesta · portafolio', 'tipo' => 'area', 'def' => 'Tenemos los casos publicados con lo que hicimos en cada uno.'],
                         'r_quienes' => ['label' => 'Respuesta · quiénes somos', 'tipo' => 'area', 'def' => 'Somos una agencia de Aguascalientes que trabaja como dirección comercial asistida por IA: conectamos tus objetivos con datos reales y auditamos cada mes si la estrategia funciona.'],
-                        'r_niveles' => ['label' => 'Respuesta · los tres niveles', 'tipo' => 'area', 'def' => 'Trabajamos en tres niveles según tu punto de partida:\n\n*1. Construir* — no tienes presencia digital todavía.\n*2. Mejorar* — ya tienes web y redes, pero no rinden.\n*3. Vender* — ya tienes todo y quieres resultados medidos.'],
+                        'r_niveles' => ['label' => 'Respuesta · los tres niveles', 'tipo' => 'area', 'def' => 'Trabajamos en tres niveles según tu punto de partida:' . "\n" . '' . "\n" . '*1. Construir* — no tienes presencia digital todavía.' . "\n" . '*2. Mejorar* — ya tienes web y redes, pero no rinden.' . "\n" . '*3. Vender* — ya tienes todo y quieres resultados medidos.'],
                         'r_varios' => ['label' => 'Respuesta · varios servicios posibles', 'tipo' => 'texto', 'def' => 'Puede ser cualquiera de estos. ¿Cuál te interesa?'],
                         'r_saludo' => ['label' => 'Respuesta · a un saludo suelto', 'tipo' => 'texto', 'def' => '¡Hola! ¿Qué necesitas para tu negocio?'],
                         'r_otra' => ['label' => 'Respuesta · tengo otra duda', 'tipo' => 'texto', 'def' => '¿Qué más quieres saber?'],
-                        'r_nada' => ['label' => 'Respuesta · no entendí', 'tipo' => 'area', 'def' => 'No estoy seguro de haber entendido bien 🤔\n\n¿Me lo dices de otra forma? O si prefieres, te paso con alguien del equipo que te responde al momento.'],
+                        'r_nada' => ['label' => 'Respuesta · no entendí', 'tipo' => 'area', 'def' => 'No estoy seguro de haber entendido bien 🤔' . "\n" . '' . "\n" . '¿Me lo dices de otra forma? O si prefieres, te paso con alguien del equipo que te responde al momento.'],
                         'p_nombre'      => ['label' => 'Pregunta el nombre', 'tipo' => 'texto', 'def' => '¿Cuál es tu nombre?'],
                         'p_email_mal'   => ['label' => 'Aviso si el correo está mal escrito', 'tipo' => 'texto', 'def' => 'Por favor ingresa un correo electrónico válido.'],
                         'p_whatsapp'    => ['label' => 'Pregunta el WhatsApp', 'tipo' => 'texto', 'def' => 'Excelente. ¿Cuál es tu número de WhatsApp?'],

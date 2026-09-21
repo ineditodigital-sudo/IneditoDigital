@@ -80,3 +80,6 @@ out/
 
 # Las tarjetas de compartir que dibuja og.php. Se rehacen solas.
 cache-og/
+
+# Salida del MCP de Playwright (capturas, bitacoras, evaluaciones): local
+.playwright-mcp/

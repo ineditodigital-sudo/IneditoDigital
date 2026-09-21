@@ -217,6 +217,38 @@
     overflow-wrap: break-word;
   }
 
+  /*
+   * La misma cuenta para otros tres titulos en Hanson (21-sep). El barrido los
+   * encontro saliendose en telefono:
+   *   - el H1 de cuatro articulos del blog y el de los casos del portafolio
+   *     empujaban la pagina de lado (hasta 482 px de ancho en una ventana de
+   *     375: «AGUASCALIENTES» a 36 px mide 454);
+   *   - en la portada, «AGUASCALIENTES,» (12.9 em) no cabia en el titulo de
+   *     seccion a 30 px y la seccion, con overflow-hidden, la recortaba.
+   * En telefono el tamano sale del ancho disponible entre 13.5 (la palabra
+   * mas ancha con su signo, y un poco de aire); en cuanto hay espacio se
+   * queda el tamano de siempre, asi que tablet y escritorio no cambian.
+   */
+  .titulo-seccion {
+    font-size: min(1.875rem, calc((100vw - 2rem) / 13.5));
+  }
+  .titulo-articulo,
+  .titulo-caso {
+    font-size: min(2.25rem, calc((100vw - 2rem) / 13.5));
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+  @media (min-width: 768px) {
+    .titulo-seccion,
+    .titulo-articulo {
+      font-size: 3rem;
+    }
+    /* El caso va a 60 px en una caja de 1024: ahi tambien hay que medir. */
+    .titulo-caso {
+      font-size: min(3.75rem, calc(min(1024px, 100vw - 2rem) / 13.5));
+    }
+  }
+
   h2 {
     font-size: clamp(1.5rem, 3.5vw, 2.75rem);
     line-height: 1.25;

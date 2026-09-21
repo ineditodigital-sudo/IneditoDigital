@@ -710,7 +710,7 @@ ${extra.pagina.desc}`, {
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="fixed bottom-4 right-4 z-50 w-[calc(100vw-2rem)] md:bottom-6 md:right-6 md:w-[420px]"
           role="dialog"
-          aria-label={tVen('titulo', 'Asistente de Inédito')}
+          aria-label={tVen('titulo', 'ASISTENTE IA')}
         >
           <div className="flex max-h-[min(78vh,620px)] flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0A0A0A]/97 shadow-[0_0_60px_rgba(119,0,206,.35)] backdrop-blur-2xl md:rounded-3xl">
             {/* cabecera */}

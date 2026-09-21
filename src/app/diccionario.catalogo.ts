@@ -93,8 +93,8 @@ export const CATALOGO: Record<string, string> = {
     'EARLY TIES - Water Experiences for Families',
   'Sitio web emocional y funcional para academia de natación especializada en bebés y niños.':
     'A warm, functional site for a swimming academy specializing in babies and children.',
-  'Sitio web gourmet para el restaurante más grande de la Feria Nacional de San Marcos en Aguascalientes.':
-    'A gourmet site for the largest restaurant at the Feria Nacional de San Marcos in Aguascalientes.',
+  'Sitio web gourmet para un restaurante de Aguascalientes.':
+    'A gourmet site for a restaurant in Aguascalientes.',
   'Plataforma digital robusta para red de espacios coworking con presencia en toda la República Mexicana.':
     'A robust digital platform for a coworking network with locations across Mexico.',
   'Sitio web innovador con chatbot inteligente para empresa líder en diseño y montaje de stands y exposiciones.':
@@ -627,8 +627,8 @@ export const CATALOGO: Record<string, string> = {
     'You stop spending on advertising pushing a channel your margin cannot carry',
   'Carteleras, unipolares, puentes peatonales, vallas y pantallas digitales LED':
     'Billboards, unipoles, pedestrian bridges, street-level panels and LED screens',
-  'Revisión con Claude contra los objetivos de dirección, no contra corazonadas':
-    'A review with Claude against leadership’s objectives, not against hunches',
+  'Revisión con IA contra los objetivos de dirección, no contra corazonadas':
+    'An AI review against leadership’s objectives, not against hunches',
   'Selección del sitio por flujo vehicular y ángulo de lectura, no por catálogo':
     'Sites chosen by traffic flow and reading angle, not from a catalog',
   'Medición de la campaña: número propio, página de destino y búsquedas de marca':
@@ -689,8 +689,8 @@ export const CATALOGO: Record<string, string> = {
     'Consistent details across your site, Google listing and LinkedIn strengthen your presence in search',
   'Tu presencia, tus campañas y tus contactos quedan en un tablero que consultas desde donde estés.':
     'Your presence, your campaigns and your leads end up on a dashboard you can check from anywhere.',
-  'Revisión mensual con Claude contra los objetivos que puso dirección, no contra métricas de vanidad':
-    'A monthly review with Claude against the objectives leadership set, not against vanity metrics',
+  'Revisión mensual con IA contra los objetivos que puso dirección, no contra métricas de vanidad':
+    'A monthly AI review against the objectives leadership set, not against vanity metrics',
   'Tu logo, tus colores y tu tipografía sobre la tarjeta física. Tú la apruebas antes de producir nada':
     'Your logo, your colors and your typeface on the physical card. You approve it before anything is produced',
   'Redacción de los anuncios y de la página a la que llegan, que casi siempre es la mitad del resultado':
@@ -956,8 +956,8 @@ export const CATALOGO: Record<string, string> = {
     'We advise you on buying them and can manage hosting for you. The first year of the domain may be included, depending on the package.',
   'Plan de arranque con lo que hay que preparar antes de pautar, y los indicadores que van a decir en tres meses si se sigue o se corrige.':
     'A start plan with what has to be ready before running ads, and the indicators that will say in three months whether to continue or correct.',
-  'Te entregamos el acceso y el reporte mensual automático. Cada mes, Claude revisa el desempeño contra los objetivos y señala qué cambiar.':
-    'We hand you the access and the automatic monthly report. Every month, Claude reviews performance against the objectives and points out what to change.',
+  'Te entregamos el acceso y el reporte mensual automático. Cada mes, una IA revisa el desempeño contra los objetivos y señala qué cambiar.':
+    'We hand you the access and the automatic monthly report. Every month, an AI reviews performance against the objectives and points out what to change.',
   'Search Console, Analytics, las cuentas de campañas y, cuando aplica, el ERP. Todo con permisos de solo lectura y a nombre de tu empresa.':
     'Search Console, Analytics, the campaign accounts and, where applicable, the ERP. All with read-only permissions, in your company’s name.',
   'Margen real por producto, capacidad de surtido y costo de servir a un cliente. Sin esto, cualquier recomendación de canal es una opinión.':

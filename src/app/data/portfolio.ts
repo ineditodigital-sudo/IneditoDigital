@@ -124,7 +124,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     client: '1828 Brasa y Carbón',
     category: 'Restaurantes',
     services: ['Diseño Web', 'Menú Digital', 'UX Mobile'],
-    description: 'Sitio web gourmet para el restaurante más grande de la Feria Nacional de San Marcos en Aguascalientes.',
+    description: 'Sitio web gourmet para un restaurante de Aguascalientes.',
     challenge: '1828 necesitaba un sitio que reflejara la calidad de su comida, facilitara la navegación del menú y mejorara la experiencia del cliente.',
     solution: 'Desarrollamos un sitio web premium con menú digital interactivo, galería apetitosa de platillos, sistema de reservaciones y optimización mobile-first perfecta para consulta en el restaurante.',
     results: [

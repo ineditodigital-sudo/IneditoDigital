@@ -82,15 +82,15 @@ export default function ServiceDetailPage() {
               </span>
             </h2>
             <p className="mx-auto max-w-2xl text-white/70">
-              {tDem('bajada', 'Explora en vivo las activaciones interactivas que podemos implementar en tu stand.')}
+              {tDem('bajada', 'Explora en vivo las activaciones interactivas que podemos implementar en tu stand')}
             </p>
           </motion.div>
 
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              { Icono: Gamepad2, t: tDem('d1_titulo', 'RULETA DE PREMIOS'), d: tDem('d1_texto', 'Ruleta interactiva totalmente personalizable.'), u: tDem('d1_url', 'https://ruleta-expo.inedito.digital/demo') },
-              { Icono: Camera, t: tDem('d2_titulo', 'PHOTO OPPORTUNITY'), d: tDem('d2_texto', 'Photobooth con marcos personalizados de tu marca.'), u: tDem('d2_url', 'https://photo-oportunity.inedito.digital/demo') },
-              { Icono: Grid3x3, t: tDem('d3_titulo', 'TIC TAC TOE'), d: tDem('d3_texto', 'Gato interactivo con premios. Juega contra la IA y gana.'), u: tDem('d3_url', 'https://tic-tac-toe.inedito.digital/demo') },
+              { Icono: Gamepad2, t: tDem('d1_titulo', 'RULETA DE PREMIOS'), d: tDem('d1_texto', 'Ruleta interactiva totalmente personalizable. Perfecta para sorteos, rifas y dinámicas de gamificación en tu stand.'), u: tDem('d1_url', 'https://ruleta-expo.inedito.digital/demo') },
+              { Icono: Camera, t: tDem('d2_titulo', 'PHOTO OPPORTUNITY'), d: tDem('d2_texto', 'Photobooth con marcos personalizados de tu marca. Captura fotos, compártelas y genera engagement viral en redes sociales.'), u: tDem('d2_url', 'https://photo-oportunity.inedito.digital/demo') },
+              { Icono: Grid3x3, t: tDem('d3_titulo', 'TIC TAC TOE'), d: tDem('d3_texto', 'Gato interactivo con premios. Juega contra la IA y gana. Diversión garantizada para atraer visitantes a tu stand.'), u: tDem('d3_url', 'https://tic-tac-toe.inedito.digital/demo') },
             ].map(({ Icono, t, d, u }, i) => (
               // A 768 px caben tres tarjetas de 229 px y «OPPORTUNITY» en Hanson
               // mide diez veces su tamaño de letra: el título se ajusta a la tarjeta.

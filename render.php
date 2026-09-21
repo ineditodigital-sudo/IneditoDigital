@@ -251,7 +251,7 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
     $desc = seoDe($s, 'metaDescription') ?: ($primera ?: ($s['shortDescription'] ?? $defaultDesc));
     $canonical = $BASE.'/servicios/'.$s['slug']; $crumbs[]=['Servicios','/servicios']; $crumbs[]=[$s['title'],'/servicios/'.$s['slug']];
     $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical,'dateModified'=>date('Y-m-d', strtotime((string)($s['fecha'] ?: 'now')))];
-    $bodyBuilder = function() use ($s, $pdo) {
+    $bodyBuilder = function() use ($s, $pdo, $paginas) {
       // La DEFINICION va primero: un motor de respuestas toma el primer
       // parrafo, y el gancho comercial no responde "que es".
       $h='<h1>'.e($s['title'] ?? '').'</h1>';
@@ -300,17 +300,43 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
         }
       }
 
+      // Los mismos titulos de seccion que la ficha (components/FichaServicio),
+      // en el mismo orden: lo que lee un robot y lo que ve una persona dicen lo
+      // mismo. Antes aqui decia «Características · Beneficios · Ideal para ·
+      // Proceso» y el texto largo iba sin titulo antes de todo (21-sep).
+      $enc = is_array($paginas['servicio-detalle']['contenido']['encabezados'] ?? null)
+           ? $paginas['servicio-detalle']['contenido']['encabezados'] : [];
+      $tit = function(string $k1, string $d1, string $k2, string $d2) use ($enc): string {
+        $a = trim((string)($enc[$k1] ?? '')); $b = trim((string)($enc[$k2] ?? ''));
+        return e(trim(($a !== '' ? $a : $d1) . ' ' . ($b !== '' ? $b : $d2)));
+      };
+      $lista = function(string $k) use ($s): string {
+        if (empty($s[$k]) || !is_array($s[$k])) return '';
+        $o = ''; foreach ($s[$k] as $it) $o .= '<li>'.e($it).'</li>';
+        return $o;
+      };
+      if (($o = $lista('features')) !== '') $h .= '<h2>'.$tit('inc_1','QUÉ','inc_2','INCLUYE').'</h2><ul>'.$o.'</ul>';
+      if (($o = $lista('benefits')) !== '') $h .= '<h2>'.$tit('ben_1','LO QUE','ben_2','GANAS').'</h2><ul>'.$o.'</ul>';
+      if (!empty($s['process']) && is_array($s['process'])) {
+        $h .= '<h2>'.$tit('proceso_1','NUESTRO','proceso_2','PROCESO').'</h2><ol>';
+        foreach ($s['process'] as $p) $h .= '<li><strong>'.e($p['title'] ?? '').':</strong> '.e($p['description'] ?? '').'</li>';
+        $h .= '</ol>';
+      }
+      if (($o = $lista('ideal')) !== '') $h .= '<h2>'.$tit('ideal_1','IDEAL','ideal_2','PARA').'</h2><ul>'.$o.'</ul>';
       // El texto largo. Estaba guardado y no salia ni aqui ni en el sitio, asi
       // que Google veia la mitad de las paginas que si tienen sustancia.
       if (!empty($s['fullDescription'])) {
+        $fondo = '';
         foreach (preg_split('~\n\s*\n~u', (string)$s['fullDescription']) as $parrafo) {
           $parrafo = trim($parrafo);
-          if ($parrafo !== '') $h .= '<p>'.e($parrafo).'</p>';
+          if ($parrafo !== '') $fondo .= '<p>'.e($parrafo).'</p>';
         }
+        if ($fondo !== '') $h .= '<h2>'.$tit('fondo_1','EL FONDO','fondo_2','DEL ASUNTO').'</h2>'.$fondo;
       }
-      foreach (['features'=>'Características','benefits'=>'Beneficios','ideal'=>'Ideal para'] as $k=>$lbl) if(!empty($s[$k]) && is_array($s[$k])){ $h.='<h2>'.$lbl.'</h2><ul>'; foreach($s[$k] as $it) $h.='<li>'.e($it).'</li>'; $h.='</ul>'; }
-      if(!empty($s['process']) && is_array($s['process'])){ $h.='<h2>Proceso</h2><ol>'; foreach($s['process'] as $p) $h.='<li><strong>'.e($p['title'] ?? '').':</strong> '.e($p['description'] ?? '').'</li>'; $h.='</ol>'; }
-      if(!empty($s['faq']) && is_array($s['faq'])){ $h.='<h2>Preguntas frecuentes</h2>'; foreach($s['faq'] as $f) $h.='<h3>'.e($f['question'] ?? '').'</h3><p>'.e($f['answer'] ?? '').'</p>'; }
+      if (!empty($s['faq']) && is_array($s['faq'])) {
+        $h .= '<h2>'.$tit('faq_1','PREGUNTAS','faq_2','FRECUENTES').'</h2>';
+        foreach ($s['faq'] as $f) $h .= '<h3>'.e($f['question'] ?? '').'</h3><p>'.e($f['answer'] ?? '').'</p>';
+      }
       return $h;
     };
     if (!empty($s['faq']) && is_array($s['faq'])) {

@@ -114,7 +114,7 @@ export default function AboutPage() {
             <Compass className="mb-5 text-white/85" size={30} strokeWidth={1.6} />
             <h2 className="heading mb-4 text-2xl md:text-[1.75rem]">{tMis('vision_titulo', 'NUESTRA VISIÓN')}</h2>
             <p className="text-[15.5px] leading-relaxed text-white/80">
-              {tMis('vision_texto', 'Que las empresas de Aguascalientes no solo aparezcan en Google, sino también en las respuestas que dan ChatGPT, Claude y Gemini cuando alguien pregunta por un proveedor. Casi nadie en el mercado está trabajando eso todavía.')}
+              {tMis('vision_texto', 'Que las empresas de Aguascalientes no solo aparezcan en Google, sino también en las respuestas que dan los asistentes de inteligencia artificial cuando alguien pregunta por un proveedor. Casi nadie en el mercado está trabajando eso todavía.')}
             </p>
           </motion.article>
         </div>
@@ -136,6 +136,9 @@ export default function AboutPage() {
                 <motion.article
                   key={i}
                   {...entra(i * 0.12)}
+                  // A 768 px la tarjeta deja 174 px y «TRANSPARENCIA» mide 11.72
+                  // veces su letra: el titulo se mide contra la tarjeta.
+                  style={{ containerType: 'inline-size' }}
                   className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-7
                              transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40 hover:bg-white/[.06]"
                 >
@@ -149,7 +152,7 @@ export default function AboutPage() {
                   >
                     <Icono className="text-[#AA66FF]" size={22} strokeWidth={1.7} />
                   </div>
-                  <h3 className="heading mb-3 text-lg leading-tight">{titulo}</h3>
+                  <h3 className="heading mb-3 leading-tight" style={{ fontSize: 'min(1.125rem, 8.4cqw)' }}>{titulo}</h3>
                   <p className="text-[14.5px] leading-relaxed text-white/70">{texto}</p>
                   {i === 1 && <FranjaLogosIA alto={18} className="mt-5" />}
                 </motion.article>

@@ -638,7 +638,7 @@ export const SERVICES: Service[] = [
       'Redacción de los anuncios y de la página a la que llegan, que casi siempre es la mitad del resultado',
       'Presupuesto arrancando en pruebas chicas, y se sube solo lo que demuestra que convierte',
       'Medición en el mismo tablero que Google Ads y Meta, para poder compararlos de verdad',
-      'Revisión mensual con Claude contra los objetivos que puso dirección, no contra métricas de vanidad'
+      'Revisión mensual con IA contra los objetivos que puso dirección, no contra métricas de vanidad'
     ],
     benefits: [
       'Entras cuando el espacio todavía es barato, no cuando ya lo encarecieron los demás',
@@ -743,7 +743,7 @@ export const SERVICES: Service[] = [
       {
         step: 4,
         title: 'Entrega y revisión',
-        description: 'Te entregamos el acceso y el reporte mensual automático. Cada mes, Claude revisa el desempeño contra los objetivos y señala qué cambiar.'
+        description: 'Te entregamos el acceso y el reporte mensual automático. Cada mes, una IA revisa el desempeño contra los objetivos y señala qué cambiar.'
       }
     ],
     faq: [
@@ -784,7 +784,7 @@ export const SERVICES: Service[] = [
       'Análisis de qué está haciendo tu competencia en cada canal y a qué precio',
       'Plan de apertura del canal elegido, con lo que hay que preparar antes del primer peso de pauta',
       'Definición de qué se mide para saber en tres meses si la decisión fue la correcta',
-      'Revisión con Claude contra los objetivos de dirección, no contra corazonadas'
+      'Revisión con IA contra los objetivos de dirección, no contra corazonadas'
     ],
     benefits: [
       'Dejas de gastar publicidad empujando por un canal que tu margen no aguanta',

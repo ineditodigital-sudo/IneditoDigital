@@ -25,11 +25,16 @@ export default function ApartadosLegales({ t, respaldo, libres = 3 }: {
   const total = respaldo.length + libres;
   const bloques = [];
 
+  /* Un «\n» escrito como dos caracteres cuenta como salto. Asi llegaron a la
+     base cinco campos de Privacidad y Terminos (el def del panel iba entre
+     comillas simples de PHP) y la pagina mostraba «\n» tal cual. */
+  const lineas = (s: string) => s.replace(/\\n/g, '\n');
+
   for (let i = 1; i <= total; i++) {
     const def = respaldo[i - 1] ?? { titulo: '', texto: '', lista: '' };
     const titulo = t(`a${i}_titulo`, def.titulo);
-    const texto = t(`a${i}_texto`, def.texto);
-    const puntos = t(`a${i}_lista`, def.lista ?? '')
+    const texto = lineas(t(`a${i}_texto`, def.texto));
+    const puntos = lineas(t(`a${i}_lista`, def.lista ?? ''))
       .split('\n')
       .map((p) => p.trim())
       .filter(Boolean);

@@ -554,8 +554,8 @@ export const DICCIONARIO: Record<string, string> = {
     'We are a team from Aguascalientes. We work with companies that want to stop spending on digital blind: we connect objectives, data and campaigns in one place, and audit with AI whether the strategy is paying off.',
   'Que cada peso que una empresa invierte en digital se pueda medir contra ventas reales. Conectamos los objetivos de dirección con Search Console, Analytics y las campañas en un solo tablero, y revisamos periódicamente si la estrategia está funcionando.':
     'That every peso a company puts into digital can be measured against real sales. We connect leadership’s objectives with Search Console, Analytics and the campaigns on one dashboard, and check regularly whether the strategy is working.',
-  'Que las empresas de Aguascalientes no solo aparezcan en Google, sino también en las respuestas que dan ChatGPT, Claude y Gemini cuando alguien pregunta por un proveedor. Casi nadie en el mercado está trabajando eso todavía.':
-    'That companies in Aguascalientes show up not only on Google, but in the answers ChatGPT, Claude and Gemini give when somebody asks for a supplier. Almost nobody in this market is working on that yet.',
+  'Que las empresas de Aguascalientes no solo aparezcan en Google, sino también en las respuestas que dan los asistentes de inteligencia artificial cuando alguien pregunta por un proveedor. Casi nadie en el mercado está trabajando eso todavía.':
+    'That companies in Aguascalientes show up not only on Google, but in the answers AI assistants give when somebody asks for a supplier. Almost nobody in this market is working on that yet.',
   'Tableros conectados a datos reales y, cuando tu ERP lo permite, cruce directo entre campañas y ventas cerradas. No clics ni likes.':
     'Dashboards wired to real data and, when your ERP allows it, a direct match between campaigns and closed sales. Not clicks or likes.',
   'No solo Google. También los motores de IA que cada vez más recomiendan proveedores: ChatGPT, Claude, Gemini y Perplexity.':
@@ -1191,4 +1191,97 @@ export const DICCIONARIO: Record<string, string> = {
   '¿A quién me recomiendas en Aguascalientes?': 'Who do you recommend in Aguascalientes?',
   'Tu negocio': 'Your business',
   'Te recomiendan': 'You get recommended',
+  /* 21-sep: textos cortos que salian en español en la version en ingles
+     (lo encontro el barrido con __fugas). Las llaves son el texto publicado. */
+  /* / */
+  'Los tres niveles de servicio': 'The three service levels',
+  'Construir, mejorar o vender: según en qué punto estés':
+    'Build, improve or sell: depending on where you stand',
+  'Qué está mal en tu presencia digital, con evidencia':
+    'What is wrong with your digital presence, backed by evidence',
+  'El activo más importante y más descuidado': 'The most important asset, and the most neglected one',
+  'SEO, AEO y GEO': 'SEO, AEO and GEO',
+  'En qué se diferencian y por qué ya no basta el primero':
+    'How they differ, and why the first one is no longer enough',
+  /* /servicios */
+  'Soluciones digitales integrales que impulsan tu crecimiento con estrategias basadas en resultados':
+    'Comprehensive digital solutions that drive your growth with results-driven strategies',
+  '¿No sabes cuál te toca? Te lo decimos en 30 segundos.':
+    'Not sure which one you need? We will tell you in 30 seconds.',
+  /* /servicios-ia */
+  'Los servicios de inteligencia artificial aplicada son sistemas que se conectan a la operación real de una empresa —su chat, su catálogo, su lista de prospectos, sus campañas— y se hacen cargo de una parte concreta del trabajo. No son una herramienta que alguien tiene que aprender a usar: son procesos que quedan corriendo.':
+    'Applied artificial intelligence services are systems that connect to the real operation of a business —its chat, its catalog, its list of prospects, its campaigns— and take over a specific part of the work. They are not a tool somebody has to learn to use: they are processes that keep running.',
+  /* /servicios-ia/whatsapp */
+  'Un agente de IA en WhatsApp es un programa que atiende el chat de tu negocio con lenguaje normal: lee lo que te escriben, responde con la información real de tu empresa —precios, horarios, disponibilidad— y pasa la conversación a una persona cuando hace falta. Vive en tu número de siempre, así que el cliente no nota ningún cambio.':
+    'An AI agent on WhatsApp is a program that handles your business chat in plain language: it reads what people write to you, answers with your company’s real information —prices, hours, availability— and hands the conversation to a person when needed. It lives on your usual number, so the customer does not notice any change.',
+  '¿Mis clientes se van a dar cuenta de que hablan con una IA?':
+    'Will my customers realize they are talking to an AI?',
+  'Se lo decimos desde el primer mensaje, y es lo correcto: engañar a alguien sobre eso se nota y molesta. Lo que sí notan es que les contestan al instante y con información correcta, que es lo que buscaban. La molestia con los bots viene de los que no resuelven nada, no de saber que es un bot.':
+    'We tell them from the first message, and that is the right way to do it: misleading someone about that shows, and it annoys people. What they do notice is getting an instant reply with correct information, which is what they were after. The annoyance with bots comes from the ones that do not solve anything, not from knowing it is a bot.',
+  '¿Qué pasa si el agente no sabe responder?': 'What happens if the agent does not know how to answer?',
+  'Avisa que lo va a pasar con alguien del equipo y guarda la conversación completa, para que quien llegue no haga repetir todo desde el principio. Definimos contigo los casos en los que debe soltar siempre: reclamos, negociación de precio, o cuando la persona ya quiere comprar.':
+    'It lets the customer know it is handing them off to someone on the team and saves the full conversation, so whoever picks it up does not need to make them repeat everything from the start. We define with you the cases where it should always hand off: complaints, price negotiations, or when the person already wants to buy.',
+  '¿Se puede usar mi número actual de WhatsApp?': 'Can I use my current WhatsApp number?',
+  'Sí, y es lo recomendable — cambiar de número es tirar años de conversaciones y de contactos guardados. Se migra a WhatsApp Business API conservando el mismo número. Durante ese trámite el número queda inactivo unas horas, así que se agenda en horario de baja actividad.':
+    'Yes, and it is the recommended path — changing numbers throws away years of conversations and saved contacts. You migrate to the WhatsApp Business API keeping the same number. During that process the number stays inactive for a few hours, so it gets scheduled for a low-traffic time.',
+  '¿Cuánto tarda en estar funcionando?': 'How long until it is up and running?',
+  'La conexión técnica toma pocos días. Lo que marca el ritmo es reunir tu información: precios vigentes, políticas y las preguntas reales de tus clientes. Con eso a la mano, entre dos y tres semanas está contestando; sin eso, el agente responde en genérico y no vale la pena encenderlo.':
+    'The technical connection takes a few days. What sets the pace is gathering your information: current prices, policies and the real questions your customers ask. With that in hand, it is answering within two to three weeks; without it, the agent answers in generic terms and is not worth turning on.',
+  /* /servicios-ia/ventas */
+  'La IA de ventas es el uso de inteligencia artificial para que un equipo comercial deje de gastar su tiempo en prospectos que nunca iban a comprar. Ordena la lista por probabilidad real, escribe el primer contacto con el dato de cada empresa y sostiene el seguimiento que normalmente se abandona al tercer intento.':
+    'AI for sales means using artificial intelligence so a sales team stops spending its time on prospects who were never going to buy. It ranks the list by real probability, drafts the first outreach with the specific data of each company, and keeps up the follow-up that normally gets dropped after the third attempt.',
+  '¿Esto reemplaza a mi equipo de ventas?': 'Does this replace my sales team?',
+  'No, y quien lo prometa está exagerando. La venta la cierra una persona, sobre todo con ticket alto. Lo que se automatiza es lo que rodea a la venta: buscar datos, redactar el primer contacto, recordar el seguimiento, llenar el CRM. Un vendedor gasta ahí buena parte de su semana.':
+    'No, and anyone who promises that is overselling it. A person closes the sale, especially on big-ticket deals. What gets automated is everything around the sale: finding data, drafting the first outreach, remembering to follow up, filling in the CRM. A salesperson spends a good part of their week on exactly that.',
+  '¿Necesito tener un CRM antes de empezar?': 'Do I need a CRM before I start?',
+  'Ayuda mucho, pero no es obligatorio para arrancar. Se puede empezar con lo que tengas, incluso una hoja de cálculo, y montar el CRM en paralelo. Lo que sí hace falta es que alguien registre lo que pasó con cada prospecto: sin ese dato el sistema no tiene de qué aprender.':
+    'It helps a lot, but it is not required to get started. You can begin with whatever you have, even a spreadsheet, and build the CRM in parallel. What you do need is somebody logging what happened with each prospect: without that data, the system has nothing to learn from.',
+  '¿Cómo sabe la IA cuáles prospectos son buenos?': 'How does the AI know which prospects are good?',
+  'Al principio con reglas que definimos contigo: tamaño de la empresa, giro, comportamiento en el sitio, rapidez de respuesta. Después con tus cierres reales — cuando ya hay unas decenas de ventas y de pérdidas registradas, el criterio deja de ser una suposición y pasa a ser tu historial.':
+    'At first with rules we define with you: company size, line of work, on-site behavior, how fast they respond. Later with your actual closed deals — once there are a few dozen recorded wins and losses, the criteria stop being a guess and become your own track record.',
+  '¿Los correos automáticos no suenan a robot?': 'Will automated emails sound like a robot?',
+  'Los genéricos sí, y por eso no funcionan. El planteamiento aquí es otro: la IA prepara un borrador que menciona algo concreto de esa empresa y el vendedor lo revisa antes de mandarlo. Nadie manda nada sin leerlo. Lo que se gana es velocidad, no permiso para escribir mal.':
+    'Generic ones do, and that is why they do not work. The approach here is different: the AI prepares a draft that mentions something specific about that company, and the salesperson reviews it before sending. Nothing goes out unread. What you gain is speed, not a license to write badly.',
+  /* /servicios-ia/marketing */
+  'La IA aplicada a marketing es usar inteligencia artificial para decidir dónde poner el presupuesto, producir el contenido que hace falta y detectar lo que no está funcionando antes de que se gaste el mes. No es publicar más rápido: es dejar de gastar en lo que no devuelve nada.':
+    'AI applied to marketing means using artificial intelligence to decide where to put the budget, produce the content you need and catch what is not working before the month’s budget is gone. It is not about publishing faster: it is about no longer spending on what brings nothing back.',
+  '¿La IA va a escribir todo mi contenido?': 'Will AI write all my content?',
+  'Puede, y no lo recomendamos. El contenido escrito completo por una IA suena a contenido escrito por una IA, y la gente lo distingue cada vez mejor. Sirve muy bien para producir variantes de un mensaje que ya decidiste, para adaptar un texto a cada canal y para salir del renglón en blanco.':
+    'It can, and we do not recommend it. Content written entirely by AI sounds like content written by AI, and people are getting better at spotting it. It works very well for producing variations on a message you already decided on, adapting a text to each channel and getting past a blank page.',
+  '¿Sirve si mi presupuesto de publicidad es chico?': 'Does this work if my ad budget is small?',
+  'Con presupuestos pequeños la automatización de pujas rinde poco, porque el sistema no junta datos suficientes para aprender. Lo que sí rinde desde el primer mes es medir bien y producir más variantes. Preferimos decirlo antes que vender una optimización que no va a tener de qué alimentarse.':
+    'With small budgets, bid automation does not pay off much, because the system does not gather enough data to learn. What does pay off from month one is measuring accurately and producing more variations. We would rather say so upfront than sell you an optimization that will have nothing to run on.',
+  '¿Cómo sé si de verdad está funcionando?': 'How do I know it is actually working?',
+  'Porque la conversación cambia de tema. Se deja de discutir alcance e impresiones y se empieza a discutir cuánto costó cada cliente y de qué campaña salió. Si a los tres meses el reporte sigue hablando de seguidores, algo se hizo mal.':
+    'Because the conversation changes topic. You stop discussing reach and impressions and start discussing what each customer cost and which campaign they came from. If the report is still talking about followers three months in, something went wrong.',
+  '¿Qué es eso de aparecer en las respuestas de ChatGPT?':
+    'What does it mean to show up in ChatGPT’s answers?',
+  'Cuando alguien le pregunta a un asistente por proveedores de tu categoría, la respuesta menciona empresas concretas. Estar o no estar ahí ya mueve clientes, y depende de cosas que se trabajan: que tu sitio sea legible para esos sistemas y que existan menciones tuyas fuera de tu propia página.':
+    'When somebody asks an assistant for suppliers in your category, the answer names specific companies. Whether you are on that list or not already moves customers, and it depends on things you can work on: making your site legible to those systems and having mentions of you outside your own page.',
+  /* /servicios-ia/ecommerce */
+  'La IA para e-commerce es el conjunto de sistemas que trabajan sobre las visitas que tu tienda ya recibe: recomiendan el producto correcto, responden las dudas que frenan la compra y recuperan los carritos abandonados. No traen más gente — hacen que compre más de la que ya está entrando.':
+    'AI for e-commerce is the set of systems that work on the visits your store is already getting: they recommend the right product, answer the questions holding back the purchase and recover abandoned carts. They do not bring in more people — they get the people already coming in to buy more.',
+  '¿Funciona con mi plataforma actual?': 'Does it work with my current platform?',
+  'Con las más usadas —Shopify, WooCommerce, Tiendanube, Magento— la conexión es directa. Con desarrollos a la medida depende de si la tienda permite consultar catálogo e inventario desde fuera; casi siempre se puede, y lo revisamos antes de proponer nada.':
+    'With the most popular ones —Shopify, WooCommerce, Tiendanube, Magento— the connection is direct. With custom-built stores, it depends on whether the platform allows outside access to catalog and inventory; it almost always does, and we check before proposing anything.',
+  '¿Cuánto puede subir la conversión?': 'How much can this lift conversion?',
+  'Depende demasiado del punto de partida como para prometer un número, y desconfía de quien te dé uno sin ver tu tienda. Lo que sí se puede decir es dónde suele estar el margen: en el buscador interno, en las dudas de envío y devolución, y en la recuperación de carritos.':
+    'It depends too much on your starting point to promise a number, and you should be wary of anyone who gives you one without seeing your store. What we can say is where the upside usually is: on-site search, shipping and return questions, and cart recovery.',
+  '¿Necesito mucho tráfico para que valga la pena?': 'Do I need a lot of traffic for this to be worth it?',
+  'Para que las recomendaciones aprendan sí hace falta cierto volumen de visitas y de compras. Pero la atención automática en el chat y la recuperación de carritos rinden desde el primer mes, incluso en tiendas chicas, porque no dependen de aprender: dependen de contestar a tiempo.':
+    'For the recommendations to learn, you do need a certain volume of visits and purchases. But automatic chat support and cart recovery pay off from the first month, even in small stores, because they do not depend on learning: they depend on answering on time.',
+  '¿El agente puede procesar pedidos completos?': 'Can the agent process complete orders?',
+  'Puede tomar el pedido, resolver dudas y llevar a la persona hasta el pago. El cobro se hace en tu pasarela de siempre, no dentro del chat: es más seguro y evita problemas con la conciliación y con las devoluciones.':
+    'It can take the order, answer questions and walk the person through to checkout. Payment happens on your usual payment gateway, not inside the chat: it is safer and avoids problems with reconciliation and returns.',
+  /* /servicios/activaciones-para-expo */
+  'Explora en vivo las activaciones interactivas que podemos implementar en tu stand':
+    'Try the interactive activations we can put in your booth, live',
+  'Ruleta interactiva totalmente personalizable. Perfecta para sorteos, rifas y dinámicas de gamificación en tu stand.':
+    'A fully customizable interactive prize wheel. Perfect for giveaways, raffles and gamification at your booth.',
+  'Photobooth con marcos personalizados de tu marca. Captura fotos, compártelas y genera engagement viral en redes sociales.':
+    'A photo booth with frames branded as yours. Snap photos, share them and spark viral engagement on social media.',
+  'Gato interactivo con premios. Juega contra la IA y gana. Diversión garantizada para atraer visitantes a tu stand.':
+    'Interactive tic-tac-toe with prizes. Play the AI and win. Guaranteed fun that pulls visitors into your booth.',
+  /* /servicios/linkedin-de-empresa */
+  '240 seguidores del sector': '240 industry followers',
 };

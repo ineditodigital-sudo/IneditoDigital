@@ -313,12 +313,15 @@ export default function AIServicesPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
+                // A 768 px caben tres tarjetas de 229 px y «ESCALABILIDAD» mide
+                // 10.79 veces su letra: el titulo se mide contra la tarjeta.
+                style={{ containerType: 'inline-size' }}
               >
                 <GlassCard className="p-6 text-center h-full hover:bg-white/5 transition-all duration-300">
                   <div className="w-14 h-14 rounded-2xl bg-[#7700CE]/20 flex items-center justify-center mx-auto mb-4">
                     <item.icon className="text-[#7700CE]" size={28} />
                   </div>
-                  <h3 className="heading text-xl text-white mb-3">{item.title}</h3>
+                  <h3 className="heading text-white mb-3" style={{ fontSize: 'min(1.25rem, 7.4cqw)' }}>{item.title}</h3>
                   <p className="text-white/70 text-sm leading-relaxed">{item.description}</p>
                 </GlassCard>
               </motion.div>

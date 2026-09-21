@@ -331,7 +331,7 @@ export default function HomePage() {
                   <span aria-hidden className="h-px w-8 bg-[#AA66FF]/60" />
                   {tEnf('etiqueta', 'NUESTRO ENFOQUE')}
                 </span>
-                <h2 className="heading mb-5 text-3xl leading-[1.05] [text-wrap:balance] md:text-5xl">
+                <h2 className="heading titulo-seccion mb-5 leading-[1.05] [text-wrap:balance]">
                   {tEnf('titulo_1', 'NO ES UNA PROMESA,')}{' '}
                   <span
                     className="bg-clip-text text-transparent"
@@ -933,7 +933,7 @@ export default function HomePage() {
             className="mb-10 max-w-3xl"
           >
             <Kicker>{tVal('etiqueta', 'QUIÉN ESTÁ DETRÁS')}</Kicker>
-            <h2 className="heading mb-5 text-3xl leading-[1.05] [text-wrap:balance] md:text-5xl">
+            <h2 className="heading titulo-seccion mb-5 leading-[1.05] [text-wrap:balance]">
               {tVal('postura_1', 'DE AGUASCALIENTES,')}{' '}
               <span
                 className="bg-clip-text text-transparent"

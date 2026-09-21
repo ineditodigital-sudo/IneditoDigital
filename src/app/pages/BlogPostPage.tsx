@@ -55,7 +55,7 @@ export default function BlogPostPage() {
 
           <div className="mb-8">
             <span className="inline-block px-3 py-1 rounded-full bg-[#7700CE]/20 text-[#7700CE] text-sm mb-4">{post.category}</span>
-            <h1 className="heading text-4xl md:text-5xl mb-6">{post.title}</h1>
+            <h1 className="heading titulo-articulo mb-6">{post.title}</h1>
             
             <div className="flex flex-wrap gap-6 text-white/60 text-sm mb-6">
               <div className="flex items-center gap-2">

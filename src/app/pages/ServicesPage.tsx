@@ -184,11 +184,17 @@ export default function ServicesPage() {
               <motion.div key={service.id} {...entra(Math.min(index * 0.04, 0.4))}>
                 <Link to={`/servicios/${service.slug}`}>
                   <GlassCard hover className="group h-full">
-                    <div className="mb-4">
+                    {/* A 1024 px la tarjeta deja 273 px y «ESPECTACULARES» mide
+                        12.83 veces su letra (308 px a 24): el titulo se mide
+                        contra la tarjeta, con tope en los 24 px de siempre. */}
+                    <div className="mb-4" style={{ containerType: 'inline-size' }}>
                       <span className="mb-4 inline-block rounded-full bg-[#9933FF]/18 px-3 py-1 text-sm text-[#AA66FF]">
                         {service.category}
                       </span>
-                      <h3 className="heading mb-3 text-2xl transition-colors group-hover:text-[#AA66FF]">
+                      <h3
+                        className="heading mb-3 transition-colors group-hover:text-[#AA66FF]"
+                        style={{ fontSize: 'min(1.5rem, 7.6cqw)' }}
+                      >
                         {service.title}
                       </h3>
                       <p className="mb-4 text-white/70">{service.shortDescription}</p>

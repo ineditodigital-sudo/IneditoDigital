@@ -53,7 +53,7 @@ El servicio se adapta al grado de posicionamiento de cada cliente.
 - ChatGPT Ads: recién lanzado. Inédito Digital es de los primeros en trabajarlo.
 - Campañas de Meta: con su dashboard, no a ciegas.
 - Estrategia de canales de venta: definir el camino correcto entre venta B2B directa, apertura de marketplaces (Mercado Libre, Amazon) o una combinación de ambos.
-- Auditorías con Claude: revisión periódica de los resultados contra los objetivos que define la dirección del cliente. No son reportes de vanidad, sino revisión continua de si la estrategia está funcionando.
+- Auditorías con IA: revisión periódica de los resultados contra los objetivos que define la dirección del cliente. No son reportes de vanidad, sino revisión continua de si la estrategia está funcionando.
 - Cruce campañas-ventas: para clientes que tienen su ERP desarrollado por Maindsoft, cruce de prospectos (cómo llegaron) contra ventas cerradas, para medir las campañas contra facturación real y no contra clics ni likes.
 
 ## SEO, AEO y GEO: en qué se diferencian

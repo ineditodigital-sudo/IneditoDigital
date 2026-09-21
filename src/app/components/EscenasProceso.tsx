@@ -690,7 +690,7 @@ function EscenaPerfil({ activo }: { activo: number }) {
               <div className="h-1.5 w-32 rounded-full bg-white/18" />
               <div className="flex items-center gap-1 pt-0.5">
                 <Users size={9} className="text-white/40" />
-                <span className="text-[8.5px] text-white/40">240 seguidores del sector</span>
+                <span className="text-[8.5px] text-white/40">{tr('240 seguidores del sector')}</span>
               </div>
             </motion.div>
             {/* paso 3: la cadencia */}
