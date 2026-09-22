@@ -10,7 +10,7 @@ import { tr } from '../idioma';
 import { detectarGlobal, buscarServicios, buscarPregunta, buscarExtra } from './asistente/intenciones';
 import { enlaceWhatsApp, construirMensaje, type Requerimiento } from './asistente/mensajeWhatsApp';
 import type { Service } from '../data/services';
-import { agruparServicios } from '../data/grupos';
+import { pasosDelMetodo, diagnosticoDelMetodo, otrosServicios } from '../data/metodo';
 
 /*
  * ASISTENTE — reescrito el 24/08/2026.
@@ -246,43 +246,47 @@ export default function AIAssistant() {
      * gana el servicio.
      */
     const encajaUno = coincidencias.length > 0 && coincidencias[0].puntos >= 10;
+    /* El catálogo se cuenta como el menú: el método en tres pasos, con el
+       diagnóstico como puerta de entrada (data/metodo.ts). Lo demás sigue a
+       mano, en «Otros servicios». */
     if (global === 'catalogo' && !encajaUno) {
-      const grupos = agruparServicios(services);
+      const d = diagnosticoDelMetodo();
       bot(
-        tCon('r_catalogo', 'Estos son los frentes en los que trabajamos, más todo lo de inteligencia artificial. ¿Cuál te interesa?'),
+        tCon('r_catalogo', 'Trabajamos en tres pasos: que te encuentren, que te escriban y que te compren. ¿Por cuál empezamos?'),
         {
-          enlace: { titulo: 'Todos los servicios', sub: 'Y los tres niveles según tu punto de partida', url: '/servicios' },
+          enlace: { titulo: d.titulo, sub: tCon('r_catalogo_sub', 'Empieza por saber qué está mal, con evidencia'), url: d.ruta },
           opciones: [
-            ...grupos.map((g) => ({ etiqueta: g.titulo, valor: `__grupo:${g.titulo}__` })),
-            { etiqueta: '🤖 Servicios de IA', valor: '__grupo:IA__' },
+            ...pasosDelMetodo().map((p) => ({ etiqueta: `${p.numero} · ${p.titulo}`, valor: `__grupo:${p.numero}__` })),
+            { etiqueta: tCon('opcion_otros', 'Otros servicios'), valor: '__grupo:otros__' },
           ],
         }
       );
       return;
     }
 
-    /* Al elegir un grupo, se listan sus servicios como botones. */
+    /* Al elegir un paso, se listan sus servicios como botones. El botón manda
+       el título vigente del servicio (el del panel, ya en el idioma de la
+       visita) para que la búsqueda caiga en su ficha. */
     if (texto.startsWith('__grupo:')) {
-      const nombre = texto.slice(8, -2);
-      if (nombre === 'IA') {
-        bot(tCon('r_grupo_ia', 'Esto es lo que hacemos con inteligencia artificial:'), {
-          enlace: { titulo: 'Servicios de IA', sub: 'Ver todo el bloque', url: '/servicios-ia' },
+      const clave = texto.slice(8, -2);
+      if (clave === 'otros') {
+        bot(tCon('r_otros', 'También hacemos esto, casi siempre como parte de un proyecto:'), {
           opciones: [
-            { etiqueta: 'Posicionamiento en IA', valor: 'posicionamiento en ia' },
-            { etiqueta: 'IA para WhatsApp', valor: 'ia para whatsapp' },
-            { etiqueta: 'IA de Ventas', valor: 'ia de ventas' },
-            { etiqueta: 'IA para Marketing', valor: 'ia para marketing' },
-            { etiqueta: 'IA para E-commerce', valor: 'ia para ecommerce' },
+            ...otrosServicios(services).map((s) => ({ etiqueta: s.title, valor: s.title })),
+            { etiqueta: '← Ver los tres pasos', valor: 'que servicios tienen' },
           ],
         });
         return;
       }
-      const grupo = agruparServicios(services).find((g) => g.titulo === nombre);
-      if (grupo) {
-        bot(`*${grupo.titulo}*\n\nElige el que te interese y te cuento:`, {
+      const paso = pasosDelMetodo().find((p) => p.numero === clave);
+      if (paso) {
+        bot(`*${paso.titulo}* · ${paso.sub}\n\n${tr('Elige el que te interese y te cuento:')}`, {
           opciones: [
-            ...grupo.items.map((s) => ({ etiqueta: s.title, valor: s.title })),
-            { etiqueta: '← Ver otros grupos', valor: 'que servicios tienen' },
+            ...paso.items.map((it) => ({
+              etiqueta: it.titulo,
+              valor: (it.slug && services.find((s) => s.slug === it.slug)?.title) || it.buscar,
+            })),
+            { etiqueta: '← Ver los tres pasos', valor: 'que servicios tienen' },
           ],
         });
         return;

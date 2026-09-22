@@ -5,51 +5,49 @@ import { Menu, X, ChevronDown, ArrowRight, MessageCircle, Sparkles } from 'lucid
 import { useApp } from '../context/AppContext';
 import { cn } from './ui/utils';
 import { marca } from '../cms';
-import { agruparServicios } from '../data/grupos';
-import { IconoServicio } from './IconoServicio';
+import { pasosDelMetodo, diagnosticoDelMetodo } from '../data/metodo';
 import CambioIdioma from './CambioIdioma';
 import { tr } from '../idioma';
 
 /*
- * Antes habia dos menus desplegables gemelos: "Servicios" (13 filas en una
- * columna) y "Servicios IA" (5 filas). Ahora hay UN mega menu bajo
- * "Servicios": tres grupos por categoria + la columna de IA destacada.
- * Menos entradas arriba, mas mapa al abrirlo.
+ * UN mega menu bajo "Servicios", con el metodo de la agencia en tres pasos
+ * (que te encuentren, que te escriban, que te compren) y el diagnostico como
+ * puerta de entrada. Hasta el 22-sep era un catalogo de 23 servicios por
+ * categoria y se leia como «hacemos de todo»; ver data/metodo.ts.
  *
  * En movil no hay mega menu: el mismo contenido va como acordeon con
- * encabezados de grupo, que en pantalla chica funciona mejor que un panel.
+ * encabezados de paso, que en pantalla chica funciona mejor que un panel.
  */
+
+/* Las paginas de IA que no son servicios del panel. El menu ya no las lista
+   todas, pero siguen siendo rutas del sitio y no pueden contar como 404. */
+const RUTAS_IA = [
+  '/servicios/posicionamiento-en-ia',
+  '/servicios-ia/whatsapp',
+  '/servicios-ia/ventas',
+  '/servicios-ia/marketing',
+  '/servicios-ia/ecommerce',
+];
 
 export default function Header() {
   const location = useLocation();
   const { services, settings, openAssistant } = useApp();
   const m = marca.menu();
-  const mIA = marca.menuIA();
-  /* En el panel el texto trae su flecha («Ver todos los servicios →») y el
-     menu ya pinta una: se quita la escrita para que no salgan dos. Ademas asi
-     la llave del diccionario es la del texto publicado, flecha incluida. */
-  const verTodos = mIA('ver_todos', 'Ver todos los servicios →').replace(/\s*→\s*$/, '');
+  const mS = marca.menuServicios();
+  /* Si en el panel alguien escribe el texto con su flecha, se quita: el menu
+     ya pinta una y saldrian dos. */
+  const verTodos = mS('ver_todos', 'Ver todos los servicios').replace(/\s*→\s*$/, '');
   const mLogo = marca.logo();
 
   /*
-   * Los grupos del mega menu.
+   * El metodo en tres pasos y su puerta de entrada.
    *
-   * Salen de agruparServicios y no de una lista propia: el asistente usa la
-   * misma funcion, y si el chat y el menu contestan distinto a "que servicios
-   * tienen" la culpa siempre es de dos listas paralelas. Aqui habia una.
+   * Salen de data/metodo.ts y no de una lista propia: el asistente usa las
+   * mismas funciones, y si el chat y el menu contestan distinto a "que
+   * servicios tienen" la culpa siempre es de dos listas paralelas.
    */
-  const grupos = agruparServicios(services).map((g, i) => ({
-    ...g,
-    titulo: m(`grupo_${i + 1}`, g.titulo),
-  }));
-
-  const itemsIA = [
-    { label: mIA('geo', 'Posicionamiento en IA'), path: '/servicios/posicionamiento-en-ia', description: mIA('geo_desc', 'Que ChatGPT te recomiende') },
-    { label: mIA('whatsapp', 'IA para WhatsApp'), path: '/servicios-ia/whatsapp', description: mIA('whatsapp_desc', 'Ventas y Soporte 24/7') },
-    { label: mIA('ventas', 'IA de Ventas'), path: '/servicios-ia/ventas', description: mIA('ventas_desc', 'Prospección Inteligente') },
-    { label: mIA('marketing', 'IA para Marketing'), path: '/servicios-ia/marketing', description: mIA('marketing_desc', 'Optimización Automática') },
-    { label: mIA('ecommerce', 'IA para E-commerce'), path: '/servicios-ia/ecommerce', description: mIA('ecommerce_desc', 'Convierte Más Visitas') },
-  ];
+  const pasos = pasosDelMetodo();
+  const diag = diagnosticoDelMetodo();
 
   const enlaces = [
     { label: m('inicio', 'Inicio'), path: '/' },
@@ -109,7 +107,7 @@ export default function Header() {
     '/servicios',
     '/servicios-ia',
     ...services.map((s) => `/servicios/${s.slug}`),
-    ...itemsIA.map((s) => s.path),
+    ...RUTAS_IA,
   ];
   const is404Page = location.pathname === '/404' || !rutas.includes(location.pathname);
 
@@ -273,69 +271,62 @@ export default function Header() {
             onMouseLeave={() => cerrarMega()}
           >
             <div className="container mx-auto max-w-5xl px-6 pt-3 pb-6">
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl">
-                <div
-                  className="grid"
-                  style={{ gridTemplateColumns: `repeat(${grupos.length}, 1fr) 1.15fr` }}
-                >
-                  {/* Los tres grupos de servicios */}
-                  {grupos.map((g) => (
-                    <div key={g.titulo} className="border-r border-white/8 p-5">
-                      <div className="mb-3 font-mono text-[10px] uppercase tracking-[.18em] text-white/40">
-                        {g.titulo}
+              {/* Opaco: el titular de la portada se transparentaba detrás de las
+                  descripciones y costaba leerlas. */}
+              <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0f] shadow-2xl">
+                <div className="grid" style={{ gridTemplateColumns: `repeat(${pasos.length}, 1fr) 1.1fr` }}>
+                  {/* Los tres pasos: numerados, porque son una secuencia y no
+                      tres departamentos. Cada servicio dice lo que gana el
+                      cliente, no solo cómo se llama. */}
+                  {pasos.map((p) => (
+                    <div key={p.numero} className="border-r border-white/8 p-5">
+                      <div className="font-mono text-[10px] uppercase tracking-[.18em] text-white/45">
+                        <span className="text-[#CC66FF]">{p.numero}</span> · {p.titulo}
                       </div>
+                      <div className="mb-3 mt-1 text-[11px] leading-snug text-white/40">{p.sub}</div>
                       <div className="space-y-0.5">
-                        {g.items.map((s) => (
+                        {p.items.map((it) => (
                           <Link
-                            key={s.slug}
-                            to={`/servicios/${s.slug}`}
-                            className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-white/[.06]"
+                            key={it.ruta}
+                            to={it.ruta}
+                            className="group block rounded-lg px-2.5 py-2 transition-colors hover:bg-white/[.06]"
                           >
-                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[.04] text-white/45 transition-colors group-hover:border-[#CC66FF]/40 group-hover:bg-[#CC66FF]/12 group-hover:text-[#CC66FF]">
-                              <IconoServicio nombre={s.icon} size={15} />
-                            </span>
-                            <span className="text-[12.5px] font-medium text-white/85 transition-colors group-hover:text-white">
-                              {s.title}
-                            </span>
+                            <div className="text-[12.5px] font-medium text-white/90 transition-colors group-hover:text-white">
+                              {it.titulo}
+                            </div>
+                            <div className="mt-0.5 text-[10.5px] leading-snug text-white/45">{it.desc}</div>
                           </Link>
                         ))}
                       </div>
                     </div>
                   ))}
 
-                  {/* La columna de IA, destacada */}
+                  {/* La puerta de entrada, destacada: todo empieza por saber
+                      qué está mal, con evidencia. */}
                   <div
-                    className="p-5"
-                    style={{ background: 'linear-gradient(160deg, rgba(119,0,206,.22), rgba(119,0,206,.05))' }}
+                    className="flex flex-col p-5"
+                    style={{ background: 'linear-gradient(160deg, rgba(119,0,206,.24), rgba(119,0,206,.05))' }}
                   >
-                    <Link
-                      to="/servicios-ia"
-                      className="mb-3 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.18em] text-[#CC66FF] hover:text-white transition-colors"
-                    >
+                    <div className="mb-3 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.18em] text-[#CC66FF]">
                       <Sparkles size={12} />
-                      {m('servicios_ia', 'Servicios IA')}
-                    </Link>
-                    <div className="space-y-0.5">
-                      {itemsIA.map((s) => (
-                        <Link
-                          key={s.path}
-                          to={s.path}
-                          className="group block rounded-lg px-2.5 py-2 transition-colors hover:bg-[#CC66FF]/10"
-                        >
-                          <div className="text-[12.5px] font-medium text-white/90 transition-colors group-hover:text-white">
-                            {s.label}
-                          </div>
-                          <div className="mt-0.5 text-[10.5px] text-white/45">{s.description}</div>
-                        </Link>
-                      ))}
+                      {diag.kicker}
                     </div>
+                    <div className="text-[15px] font-semibold leading-snug text-white">{diag.titulo}</div>
+                    <p className="mt-2 text-[11.5px] leading-relaxed text-white/60">{diag.texto}</p>
+                    <Link
+                      to={diag.ruta}
+                      className="mt-auto inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-4 py-2 text-[11.5px] font-bold text-white transition-[transform,box-shadow] duration-150 ease-out hover:shadow-[0_0_24px_rgba(119,0,206,0.45)] active:scale-[0.97]"
+                    >
+                      {diag.boton}
+                      <ArrowRight size={13} />
+                    </Link>
                   </div>
                 </div>
 
                 {/* Pie del panel */}
-                <div className="flex items-center justify-between border-t border-white/8 px-5 py-3">
+                <div className="flex items-center justify-between gap-6 border-t border-white/8 px-5 py-3">
                   <span className="text-[11px] text-white/40">
-                    {m('mega_pie', 'Construir, mejorar o vender: el servicio se adapta a tu punto de partida')}
+                    {mS('pie', 'Un solo sistema en tres pasos: cada paso se mide antes de dar el siguiente.')}
                   </span>
                   <Link
                     to="/servicios"
@@ -363,7 +354,7 @@ export default function Header() {
             <div className="container mx-auto max-w-7xl space-y-1 px-4 py-4 max-h-[calc(100vh-70px)] overflow-y-auto">
               <MovilEnlace to="/" activo={location.pathname === '/'}>{m('inicio', 'Inicio')}</MovilEnlace>
 
-              {/* Servicios: acordeon con los mismos grupos del mega menu */}
+              {/* Servicios: acordeon con los mismos pasos del mega menu */}
               <button
                 onClick={() => setMovilServicios(!movilServicios)}
                 className={cn(
@@ -377,38 +368,29 @@ export default function Header() {
 
               {movilServicios && (
                 <div className="ml-2 space-y-3 border-l border-white/10 pl-3 pt-1">
-                  {grupos.map((g) => (
-                    <div key={g.titulo}>
-                      <div className="mb-1 font-mono text-[9.5px] uppercase tracking-[.16em] text-white/35">
-                        {g.titulo}
+                  {pasos.map((p) => (
+                    <div key={p.numero}>
+                      <div className="mb-1 font-mono text-[9.5px] uppercase tracking-[.16em] text-white/40">
+                        <span className="text-[#CC66FF]">{p.numero}</span> · {p.titulo}
                       </div>
-                      {g.items.map((s) => (
+                      {p.items.map((it) => (
                         <Link
-                          key={s.slug}
-                          to={`/servicios/${s.slug}`}
-                          className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-white/70 transition-colors hover:bg-white/5 hover:text-white"
+                          key={it.ruta}
+                          to={it.ruta}
+                          className="block rounded-lg px-2 py-1.5 text-xs text-white/70 transition-colors hover:bg-white/5 hover:text-white"
                         >
-                          <IconoServicio nombre={s.icon} size={13} className="shrink-0 text-white/40" />
-                          {s.title}
+                          {it.titulo}
                         </Link>
                       ))}
                     </div>
                   ))}
-                  <div>
-                    <div className="mb-1 flex items-center gap-1 font-mono text-[9.5px] uppercase tracking-[.16em] text-[#CC66FF]">
-                      <Sparkles size={10} />
-                      {m('servicios_ia', 'Servicios IA')}
-                    </div>
-                    {itemsIA.map((s) => (
-                      <Link
-                        key={s.path}
-                        to={s.path}
-                        className="block rounded-lg px-2 py-1.5 text-xs text-white/70 transition-colors hover:bg-white/5 hover:text-white"
-                      >
-                        {s.label}
-                      </Link>
-                    ))}
-                  </div>
+                  <Link
+                    to={diag.ruta}
+                    className="flex items-center gap-1.5 rounded-lg border border-[#9933FF]/30 bg-[#7700CE]/10 px-2.5 py-2 text-xs font-semibold text-white"
+                  >
+                    <Sparkles size={12} className="shrink-0 text-[#CC66FF]" />
+                    {diag.kicker}: {diag.titulo}
+                  </Link>
                   <Link to="/servicios" className="block px-2 py-1.5 text-xs font-bold text-[#CC66FF]">
                     {verTodos} →
                   </Link>

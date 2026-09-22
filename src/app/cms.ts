@@ -213,7 +213,8 @@ export function aplicarColoresDeMarca() {
 /** Menús y textos del encabezado y el pie, con sus respaldos. */
 export const marca = {
   menu: () => contenido('marca', 'menu'),
-  menuIA: () => contenido('marca', 'menu_ia'),
+  /* El menú de servicios: los tres pasos del método (data/metodo.ts). */
+  menuServicios: () => contenido('marca', 'menu_servicios'),
   pie: () => contenido('marca', 'pie'),
   redes: () => contenido('marca', 'redes'),
   logo: () => contenido('marca', 'logo'),
