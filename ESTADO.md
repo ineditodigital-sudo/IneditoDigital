@@ -8,9 +8,8 @@
 | | |
 |---|---|
 | Último commit de código | `823d13f` — Cada servicio de /servicios tiene su ícono animado |
-| En producción | `46db562` — la portada con los tres pasos (`assets/index-i197ZudT.js`, verificado en vivo el 23-sep). La base, al día |
-| Sin publicar | `823d13f`: los íconos animados de /servicios (solo código, no toca la base) |
-| GitHub | Al día. La historia reescrita (183 commits, todos de «Inédito Digital») se subió el 23-sep sobre `eaf1982`, el último que había allá (2-sep, contenido completo en la historia original). **El repositorio es público** (ver Trampas) |
+| En producción | El mismo: `assets/index-CnGKTPQo.js`, publicado y verificado en vivo el 23-sep (los 19 íconos de /servicios en escritorio y teléfono, español e inglés). La base, al día |
+| GitHub | Al día hasta `79ecd5f` (lo de después sigue solo en local). La historia reescrita (183 commits, todos de «Inédito Digital») se subió el 23-sep sobre `eaf1982`, el último que había allá (2-sep, contenido completo en la historia original). **El repositorio es público** (ver Trampas) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
 | Desplegar | `npm run build` y luego, en otro comando, `bash deploy.sh`: el candado revisa que `dist` sea más nuevo que `src` antes de dejar correr el despliegue (detalle en `docs/DESPLIEGUE.md`) |
@@ -285,7 +284,7 @@ En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12�
 - `render.php`: la portada para robots cuenta los tres pasos, y las preguntas «¿Qué hace exactamente?» y «¿Es confiable?» ya no hablan de niveles. Los pasos se escriben una vez (`metodoPasos()`) y los textos se leen con `textosPagina()`, para la portada y /servicios.
 - Barrido limpio en 9 tamaños y dos idiomas; la única «fuga» en inglés es el nombre de quien dejó una opinión.
 
-**Íconos animados en /servicios** (`823d13f`, sin publicar). Cada servicio tiene un dibujo propio que cuenta en un segundo qué hace: el sitio se arma, tu resultado sube al primer lugar, el pin cae en el mapa, el embudo deja pasar a un cliente, la aguja califica al prospecto… Son 19, más uno genérico.
+**Íconos animados en /servicios** (`823d13f`, en vivo desde el 23-sep). Cada servicio tiene un dibujo propio que cuenta en un segundo qué hace: el sitio se arma, tu resultado sube al primer lugar, el pin cae en el mapa, el embudo deja pasar a un cliente, la aguja califica al prospecto… Son 19, más uno genérico.
 
 - Se animan una vez al entrar en pantalla (antes esperan congelados en su primer cuadro, para no saltar) y otra al pasar el cursor por la tarjeta, solo con ratón. Sin bucles. Con «reducir movimiento», quietos.
 - `src/app/components/IconoServicio.tsx` (dibujos y cuándo se mueven) y `src/styles/iconos-servicio.css` (el movimiento). SVG de 32 × 32, CSS con transform, opacity y el trazo de las líneas.
