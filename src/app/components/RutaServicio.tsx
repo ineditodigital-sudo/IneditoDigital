@@ -15,7 +15,8 @@ import { IconoServicio } from './IconoServicio';
  * Orienta en vez de vender en combo: según si el negocio empieza de cero o
  * ya funciona, muestra hasta tres servicios con su papel (primero, va con
  * este, más alcance, después, otra ruta) y el porqué en una línea. Qué
- * recomienda a qué vive en data/recomendaciones.ts.
+ * recomienda a qué: lo que cada servicio guardó en el panel y, si no, lo de
+ * data/recomendaciones.ts.
  *
  * La etapa elegida se recuerda (localStorage): quien dijo «empiezo de cero»
  * lo sigue viendo así al saltar de un servicio a otro.
@@ -44,7 +45,11 @@ export function RutaServicio({ className = '' }: { className?: string }) {
   const t = contenido('servicio-detalle', 'ruta');
   const [etapa, setEtapa] = useState<Etapa>(leerEtapa);
 
-  const lista = recomendacionesPara(claveDeRuta(pathname), etapa);
+  /* Las que el servicio guardó en el panel mandan; si no tiene, las del
+     código. Las páginas de IA no son servicios del panel: siempre del código. */
+  const clave = claveDeRuta(pathname);
+  const propias = pathname.startsWith('/servicios/') ? services.find((s) => s.slug === clave)?.recomendaciones : undefined;
+  const lista = recomendacionesPara(clave, etapa, propias, pathname);
   if (!lista.length) return null;
 
   const elegir = (e: Etapa) => {

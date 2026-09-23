@@ -198,16 +198,26 @@ function textosPagina(array $paginas, string $slug): array {
   return contenido_con_respaldo($slug, json_encode($paginas[$slug]['contenido'] ?? null));
 }
 
-/** «Arma tu ruta» para robots: lo mismo que la ficha, del JSON que deja la
-    compilación (src/app/data/recomendaciones.ts → dist/datos/). Hasta tres
-    por etapa, con su papel y su porqué, y los nombres como los dice el menú. */
-function rutaHtml(string $clave, array $paginas, array $services): string {
+/** «Arma tu ruta» para robots: lo mismo que la ficha. Las que el servicio
+    guardó en el panel (`$propias`, de su data_json) mandan, aunque vengan
+    vacías; si no tiene, las del código, del JSON que deja la compilación
+    (src/app/data/recomendaciones.ts → dist/datos/). Hasta tres por etapa,
+    con su papel y su porqué, y los nombres como los dice el menú. */
+function rutaHtml(string $clave, array $paginas, array $services, ?array $propias = null, string $rutaActual = ''): string {
   static $datos = null;
   if ($datos === null) {
     $j = @file_get_contents(__DIR__ . '/datos/recomendaciones.json');
     $datos = is_string($j) ? (json_decode($j, true) ?: []) : [];
   }
-  $lista = $datos[$clave] ?? [];
+  /* Vienen de un formulario: sin destino o sin razón no cuentan, un papel
+     desconocido pasa a «va con este» y nadie se recomienda a sí mismo. */
+  $lista = [];
+  foreach (($propias ?? ($datos[$clave] ?? [])) as $r) {
+    if (!is_array($r) || trim((string)($r['a'] ?? '')) === '' || trim((string)($r['razon'] ?? '')) === '') continue;
+    if ($rutaActual !== '' && $r['a'] === $rutaActual) continue;
+    if (!in_array($r['tipo'] ?? '', ['base', 'complemento', 'alcance', 'siguiente', 'ruta'], true)) $r['tipo'] = 'complemento';
+    $lista[] = $r;
+  }
   if (!$lista) return '';
 
   $ms = textosPagina($paginas, 'marca')['menu_servicios'] ?? [];
@@ -419,7 +429,9 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
         $h .= '</ol>';
       }
       if (($o = $lista('ideal')) !== '') $h .= '<h2>'.$tit('ideal_1','IDEAL','ideal_2','PARA').'</h2><ul>'.$o.'</ul>';
-      $h .= rutaHtml((string)($s['slug'] ?? ''), $paginas, $services);
+      $h .= rutaHtml((string)($s['slug'] ?? ''), $paginas, $services,
+                     is_array($s['recomendaciones'] ?? null) ? $s['recomendaciones'] : null,
+                     '/servicios/' . ($s['slug'] ?? ''));
       // El texto largo. Estaba guardado y no salia ni aqui ni en el sitio, asi
       // que Google veia la mitad de las paginas que si tienen sustancia.
       if (!empty($s['fullDescription'])) {

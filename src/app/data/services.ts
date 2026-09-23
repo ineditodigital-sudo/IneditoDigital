@@ -1,4 +1,5 @@
 import type { SeoFicha } from './portfolio';
+import type { Recomendacion } from './recomendaciones';
 
 export interface Service {
   id: string;
@@ -23,6 +24,8 @@ export interface Service {
   ideal: string[];
   process: { step: number; title: string; description: string }[];
   faq: { question: string; answer: string }[];
+  /** «Arma tu ruta» guardada en el panel. Sin ella, la del código. */
+  recomendaciones?: Recomendacion[];
   order: number;
   seo?: SeoFicha;
 }

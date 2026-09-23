@@ -15,6 +15,12 @@
  *   - vite.config.ts los deja al compilar en dist/datos/recomendaciones.json,
  *     y render.php los lee de ahí para Google y las IA. Una sola lista.
  *
+ * Desde el 23-sep, cada servicio del panel puede tener las suyas (Servicios ›
+ * editar › «Arma tu ruta», en su data_json), y esas mandan. Esta lista queda
+ * como respaldo: la que se ve mientras un servicio no guarde las propias, la
+ * que el panel enseña para empezar a editar, y la única de las páginas de IA
+ * y la de posicionamiento en IA, que no son servicios del panel.
+ *
  * La clave de cada servicio es el último tramo de su ruta:
  * /servicios/google-ads → 'google-ads', /servicios-ia/whatsapp → 'whatsapp'.
  */
@@ -216,9 +222,29 @@ export const RECOMENDACIONES: Record<string, Recomendacion[]> = {
   ],
 };
 
-/** Hasta tres, en orden, para una etapa. */
-export const recomendacionesPara = (clave: string, etapa: Etapa) =>
-  (RECOMENDACIONES[clave] ?? []).filter((r) => !r.etapa || r.etapa === etapa).slice(0, 3);
+const TIPOS = new Set<TipoRecomendacion>(['base', 'complemento', 'alcance', 'siguiente', 'ruta']);
+
+/**
+ * Hasta tres, en orden, para una etapa.
+ *
+ * `propias` son las que el servicio guardó en el panel (su data_json): si
+ * existen, mandan, aunque vengan vacías (quitarlas todas apaga la sección).
+ * Si no, las de este archivo. Vienen de un formulario, así que se revisan:
+ * sin destino o sin razón no cuentan, un papel desconocido pasa a «va con
+ * este», y nadie se recomienda a sí mismo.
+ */
+export const recomendacionesPara = (
+  clave: string,
+  etapa: Etapa,
+  propias?: Recomendacion[] | null,
+  rutaActual = ''
+): Recomendacion[] =>
+  (Array.isArray(propias) ? propias : RECOMENDACIONES[clave] ?? [])
+    .filter((r) => r && typeof r.a === 'string' && r.a && typeof r.razon === 'string' && r.razon.trim())
+    .map((r) => ({ ...r, tipo: TIPOS.has(r.tipo) ? r.tipo : 'complemento' }))
+    .filter((r) => r.a !== rutaActual)
+    .filter((r) => !r.etapa || r.etapa === etapa)
+    .slice(0, 3);
 
 /** La clave de un servicio a partir de su ruta. */
 export const claveDeRuta = (ruta: string) => ruta.split('/').filter(Boolean).pop() ?? '';

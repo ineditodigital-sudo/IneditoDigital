@@ -12,6 +12,7 @@
  * página. Si algún día el sitio los muestre, vuelven aquí con su `json`.
  */
 require_once __DIR__ . '/../inc/crud.php';
+require_once __DIR__ . '/../inc/recomendaciones.php';
 
 crud('servicios', [
   'table'=>'services','single'=>'Servicio','plural'=>'Servicios','title_field'=>'title','sub_field'=>'category',
@@ -20,6 +21,7 @@ crud('servicios', [
     'La página'      => 'El cuerpo de /servicios/…',
     'El proceso'     => 'El recorrido que se arma al bajar por la página',
     'Preguntas'      => 'Salen en la página y también las leen las IA',
+    'Arma tu ruta'   => 'Qué recomienda esta ficha según si el negocio empieza de cero o ya funciona',
     'Buscadores'     => 'Solo para Google y las IA',
   ],
   'fields'=>[
@@ -49,10 +51,20 @@ crud('servicios', [
     'faq'        => ['label'=>'Preguntas frecuentes','type'=>'pares','json'=>'faq','col'=>false,'grupo'=>'Preguntas',
                      'claves'=>['question'=>'Pregunta','answer'=>'Respuesta']],
 
-    /* «Servicios relacionados» salió el 23-sep: el sitio nunca lo mostró, y
-       lo que recomienda cada ficha ahora va por etapa en «Arma tu ruta»
-       (src/app/data/recomendaciones.ts). Lo que ya estaba guardado se queda
-       en el data_json, sin efecto: crud() parte del que ya existe. */
+    /* «Arma tu ruta» (23-sep), en el lugar de «Servicios relacionados», que
+       el sitio nunca mostró (lo viejo se queda en el data_json, sin efecto).
+       Cada renglón: a dónde lleva, su papel, para quién y por qué. Mientras
+       el servicio no guarde las suyas, el formulario enseña las que el sitio
+       ya muestra (panel/inc/recomendaciones.php). */
+    'recomendaciones' => ['label'=>'Recomendaciones','type'=>'pares','json'=>'recomendaciones','col'=>false,'grupo'=>'Arma tu ruta',
+                     'claves'=>['a'=>'Servicio que recomienda','tipo'=>'Papel','etapa'=>'Para quién','razon'=>'Por qué, en una línea'],
+                     'opciones'=>['a'=>recomendaciones_destinos(),'tipo'=>RECOMENDACIONES_TIPOS,'etapa'=>RECOMENDACIONES_ETAPAS],
+                     'anchos'=>['a'=>2.2,'tipo'=>1.5,'etapa'=>1.4,'razon'=>3],
+                     'largos'=>['razon'],
+                     'requeridas'=>['a','razon'],
+                     'respaldo'=>fn($row, $json) => recomendaciones_de_codigo((string)(($json['slug'] ?? '') ?: ($row['slug'] ?? ''))),
+                     'help'=>'Hasta tres para cada etapa: si hay más, la ficha muestra las primeras tres en este orden. «Las dos» sale tanto a quien empieza de cero como a quien ya tiene un negocio. Un renglón sin «Por qué» no se guarda. Si quitas todas, la ficha no muestra la sección. En inglés sale la traducción de las que ya existían; una razón nueva se ve en español hasta que se traduzca.'],
+
 
     'keywords'   => ['label'=>'Palabras clave','type'=>'lista','json'=>'seo.keywords','sep'=>'comas','grupo'=>'Buscadores'],
     'meta_title' => ['label'=>'Título para buscadores','type'=>'texto','json'=>'seo.metaTitle','grupo'=>'Buscadores','help'=>'Vacío es la mejor opción salvo que tengas un motivo: se arma solo como «Servicio en Aguascalientes | INÉDITO DIGITAL», y si no cabe en los 60 caracteres que Google muestra, se cae la marca antes que la ciudad. Si lo escribes, no pases de 60 y nombra la ciudad.'],

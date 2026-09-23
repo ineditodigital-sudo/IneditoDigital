@@ -55,6 +55,14 @@ function pintar(string $modulo, array $get): string {
     return ob_get_clean();
 }
 
+/** Las recomendaciones que trae el formulario, leídas de su campo oculto
+    (el JSON va con las barras escapadas, así que no se busca como texto). */
+function recomendaciones_del_formulario(string $h): array {
+    if (!preg_match('~name="recomendaciones" value=\'([^\']*)\'~', $h, $m)) throw new RuntimeException('no esta el campo de recomendaciones');
+    $d = json_decode(html_entity_decode($m[1], ENT_QUOTES, 'UTF-8'), true);
+    return is_array($d) ? $d : [];
+}
+
 echo "== los formularios se pintan ==\n";
 foreach (['portafolio' => 1, 'servicios' => 0, 'blog' => 0] as $mod => $id) {
     prueba("$mod · formulario nuevo", function () use ($mod) {
@@ -125,6 +133,10 @@ prueba('servicios · crear uno nuevo con proceso y preguntas', function () use (
         'ideal'=>"Empresas\nComercios",
         'process'=>json_encode([['title'=>'Diagnostico','description'=>'Se revisa.'],['title'=>'Entrega','description'=>'Se publica.']]),
         'faq'=>json_encode([['question'=>'¿Cuánto tarda?','answer'=>'Dos semanas.']]),
+        'recomendaciones'=>json_encode([
+            ['a'=>'/servicios/google-ads','tipo'=>'complemento','etapa'=>'','razon'=>'Le trae gente.'],
+            ['a'=>'/servicios/branding','tipo'=>'base','etapa'=>'cero','razon'=>''],
+        ]),
         'keywords'=>'uno, dos','meta_title'=>'Título SEO','meta_desc'=>'Descripción SEO',
     ];
     try { require $RAIZ . '/panel/pages/servicios.php'; }
@@ -142,10 +154,39 @@ prueba('servicios · crear uno nuevo con proceso y preguntas', function () use (
         'el proceso conserva el texto'    => $j['process'][1]['title'] === 'Entrega',
         'las preguntas se guardan'        => $j['faq'][0]['question'] === '¿Cuánto tarda?',
         'relacionados ya no se escribe'   => !array_key_exists('relatedServices', $j),
+        'se guardan las recomendaciones'  => ($j['recomendaciones'][0] ?? null) === ['a'=>'/servicios/google-ads','tipo'=>'complemento','etapa'=>'','razon'=>'Le trae gente.'],
+        'sin razon el renglon no entra'   => count($j['recomendaciones'] ?? []) === 1,
         'el seo va anidado'               => $j['seo']['metaTitle'] === 'Título SEO' && $j['seo']['keywords'] === ['uno','dos'],
         'el id nuevo entra al data_json'  => $j['id'] === (string)$r['id'],
     ];
     foreach ($comprobar as $q => $ok) if (!$ok) throw new RuntimeException("falla: $q");
+});
+
+prueba('servicios · sin recomendaciones propias, el formulario enseña las del sitio', function () use ($pdo) {
+    /* Un servicio como los de produccion: nunca se le guardaron. El
+       formulario debe partir de las que el sitio ya muestra, no de cero. */
+    $pdo->exec("INSERT INTO services (slug,title,status,data_json) VALUES ('google-ads','Google Ads','published','" . str_replace("'", "''", json_encode(['slug'=>'google-ads','title'=>'Google Ads','category'=>'Publicidad'], JSON_UNESCAPED_UNICODE)) . "')");
+    $id = (int)$pdo->lastInsertId();
+    $h = pintar('servicios', ['edit' => (string)$id]);
+    foreach (['Arma tu ruta', 'Servicio que recomienda', 'Posicionamiento en IA'] as $esperado) {
+        if (strpos($h, $esperado) === false) throw new RuntimeException("no aparece {$esperado} en el formulario");
+    }
+    $rec = recomendaciones_del_formulario($h);
+    if (($rec[0]['a'] ?? '') !== '/servicios/funnels-de-venta' || ($rec[0]['razon'] ?? '') !== 'Sin una página que convierta, cada clic se pierde.') {
+        throw new RuntimeException('el formulario no parte de las del sitio: ' . json_encode($rec[0] ?? null, JSON_UNESCAPED_UNICODE));
+    }
+});
+
+prueba('servicios · una lista vaciada a proposito se queda vacia', function () use ($pdo, $RAIZ) {
+    $id = (int)$pdo->query("SELECT id FROM services WHERE slug = 'google-ads'")->fetchColumn();
+    $_SERVER['REQUEST_METHOD'] = 'POST'; $_GET = [];
+    $_POST = ['csrf'=>'prueba','action'=>'save','id'=>(string)$id,'title'=>'Google Ads','slug'=>'google-ads','category'=>'Publicidad','status'=>'published','recomendaciones'=>'[]'];
+    try { require $RAIZ . '/panel/pages/servicios.php'; }
+    catch (RuntimeException $ex) { if ($ex->getMessage() !== '__redirect__') throw $ex; }
+    $j = json_decode((string)$pdo->query("SELECT data_json FROM services WHERE id = $id")->fetchColumn(), true);
+    if (($j['recomendaciones'] ?? null) !== []) throw new RuntimeException('no quedo la lista vacia en el data_json');
+    $h = pintar('servicios', ['edit' => (string)$id]);
+    if (recomendaciones_del_formulario($h) !== []) throw new RuntimeException('volvieron a aparecer las del sitio');
 });
 
 prueba('blog · la fecha y las etiquetas llegan al sitio', function () use ($pdo, $RAIZ) {

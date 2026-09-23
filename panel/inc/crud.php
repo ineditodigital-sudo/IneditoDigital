@@ -32,6 +32,15 @@
  *   'sep'    en 'lista': 'lineas' (por defecto) o 'comas', para la columna
  *   'claves' en 'pares': ['clave' => 'Etiqueta', …] de cada renglón
  *   'auto'   en 'pares': clave que se numera sola (1, 2, 3…)
+ *   'opciones'   en 'pares': ['clave' => ['valor' => 'Etiqueta', …]]: esa
+ *                clave se elige de un menú en vez de escribirse
+ *   'anchos'     en 'pares': ['clave' => 2, …] lo que ocupa cada una en su
+ *                renglón (1 si no se dice)
+ *   'largos'     en 'pares': claves que van en un cuadro de varias líneas
+ *   'requeridas' en 'pares': claves sin las que el renglón no se guarda
+ *   'respaldo'   function ($row, $json): lo que enseña el formulario cuando
+ *                el data_json todavía no tiene esa clave. Una lista vaciada
+ *                a propósito se queda vacía: solo cuenta si la clave falta.
  */
 
 require_once __DIR__ . '/indexnow.php';
@@ -72,6 +81,11 @@ function crud_valor(array $f, array $row, array $json) {
     foreach ((array)($f['json'] ?? []) as $ruta) {
         $v = crud_leer($json, $ruta);
         if ($v !== null && $v !== '' && $v !== []) return $v;
+    }
+    if (isset($f['respaldo']) && is_callable($f['respaldo'])) {
+        $existe = false;
+        foreach ((array)($f['json'] ?? []) as $ruta) if (crud_leer($json, $ruta) !== null) $existe = true;
+        if (!$existe) return ($f['respaldo'])($row, $json);
     }
     if (($f['col'] ?? true) === false) return $tipo === 'lista' || $tipo === 'pares' ? [] : '';
     $col = $row[$f['nombre']] ?? '';
@@ -189,6 +203,9 @@ function crud(string $page, array $c): void {
                                 if ($limpia[$cl] !== '') $vacia = false;
                             }
                             if ($vacia) continue;
+                            foreach ((array)($f['requeridas'] ?? []) as $cl) {
+                                if (($limpia[$cl] ?? '') === '') continue 2;
+                            }
                             $val[] = $limpia; $n++;
                         }
                     }
@@ -301,7 +318,10 @@ function crud(string $page, array $c): void {
                   <div class="mini" style="margin-top:4px">Una por línea.<?= !empty($f['help']) ? ' ' . e($f['help']) : '' ?></div>
 
                 <?php elseif ($tipo === 'pares'): ?>
-                  <div class="rep" data-claves='<?= e(json_encode($f['claves'], JSON_UNESCAPED_UNICODE)) ?>' data-auto="<?= e($f['auto'] ?? '') ?>">
+                  <div class="rep" data-claves='<?= e(json_encode($f['claves'], JSON_UNESCAPED_UNICODE)) ?>' data-auto="<?= e($f['auto'] ?? '') ?>"
+                       data-opciones='<?= e(json_encode($f['opciones'] ?? new stdClass, JSON_UNESCAPED_UNICODE)) ?>'
+                       data-anchos='<?= e(json_encode($f['anchos'] ?? new stdClass)) ?>'
+                       data-largos='<?= e(json_encode(array_values($f['largos'] ?? []))) ?>'>
                     <div class="rep-filas"></div>
                     <button type="button" class="btn small ghost rep-mas" style="margin-top:10px">+ Agregar</button>
                     <input type="hidden" name="<?= $k ?>" value='<?= e(json_encode(array_values((array)$val), JSON_UNESCAPED_UNICODE)) ?>'>
@@ -341,7 +361,7 @@ function crud(string $page, array $c): void {
           .rep-quitar{border:1px solid var(--line);background:transparent;color:var(--mut);border-radius:8px;
             width:30px;height:30px;cursor:pointer;font-size:15px;line-height:1;align-self:center}
           .rep-quitar:hover{border-color:#b3324f;color:#ff7d9c}
-          @media(min-width:700px){ .rep-campos{grid-template-columns:repeat(var(--n),1fr)} }
+          @media(min-width:700px){ .rep-campos{grid-template-columns:var(--cols)} }
         </style>
         <script>
         (function () {
@@ -351,6 +371,9 @@ function crud(string $page, array $c): void {
             var oculto = rep.querySelector('input[type=hidden]');
             var cajon  = rep.querySelector('.rep-filas');
             var visibles = Object.keys(claves).filter(function (k) { return k !== auto; });
+            var opciones = JSON.parse(rep.dataset.opciones || '{}');
+            var anchos   = JSON.parse(rep.dataset.anchos || '{}');
+            var largos   = JSON.parse(rep.dataset.largos || '[]');
 
             function leer() { try { var d = JSON.parse(oculto.value || '[]'); return Array.isArray(d) ? d : []; } catch (e) { return []; } }
             function guardar() {
@@ -367,17 +390,37 @@ function crud(string $page, array $c): void {
               d.className = 'rep-fila';
               var campos = document.createElement('div');
               campos.className = 'rep-campos';
-              campos.style.setProperty('--n', visibles.length);
+              campos.style.setProperty('--cols', visibles.map(function (k) { return (anchos[k] || 1) + 'fr'; }).join(' '));
               visibles.forEach(function (k) {
                 var w = document.createElement('div');
                 var l = document.createElement('label'); l.textContent = claves[k]; w.appendChild(l);
-                var largo = /respuesta|descripci|texto/i.test(claves[k]);
-                var i = document.createElement(largo ? 'textarea' : 'input');
-                if (!largo) i.type = 'text';
-                else i.style.minHeight = '78px';
+                var i;
+                if (opciones[k]) {
+                  /* Se elige de un menú: así nadie escribe un valor que no
+                     existe. Uno guardado que ya salió de la lista se
+                     conserva, marcado, en vez de cambiarse sin avisar. */
+                  i = document.createElement('select');
+                  Object.keys(opciones[k]).forEach(function (v) {
+                    var o = document.createElement('option'); o.value = v; o.textContent = opciones[k][v]; i.appendChild(o);
+                  });
+                  var actual = (datos && datos[k] != null) ? String(datos[k]) : Object.keys(opciones[k])[0];
+                  if (!Object.prototype.hasOwnProperty.call(opciones[k], actual)) {
+                    var o = document.createElement('option'); o.value = actual; o.textContent = actual + ' (ya no está en la lista)'; i.appendChild(o);
+                  }
+                  i.value = actual;
+                  i.addEventListener('change', guardar);
+                } else {
+                  /* Los de 'largos' son frases cortas que pueden partirse en
+                     dos renglones; las respuestas y descripciones, párrafos. */
+                  var corto = largos.indexOf(k) >= 0;
+                  var largo = corto || /respuesta|descripci|texto/i.test(claves[k]);
+                  i = document.createElement(largo ? 'textarea' : 'input');
+                  if (!largo) i.type = 'text';
+                  else i.style.minHeight = corto ? '52px' : '78px';
+                  i.value = (datos && datos[k] != null) ? datos[k] : '';
+                  i.addEventListener('input', guardar);
+                }
                 i.dataset.clave = k;
-                i.value = (datos && datos[k] != null) ? datos[k] : '';
-                i.addEventListener('input', guardar);
                 w.appendChild(i);
                 campos.appendChild(w);
               });

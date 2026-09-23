@@ -990,7 +990,7 @@ function registro_paginas(): array {
                    (src/app/data/recomendaciones.ts); aquí, los textos. */
                 'ruta' => [
                     'nombre' => 'Arma tu ruta (recomendaciones)',
-                    'ayuda'  => 'La sección que, según si el negocio empieza de cero o ya funciona, recomienda qué va antes, junto o en lugar de cada servicio. Qué servicio recomienda a cuál, y por qué, no se edita aquí: pídeselo al equipo técnico.',
+                    'ayuda'  => 'La sección que, según si el negocio empieza de cero o ya funciona, recomienda qué va antes, junto o en lugar de cada servicio. Aquí van sus textos fijos. Qué recomienda cada servicio, y por qué, se edita en el propio servicio: Contenido › Servicios › editar › «Arma tu ruta». Las páginas de IA y la de posicionamiento en IA no son servicios del panel: las suyas las ajusta el equipo técnico.',
                     'campos' => [
                         'kicker'            => ['label' => 'Etiqueta de arriba', 'tipo' => 'texto', 'def' => 'Según tu punto de partida'],
                         'titulo_1'          => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'ARMA'],
