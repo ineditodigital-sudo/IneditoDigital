@@ -9,7 +9,7 @@
 |---|---|
 | Último commit de código | `46db562` — La portada cuenta los tres pasos, no los tres niveles |
 | En producción | El mismo: `assets/index-i197ZudT.js`, publicado y verificado en vivo el 23-sep (portada y /servicios en español e inglés, y lo que ven los robots). La base, al día con los dos cambios |
-| GitHub | La historia se reescribió en local el 22-sep (todo con el autor «Inédito Digital»). Falta subirla con `git push --force-with-lease origin main`: desde esta máquina no se alcanza github.com |
+| GitHub | Al día. La historia reescrita (183 commits, todos de «Inédito Digital») se subió el 23-sep sobre `eaf1982`, el último que había allá (2-sep, contenido completo en la historia original). **El repositorio es público** (ver Trampas) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
 | Desplegar | `npm run build` y luego, en otro comando, `bash deploy.sh`: el candado revisa que `dist` sea más nuevo que `src` antes de dejar correr el despliegue (detalle en `docs/DESPLIEGUE.md`) |
@@ -316,7 +316,6 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 
 ### Técnicos (para la siguiente sesión)
 
-- [ ] **Subir la historia reescrita**: `git push --force-with-lease origin main`, desde una máquina que alcance github.com.
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
 - [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
@@ -371,6 +370,7 @@ Reglas:
 - **Credenciales fuera del alcance de Claude:** las reglas `deny` bloquean cualquier comando que *nombre* esos archivos (`cat`, `ls`, `sed`, `>`), aunque sea para borrar un señuelo. `deploy.sh` sigue funcionando porque los lee desde su propio proceso. Un script de un solo uso que necesite `deploy.env` tiene que leerlo desde un archivo `.sh` o `.py`, no desde la línea de comandos.
 - **Git Bash convierte rutas**: `/servicios` pasa a `C:/Program Files/Git/servicios` al dárselo a Python o a `claude`. `verificar_vivo.py` ya lo deshace. Con `cmd /c` o rutas que empiezan con `/`, antepón `MSYS_NO_PATHCONV=1`.
 - LiteSpeed ignora las cabeceras de `.htaccess` en respuestas PHP (detalle en `docs/DESPLIEGUE.md`).
+- **El repositorio de GitHub es público**: todo lo que entra a git se puede leer. Al 23-sep no hay credenciales en ninguna versión (solo plantillas en `api/config.example.php` y `deploy.env.example`); las reales viven en `api/config.php` y `deploy.env`, fuera de git. Ojo también con archivos con licencia: `panel/inc/reporte/Hanson-Bold.ttf` ya está publicado ahí.
 
 ## Antes de entregar un cambio visual
 
