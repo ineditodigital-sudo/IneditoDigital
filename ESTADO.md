@@ -8,8 +8,7 @@
 | | |
 |---|---|
 | Último commit de código | `69e5344` — El asistente no registra un lead sin WhatsApp o correo |
-| En producción | `8fde35b` — Etiquetas claras en las tarjetas de /servicios-ia (`assets/index-DeBihEBq.js`, verificado en vivo el 21-sep). Antes de la reescritura del 22-sep ese commit se llamaba `acc16a6` |
-| Sin publicar | `9586e77` (menú en tres pasos), `5e0d75b` (nombre de los servicios de IA) y `69e5344` (contacto obligatorio en el asistente). Ver «Lo último (22 y 23 de septiembre)» |
+| En producción | El mismo: `assets/index-UGrtd-HW.js`, publicado y verificado en vivo el 23-sep (menú en español e inglés, asistente y `api/lead.php`) |
 | GitHub | La historia se reescribió en local el 22-sep (todo con el autor «Inédito Digital»). Falta subirla con `git push --force-with-lease origin main`: desde esta máquina no se alcanza github.com |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
@@ -242,7 +241,7 @@ De paso: el título «POSICIONAMIENTO ORGÁNICO» de la vitrina de la portada se
 
 **Investigación de mercado** (documento «Investigación de mercado: especializarse o no», en Claude Docs). Conclusión que ya es decisión: Inédito se especializa **por servicio y por cómo compra y crece el cliente**, no por giro. En Aguascalientes ningún giro tiene suficientes empresas que puedan pagar, y el cuello de botella es la demanda, no la capacidad. El diferenciador que se puede comprobar: medir quién lee al cliente, incluida la IA (bitácora `ia_bots`).
 
-**Menú de servicios en tres pasos** (`9586e77`, sin publicar). Un cliente le dijo a la agencia que el desplegable de 23 servicios la hacía ver «todóloga». Ahora cuenta un método:
+**Menú de servicios en tres pasos** (`9586e77`, en vivo desde el 23-sep). Un cliente le dijo a la agencia que el desplegable de 23 servicios la hacía ver «todóloga». Ahora cuenta un método:
 
 - 01 · Que te encuentren: sitio web, posicionamiento en Google, posicionamiento en IA, ficha de Google.
 - 02 · Que te escriban: agente de IA para WhatsApp, IA de ventas, funnels.
@@ -251,9 +250,9 @@ De paso: el título «POSICIONAMIENTO ORGÁNICO» de la vitrina de la portada se
 
 La fuente única es `src/app/data/metodo.ts` (menú y asistente: a «¿qué hacen?» contesta con los tres pasos). Los textos se editan en Panel › Contenido › Marca › «Menú de servicios (los tres pasos)». Los servicios sueltos (branding, logo, QR, NFC, expo, espectaculares, LinkedIn) siguen publicados y se llega a ellos con «Ver todos los servicios». Salió del registro la sección `menu_ia`.
 
-**El nombre de los servicios de IA** que va en el mensaje de WhatsApp («me interesa el servicio de IA de Ventas») se leía de `menu_ia`. Ahora sale de la portada de cada página, campo «Nombre en una frase» (`5e0d75b`, sin publicar). En la base, `menu_ia` tenía los textos por defecto, así que no se pierde nada.
+**El nombre de los servicios de IA** que va en el mensaje de WhatsApp («me interesa el servicio de IA de Ventas») se leía de `menu_ia`. Ahora sale de la portada de cada página, campo «Nombre en una frase» (`5e0d75b`, en vivo). En la base, `menu_ia` tenía los textos por defecto, así que no se pierde nada.
 
-**El asistente ya no registra leads sin contacto** (`69e5344`, sin publicar). Los cuatro leads que habían llegado por el asistente traían solo el nombre. Ahora, después del nombre, pregunta «¿A qué WhatsApp te escribimos? Si lo prefieres, déjanos tu correo.» y no registra sin uno de los dos:
+**El asistente ya no registra leads sin contacto** (`69e5344`, en vivo desde el 23-sep). Los cuatro leads que habían llegado por el asistente traían solo el nombre. Ahora, después del nombre, pregunta «¿A qué WhatsApp te escribimos? Si lo prefieres, déjanos tu correo.» y no registra sin uno de los dos:
 
 - WhatsApp de 10 dígitos (con +52 o +52 1 se deja en 10); uno de otro país se guarda con su lada.
 - Correo con la misma regla que PHPMailer (sin acentos ni puntos dobles), buscado dentro de la frase.
@@ -262,6 +261,8 @@ La fuente única es `src/app/data/metodo.ts` (menú y asistente: a «¿qué hace
 - El enlace «Prefiero escribir por WhatsApp» sigue ahí: no registra nada, y quien escribe por ahí deja su número en el chat.
 
 Probado en local en español e inglés: número incompleto, correo con acento, correo con punto doble, correo dentro de una frase, número de EE. UU., WhatsApp y correo juntos. El nombre y el número ya no salen en el mensaje de WhatsApp como si fueran consultas. La base no guarda `r_listo` ni `r_catalogo` del asistente, así que su cambio de texto no necesita script.
+
+En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12» y «test@correo» sin enviar nada, y con un WhatsApp válido arma el lead con el teléfono (se interceptó en el navegador para no crear uno real); `api/lead.php` contesta 422 con `fields: [phone, email]` a un envío sin contacto, así que no se guarda.
 
 **Git**: todos los commits salen como «Inédito Digital <contacto@inedito.digital>». La historia se reescribió el 22-sep; la original está en `.claude/respaldos/2026-09-22-historia-original.bundle` (HEAD anterior `d171fa9`). Los hashes de este documento ya son los nuevos.
 
@@ -295,7 +296,6 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 
 ### Técnicos (para la siguiente sesión)
 
-- [ ] **Publicar** `9586e77`, `5e0d75b` y `69e5344` (menú en tres pasos y contacto obligatorio), si el cliente lo aprueba. Después, comprobar en vivo el menú y el paso del contacto, y que `api/lead.php` responda 422 a un envío sin WhatsApp ni correo (sin crear leads de prueba en producción).
 - [ ] **Subir la historia reescrita**: `git push --force-with-lease origin main`, desde una máquina que alcance github.com.
 - [ ] Sugerido: que `/servicios` también se ordene por los tres pasos, como el menú.
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
