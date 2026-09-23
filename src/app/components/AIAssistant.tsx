@@ -61,7 +61,7 @@ const RESUMEN: Partial<Record<string, string>> = {
   horario: 'ya vi el horario',
   catalogo: 'ya vi la lista de servicios',
   quienes: 'ya leí a qué se dedican',
-  niveles: 'ya vi los tres niveles',
+  niveles: 'ya vi los tres pasos',
   portafolio: 'ya vi el portafolio',
   equipo: 'no estaba publicado, queda pendiente',
   cobertura: 'queda pendiente confirmarlo',
@@ -550,15 +550,24 @@ ${extra.pagina.desc}`, {
       return;
     }
 
+    /* «¿Por dónde empiezo?», «¿qué me conviene?»: los tres pasos, con el
+       diagnóstico como respuesta al «por dónde». Hasta el 23-sep contestaba
+       con tres niveles (Construir, Mejorar, Vender) y enlazaba a /servicios,
+       que ya cuenta el método: la respuesta prometía algo que la página no
+       tenía. Los botones son los mismos del catálogo. */
     if (global === 'niveles') {
+      const d = diagnosticoDelMetodo();
       bot(
         tCon(
           'r_niveles',
-          'Trabajamos en tres niveles según tu punto de partida:\n\n*1. Construir* — no tienes presencia digital todavía.\n*2. Mejorar* — ya tienes web y redes, pero no rinden.\n*3. Vender* — ya tienes todo y quieres resultados medidos.'
+          'No tienes que contratar todo. Trabajamos en tres pasos —que te encuentren, que te escriban y que te compren— y el diagnóstico con IA te dice por cuál empezar, con evidencia.'
         ),
         {
-          enlace: { titulo: 'Los tres niveles', sub: 'Elige por dónde entrar', url: '/servicios' },
-          opciones: [{ etiqueta: '¿Cuál me toca? Pregúntame', valor: '__cotizar__' }],
+          enlace: { titulo: d.titulo, sub: tCon('r_catalogo_sub', 'Empieza por saber qué está mal, con evidencia'), url: d.ruta },
+          opciones: [
+            ...pasosDelMetodo().map((p) => ({ etiqueta: `${p.numero} · ${p.titulo}`, valor: `__grupo:${p.numero}__` })),
+            { etiqueta: '¿Cuál me toca? Pregúntame', valor: '__cotizar__' },
+          ],
         }
       );
       return;

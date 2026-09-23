@@ -203,7 +203,7 @@ export function detectarGlobal(texto: string): Global | null {
    * Caso "no se que necesito": la frase entera son palabras de relleno y al
    * filtrarlas no queda nada que emparejar. No es que no se entienda: es
    * alguien pidiendo orientacion, que es exactamente para lo que estan los
-   * tres niveles.
+   * tres pasos y el diagnostico.
    */
   if (!tokens.length && crudo.trim().split(' ').length >= 3) return 'niveles';
   return null;

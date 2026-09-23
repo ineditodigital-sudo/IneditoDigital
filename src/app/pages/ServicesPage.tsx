@@ -1,12 +1,10 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import SEO from '../components/SEO';
-import { GlassCard } from '../components/GlassCard';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
-import { tr } from '../idioma';
-import { esCobertura } from '../data/grupos';
+import { pasosDelMetodo, diagnosticoDelMetodo, otrosServicios } from '../data/metodo';
 
 /* Entrada estandar del sitio: aparecer subiendo, una sola vez. */
 const entra = (retraso = 0) => ({
@@ -16,50 +14,63 @@ const entra = (retraso = 0) => ({
   transition: { duration: 0.55, delay: retraso },
 });
 
+/*
+ * /servicios cuenta el mismo método que el menú (data/metodo.ts), con espacio
+ * para explicarlo.
+ *
+ * Hasta el 23-sep era un catálogo: «¿En qué punto estás?» con tres niveles y
+ * debajo las fichas revueltas, la especialidad junto a los productos sueltos.
+ * Se leía como una agencia que hace de todo. Ahora va así:
+ *
+ *   1. Portada, con los dos botones de siempre.
+ *   2. Los tres pasos: qué gana el cliente, con qué se mide y los servicios
+ *      de cada uno. Los nombres salen de Marca › Menú de servicios, así que el
+ *      menú y la página no pueden contar historias distintas.
+ *   3. Empieza aquí: el diagnóstico, que dice por cuál paso empezar (lo que
+ *      antes intentaban resolver los niveles).
+ *   4. Complementos: lo que sigue publicado pero no es el método.
+ *
+ * render.php arma lo mismo, en el mismo orden, para quien no ejecuta
+ * JavaScript.
+ */
 export default function ServicesPage() {
   const t = contenido('servicios', 'encabezado');
-  const tNiv = contenido('servicios', 'niveles');
+  const tMet = contenido('servicios', 'metodo');
+  const tOtr = contenido('servicios', 'otros');
   const tTar = contenido('servicios', 'tarjeta');
-  const { services: todosLosServicios, settings, openAssistant } = useApp();
-  /* El catalogo muestra el que hacemos, no donde lo hacemos: las landings de
-     ciudad viven aparte y se llega a ellas desde el bloque de cobertura. */
-  const services = todosLosServicios.filter((s) => !esCobertura(s));
+  const { services, settings, openAssistant } = useApp();
+  const pasos = pasosDelMetodo();
+  const diag = diagnosticoDelMetodo();
+  const complementos = otrosServicios(services);
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     'Hola, vi sus servicios y quiero saber cuál me conviene'
   )}`;
 
-  /* Los tres niveles del documento de dirección. Antes de la lista de fichas,
-     porque la pregunta que trae a la gente no es "qué servicios hay" sino
-     "en qué punto estoy yo". */
-  const niveles = [
+  /* Lo que gana el cliente en cada paso y con qué se mide, en el orden de
+     pasosDelMetodo(). */
+  const detalle = [
     {
-      verbo: tNiv('n1_verbo', 'CONSTRUIR'),
-      lema: tNiv('n1_lema', 'Presencia desde cero'),
-      texto: tNiv('n1_texto', 'Para empresas que no tienen nada de presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el día uno, ficha de Google, LinkedIn armado y tablero base.'),
-      promesa: tNiv('n1_promesa', 'Cuando te busquen, existes y te ves formal.'),
-      enlace: '',
+      texto: tMet('p1_texto', 'Cuando alguien busca lo que vendes —en Google, en Maps o preguntándole a ChatGPT—, tu negocio aparece, se ve serio y dice lo correcto.'),
+      mide: tMet('p1_mide', 'En qué búsquedas apareces, cuántas visitas llegan y si los asistentes de IA te mencionan.'),
     },
     {
-      verbo: tNiv('n2_verbo', 'MEJORAR'),
-      lema: tNiv('n2_lema', 'Presencia que compite'),
-      texto: tNiv('n2_texto', 'Para empresas con web y redes mal trabajadas. Se entra por la auditoría con IA: del diagnóstico sale el plan de mejora.'),
-      promesa: tNiv('n2_promesa', 'Te decimos exactamente qué está mal y lo arreglamos.'),
-      enlace: tNiv('n2_enlace', '/servicios/auditoria-con-ia'),
+      texto: tMet('p2_texto', 'Quien te encuentra tiene por dónde escribirte y nadie se queda esperando: un agente de IA contesta a cualquier hora y le pasa el prospecto a una persona de tu equipo.'),
+      mide: tMet('p2_mide', 'Cuántos prospectos llegan, por qué canal y en cuánto tiempo reciben respuesta.'),
     },
     {
-      verbo: tNiv('n3_verbo', 'VENDER'),
-      lema: tNiv('n3_lema', 'Presencia que convierte'),
-      texto: tNiv('n3_texto', 'Para empresas que ya tienen todo y quieren resultados. Canales de venta, campañas con tablero unificado y, cuando hay ERP, cruce de prospectos contra ventas cerradas.'),
-      promesa: tNiv('n3_promesa', 'Cada peso invertido se mide contra ventas reales.'),
-      enlace: '',
+      texto: tMet('p3_texto', 'La publicidad se invierte donde se puede medir, y cada campaña se juzga por los prospectos que trae, no por los clics.'),
+      mide: tMet('p3_mide', 'Cuánto cuesta cada prospecto y, cuando tu sistema lo permite, qué ventas cerró cada canal, en un solo tablero.'),
     },
   ];
+  const palabraPaso = tMet('paso', 'Paso');
+  const seMide = tMet('se_mide', 'Se mide');
+  const verMas = tTar('ver_mas', 'Ver detalles');
 
   return (
     <>
       <SEO
         title="Servicios · Agencia de marketing digital y publicidad en Aguascalientes"
-        description="Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Tres niveles según en qué punto estés: construir, mejorar o vender."
+        description="Marketing digital y publicidad en Aguascalientes, en tres pasos: que te encuentren, que te escriban y que te compren. Medido hasta la venta."
         keywords={['agencia de publicidad aguascalientes', 'agencia de mercadotecnia', 'servicios marketing digital', 'agencia de contenido digital', 'seo aguascalientes']}
       />
 
@@ -68,7 +79,7 @@ export default function ServicesPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mx-auto mb-16 max-w-3xl text-center"
+            className="mx-auto mb-16 max-w-3xl text-center md:mb-20"
           >
             <h1 className="heading mb-6 text-4xl md:text-6xl">
               {t('titulo_1', 'NUESTROS')}{' '}
@@ -80,7 +91,7 @@ export default function ServicesPage() {
               </span>
             </h1>
             <p className="text-lg leading-relaxed text-white/80 md:text-xl">
-              {t('bajada', 'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Todo conectado a datos reales y medido hasta la venta.')}
+              {t('bajada', 'Marketing digital y publicidad para empresas de Aguascalientes: que te encuentren, que te escriban y que te compren. Todo medido hasta la venta.')}
             </p>
 
             {/*
@@ -116,108 +127,157 @@ export default function ServicesPage() {
             </div>
           </motion.div>
 
-          {/* ------------------------------------------------ los tres niveles */}
-          {tNiv.visible() && (
-            <div className="mb-20">
-              <motion.h2 {...entra()} className="heading mb-3 text-center text-2xl md:text-3xl">
-                {tNiv('titulo', '¿EN QUÉ PUNTO ESTÁS?')}
+          {/* ------------------------------------------------ los tres pasos */}
+          <div className="mx-auto max-w-6xl">
+            <div className="mx-auto mb-6 max-w-2xl text-center md:mb-8">
+              <motion.h2 {...entra()} className="mb-3 text-2xl md:text-3xl">
+                {tMet('titulo', 'UN SISTEMA EN TRES PASOS')}
               </motion.h2>
-              <motion.p {...entra(0.06)} className="mx-auto mb-12 max-w-xl text-center text-white/65">
-                {tNiv('bajada', 'El servicio se adapta al grado de posicionamiento de cada empresa. Elige por dónde entrar.')}
+              <motion.p {...entra(0.06)} className="leading-relaxed text-white/65">
+                {tMet('bajada', 'Cada paso prepara el siguiente y se mide antes de dar el que sigue. Así sabes qué funciona antes de invertir más.')}
               </motion.p>
-
-              <div className="grid gap-5 md:grid-cols-3">
-                {niveles.map((n, i) => {
-                  const cuerpo = (
-                    <article
-                      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 p-7
-                                 transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40"
-                      style={{ background: 'linear-gradient(165deg, rgba(119,0,206,.14), rgba(255,255,255,.02) 62%)' }}
-                    >
-                      <span
-                        className="absolute inset-x-0 top-0 h-px opacity-60 transition-opacity duration-300 group-hover:opacity-100"
-                        style={{ background: 'linear-gradient(90deg,transparent,#9933FF,transparent)' }}
-                      />
-                      <span
-                        className="heading absolute right-5 top-4 text-5xl leading-none text-transparent"
-                        style={{ WebkitTextStroke: '1px rgba(170,102,255,.28)' }}
-                        aria-hidden="true"
-                      >
-                        {i + 1}
-                      </span>
-                      <div className="heading text-2xl leading-tight">{n.verbo}</div>
-                      <div className="mt-1 text-sm font-semibold text-[#AA66FF]">{n.lema}</div>
-                      <p className="mt-4 text-[14.5px] leading-relaxed text-white/75">{n.texto}</p>
-                      <div className="mt-auto border-t border-white/10 pt-4">
-                        <p className="text-[13.5px] italic text-white/65">«{n.promesa}»</p>
-                        {n.enlace && (
-                          <span className="mt-3 inline-flex items-center gap-1.5 text-sm text-[#AA66FF]">
-                            {tr('Empezar por aquí')}
-                            <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
-                          </span>
-                        )}
-                      </div>
-                    </article>
-                  );
-                  return (
-                    <motion.div key={i} {...entra(i * 0.1)} className="h-full">
-                      {n.enlace ? (
-                        <Link to={n.enlace} className="block h-full">
-                          {cuerpo}
-                        </Link>
-                      ) : (
-                        cuerpo
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
             </div>
-          )}
 
-          {/* ------------------------------------------------ las fichas */}
-          <motion.h2 {...entra()} className="heading mb-10 text-center text-2xl md:text-3xl">
-            {tr('TODO LO QUE HACEMOS')}
-          </motion.h2>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, index) => (
-              <motion.div key={service.id} {...entra(Math.min(index * 0.04, 0.4))}>
-                <Link to={`/servicios/${service.slug}`}>
-                  <GlassCard hover className="group h-full">
-                    {/* A 1024 px la tarjeta deja 273 px y «ESPECTACULARES» mide
-                        12.83 veces su letra (308 px a 24): el titulo se mide
-                        contra la tarjeta, con tope en los 24 px de siempre. */}
-                    <div className="mb-4" style={{ containerType: 'inline-size' }}>
-                      <span className="mb-4 inline-block rounded-full bg-[#9933FF]/18 px-3 py-1 text-sm text-[#AA66FF]">
-                        {service.category}
-                      </span>
-                      <h3
-                        className="heading mb-3 transition-colors group-hover:text-[#AA66FF]"
-                        style={{ fontSize: 'min(1.5rem, 7.6cqw)' }}
+            {pasos.map((p, i) => {
+              const d = detalle[i];
+              return (
+                <section
+                  key={p.numero}
+                  aria-labelledby={`paso-${p.numero}`}
+                  className="grid gap-8 border-t border-white/10 py-12 md:py-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14"
+                >
+                  <motion.div {...entra()}>
+                    <div className="flex items-end gap-4">
+                      {/* El número hueco, como en los niveles de la portada:
+                          ordena sin competir con el título. */}
+                      <span
+                        aria-hidden="true"
+                        className="heading text-6xl leading-[.8] text-transparent md:text-7xl"
+                        style={{ WebkitTextStroke: '1.5px rgba(170,102,255,.55)' }}
                       >
-                        {service.title}
-                      </h3>
-                      <p className="mb-4 text-white/70">{service.shortDescription}</p>
+                        {p.numero}
+                      </span>
+                      <span className="font-mono text-[11px] uppercase tracking-[.18em] text-white/45">
+                        {palabraPaso} {p.numero}
+                      </span>
                     </div>
+                    <h3 id={`paso-${p.numero}`} className="mt-5 text-3xl leading-[1.05] md:text-4xl">
+                      {p.titulo}
+                    </h3>
+                    <p className="mt-2 font-semibold text-[#AA66FF]">{p.sub}</p>
+                    {d?.texto && <p className="mt-4 text-[15.5px] leading-relaxed text-white/75">{d.texto}</p>}
+                    {d?.mide && (
+                      <div className="mt-6 rounded-xl border border-[#9933FF]/25 bg-[#7700CE]/10 px-4 py-3">
+                        <div className="font-mono text-[10px] uppercase tracking-[.18em] text-[#CC66FF]">{seMide}</div>
+                        <p className="mt-1 text-sm leading-snug text-white/85">{d.mide}</p>
+                      </div>
+                    )}
+                  </motion.div>
 
-                    <div className="mb-6 space-y-2">
-                      {service.features.slice(0, 3).map((feature, i) => (
-                        <div key={i} className="flex items-start gap-2 text-sm text-white/75">
-                          <span className="mt-1 text-[#AA66FF]">•</span>
-                          <span>{feature}</span>
-                        </div>
-                      ))}
-                    </div>
+                  {/* Los servicios del paso. Con un número impar, el último
+                      ocupa las dos columnas en vez de quedar huérfano. */}
+                  <div className="grid content-start gap-4 sm:grid-cols-2">
+                    {p.items.map((it, j) => (
+                      <motion.div
+                        key={it.ruta}
+                        {...entra(0.05 + j * 0.05)}
+                        className={p.items.length % 2 === 1 && j === p.items.length - 1 ? 'sm:col-span-2' : undefined}
+                      >
+                        {/* En teléfono, flecha al lado y sin «Ver detalles»: la
+                            tarjeta entera es el enlace, y con once apiladas esa
+                            línea sumaba casi una pantalla de scroll. */}
+                        <Link
+                          to={it.ruta}
+                          className="group flex h-full items-start gap-3 rounded-2xl border border-white/10 bg-white/[.03] p-4 transition-colors duration-200 hover:border-[#AA66FF]/45 hover:bg-white/[.06] sm:flex-col sm:items-stretch sm:gap-0 sm:p-5"
+                        >
+                          <div className="min-w-0 flex-1 sm:flex-none">
+                            <div className="text-[17px] font-semibold leading-snug text-white">{it.titulo}</div>
+                            <p className="mt-1.5 text-[14px] leading-relaxed text-white/65">{it.desc}</p>
+                          </div>
+                          <ArrowRight size={18} className="mt-0.5 shrink-0 text-[#AA66FF] sm:hidden" aria-hidden="true" />
+                          <span className="mt-auto hidden items-center gap-1.5 pt-4 text-sm text-[#AA66FF] sm:inline-flex">
+                            {verMas}
+                            <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-1" />
+                          </span>
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
 
-                    <div className="flex items-center text-sm text-[#AA66FF] transition-all group-hover:gap-2">
-                      <span>{tTar('ver_mas', 'Ver detalles')}</span>
-                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </GlassCard>
+            {/* ------------------------------------------------ empieza aquí */}
+            <motion.section
+              {...entra()}
+              className="relative mt-4 overflow-hidden rounded-3xl border border-[#9933FF]/30 px-6 py-10 md:px-12 md:py-14"
+              style={{ background: 'linear-gradient(160deg, rgba(119,0,206,.30), rgba(119,0,206,.06) 70%)' }}
+            >
+              <div className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[.18em] text-[#CC66FF]">
+                <Sparkles size={13} />
+                {diag.kicker}
+              </div>
+              <h2 className="mt-3 text-3xl md:text-5xl">{diag.titulo}</h2>
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">{diag.texto}</p>
+              <p className="mt-2 max-w-2xl leading-relaxed text-white/60">
+                {tMet('diag_extra', 'No tienes que contratar los tres pasos: con el diagnóstico sabes por cuál empezar.')}
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  to={diag.ruta}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-transform hover:scale-[1.03]"
+                >
+                  {diag.boton}
+                  <ArrowRight size={17} />
                 </Link>
-              </motion.div>
-            ))}
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 text-sm font-bold tracking-wide text-white transition-colors hover:border-[#CC66FF]/50 hover:bg-white/5"
+                >
+                  {t('cta_wa', 'WHATSAPP')}
+                </a>
+              </div>
+            </motion.section>
+
+            {/* ------------------------------------------------ complementos */}
+            {complementos.length > 0 && (
+              <section className="mt-20 md:mt-24">
+                <motion.h2 {...entra()} className="text-2xl md:text-3xl">
+                  {tOtr('titulo', 'COMPLEMENTOS')}
+                </motion.h2>
+                <motion.p {...entra(0.05)} className="mt-2 max-w-2xl leading-relaxed text-white/65">
+                  {tOtr('bajada', 'Piezas que se suman a los tres pasos cuando tu negocio las necesita.')}
+                </motion.p>
+                <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  {complementos.map((s, i) => (
+                    <motion.div key={s.id} {...entra(Math.min(i * 0.04, 0.3))}>
+                      <Link
+                        to={`/servicios/${s.slug}`}
+                        className="group flex h-full flex-col rounded-xl border border-white/10 p-4 transition-colors duration-200 hover:border-[#AA66FF]/40 hover:bg-white/[.04]"
+                      >
+                        <div className="font-semibold leading-snug text-white/90 transition-colors group-hover:text-white">
+                          {s.title}
+                        </div>
+                        <p className="mt-1 text-[13px] leading-snug text-white/55">{s.shortDescription}</p>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+                <p className="mt-8 text-sm text-white/55">
+                  {tOtr('cierre', '¿Buscas algo que no está aquí?')}{' '}
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-[#CC66FF] transition-colors hover:text-white"
+                  >
+                    {tOtr('cierre_enlace', 'Pregúntanos por WhatsApp')} →
+                  </a>
+                </p>
+              </section>
+            )}
           </div>
         </div>
       </section>

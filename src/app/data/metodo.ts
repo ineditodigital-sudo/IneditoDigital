@@ -94,17 +94,23 @@ export function diagnosticoDelMetodo() {
   };
 }
 
-/** Los servicios del panel que ya cuenta el método, diagnóstico incluido. */
-const EN_EL_METODO = new Set([
-  'diseno-y-desarrollo-web', 'posicionamiento-organico', 'ficha-de-google',
-  'funnels-de-venta', 'google-ads', 'chatgpt-ads', 'estrategia-de-canales',
-  'tablero-de-resultados', 'auditoria-con-ia',
-]);
+/* Servicios del panel que el método ya cuenta con otro nombre: el agente de
+   IA para WhatsApp del paso 2 es lo mismo que «Chatbots y Agentes». Listarlo
+   además como complemento lo repetía dos bloques más abajo en /servicios. */
+const YA_CONTADOS = new Set(['chatbots-y-agentes']);
 
 /* Páginas que el panel guarda como servicio pero existen para una búsqueda
    («agencia de IA en Aguascalientes»), no para venderse como servicio. */
 const NO_ES_SERVICIO = new Set(['inteligencia-artificial-aguascalientes']);
 
-/** Lo que queda fuera del método: sigue publicado, pero no va en el menú. */
-export const otrosServicios = (todos: Service[]) =>
-  todos.filter((s) => !esCobertura(s) && !EN_EL_METODO.has(s.slug) && !NO_ES_SERVICIO.has(s.slug));
+/** Lo que queda fuera del método: sigue publicado, pero no va en el menú y
+    en /servicios sale como complemento. Lo que ya está en un paso, o es el
+    diagnóstico, se deduce de los pasos mismos; así no hay una segunda lista
+    que actualizar. render.php hace la misma cuenta. */
+export const otrosServicios = (todos: Service[]) => {
+  const enElMetodo = new Set<string>([diagnosticoDelMetodo().slug]);
+  for (const p of pasosDelMetodo()) for (const it of p.items) if (it.slug) enElMetodo.add(it.slug);
+  return todos.filter(
+    (s) => !esCobertura(s) && !enElMetodo.has(s.slug) && !YA_CONTADOS.has(s.slug) && !NO_ES_SERVICIO.has(s.slug)
+  );
+};

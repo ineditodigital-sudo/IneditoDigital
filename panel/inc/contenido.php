@@ -623,7 +623,7 @@ function registro_paginas(): array {
         'servicios' => [
             'nombre' => 'Servicios (listado)',
             'ruta'   => '/servicios',
-            'ayuda'  => 'Solo el encabezado. Los servicios en sí se administran en la sección «Servicios» del menú.',
+            'ayuda'  => 'El encabezado, los tres pasos y los complementos. El nombre de cada paso y de sus servicios, y el recuadro del diagnóstico, se cambian en Marca › «Menú de servicios (los tres pasos)», para que el menú y esta página digan lo mismo. Los servicios en sí se administran en la sección «Servicios» del menú.',
             'secciones' => [
                 'encabezado' => [
                     'nombre' => 'Encabezado',
@@ -631,7 +631,7 @@ function registro_paginas(): array {
                         'titulo_1' => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'NUESTROS'],
                         'titulo_2' => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'SERVICIOS'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo',
-                                       'def' => 'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Todo conectado a datos reales y medido hasta la venta.'],
+                                       'def' => 'Marketing digital y publicidad para empresas de Aguascalientes: que te encuentren, que te escriban y que te compren. Todo medido hasta la venta.'],
                         /* Los dos botones de arriba. Esta página no tenía ninguno:
                            lo primero que se podía tocar estaba a 920 px, o sea
                            debajo de la primera pantalla de un teléfono. */
@@ -642,25 +642,36 @@ function registro_paginas(): array {
                     ],
                 ],
 
-                'niveles' => [
-                    'nombre' => 'Los tres niveles',
+                /* Los tres pasos del método (23-sep). Reemplazan a «Los tres
+                   niveles». Los nombres de los pasos y de sus servicios viven en
+                   Marca › menu_servicios, compartidos con el menú; aquí va solo
+                   lo que explica la página. */
+                'metodo' => [
+                    'nombre' => 'Los tres pasos',
+                    'ayuda'  => 'Lo que gana el cliente en cada paso y con qué se mide. El nombre de cada paso y de sus servicios se cambia en Marca › «Menú de servicios (los tres pasos)».',
                     'campos' => [
-                        'visible'   => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo'    => ['label' => 'Título', 'tipo' => 'texto', 'def' => '¿EN QUÉ PUNTO ESTÁS?'],
-                        'bajada'    => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'El servicio se adapta al grado de posicionamiento de cada empresa. Elige por dónde entrar.'],
-                        'n1_verbo'  => ['label' => 'Nivel 1 · verbo', 'tipo' => 'texto', 'def' => 'CONSTRUIR'],
-                        'n1_lema'   => ['label' => 'Nivel 1 · lema', 'tipo' => 'texto', 'def' => 'Presencia desde cero'],
-                        'n1_texto'  => ['label' => 'Nivel 1 · texto', 'tipo' => 'area', 'def' => 'Para empresas que no tienen nada de presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el día uno, ficha de Google, LinkedIn armado y tablero base.'],
-                        'n1_promesa'=> ['label' => 'Nivel 1 · promesa', 'tipo' => 'texto', 'def' => 'Cuando te busquen, existes y te ves formal.'],
-                        'n2_verbo'  => ['label' => 'Nivel 2 · verbo', 'tipo' => 'texto', 'def' => 'MEJORAR'],
-                        'n2_lema'   => ['label' => 'Nivel 2 · lema', 'tipo' => 'texto', 'def' => 'Presencia que compite'],
-                        'n2_texto'  => ['label' => 'Nivel 2 · texto', 'tipo' => 'area', 'def' => 'Para empresas con web y redes mal trabajadas. Se entra por la auditoría con IA: del diagnóstico sale el plan de mejora.'],
-                        'n2_promesa'=> ['label' => 'Nivel 2 · promesa', 'tipo' => 'texto', 'def' => 'Te decimos exactamente qué está mal y lo arreglamos.'],
-                        'n2_enlace' => ['label' => 'Nivel 2 · a dónde lleva', 'tipo' => 'texto', 'def' => '/servicios/auditoria-con-ia'],
-                        'n3_verbo'  => ['label' => 'Nivel 3 · verbo', 'tipo' => 'texto', 'def' => 'VENDER'],
-                        'n3_lema'   => ['label' => 'Nivel 3 · lema', 'tipo' => 'texto', 'def' => 'Presencia que convierte'],
-                        'n3_texto'  => ['label' => 'Nivel 3 · texto', 'tipo' => 'area', 'def' => 'Para empresas que ya tienen todo y quieren resultados. Canales de venta, campañas con tablero unificado y, cuando hay ERP, cruce de prospectos contra ventas cerradas.'],
-                        'n3_promesa'=> ['label' => 'Nivel 3 · promesa', 'tipo' => 'texto', 'def' => 'Cada peso invertido se mide contra ventas reales.'],
+                        'titulo'     => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'UN SISTEMA EN TRES PASOS'],
+                        'bajada'     => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'Cada paso prepara el siguiente y se mide antes de dar el que sigue. Así sabes qué funciona antes de invertir más.'],
+                        'paso'       => ['label' => 'Palabra junto al número («Paso 01»)', 'tipo' => 'texto', 'def' => 'Paso'],
+                        'se_mide'    => ['label' => 'Etiqueta del recuadro de medición', 'tipo' => 'texto', 'def' => 'Se mide'],
+                        'p1_texto'   => ['label' => 'Paso 1 · qué gana el cliente', 'tipo' => 'area', 'def' => 'Cuando alguien busca lo que vendes —en Google, en Maps o preguntándole a ChatGPT—, tu negocio aparece, se ve serio y dice lo correcto.'],
+                        'p1_mide'    => ['label' => 'Paso 1 · con qué se mide', 'tipo' => 'area', 'def' => 'En qué búsquedas apareces, cuántas visitas llegan y si los asistentes de IA te mencionan.'],
+                        'p2_texto'   => ['label' => 'Paso 2 · qué gana el cliente', 'tipo' => 'area', 'def' => 'Quien te encuentra tiene por dónde escribirte y nadie se queda esperando: un agente de IA contesta a cualquier hora y le pasa el prospecto a una persona de tu equipo.'],
+                        'p2_mide'    => ['label' => 'Paso 2 · con qué se mide', 'tipo' => 'area', 'def' => 'Cuántos prospectos llegan, por qué canal y en cuánto tiempo reciben respuesta.'],
+                        'p3_texto'   => ['label' => 'Paso 3 · qué gana el cliente', 'tipo' => 'area', 'def' => 'La publicidad se invierte donde se puede medir, y cada campaña se juzga por los prospectos que trae, no por los clics.'],
+                        'p3_mide'    => ['label' => 'Paso 3 · con qué se mide', 'tipo' => 'area', 'def' => 'Cuánto cuesta cada prospecto y, cuando tu sistema lo permite, qué ventas cerró cada canal, en un solo tablero.'],
+                        'diag_extra' => ['label' => 'Recuadro del diagnóstico · frase de abajo', 'tipo' => 'area', 'def' => 'No tienes que contratar los tres pasos: con el diagnóstico sabes por cuál empezar.'],
+                    ],
+                ],
+
+                'otros' => [
+                    'nombre' => 'Complementos',
+                    'ayuda'  => 'Los servicios publicados que no están en ningún paso (branding, logo, QR, tarjetas NFC, expo, espectaculares, LinkedIn). Salen solos de la sección «Servicios».',
+                    'campos' => [
+                        'titulo'        => ['label' => 'Título', 'tipo' => 'texto', 'def' => 'COMPLEMENTOS'],
+                        'bajada'        => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'Piezas que se suman a los tres pasos cuando tu negocio las necesita.'],
+                        'cierre'        => ['label' => 'Frase de abajo', 'tipo' => 'texto', 'def' => '¿Buscas algo que no está aquí?'],
+                        'cierre_enlace' => ['label' => 'Enlace a WhatsApp de la frase de abajo', 'tipo' => 'texto', 'def' => 'Pregúntanos por WhatsApp'],
                     ],
                 ],
 
@@ -1736,7 +1747,7 @@ Lo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes 
                         'r_precio' => ['label' => 'Respuesta · precios', 'tipo' => 'area', 'def' => 'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.' . "\n" . '' . "\n" . 'Lo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.'],
                         'r_portafolio' => ['label' => 'Respuesta · portafolio', 'tipo' => 'area', 'def' => 'Tenemos los casos publicados con lo que hicimos en cada uno.'],
                         'r_quienes' => ['label' => 'Respuesta · quiénes somos', 'tipo' => 'area', 'def' => 'Somos una agencia de Aguascalientes que trabaja como dirección comercial asistida por IA: conectamos tus objetivos con datos reales y auditamos cada mes si la estrategia funciona.'],
-                        'r_niveles' => ['label' => 'Respuesta · los tres niveles', 'tipo' => 'area', 'def' => 'Trabajamos en tres niveles según tu punto de partida:' . "\n" . '' . "\n" . '*1. Construir* — no tienes presencia digital todavía.' . "\n" . '*2. Mejorar* — ya tienes web y redes, pero no rinden.' . "\n" . '*3. Vender* — ya tienes todo y quieres resultados medidos.'],
+                        'r_niveles' => ['label' => 'Respuesta · por dónde empezar (los tres pasos)', 'tipo' => 'area', 'def' => 'No tienes que contratar todo. Trabajamos en tres pasos —que te encuentren, que te escriban y que te compren— y el diagnóstico con IA te dice por cuál empezar, con evidencia.'],
                         'r_varios' => ['label' => 'Respuesta · varios servicios posibles', 'tipo' => 'texto', 'def' => 'Puede ser cualquiera de estos. ¿Cuál te interesa?'],
                         'r_saludo' => ['label' => 'Respuesta · a un saludo suelto', 'tipo' => 'texto', 'def' => '¡Hola! ¿Qué necesitas para tu negocio?'],
                         'r_otra' => ['label' => 'Respuesta · tengo otra duda', 'tipo' => 'texto', 'def' => '¿Qué más quieres saber?'],

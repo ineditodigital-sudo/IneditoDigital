@@ -566,26 +566,12 @@ export const DICCIONARIO: Record<string, string> = {
   'ROI promedio': 'Average ROI',
 
   /* ── servicios ─────────────────────────────────────────────────────── */
-  '¿EN QUÉ PUNTO ESTÁS?': 'WHERE ARE YOU RIGHT NOW?',
-  'El servicio se adapta al grado de posicionamiento de cada empresa. Elige por dónde entrar.':
-    'The service adapts to how far along each company already is. Choose where to come in.',
   'CONSTRUIR': 'BUILD',
-  'Presencia desde cero': 'A presence from scratch',
   'Cuando te busquen, existes y te ves formal.': 'When they look you up, you exist and you look the part.',
-  'Para empresas que no tienen nada de presencia digital. Web que pasa PageSpeed con SEO, AEO y GEO desde el día uno, ficha de Google, LinkedIn armado y tablero base.':
-    'For companies with no digital presence at all. A site that passes PageSpeed with SEO, AEO and GEO from day one, a Google listing, LinkedIn set up and a starter dashboard.',
   'MEJORAR': 'IMPROVE',
-  'Presencia que compite': 'A presence that competes',
   'Te decimos exactamente qué está mal y lo arreglamos.': 'We tell you exactly what is wrong, and we fix it.',
-  'Para empresas con web y redes mal trabajadas. Se entra por la auditoría con IA: del diagnóstico sale el plan de mejora.':
-    'For companies whose site and social profiles were done badly. You come in through the AI audit: the diagnostic produces the improvement plan.',
   'VENDER': 'SELL',
-  'Presencia que convierte': 'A presence that converts',
   'Cada peso invertido se mide contra ventas reales.': 'Every peso spent is measured against real sales.',
-  'Para empresas que ya tienen todo y quieren resultados. Canales de venta, campañas con tablero unificado y, cuando hay ERP, cruce de prospectos contra ventas cerradas.':
-    'For companies that already have everything and want results. Sales channels, campaigns on a unified dashboard and, when there is an ERP, leads matched against closed sales.',
-  'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Todo conectado a datos reales y medido hasta la venta.':
-    'Digital marketing, advertising and content for companies in Aguascalientes. All of it wired to real data and measured through to the sale.',
 
   /* ── demos interactivos (páginas de servicio) ──────────────────────── */
   'PRUEBA NUESTROS': 'TRY OUR',
@@ -862,8 +848,6 @@ export const DICCIONARIO: Record<string, string> = {
     'Invoicing, payment methods and terms are handled case by case, and I do not want to give you the wrong information.\n\nOn WhatsApp they will clear it up right away, with the correct details.',
   'Somos una agencia de Aguascalientes que trabaja como dirección comercial asistida por IA: conectamos tus objetivos con datos reales y auditamos cada mes si la estrategia funciona.':
     'We are an agency from Aguascalientes working as AI-assisted commercial leadership: we connect your objectives to real data and audit every month whether the strategy is working.',
-  'Trabajamos en tres niveles según tu punto de partida:\n\n*1. Construir* — no tienes presencia digital todavía.\n*2. Mejorar* — ya tienes web y redes, pero no rinden.\n*3. Vender* — ya tienes todo y quieres resultados medidos.':
-    'We work at three levels depending on where you start:\n\n*1. Build* — you have no digital presence yet.\n*2. Improve* — you have a site and social profiles, but they do not perform.\n*3. Sell* — you have everything and want measured results.',
   'Soy el asistente del sitio de Inédito Digital 🤖\n\nNo soy una persona: contesto con la información publicada de los servicios. Para lo que necesite criterio —una cotización, tu caso concreto— te paso con el equipo por WhatsApp y te responden ellos.':
     'I am the assistant on Inédito Digital’s site 🤖\n\nI am not a person: I answer from the published information about the services. For anything that needs judgment —a quote, your particular case— I pass you to the team on WhatsApp and they answer.',
   'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.\n\nLo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.':
@@ -896,9 +880,7 @@ export const DICCIONARIO: Record<string, string> = {
   'Ver todo el bloque': 'See the whole section',
   'Todos los servicios': 'All services',
   'Servicios de IA': 'AI services',
-  'Los tres niveles': 'The three levels',
   'Y los tres niveles según tu punto de partida': 'And the three levels, depending on where you start',
-  'Elige por dónde entrar': 'Choose where to come in',
   'Auditoría con IA': 'AI audit',
   'Cómo medimos y qué se entrega': 'How we measure and what gets delivered',
   'Cómo trabajamos y qué prometemos': 'How we work and what we promise',
@@ -926,7 +908,6 @@ export const DICCIONARIO: Record<string, string> = {
   'ya vi el horario': 'I already saw the hours',
   'ya vi la lista de servicios': 'I already saw the list of services',
   'ya leí a qué se dedican': 'I already read what they do',
-  'ya vi los tres niveles': 'I already saw the three levels',
   'ya vi el portafolio': 'I already saw the portfolio',
   'no estaba publicado, queda pendiente': 'it was not published, still pending',
   'queda pendiente confirmarlo': 'still pending confirmation',
@@ -1138,11 +1119,9 @@ export const DICCIONARIO: Record<string, string> = {
   'Tu navegador no soporta videos HTML5.': 'Your browser does not support HTML5 video.',
   'Redirigiendo al menú...': 'Redirecting to the menu…',
   'Redirigiendo al documento...': 'Redirecting to the document…',
-  'TODO LO QUE HACEMOS': 'EVERYTHING WE DO',
 
   /* ── texto suelto del JSX (envuelto en tr(), no viene del panel) ────── */
   'Empezar de nuevo': 'Start over',
-  'Empezar por aquí': 'Start here',
   'Cuéntale al asistente qué necesita tu empresa': 'Tell the assistant what your company needs',
   'Compartir esta página': 'Share this page',
   'Cargando el catálogo de espacios…': 'Loading the space catalog…',
@@ -1347,4 +1326,23 @@ export const DICCIONARIO: Record<string, string> = {
   'Ese correo no se ve completo. Revísalo, o déjanos mejor tu WhatsApp.': 'That email doesn\'t look complete. Check it, or leave your WhatsApp instead.',
   'Listo': 'Done',
   'Te preparé el mensaje con todo lo que consultaste.\n\nDale al botón de abajo y solo tienes que enviarlo. Si no alcanzas, te escribimos nosotros.': 'I\'ve prepared the message with everything you asked about.\n\nTap the button below and you only need to send it. If you can\'t, we\'ll write to you.',
+  /* /servicios en tres pasos (23-sep) */
+  'No tienes que contratar todo. Trabajamos en tres pasos —que te encuentren, que te escriban y que te compren— y el diagnóstico con IA te dice por cuál empezar, con evidencia.': 'You don\'t have to hire everything. We work in three steps (get found, get contacted and get sales), and the AI diagnosis tells you where to start, with evidence.',
+  'ya vi los tres pasos': 'I already saw the three steps',
+  'La publicidad se invierte donde se puede medir, y cada campaña se juzga por los prospectos que trae, no por los clics.': 'Advertising goes where it can be measured, and every campaign is judged by the leads it brings in, not by clicks.',
+  'Marketing digital y publicidad para empresas de Aguascalientes: que te encuentren, que te escriban y que te compren. Todo medido hasta la venta.': 'Digital marketing and advertising for businesses in Aguascalientes: get found, get contacted and get sales. All of it measured through to the sale.',
+  'UN SISTEMA EN TRES PASOS': 'ONE SYSTEM, THREE STEPS',
+  'Cada paso prepara el siguiente y se mide antes de dar el que sigue. Así sabes qué funciona antes de invertir más.': 'Each step sets up the next, and each one is measured before we take the next. That way you know what works before you invest more.',
+  'Paso': 'Step',
+  'Se mide': 'What we measure',
+  'Cuando alguien busca lo que vendes —en Google, en Maps o preguntándole a ChatGPT—, tu negocio aparece, se ve serio y dice lo correcto.': 'When someone looks for what you sell (on Google, on Maps or by asking ChatGPT), your business shows up, looks professional and says the right things.',
+  'En qué búsquedas apareces, cuántas visitas llegan y si los asistentes de IA te mencionan.': 'Which searches you show up in, how many visits come in and whether AI assistants mention you.',
+  'Quien te encuentra tiene por dónde escribirte y nadie se queda esperando: un agente de IA contesta a cualquier hora y le pasa el prospecto a una persona de tu equipo.': 'Whoever finds you has an easy way to write to you, and nobody is left waiting: an AI agent answers at any hour and hands the lead to a person on your team.',
+  'Cuántos prospectos llegan, por qué canal y en cuánto tiempo reciben respuesta.': 'How many leads come in, through which channel and how quickly they get an answer.',
+  'Cuánto cuesta cada prospecto y, cuando tu sistema lo permite, qué ventas cerró cada canal, en un solo tablero.': 'What each lead costs and, when your system allows it, which sales each channel closed, all on one dashboard.',
+  'No tienes que contratar los tres pasos: con el diagnóstico sabes por cuál empezar.': 'You don\'t have to hire all three steps: the diagnosis tells you where to start.',
+  'COMPLEMENTOS': 'ADD-ONS',
+  'Piezas que se suman a los tres pasos cuando tu negocio las necesita.': 'Pieces that plug into the three steps when your business needs them.',
+  '¿Buscas algo que no está aquí?': 'Looking for something that isn\'t here?',
+  'Pregúntanos por WhatsApp': 'Ask us on WhatsApp',
 };

@@ -374,29 +374,61 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
   } else { $is404 = true; }
 }
 elseif ($seg[0] === 'servicios') {
-  $title = 'Servicios · Agencia de marketing digital y publicidad en Aguascalientes | '.$siteName; $desc = 'Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. Tres niveles según en qué punto estés: construir, mejorar o vender.';
+  $title = 'Servicios · Agencia de marketing digital y publicidad en Aguascalientes | '.$siteName; $desc = 'Marketing digital y publicidad en Aguascalientes, en tres pasos: que te encuentren, que te escriban y que te compren. Medido hasta la venta.';
   $canonical=$BASE.'/servicios'; $crumbs[]=['Servicios','/servicios'];
-    $bodyBuilder = function() use ($services,$paginas){
-    // Los tres niveles salen del panel, igual que en la version React.
-    $n = is_array($paginas['servicios']['contenido']['niveles'] ?? null)
-       ? $paginas['servicios']['contenido']['niveles'] : [];
+  $bodyBuilder = function() use ($services, $paginas) {
+    /* El mismo orden que ServicesPage.tsx: portada, los tres pasos, el
+       diagnóstico y los complementos.
+
+       Los textos salen de la base con los respaldos del registro del panel
+       (contenido_con_respaldo), así que aquí no se repite ninguno. Lo que sí
+       va en pareja con src/app/data/metodo.ts es qué servicio va en qué paso
+       y a dónde lleva: si se mueve uno allá, se mueve aquí. */
+    require_once __DIR__ . '/panel/inc/contenido.php';
+    $pc = fn(string $slug): array => contenido_con_respaldo($slug, json_encode($paginas[$slug]['contenido'] ?? null));
+    $sv = $pc('servicios');
+    $ms = $pc('marca')['menu_servicios'] ?? [];
+    $enc = $sv['encabezado'] ?? []; $met = $sv['metodo'] ?? []; $otr = $sv['otros'] ?? [];
+    $pasos = [
+      1 => [['web', '/servicios/diseno-y-desarrollo-web'], ['seo', '/servicios/posicionamiento-organico'],
+            ['geo', '/servicios/posicionamiento-en-ia'], ['ficha', '/servicios/ficha-de-google']],
+      2 => [['agente', '/servicios-ia/whatsapp'], ['ventas', '/servicios-ia/ventas'], ['funnels', '/servicios/funnels-de-venta']],
+      3 => [['ads', '/servicios/google-ads'], ['chatgpt', '/servicios/chatgpt-ads'],
+            ['canales', '/servicios/estrategia-de-canales'], ['tablero', '/servicios/tablero-de-resultados']],
+    ];
+    /* Fuera de los complementos: el diagnóstico, lo que ya está en un paso
+       (se suma abajo), el agente que el paso 2 cuenta con otro nombre y la
+       página que existe para una búsqueda y no es un servicio. */
+    $enMetodo = ['auditoria-con-ia' => 1, 'chatbots-y-agentes' => 1, 'inteligencia-artificial-aguascalientes' => 1];
+
     $h = '<h1>Servicios · Agencia de marketing digital y publicidad en Aguascalientes</h1>';
-    $h .= '<p>Marketing digital, publicidad, mercadotecnia y contenido para empresas de Aguascalientes. El servicio se adapta al grado de posicionamiento de cada empresa.</p>';
-    $tit = trim((string)($n['titulo'] ?? '')) ?: '¿En qué punto estás?';
-    $h .= '<h2>' . e($tit) . '</h2><ul>';
-    foreach ([1, 2, 3] as $k) {
-      $v = trim((string)($n["n{$k}_verbo"] ?? ''));
-      if ($v === '') continue;
-      $h .= '<li><strong>' . e($v) . '</strong>'
-          . (!empty($n["n{$k}_lema"]) ? ' · ' . e($n["n{$k}_lema"]) : '')
-          . ': ' . e((string)($n["n{$k}_texto"] ?? ''))
-          . (!empty($n["n{$k}_promesa"]) ? ' Promesa: ' . e($n["n{$k}_promesa"]) : '')
-          . '</li>';
+    $h .= '<p>' . e($enc['bajada'] ?? '') . '</p>';
+    $h .= '<h2>' . e($met['titulo'] ?? '') . '</h2><p>' . e($met['bajada'] ?? '') . '</p>';
+    foreach ($pasos as $n => $items) {
+      $h .= '<h3>' . e(($met['paso'] ?? '') . ' 0' . $n . ' · ' . ($ms['paso_' . $n] ?? '')) . '</h3>';
+      $h .= '<p><strong>' . e($ms['paso_' . $n . '_sub'] ?? '') . '.</strong> ' . e($met['p' . $n . '_texto'] ?? '') . '</p>';
+      $h .= '<p><strong>' . e($met['se_mide'] ?? '') . '.</strong> ' . e($met['p' . $n . '_mide'] ?? '') . '</p><ul>';
+      foreach ($items as [$k, $ruta]) {
+        $h .= '<li><a href="' . e($ruta) . '">' . e($ms[$k] ?? '') . '</a>: ' . e($ms[$k . '_desc'] ?? '') . '</li>';
+        if (strpos($ruta, '/servicios/') === 0) $enMetodo[substr($ruta, strlen('/servicios/'))] = 1;
       }
-    $h .= '</ul><h2>Todo lo que hacemos</h2><ul>';
-    foreach ($services as $s) $h .= '<li><a href="/servicios/' . e($s['slug'] ?? '') . '">'
-      . e($s['title'] ?? '') . '</a>: ' . e($s['shortDescription'] ?? $s['short_desc'] ?? '') . '</li>';
-    return $h . '</ul>';
+      $h .= '</ul>';
+    }
+    $h .= '<h2>' . e($ms['diag_titulo'] ?? '') . '</h2>'
+        . '<p>' . e($ms['diag_texto'] ?? '') . ' ' . e($met['diag_extra'] ?? '') . '</p>'
+        . '<p><a href="/servicios/auditoria-con-ia">' . e($ms['diag_boton'] ?? '') . '</a></p>';
+
+    $lista = '';
+    foreach ($services as $s) {
+      $cat = (string)($s['category'] ?? '');
+      if (isset($enMetodo[$s['slug'] ?? '']) || $cat === 'Cobertura' || $cat === 'Sectores') continue;
+      $lista .= '<li><a href="/servicios/' . e($s['slug'] ?? '') . '">' . e($s['title'] ?? '') . '</a>: '
+              . e($s['shortDescription'] ?? $s['short_desc'] ?? '') . '</li>';
+    }
+    if ($lista !== '') {
+      $h .= '<h2>' . e($otr['titulo'] ?? '') . '</h2><p>' . e($otr['bajada'] ?? '') . '</p><ul>' . $lista . '</ul>';
+    }
+    return $h;
   };
 }
 elseif ($seg[0] === 'portafolio' && isset($seg[1])) {
