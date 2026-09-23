@@ -8,8 +8,7 @@
 | | |
 |---|---|
 | Último commit de código | `46db562` — La portada cuenta los tres pasos, no los tres niveles |
-| En producción | `5917f7e` — /servicios cuenta el método en tres pasos (`assets/index-Csl9MATb.js`, publicado y verificado en vivo el 23-sep, con la bajada corregida en la base) |
-| Sin publicar | `46db562`: la portada con los tres pasos. Al publicar, correr `.claude/respaldos/2026-09-23-portada_bd.php` en modo `aplicar` (ver Pendientes) |
+| En producción | El mismo: `assets/index-i197ZudT.js`, publicado y verificado en vivo el 23-sep (portada y /servicios en español e inglés, y lo que ven los robots). La base, al día con los dos cambios |
 | GitHub | La historia se reescribió en local el 22-sep (todo con el autor «Inédito Digital»). Falta subirla con `git push --force-with-lease origin main`: desde esta máquina no se alcanza github.com |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
@@ -277,10 +276,10 @@ En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12�
 - El asistente, a «¿por dónde empiezo?» o «¿qué me conviene?», ya no contesta con los tres niveles: responde con los tres pasos y el diagnóstico como punto de partida, con los mismos botones que «¿qué hacen?».
 - Revisor de marca: sin reglas rotas. Se corrigió el paso 3, que prometía sin condición «saber qué canal vendió» (eso depende de que el sistema del cliente lo permita, como dice la ficha del tablero). La portada sigue con los tres niveles: pendiente de decidir (abajo).
 
-**La portada con los tres pasos** (`46db562`, sin publicar). Seguía con «El servicio se adapta a dónde estás» (Construir / Mejorar / Vender), y su banda de enfoque mandaba a /servicios con «Los tres niveles de servicio»:
+**La portada con los tres pasos** (`46db562`, en vivo desde el 23-sep). Seguía con «El servicio se adapta a dónde estás» (Construir / Mejorar / Vender), y su banda de enfoque mandaba a /servicios con «Los tres niveles de servicio»:
 
 - La sección ahora es «Tres pasos hasta la venta»: tres tarjetas con el paso, su frase y sus servicios como enlaces, y los botones «Pedir diagnóstico» y «Ver los tres pasos». Se edita en Contenido › Inicio › «Los tres pasos»; los nombres, en Marca › menú de servicios.
-- La pieza 01 de «Las cuatro piezas del sistema» pasa a «Los tres pasos · Que te encuentren, que te escriban y que te compren». Está guardada en la base con el texto viejo: `.claude/respaldos/2026-09-23-portada_bd.php` la cambia (probado en modo lectura: encuentra el texto viejo en contenido y en borrador).
+- La pieza 01 de «Las cuatro piezas del sistema» pasa a «Los tres pasos · Que te encuentren, que te escriban y que te compren». Estaba guardada en la base con el texto viejo; se cambió el 23-sep con `.claude/respaldos/2026-09-23-portada_bd.php`, en contenido y borrador. El «antes» quedó en `.claude/respaldos/2026-09-23-antes-de-portada.txt`.
 - «El ciclo completo» (Objetivos, Conectar, Auditar, Ajustar) se queda: es el ciclo mensual de dirección, no el método.
 - `render.php`: la portada para robots cuenta los tres pasos, y las preguntas «¿Qué hace exactamente?» y «¿Es confiable?» ya no hablan de niveles. Los pasos se escriben una vez (`metodoPasos()`) y los textos se leen con `textosPagina()`, para la portada y /servicios.
 - Barrido limpio en 9 tamaños y dos idiomas; la única «fuga» en inglés es el nombre de quien dejó una opinión.
@@ -318,7 +317,6 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 ### Técnicos (para la siguiente sesión)
 
 - [ ] **Subir la historia reescrita**: `git push --force-with-lease origin main`, desde una máquina que alcance github.com.
-- [ ] **Publicar la portada con los tres pasos** (`46db562`) si el cliente la aprueba: `npm run build`, `bash deploy.sh` y luego `bash .claude/respaldos/correr_en_servidor.sh .claude/respaldos/2026-09-23-portada_bd.php aplicar <salida.txt>`. Después, comprobar en vivo la sección y la pieza 01 de la banda de enfoque, en español e inglés.
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
 - [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
