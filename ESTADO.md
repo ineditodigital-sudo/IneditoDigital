@@ -1,30 +1,32 @@
 # Estado del sitio · inedito.digital
 
-> Corte: **21 de septiembre de 2026**. Escrito para retomar en otra sesión.
+> Corte: **23 de septiembre de 2026**. Escrito para retomar en otra sesión.
 > Antes de confiar en esto, compáralo con `git log -1` y con el bundle que sirve el sitio. Si no coinciden, algo cambió después de este corte.
 
 ## En una mirada
 
 | | |
 |---|---|
-| Último commit de código | `acc16a6` — Etiquetas claras en las tarjetas de /servicios-ia |
-| En producción | El mismo: `assets/index-DeBihEBq.js` (verificado en vivo el 21-sep, español e inglés) |
+| Último commit de código | `69e5344` — El asistente no registra un lead sin WhatsApp o correo |
+| En producción | `8fde35b` — Etiquetas claras en las tarjetas de /servicios-ia (`assets/index-DeBihEBq.js`, verificado en vivo el 21-sep). Antes de la reescritura del 22-sep ese commit se llamaba `acc16a6` |
+| Sin publicar | `9586e77` (menú en tres pasos), `5e0d75b` (nombre de los servicios de IA) y `69e5344` (contacto obligatorio en el asistente). Ver «Lo último (22 y 23 de septiembre)» |
+| GitHub | La historia se reescribió en local el 22-sep (todo con el autor «Inédito Digital»). Falta subirla con `git push --force-with-lease origin main`: desde esta máquina no se alcanza github.com |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
-| Desplegar | `npm run build && bash deploy.sh` (detalle en `docs/DESPLIEGUE.md`) |
+| Desplegar | `npm run build` y luego, en otro comando, `bash deploy.sh`: el candado revisa que `dist` sea más nuevo que `src` antes de dejar correr el despliegue (detalle en `docs/DESPLIEGUE.md`) |
 | Arquitectura | SPA React + Vite, `render.php` (HTML para bots y puente de datos), panel PHP en `/panel/`, MySQL en cPanel. Ver `README.md` |
 
 ## Lo último que se hizo (septiembre)
 
-- **Sitio en inglés**, con interruptor en el encabezado (`12d1427`).
+- **Sitio en inglés**, con interruptor en el encabezado (`5b3bf58`).
 - **Contacto corregido** en el sitio, las páginas legales, la presentación y la base de producción. Había dos números ajenos publicados.
-- **Anuncios espectaculares**: servicio nuevo y catálogo de 317 espacios de Vía Gráfica, con mapa (`ac3faa0`, `5296479`).
+- **Anuncios espectaculares**: servicio nuevo y catálogo de 317 espacios de Vía Gráfica, con mapa (`bb83c30`, `6205d84`).
 - **Presentación de servicios** en `/service-presentation` (enlace oculto, noindex):
   - 12 láminas: portada, 10 servicios (incluye Tienda en línea) y cierre. Español e inglés, tema oscuro y claro.
   - Una animación Remotion por servicio (10 escenas), con logos reales de las IA, Google y WhatsApp, y mockups de teléfono en Web, Tienda y Agentes.
   - Logo oficial: los SVG de marca en `public/marca/`.
   - En teléfono: todo centrado y tarjetas que se abren al tocarlas. Acostado o en ventana baja: dos columnas.
-  - **Editable desde el panel** (Contenido › Presentación): textos, tarjetas, enlaces, orden, qué láminas se ven y contacto. Tiene borrador, versiones y vista en vivo (`da67a8c`).
+  - **Editable desde el panel** (Contenido › Presentación): textos, tarjetas, enlaces, orden, qué láminas se ven y contacto. Tiene borrador, versiones y vista en vivo (`09d3afc`).
 
 ## Lo último (14 de septiembre)
 
@@ -179,7 +181,7 @@ Los MCP pueden desconectarse a media sesión; siguen configurados (`claude mcp l
 
 ### Segunda vuelta: lo que encontraron las herramientas, corregido (21-sep)
 
-Commits `52242c2` y `a4653b3`. Todo ya existía antes; lo destapó la primera pasada completa con las herramientas.
+Commits `1c0eee2` y `a2b5b73`. Todo ya existía antes; lo destapó la primera pasada completa con las herramientas.
 
 - **Desbordes** (barrido de 61 rutas × 9 tamaños × 2 idiomas):
   - el H1 de 4 artículos del blog y del caso OFITODO empujaba la página de lado en teléfono (hasta 482 px en 375);
@@ -236,6 +238,33 @@ Después, a pedido del cliente: la opinión «Muy buena imaginen» (Alexis G.) q
 
 De paso: el título «POSICIONAMIENTO ORGÁNICO» de la vitrina de la portada se salía 28 px a 1024 de ancho; ahora se mide contra su tarjeta (`.titulo-tarjeta-icono`). Y el regreso de Google en el panel valida el `state` (antes no lo hacía).
 
+## Lo último (22 y 23 de septiembre)
+
+**Investigación de mercado** (documento «Investigación de mercado: especializarse o no», en Claude Docs). Conclusión que ya es decisión: Inédito se especializa **por servicio y por cómo compra y crece el cliente**, no por giro. En Aguascalientes ningún giro tiene suficientes empresas que puedan pagar, y el cuello de botella es la demanda, no la capacidad. El diferenciador que se puede comprobar: medir quién lee al cliente, incluida la IA (bitácora `ia_bots`).
+
+**Menú de servicios en tres pasos** (`9586e77`, sin publicar). Un cliente le dijo a la agencia que el desplegable de 23 servicios la hacía ver «todóloga». Ahora cuenta un método:
+
+- 01 · Que te encuentren: sitio web, posicionamiento en Google, posicionamiento en IA, ficha de Google.
+- 02 · Que te escriban: agente de IA para WhatsApp, IA de ventas, funnels.
+- 03 · Que te compren: Google Ads, ChatGPT Ads, estrategia de canales, tablero de resultados.
+- Columna morada «Empieza aquí»: el diagnóstico con IA.
+
+La fuente única es `src/app/data/metodo.ts` (menú y asistente: a «¿qué hacen?» contesta con los tres pasos). Los textos se editan en Panel › Contenido › Marca › «Menú de servicios (los tres pasos)». Los servicios sueltos (branding, logo, QR, NFC, expo, espectaculares, LinkedIn) siguen publicados y se llega a ellos con «Ver todos los servicios». Salió del registro la sección `menu_ia`.
+
+**El nombre de los servicios de IA** que va en el mensaje de WhatsApp («me interesa el servicio de IA de Ventas») se leía de `menu_ia`. Ahora sale de la portada de cada página, campo «Nombre en una frase» (`5e0d75b`, sin publicar). En la base, `menu_ia` tenía los textos por defecto, así que no se pierde nada.
+
+**El asistente ya no registra leads sin contacto** (`69e5344`, sin publicar). Los cuatro leads que habían llegado por el asistente traían solo el nombre. Ahora, después del nombre, pregunta «¿A qué WhatsApp te escribimos? Si lo prefieres, déjanos tu correo.» y no registra sin uno de los dos:
+
+- WhatsApp de 10 dígitos (con +52 o +52 1 se deja en 10); uno de otro país se guarda con su lada.
+- Correo con la misma regla que PHPMailer (sin acentos ni puntos dobles), buscado dentro de la frase.
+- Si el dato no sirve, explica qué falta y lo vuelve a pedir. Si el servidor responde 422, también.
+- `api/lead.php` exige a todos un correo válido o un teléfono de 10 dígitos o más (se fue la excepción por canal). El formulario de `/contacto` ya pedía los dos.
+- El enlace «Prefiero escribir por WhatsApp» sigue ahí: no registra nada, y quien escribe por ahí deja su número en el chat.
+
+Probado en local en español e inglés: número incompleto, correo con acento, correo con punto doble, correo dentro de una frase, número de EE. UU., WhatsApp y correo juntos. El nombre y el número ya no salen en el mensaje de WhatsApp como si fueran consultas. La base no guarda `r_listo` ni `r_catalogo` del asistente, así que su cambio de texto no necesita script.
+
+**Git**: todos los commits salen como «Inédito Digital <contacto@inedito.digital>». La historia se reescribió el 22-sep; la original está en `.claude/respaldos/2026-09-22-historia-original.bundle` (HEAD anterior `d171fa9`). Los hashes de este documento ya son los nuevos.
+
 ## ⚠️ Revisar primero
 
 **El cierre de la presentación en español está vacío en lo publicado.** Alguien publicó desde el panel con la etiqueta, el título y la descripción del cierre en blanco. En inglés sigue completo. Así, el cierre en español muestra solo el logo y los botones de contacto.
@@ -266,6 +295,9 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 
 ### Técnicos (para la siguiente sesión)
 
+- [ ] **Publicar** `9586e77`, `5e0d75b` y `69e5344` (menú en tres pasos y contacto obligatorio), si el cliente lo aprueba. Después, comprobar en vivo el menú y el paso del contacto, y que `api/lead.php` responda 422 a un envío sin WhatsApp ni correo (sin crear leads de prueba en producción).
+- [ ] **Subir la historia reescrita**: `git push --force-with-lease origin main`, desde una máquina que alcance github.com.
+- [ ] Sugerido: que `/servicios` también se ordene por los tres pasos, como el menú.
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
 - [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
@@ -306,6 +338,7 @@ Reglas:
 ## Trampas conocidas
 
 - **Los `def` del panel ganan al publicar.** Si cambias un texto en `HomePage.tsx`, cambia también su `def` en `panel/inc/contenido.php`.
+- **Y la base gana sobre el código.** Si el campo ya está guardado en la base, cambiar su `def` y su respaldo no cambia el sitio: hay que actualizar la base (script de un solo uso con modo prueba, como los de `.claude/respaldos/`) o editarlo en el panel. Antes, revisa si el campo está guardado.
 - **Agrupar servicios por la categoría ORIGINAL.** En inglés `service.category` llega traducida; para agrupar o filtrar se usa `categoriaBase` (o `esCobertura()` de `data/grupos.ts`). Comparar contra la traducida revolvió el menú en inglés y metió las páginas de ciudad en `/servicios`.
 - **Una plantilla para todas las fichas.** Lo que se cambie en `FichaServicio.tsx` se ve en los 26 servicios, las 4 de IA y posicionamiento. Mide los tres tipos antes de entregar, y en la de espectaculares y la de activaciones, que traen bloques propios.
 - **Dos copias** en `services`, `blog_posts` y `portfolio`: el sitio lee `data_json`, y `crud()` escribe las dos. Corre `php scripts/probar_crud.php` antes de desplegar cambios del panel.
@@ -342,6 +375,9 @@ Para eso está la skill `/barrido` (`.claude/skills/barrido/`), que ya descarta 
 - Copy de venta directo: un título que dice el beneficio y una o dos frases de cómo se cumple.
 - Una sola oficina (Aguascalientes). Las otras ciudades son palabras clave, sin domicilios inventados.
 - La ficha de Google ya está configurada con las categorías de IA.
+- Sin precios en el sitio: todo se cotiza según el cliente y su necesidad.
+- Especialización por servicio y por tipo de relación, no por giro. El menú cuenta el método en tres pasos (`src/app/data/metodo.ts`).
+- Todo lead necesita un WhatsApp (lo ideal) o un correo válidos; sin eso no se registra.
 - Píxeles de Meta y GA4: omitidos por ahora.
 - El secreto de OAuth de Google no se rota por ahora (decisión del cliente).
 
