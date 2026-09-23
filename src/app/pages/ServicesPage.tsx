@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
 import { pasosDelMetodo, diagnosticoDelMetodo, otrosServicios } from '../data/metodo';
+import { IconoServicio } from '../components/IconoServicio';
 
 /* Entrada estandar del sitio: aparecer subiendo, una sola vez. */
 const entra = (retraso = 0) => ({
@@ -190,6 +191,9 @@ export default function ServicesPage() {
                           to={it.ruta}
                           className="group flex h-full items-start gap-3 rounded-2xl border border-white/10 bg-white/[.03] p-4 transition-colors duration-200 hover:border-[#AA66FF]/45 hover:bg-white/[.06] sm:flex-col sm:items-stretch sm:gap-0 sm:p-5"
                         >
+                          {/* Entra cuando la tarjeta ya terminó de aparecer, y
+                              en orden dentro del paso. */}
+                          <IconoServicio ruta={it.ruta} retraso={320 + j * 70} className="sm:mb-4" />
                           <div className="min-w-0 flex-1 sm:flex-none">
                             <div className="text-[17px] font-semibold leading-snug text-white">{it.titulo}</div>
                             <p className="mt-1.5 text-[14px] leading-relaxed text-white/65">{it.desc}</p>
@@ -210,9 +214,11 @@ export default function ServicesPage() {
             {/* ------------------------------------------------ empieza aquí */}
             <motion.section
               {...entra()}
+              data-tarjeta
               className="relative mt-4 overflow-hidden rounded-3xl border border-[#9933FF]/30 px-6 py-10 md:px-12 md:py-14"
               style={{ background: 'linear-gradient(160deg, rgba(119,0,206,.30), rgba(119,0,206,.06) 70%)' }}
             >
+              <IconoServicio ruta={diag.ruta} tamano="lg" retraso={320} className="mb-6" />
               <div className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[.18em] text-[#CC66FF]">
                 <Sparkles size={13} />
                 {diag.kicker}
@@ -255,12 +261,15 @@ export default function ServicesPage() {
                     <motion.div key={s.id} {...entra(Math.min(i * 0.04, 0.3))}>
                       <Link
                         to={`/servicios/${s.slug}`}
-                        className="group flex h-full flex-col rounded-xl border border-white/10 p-4 transition-colors duration-200 hover:border-[#AA66FF]/40 hover:bg-white/[.04]"
+                        className="group flex h-full items-start gap-3 rounded-xl border border-white/10 p-4 transition-colors duration-200 hover:border-[#AA66FF]/40 hover:bg-white/[.04]"
                       >
-                        <div className="font-semibold leading-snug text-white/90 transition-colors group-hover:text-white">
-                          {s.title}
+                        <IconoServicio ruta={s.slug} tamano="sm" retraso={320 + (i % 4) * 70} />
+                        <div className="min-w-0">
+                          <div className="font-semibold leading-snug text-white/90 transition-colors group-hover:text-white">
+                            {s.title}
+                          </div>
+                          <p className="mt-1 text-[13px] leading-snug text-white/55">{s.shortDescription}</p>
                         </div>
-                        <p className="mt-1 text-[13px] leading-snug text-white/55">{s.shortDescription}</p>
                       </Link>
                     </motion.div>
                   ))}

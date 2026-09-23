@@ -1,6 +1,14 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Curvas de animación. No se llaman --ease-out/--ease-in-out porque
+     Tailwind 4 ya usa esos nombres para sus clases ease-*: redefinirlos
+     cambiaría todas las transiciones del sitio.
+     salida: entradas y salidas (arranca rápido, frena suave).
+     vaivén: algo que se mueve de un lugar a otro dentro de la pantalla. */
+  --curva-salida: cubic-bezier(0.23, 1, 0.32, 1);
+  --curva-vaiven: cubic-bezier(0.77, 0, 0.175, 1);
+
   /* Spacing 8pt system */
   --space-1: 8px;
   --space-2: 16px;
