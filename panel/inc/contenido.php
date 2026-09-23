@@ -1727,9 +1727,12 @@ Lo que sí garantizamos es que vas a saber qué está pasando. Medimos cada mes 
                         'r_catalogo_sub' => ['label' => 'Respuesta · qué servicios tienen, línea bajo el diagnóstico', 'tipo' => 'texto', 'def' => 'Empieza por saber qué está mal, con evidencia'],
                         'opcion_otros' => ['label' => 'Botón · otros servicios', 'tipo' => 'texto', 'def' => 'Otros servicios'],
                         'r_otros' => ['label' => 'Respuesta · otros servicios', 'tipo' => 'texto', 'def' => 'También hacemos esto, casi siempre como parte de un proyecto:'],
-                        'r_listo' => ['label' => 'Mensaje final antes de WhatsApp', 'tipo' => 'area', 'def' => 'Listo. Te preparé el mensaje con todo lo que consultaste.
-
-Dale al botón de abajo y solo tienes que enviarlo.'],
+                        // Se pide ANTES de registrar el lead: sin WhatsApp o correo no hay registro (23-sep).
+                        'p_contacto' => ['label' => 'Pregunta · WhatsApp o correo', 'tipo' => 'texto', 'def' => '¿A qué WhatsApp te escribimos? Si lo prefieres, déjanos tu correo.'],
+                        'e_telefono' => ['label' => 'Aviso · número incompleto', 'tipo' => 'texto', 'def' => 'Ese número se ve incompleto: son 10 dígitos, como 449 123 4567. También puedes dejarnos tu correo.'],
+                        'e_correo' => ['label' => 'Aviso · correo incompleto', 'tipo' => 'texto', 'def' => 'Ese correo no se ve completo. Revísalo, o déjanos mejor tu WhatsApp.'],
+                        // Va después de «Listo, <nombre>.», que el asistente pone solo.
+                        'r_listo' => ['label' => 'Mensaje final antes de WhatsApp', 'tipo' => 'area', 'def' => 'Te preparé el mensaje con todo lo que consultaste.' . "\n" . '' . "\n" . 'Dale al botón de abajo y solo tienes que enviarlo. Si no alcanzas, te escribimos nosotros.'],
                         'r_precio' => ['label' => 'Respuesta · precios', 'tipo' => 'area', 'def' => 'Cada proyecto se cotiza según lo que necesita, así que no manejo precios de lista: no sería honesto darte una cifra sin saber de qué tamaño es tu negocio.' . "\n" . '' . "\n" . 'Lo que sí: la primera revisión no tiene costo. Pásame tu caso por WhatsApp y te damos un número real.'],
                         'r_portafolio' => ['label' => 'Respuesta · portafolio', 'tipo' => 'area', 'def' => 'Tenemos los casos publicados con lo que hicimos en cada uno.'],
                         'r_quienes' => ['label' => 'Respuesta · quiénes somos', 'tipo' => 'area', 'def' => 'Somos una agencia de Aguascalientes que trabaja como dirección comercial asistida por IA: conectamos tus objetivos con datos reales y auditamos cada mes si la estrategia funciona.'],

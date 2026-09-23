@@ -42,28 +42,26 @@ $company = $clean($data['company'] ?? '');
 $service = $clean($data['service'] ?? '');
 $message = $clean($data['message'] ?? '');
 $source  = $clean($data['source']  ?? '') ?: 'Formulario de contacto web';
-/* El asistente marca 'whatsapp' cuando entrega la conversación por ahí. */
-$canal   = $clean($data['canal']   ?? '');
 
 /* --- Validación ---
  *
- * El formulario de contacto pide las cuatro cosas y siempre las manda. El
- * asistente, no: pregunta lo mínimo a propósito y muchas veces solo tiene el
- * nombre y lo que la persona quiere, porque el contacto se va a dar por
- * WhatsApp. Exigirle un correo válido significaba rechazar justo el lead que
- * ya venía caminando, así que en ese canal la conversación misma es la vía
- * de contacto y basta con saber quién es y qué pidió.
+ * Todo lead necesita cómo contactarlo: un WhatsApp (lo ideal) o un correo,
+ * y válidos. Hasta el 23-sep-2026 el asistente podía registrar solo con el
+ * nombre, confiando en que la persona mandaría el WhatsApp; los cuatro que
+ * llegaron así no traían forma de responderles ni de saber si habían
+ * escrito. Ahora el asistente pide el contacto antes de registrar, y aquí se
+ * exige a todos por igual. Un WhatsApp de México son 10 dígitos.
  */
 $hayCorreo = $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
-$hayTel    = strlen(preg_replace('/\D/', '', $phone)) >= 8;
+$hayTel    = strlen(preg_replace('/\D/', '', $phone)) >= 10;
 
 $errors = [];
 if ($name === '')                    $errors[] = 'name';
 if ($message === '')                 $errors[] = 'message';
 if ($email !== '' && !$hayCorreo)    $errors[] = 'email';
-if (!$hayCorreo && !$hayTel && $canal !== 'whatsapp') {
-    $errors[] = 'email';
+if (!$hayCorreo && !$hayTel) {
     $errors[] = 'phone';
+    $errors[] = 'email';
 }
 if ($errors) {
     http_response_code(422);

@@ -832,7 +832,6 @@ export const DICCIONARIO: Record<string, string> = {
   'En línea': 'Online',
   'Escribe tu pregunta…': 'Type your question…',
   'Tu nombre…': 'Your name…',
-  'Correo o teléfono…': 'Email or phone…',
   'Enviar por WhatsApp': 'Send on WhatsApp',
   'Prefiero escribir por WhatsApp': 'I would rather write on WhatsApp',
   'Se abre WhatsApp con el mensaje escrito. Solo tienes que enviarlo.':
@@ -911,7 +910,6 @@ export const DICCIONARIO: Record<string, string> = {
   '¿Cuál me toca? Pregúntame': 'Which one is for me? Ask me',
   '¿Qué incluye?': 'What is included?',
   '← Ver otros grupos': '← See other groups',
-  '＋ Añadir mi correo': '＋ Add my email',
   '🌐 Página web': '🌐 Website',
   '🔎 Aparecer en Google': '🔎 Show up on Google',
   '🤖 Aparecer en las IA': '🤖 Show up in the AIs',
@@ -1342,4 +1340,11 @@ export const DICCIONARIO: Record<string, string> = {
   'También hacemos esto, casi siempre como parte de un proyecto:': 'We also do this, usually as part of a project:',
   'Elige el que te interese y te cuento:': 'Pick one and I\'ll tell you more:',
   '← Ver los tres pasos': '← See the three steps',
+  /* El asistente pide WhatsApp o correo antes de registrar el lead */
+  'Tu WhatsApp o tu correo…': 'Your WhatsApp or email…',
+  '¿A qué WhatsApp te escribimos? Si lo prefieres, déjanos tu correo.': 'Which WhatsApp number should we write to? If you prefer, leave your email.',
+  'Ese número se ve incompleto: son 10 dígitos, como 449 123 4567. También puedes dejarnos tu correo.': 'That number looks incomplete: it should be 10 digits, like 449 123 4567. You can also leave your email.',
+  'Ese correo no se ve completo. Revísalo, o déjanos mejor tu WhatsApp.': 'That email doesn\'t look complete. Check it, or leave your WhatsApp instead.',
+  'Listo': 'Done',
+  'Te preparé el mensaje con todo lo que consultaste.\n\nDale al botón de abajo y solo tienes que enviarlo. Si no alcanzas, te escribimos nosotros.': 'I\'ve prepared the message with everything you asked about.\n\nTap the button below and you only need to send it. If you can\'t, we\'ll write to you.',
 };

@@ -26,7 +26,8 @@ import { pasosDelMetodo, diagnosticoDelMetodo, otrosServicios } from '../data/me
  *      (titulos, categorias, caracteristicas y preguntas frecuentes).
  *   2. Contesta con esa informacion y ENLAZA a la pagina que lo explica.
  *   3. Ofrece WhatsApp en todo momento, no solo al final.
- *   4. Solo pide nombre y, si acaso, correo. El resto es opcional.
+ *   4. Solo pide nombre y un WhatsApp o correo, sin el cual no registra el
+ *      lead (desde el 23-sep-2026). El resto es opcional.
  *
  * Regla dura: no inventa. Si no hay dato (precios, plazos exactos), lo dice y
  * pasa a WhatsApp. Un asistente que se inventa un precio sale caro.
@@ -38,6 +39,9 @@ interface Mensaje {
   texto: string;
   enlace?: { titulo: string; sub: string; url: string };
   opciones?: { etiqueta: string; valor: string }[];
+  /** Respuesta a «¿cómo te llamas?» o «¿a qué WhatsApp…?»: es un dato, no
+      una consulta, y no va en la lista de lo que consultó. */
+  dato?: boolean;
 }
 
 type Fase = 'libre' | 'nombre' | 'contacto' | 'listo';
@@ -66,6 +70,42 @@ const RESUMEN: Partial<Record<string, string>> = {
 
 let contador = 0;
 const nuevoId = () => `m${++contador}`;
+
+/*
+ * El contacto que se pide antes de registrar el lead (23-sep-2026).
+ *
+ * Hasta entonces el asistente registraba con el nombre y nada más, confiando
+ * en que la persona enviaría el WhatsApp: los cuatro leads que llegaron por
+ * aquí no traían ni teléfono ni correo, y no había forma de saber si habían
+ * escrito. Ahora sin un WhatsApp o un correo válidos no hay registro.
+ */
+
+/** Un WhatsApp de México son 10 dígitos; con la lada del país (52 o 521)
+    se deja en los 10 que se marcan. Uno de otro país se queda completo. */
+function leerTelefono(texto: string): string | null {
+  const d = texto.replace(/\D/g, '');
+  if (d.length === 10) return d;
+  if (d.length === 12 && d.startsWith('52')) return d.slice(2);
+  if (d.length === 13 && d.startsWith('521')) return d.slice(3);
+  if (d.length >= 11 && d.length <= 15 && !d.startsWith('52')) return `+${d}`;
+  return null;
+}
+
+/** La misma regla que aplica el servidor (FILTER_VALIDATE_EMAIL de PHP): sin
+    acentos, sin puntos dobles y con dominio completo. Si aquí se aceptara uno
+    que allá no, el asistente diría «listo» con un lead que no se guardó. Se
+    busca dentro del texto, así que «mi correo es ana@x.com» también sirve. */
+const CORREO = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?![a-z0-9@.-]*[a-z0-9@-])/i;
+
+function leerCorreo(texto: string): string | null {
+  const m = texto.match(CORREO);
+  if (!m) return null;
+  /* Pegado a una letra con acento, a una coma o a otra arroba ya no es el
+     correo completo: mejor volver a pedirlo que registrar la mitad. */
+  const antes = texto[(m.index ?? 0) - 1];
+  if (antes && /[^\s:;<(\[,"'¿¡]/.test(antes)) return null;
+  return m[0].toLowerCase();
+}
 
 export default function AIAssistant() {
   const tVen = contenido('asistente', 'ventana');
@@ -111,8 +151,8 @@ export default function AIAssistant() {
 
   /* tr() tambien aqui porque varias respuestas del usuario son la etiqueta del
      boton que pulso, no algo que haya tecleado. */
-  const usuario = (texto: string) =>
-    setMensajes((m) => [...m, { id: nuevoId(), emisor: 'user', texto: tr(texto) }]);
+  const usuario = (texto: string, dato = false) =>
+    setMensajes((m) => [...m, { id: nuevoId(), emisor: 'user', texto: tr(texto), dato }]);
 
   /* ---------------- apertura ---------------- */
   useEffect(() => {
@@ -211,20 +251,25 @@ export default function AIAssistant() {
 
     if (fase === 'nombre') {
       const nombre = texto.trim().replace(/^(soy|me llamo|mi nombre es)\s+/i, '');
-      /* Con el nombre ya alcanza: pedir el correo antes de dar el boton
-         anadia dos pasos para llegar a WhatsApp. Queda como opcional. */
-      cerrar({ nombre });
+      seguirConContacto({ nombre });
       return;
     }
 
-    /* El correo es opcional y NO bloquea: el boton de WhatsApp ya esta
-       disponible mientras tanto. */
+    /* WhatsApp (lo ideal) o correo, y válidos: con uno de los dos se
+       registra el lead; si no, se explica qué falta y se vuelve a pedir. */
     if (fase === 'contacto') {
-      const esCorreo = /\S+@\S+\.\S+/.test(texto);
-      const dato = esCorreo ? { email: texto.trim() } : { telefono: texto.trim() };
-      setReq((r) => ({ ...r, ...dato }));
-      setFase('listo');
-      bot('Anotado. El mensaje ya lo lleva.', {}, 400);
+      /* Si deja los dos, se guardan los dos. Los dígitos de un correo
+         (ana2024@…) no cuentan como teléfono. */
+      const correo = leerCorreo(texto);
+      const telefono = leerTelefono(texto.replace(/\S*@\S*/g, ' '));
+      if (correo || telefono) {
+        const contacto: Partial<Requerimiento> = {};
+        if (telefono) contacto.telefono = telefono;
+        if (correo) contacto.email = correo;
+        cerrar(contacto);
+        return;
+      }
+      bot(errorDeContacto(texto.includes('@')), {}, 350);
       return;
     }
 
@@ -568,11 +613,29 @@ ${extra.pagina.desc}`, {
 
   const pedirNombre = () => {
     if (req.nombre) {
-      cerrar({});
+      seguirConContacto({});
       return;
     }
     setFase('nombre');
     bot(tCon('p_nombre_corto', 'Perfecto. ¿Cómo te llamas?'));
+  };
+
+  const errorDeContacto = (esCorreo: boolean) =>
+    esCorreo
+      ? tCon('e_correo', 'Ese correo no se ve completo. Revísalo, o déjanos mejor tu WhatsApp.')
+      : tCon('e_telefono', 'Ese número se ve incompleto: son 10 dígitos, como 449 123 4567. También puedes dejarnos tu correo.');
+
+  /** Sin un WhatsApp o un correo no hay lead que se pueda atender: se pide
+      ANTES de registrarlo. Si ya lo dio en esta conversación, se sigue. */
+  const seguirConContacto = (extra: Partial<Requerimiento>) => {
+    const final = { ...req, ...extra };
+    setReq(final);
+    if (final.telefono || final.email) {
+      cerrar(extra);
+      return;
+    }
+    setFase('contacto');
+    bot(tCon('p_contacto', '¿A qué WhatsApp te escribimos? Si lo prefieres, déjanos tu correo.'));
   };
 
   /** Guarda el lead y deja el boton de WhatsApp listo. */
@@ -589,7 +652,7 @@ ${extra.pagina.desc}`, {
        primero. El equipo leía en la ficha una cosa distinta de la que
        pedía. Un párrafo escrito a mano pesa más que un botón. */
     const descripcion = mensajes
-      .filter((m) => m.emisor === 'user')
+      .filter((m) => m.emisor === 'user' && !m.dato)
       .map((m) => m.texto.trim())
       .filter((t) => t.length > 90)
       .sort((a, b) => b.length - a.length)[0];
@@ -627,24 +690,35 @@ ${extra.pagina.desc}`, {
      * que es justo la fuga que no se veía.
      *
      * El mensaje lleva lo que preguntó, para que quien atienda no arranque
-     * de cero. Si falla, no se le dice nada a la persona: su camino es
-     * WhatsApp y ese sigue abierto. */
+     * de cero. Si falla la red o el servidor, no se le dice nada a la
+     * persona: su camino es WhatsApp y ese sigue abierto.
+     *
+     * La excepción es el 422: el servidor rechazó el WhatsApp o el correo y
+     * el lead NO quedó guardado. Entonces se vuelve a pedir el dato, con más
+     * espera que el «Listo» para no llegar antes que él. */
     void fetch('/api/lead.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...datos,
         message: construirMensaje({ ...final, consultas }),
-        canal: 'whatsapp',
       }),
-    }).catch(() => {});
+    })
+      .then((res) => {
+        if (res.status !== 422) return;
+        setReq((r) => ({ ...r, telefono: undefined, email: undefined }));
+        setFase('contacto');
+        /* El teléfono se revisa igual aquí que allá; si hubo correo, fue él. */
+        bot(errorDeContacto(!!final.email), {}, 900);
+      })
+      .catch(() => {});
 
+    /* El saludo va aparte del texto del panel: así el texto es literal (se
+       puede traducir y comparar con su def) y el nombre no se pierde. */
+    const listo = final.nombre ? `${tr('Listo')}, ${final.nombre.split(' ')[0]}.` : `${tr('Listo')}.`;
     bot(
-      tCon(
-        'r_listo',
-        `Listo${final.nombre ? `, ${final.nombre.split(' ')[0]}` : ''}. Te preparé el mensaje con todo lo que consultaste.\n\nDale al botón de abajo y solo tienes que enviarlo.`
-      ),
-      { opciones: [{ etiqueta: '＋ Añadir mi correo', valor: '__correo__' }] },
+      `${listo} ${tCon('r_listo', 'Te preparé el mensaje con todo lo que consultaste.\n\nDale al botón de abajo y solo tienes que enviarlo. Si no alcanzas, te escribimos nosotros.')}`,
+      {},
       450
     );
   };
@@ -653,14 +727,8 @@ ${extra.pagina.desc}`, {
   const enviar = (texto?: string) => {
     const t = (texto ?? entrada).trim();
     if (!t) return;
-    if (!t.startsWith('__')) usuario(t);
+    if (!t.startsWith('__')) usuario(t, fase === 'nombre' || fase === 'contacto');
     setEntrada('');
-
-    if (t === '__correo__') {
-      setFase('contacto');
-      bot('Claro, escríbelo aquí.', {}, 300);
-      return;
-    }
 
     if (t === '__otra__') {
       bot(tCon('r_otra', '¿Qué más quieres saber?'), { opciones: opcionesInicio() });
@@ -683,10 +751,10 @@ ${extra.pagina.desc}`, {
    *
    * Sale de sus propios mensajes en pantalla; la nota de que se le respondio se
    * deriva pasando cada pregunta por el detector. Se descartan las que no son
-   * consultas de verdad (el nombre, el correo, un saludo suelto).
+   * consultas de verdad (el nombre, el WhatsApp o el correo, un saludo suelto).
    */
   const consultas = mensajes
-    .filter((m) => m.emisor === 'user')
+    .filter((m) => m.emisor === 'user' && !m.dato)
     .map((m) => m.texto)
     .filter((t) => t.length > 5 && !/\S+@\S+\.\S+/.test(t) && t !== req.nombre)
     .map((pregunta) => {
@@ -847,7 +915,7 @@ ${extra.pagina.desc}`, {
                         fase === 'nombre'
                           ? tr('Tu nombre…')
                           : fase === 'contacto'
-                          ? tr('Correo o teléfono…')
+                          ? tr('Tu WhatsApp o tu correo…')
                           : tVen('placeholder', 'Escribe tu pregunta…')
                       }
                       className="border-white/10 bg-white/5 text-sm text-white placeholder:text-white/40 focus:border-[#9933FF]"
