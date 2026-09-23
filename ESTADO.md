@@ -7,8 +7,9 @@
 
 | | |
 |---|---|
-| Último commit de código | `46db562` — La portada cuenta los tres pasos, no los tres niveles |
-| En producción | El mismo: `assets/index-i197ZudT.js`, publicado y verificado en vivo el 23-sep (portada y /servicios en español e inglés, y lo que ven los robots). La base, al día con los dos cambios |
+| Último commit de código | `823d13f` — Cada servicio de /servicios tiene su ícono animado |
+| En producción | `46db562` — la portada con los tres pasos (`assets/index-i197ZudT.js`, verificado en vivo el 23-sep). La base, al día |
+| Sin publicar | `823d13f`: los íconos animados de /servicios (solo código, no toca la base) |
 | GitHub | Al día. La historia reescrita (183 commits, todos de «Inédito Digital») se subió el 23-sep sobre `eaf1982`, el último que había allá (2-sep, contenido completo en la historia original). **El repositorio es público** (ver Trampas) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
@@ -284,6 +285,13 @@ En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12�
 - `render.php`: la portada para robots cuenta los tres pasos, y las preguntas «¿Qué hace exactamente?» y «¿Es confiable?» ya no hablan de niveles. Los pasos se escriben una vez (`metodoPasos()`) y los textos se leen con `textosPagina()`, para la portada y /servicios.
 - Barrido limpio en 9 tamaños y dos idiomas; la única «fuga» en inglés es el nombre de quien dejó una opinión.
 
+**Íconos animados en /servicios** (`823d13f`, sin publicar). Cada servicio tiene un dibujo propio que cuenta en un segundo qué hace: el sitio se arma, tu resultado sube al primer lugar, el pin cae en el mapa, el embudo deja pasar a un cliente, la aguja califica al prospecto… Son 19, más uno genérico.
+
+- Se animan una vez al entrar en pantalla (antes esperan congelados en su primer cuadro, para no saltar) y otra al pasar el cursor por la tarjeta, solo con ratón. Sin bucles. Con «reducir movimiento», quietos.
+- `src/app/components/IconoServicio.tsx` (dibujos y cuándo se mueven) y `src/styles/iconos-servicio.css` (el movimiento). SVG de 32 × 32, CSS con transform, opacity y el trazo de las líneas.
+- Curvas nuevas en `theme.css`: `--curva-salida` y `--curva-vaiven`. No se llaman `--ease-out`: Tailwind 4 ya usa ese nombre para sus clases.
+- «ChatGPT Ads» no lleva el logo de ChatGPT: solo existe la imagen de marca completa (símbolo y nombre), que a 32 px no se lee. El nombre queda en el título de la tarjeta.
+
 **Git**: todos los commits salen como «Inédito Digital <contacto@inedito.digital>». La historia se reescribió el 22-sep; la original está en `.claude/respaldos/2026-09-22-historia-original.bundle` (HEAD anterior `d171fa9`). Los hashes de este documento ya son los nuevos.
 
 ## ⚠️ Revisar primero
@@ -361,6 +369,7 @@ Reglas:
 - **Una plantilla para todas las fichas.** Lo que se cambie en `FichaServicio.tsx` se ve en los 26 servicios, las 4 de IA y posicionamiento. Mide los tres tipos antes de entregar, y en la de espectaculares y la de activaciones, que traen bloques propios.
 - **Dos copias** en `services`, `blog_posts` y `portfolio`: el sitio lee `data_json`, y `crud()` escribe las dos. Corre `php scripts/probar_crud.php` antes de desplegar cambios del panel.
 - **`render.php` va junto con el bundle.** Se despliegan juntos; si se desfasan, los leads se duplican o se pierden.
+- **Un servicio nuevo del panel sale con el ícono genérico** (una estrella) en /servicios. Para darle el suyo: un dibujo en `DIBUJOS` y su slug en `POR_RUTA` de `IconoServicio.tsx`, y su movimiento en `iconos-servicio.css`.
 - **Los tres pasos van en pareja**: `src/app/data/metodo.ts` (menú, asistente, /servicios y portada) y `metodoPasos()` en `render.php` (robots). Si un servicio cambia de paso o de ruta, se cambia en los dos.
 - **CLI de Remotion:** la carpeta `auditoria/` lo confunde. Pasa siempre la entrada: `npx remotion still src/remotion/index.ts <escena> out.png --frame=150`.
 - **`deploy.sh` se detiene si algún asset no sube** (el FTP a veces corta la sesión) y no toca nada más. Volver a correrlo es seguro.
