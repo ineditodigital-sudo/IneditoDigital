@@ -7,8 +7,8 @@
 
 | | |
 |---|---|
-| Último commit de código | `823d13f` — Cada servicio de /servicios tiene su ícono animado |
-| En producción | El mismo: `assets/index-CnGKTPQo.js`, publicado y verificado en vivo el 23-sep (los 19 íconos de /servicios en escritorio y teléfono, español e inglés). La base, al día |
+| Último commit de código | `5046741` — «Arma tu ruta»: cada ficha orienta según el punto de partida |
+| En producción | El mismo: `assets/index-CP72CU7W.js` y `datos/recomendaciones.json`, publicados y verificados en vivo el 23-sep (fichas en español e inglés, cambio de etapa y lo que leen los robots). La base, al día |
 | GitHub | Al día: cada cambio se sube al terminarlo (ver Decisiones). La historia reescrita (183 commits, todos de «Inédito Digital») se subió el 23-sep sobre `eaf1982`, el último que había allá (2-sep, contenido completo en la historia original). **El repositorio es público** (ver Trampas) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
