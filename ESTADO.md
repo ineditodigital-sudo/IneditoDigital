@@ -264,6 +264,18 @@ Probado en local en español e inglés: número incompleto, correo con acento, c
 
 En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12» y «test@correo» sin enviar nada, y con un WhatsApp válido arma el lead con el teléfono (se interceptó en el navegador para no crear uno real); `api/lead.php` contesta 422 con `fields: [phone, email]` a un envío sin contacto, así que no se guarda.
 
+**/servicios en tres pasos** (sin publicar). La página cuenta el mismo método que el menú, con espacio para explicarlo:
+
+- Portada con la bajada nueva y los dos botones de siempre.
+- «Un sistema en tres pasos»: por cada paso, qué gana el cliente, un recuadro «Se mide» y las tarjetas de sus servicios. Los nombres y descripciones de los pasos y servicios salen de Marca › menu_servicios (los mismos del menú); los textos propios de la página, de Contenido › Servicios › «Los tres pasos».
+- «Empieza aquí»: el diagnóstico con IA. Sustituye a «¿En qué punto estás?» (Construir / Mejorar / Vender), que salió de la página y del registro.
+- «Complementos»: los servicios publicados que no están en ningún paso (branding, logo, QR, NFC, expo, espectaculares, LinkedIn). Se calculan solos a partir de los pasos (`otrosServicios` en `data/metodo.ts`). «Chatbots y Agentes» no sale ahí porque es el mismo agente de WhatsApp del paso 2.
+- `render.php` sirve a los robots lo mismo y en el mismo orden, con los textos de la base y los respaldos del registro (`contenido_con_respaldo`); antes listaba también las páginas de ciudad y de giro.
+- La base guardaba como bajada el texto por defecto ORIGINAL («Soluciones digitales integrales que impulsan tu crecimiento…», el def de antes del 24-ago): la bajada con palabras clave nunca se vio. Se cambia al publicar con `.claude/respaldos/2026-09-23-servicios_bd.php` (solo si sigue diciendo uno de los def viejos).
+- Barrido limpio en los 9 tamaños, en español e inglés, y sin textos en español en la versión en inglés.
+- El asistente, a «¿por dónde empiezo?» o «¿qué me conviene?», ya no contesta con los tres niveles: responde con los tres pasos y el diagnóstico como punto de partida, con los mismos botones que «¿qué hacen?».
+- Revisor de marca: sin reglas rotas. Se corrigió el paso 3, que prometía sin condición «saber qué canal vendió» (eso depende de que el sistema del cliente lo permita, como dice la ficha del tablero). La portada sigue con los tres niveles: pendiente de decidir (abajo).
+
 **Git**: todos los commits salen como «Inédito Digital <contacto@inedito.digital>». La historia se reescribió el 22-sep; la original está en `.claude/respaldos/2026-09-22-historia-original.bundle` (HEAD anterior `d171fa9`). Los hashes de este documento ya son los nuevos.
 
 ## ⚠️ Revisar primero
@@ -297,7 +309,7 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 ### Técnicos (para la siguiente sesión)
 
 - [ ] **Subir la historia reescrita**: `git push --force-with-lease origin main`, desde una máquina que alcance github.com.
-- [ ] Sugerido: que `/servicios` también se ordene por los tres pasos, como el menú.
+- [ ] Sugerido: la portada todavía cuenta «El servicio se adapta a dónde estás» con tres niveles (Construir / Mejorar / Vender). Decidir si se alinea con los tres pasos o se queda como puerta de entrada.
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
 - [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
@@ -343,6 +355,7 @@ Reglas:
 - **Una plantilla para todas las fichas.** Lo que se cambie en `FichaServicio.tsx` se ve en los 26 servicios, las 4 de IA y posicionamiento. Mide los tres tipos antes de entregar, y en la de espectaculares y la de activaciones, que traen bloques propios.
 - **Dos copias** en `services`, `blog_posts` y `portfolio`: el sitio lee `data_json`, y `crud()` escribe las dos. Corre `php scripts/probar_crud.php` antes de desplegar cambios del panel.
 - **`render.php` va junto con el bundle.** Se despliegan juntos; si se desfasan, los leads se duplican o se pierden.
+- **Los tres pasos van en pareja**: `src/app/data/metodo.ts` (menú, asistente y /servicios) y el bloque de `/servicios` en `render.php` (robots). Si un servicio cambia de paso o de ruta, se cambia en los dos.
 - **CLI de Remotion:** la carpeta `auditoria/` lo confunde. Pasa siempre la entrada: `npx remotion still src/remotion/index.ts <escena> out.png --frame=150`.
 - **`deploy.sh` se detiene si algún asset no sube** (el FTP a veces corta la sesión) y no toca nada más. Volver a correrlo es seguro.
 - **Navegador de Claude:** el usuario deja una pestaña de ChatGPT abierta. Pasa siempre el `tabId` de la pestaña de pruebas.
