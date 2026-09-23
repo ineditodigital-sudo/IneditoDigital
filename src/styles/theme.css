@@ -700,6 +700,24 @@
   }
 }
 
+/* «Arma tu ruta» (fichas de servicio): al cambiar de etapa, las tarjetas
+   nuevas entran escalonadas en vez de aparecer de golpe. Con «reducir
+   movimiento», solo aparecen. */
+@keyframes ruta-entra {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ruta-aparece {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.ruta-entra {
+  animation: ruta-entra 240ms var(--curva-salida) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ruta-entra { animation-name: ruta-aparece; }
+}
+
 /* ============================================================
    HERO "EN DISEÑO": el marco se traza, los cursores llegan
    ============================================================

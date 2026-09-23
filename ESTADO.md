@@ -291,6 +291,14 @@ En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12�
 - Curvas nuevas en `theme.css`: `--curva-salida` y `--curva-vaiven`. No se llaman `--ease-out`: Tailwind 4 ya usa ese nombre para sus clases.
 - «ChatGPT Ads» no lleva el logo de ChatGPT: solo existe la imagen de marca completa (símbolo y nombre), que a 32 px no se lee. El nombre queda en el título de la tarjeta.
 
+**«Arma tu ruta» en cada ficha de servicio** (23-sep). No es un carrito ni venta en combo: orienta. El visitante elige «Empiezo de cero» o «Ya tengo un negocio» (se recuerda al pasar de un servicio a otro) y ve hasta tres servicios con su papel —Primero, Va con este, Más alcance, Después, Otra ruta— y el porqué en una línea.
+
+- 23 páginas: los 11 servicios de los pasos, el diagnóstico, los 7 complementos, «Chatbots y Agentes», la de IA en Aguascalientes y las de IA para marketing y e-commerce. Las de ciudad y de giro no la llevan.
+- Qué recomienda a qué, y por qué: `src/app/data/recomendaciones.ts` (94 razones, con su inglés en el diccionario). Los textos fijos de la sección, en el panel: Plantilla de página de servicio › «Arma tu ruta».
+- Componente `RutaServicio.tsx`, dentro de `FichaServicio.tsx` después de «Ideal para». Cada tarjeta lleva el ícono animado de su servicio.
+- Robots: al compilar, `vite.config.ts` deja la misma lista en `dist/datos/recomendaciones.json`, y `render.php` la lee (`rutaHtml`) para las fichas del panel, las de IA y la de posicionamiento en IA.
+- El campo «Servicios relacionados» del panel (relatedServices) ya no lo usa nadie: es del catálogo viejo y apunta a un «email-marketing» que no existe.
+
 **Git**: todos los commits salen como «Inédito Digital <contacto@inedito.digital>». La historia se reescribió el 22-sep; la original está en `.claude/respaldos/2026-09-22-historia-original.bundle` (HEAD anterior `d171fa9`). Los hashes de este documento ya son los nuevos.
 
 ## ⚠️ Revisar primero
@@ -368,6 +376,7 @@ Reglas:
 - **Una plantilla para todas las fichas.** Lo que se cambie en `FichaServicio.tsx` se ve en los 26 servicios, las 4 de IA y posicionamiento. Mide los tres tipos antes de entregar, y en la de espectaculares y la de activaciones, que traen bloques propios.
 - **Dos copias** en `services`, `blog_posts` y `portfolio`: el sitio lee `data_json`, y `crud()` escribe las dos. Corre `php scripts/probar_crud.php` antes de desplegar cambios del panel.
 - **`render.php` va junto con el bundle.** Se despliegan juntos; si se desfasan, los leads se duplican o se pierden.
+- **«Arma tu ruta» se compila**: los robots la leen de `dist/datos/recomendaciones.json`, que genera `vite.config.ts` al compilar. Si se cambia `recomendaciones.ts` y no se vuelve a compilar y publicar, el sitio y lo que leen los robots se desfasan. Un servicio nuevo necesita sus recomendaciones ahí (si no, su ficha no muestra la sección).
 - **Un servicio nuevo del panel sale con el ícono genérico** (una estrella) en /servicios. Para darle el suyo: un dibujo en `DIBUJOS` y su slug en `POR_RUTA` de `IconoServicio.tsx`, y su movimiento en `iconos-servicio.css`.
 - **Los tres pasos van en pareja**: `src/app/data/metodo.ts` (menú, asistente, /servicios y portada) y `metodoPasos()` en `render.php` (robots). Si un servicio cambia de paso o de ruta, se cambia en los dos.
 - **CLI de Remotion:** la carpeta `auditoria/` lo confunde. Pasa siempre la entrada: `npx remotion still src/remotion/index.ts <escena> out.png --frame=150`.

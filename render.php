@@ -198,6 +198,46 @@ function textosPagina(array $paginas, string $slug): array {
   return contenido_con_respaldo($slug, json_encode($paginas[$slug]['contenido'] ?? null));
 }
 
+/** «Arma tu ruta» para robots: lo mismo que la ficha, del JSON que deja la
+    compilación (src/app/data/recomendaciones.ts → dist/datos/). Hasta tres
+    por etapa, con su papel y su porqué, y los nombres como los dice el menú. */
+function rutaHtml(string $clave, array $paginas, array $services): string {
+  static $datos = null;
+  if ($datos === null) {
+    $j = @file_get_contents(__DIR__ . '/datos/recomendaciones.json');
+    $datos = is_string($j) ? (json_decode($j, true) ?: []) : [];
+  }
+  $lista = $datos[$clave] ?? [];
+  if (!$lista) return '';
+
+  $ms = textosPagina($paginas, 'marca')['menu_servicios'] ?? [];
+  $tx = textosPagina($paginas, 'servicio-detalle')['ruta'] ?? [];
+  $nombres = ['/servicios/auditoria-con-ia' => (string)($ms['diag_titulo'] ?? '')];
+  foreach (metodoPasos() as $items) {
+    foreach ($items as [$k, $ruta]) $nombres[$ruta] = (string)($ms[$k] ?? '');
+  }
+  foreach ($services as $s) {
+    $r = '/servicios/' . ($s['slug'] ?? '');
+    if (empty($nombres[$r])) $nombres[$r] = (string)($s['title'] ?? '');
+  }
+  $tipos = [];
+  foreach (['base', 'complemento', 'alcance', 'siguiente', 'ruta'] as $k) $tipos[$k] = (string)($tx['tipo_' . $k] ?? '');
+
+  $bloque = function (string $etapa) use ($lista, $nombres, $tipos, $tx): string {
+    $items = array_slice(array_values(array_filter($lista, fn($r) => empty($r['etapa']) || $r['etapa'] === $etapa)), 0, 3);
+    $o = '';
+    foreach ($items as $r) {
+      $n = $nombres[$r['a'] ?? ''] ?? '';
+      if ($n === '') continue;
+      $o .= '<li><a href="' . e($r['a']) . '">' . e($n) . '</a> (' . e($tipos[$r['tipo'] ?? ''] ?? '') . '): ' . e($r['razon'] ?? '') . '</li>';
+    }
+    return $o === '' ? '' : '<h3>' . e($tx['etapa_' . $etapa] ?? '') . '</h3><ul>' . $o . '</ul>';
+  };
+  $h = $bloque('cero') . $bloque('negocio');
+  if ($h === '') return '';
+  return '<h2>' . e(trim(($tx['titulo_1'] ?? '') . ' ' . ($tx['titulo_2'] ?? ''))) . '</h2><p>' . e($tx['bajada'] ?? '') . '</p>' . $h;
+}
+
 if ($path === '/') {
   // 54 caracteres: entra completo en el resultado de Google (ONP-01)
   /* Las preguntas con las que la gente busca proveedor, respondidas por
@@ -307,7 +347,7 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
     $desc = seoDe($s, 'metaDescription') ?: ($primera ?: ($s['shortDescription'] ?? $defaultDesc));
     $canonical = $BASE.'/servicios/'.$s['slug']; $crumbs[]=['Servicios','/servicios']; $crumbs[]=[$s['title'],'/servicios/'.$s['slug']];
     $schema[] = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$s['title'] ?? '','description'=>$s['shortDescription'] ?? '','provider'=>['@type'=>'Organization','name'=>$siteName,'url'=>$BASE],'areaServed'=>'Aguascalientes, México','url'=>$canonical,'dateModified'=>date('Y-m-d', strtotime((string)($s['fecha'] ?: 'now')))];
-    $bodyBuilder = function() use ($s, $pdo, $paginas) {
+    $bodyBuilder = function() use ($s, $pdo, $paginas, $services) {
       // La DEFINICION va primero: un motor de respuestas toma el primer
       // parrafo, y el gancho comercial no responde "que es".
       $h='<h1>'.e($s['title'] ?? '').'</h1>';
@@ -379,6 +419,7 @@ elseif ($seg[0] === 'servicios' && isset($seg[1])) {
         $h .= '</ol>';
       }
       if (($o = $lista('ideal')) !== '') $h .= '<h2>'.$tit('ideal_1','IDEAL','ideal_2','PARA').'</h2><ul>'.$o.'</ul>';
+      $h .= rutaHtml((string)($s['slug'] ?? ''), $paginas, $services);
       // El texto largo. Estaba guardado y no salia ni aqui ni en el sitio, asi
       // que Google veia la mitad de las paginas que si tienen sustancia.
       if (!empty($s['fullDescription'])) {
@@ -708,6 +749,7 @@ else {
           for ($i = 1; $i <= 8; $i++) if (!empty($ide["i{$i}"])) $lis .= '<li>' . e($ide["i{$i}"]) . '</li>';
           if ($lis !== '') $h .= '<h2>' . e($encabezado('ideal_1', 'IDEAL', 'ideal_2', 'PARA')) . '</h2><ul>' . $lis . '</ul>';
         }
+        $h .= rutaHtml(basename($path), $paginas, $GLOBALS['services'] ?? []);
 
         $fondo = '';
         foreach (preg_split('~\n\s*\n~u', (string)($ctx['texto_largo'] ?? '')) as $parrafo) {
@@ -870,6 +912,8 @@ if ($path === '/servicios/posicionamiento-en-ia') {
       }
       if ($lis !== '') $h .= '<h2>' . e($tit('proceso_1', 'NUESTRO', 'proceso_2', 'PROCESO')) . '</h2><ol>' . $lis . '</ol>';
     }
+
+    $h .= rutaHtml('posicionamiento-en-ia', $paginas, $GLOBALS['services'] ?? []);
 
     $fondo = '';
     foreach ([$g['problema'] ?? [], $gl] as $sec) {

@@ -3,6 +3,7 @@ import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { BASE } from './src/app/components/presentacion/contenido'
+import { RECOMENDACIONES } from './src/app/data/recomendaciones'
 
 
 function figmaAssetResolver() {
@@ -43,6 +44,20 @@ function presentacionBase(): Plugin {
   }
 }
 
+/*
+ * «Arma tu ruta» para render.php: la misma lista que pinta la ficha, en
+ * dist/datos/recomendaciones.json. Así lo que leen Google y las IA sale de
+ * la misma fuente que lo que ve el visitante, sin una copia en PHP.
+ */
+function recomendacionesJson(): Plugin {
+  return {
+    name: 'recomendaciones-json',
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'datos/recomendaciones.json', source: JSON.stringify(RECOMENDACIONES) })
+    },
+  }
+}
+
 export default defineConfig({
   plugins: [
     figmaAssetResolver(),
@@ -51,6 +66,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     presentacionBase(),
+    recomendacionesJson(),
   ],
   resolve: {
     alias: {

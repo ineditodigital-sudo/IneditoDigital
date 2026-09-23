@@ -983,6 +983,30 @@ function registro_paginas(): array {
                         'boton'    => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'COTIZAR AHORA'],
                     ],
                 ],
+
+                /* «Arma tu ruta» (23-sep): según si el negocio empieza de cero
+                   o ya funciona, qué va antes, junto o en lugar de cada
+                   servicio. Qué recomienda a qué vive en el código
+                   (src/app/data/recomendaciones.ts); aquí, los textos. */
+                'ruta' => [
+                    'nombre' => 'Arma tu ruta (recomendaciones)',
+                    'ayuda'  => 'La sección que, según si el negocio empieza de cero o ya funciona, recomienda qué va antes, junto o en lugar de cada servicio. Qué servicio recomienda a cuál, y por qué, no se edita aquí: pídeselo al equipo técnico.',
+                    'campos' => [
+                        'kicker'            => ['label' => 'Etiqueta de arriba', 'tipo' => 'texto', 'def' => 'Según tu punto de partida'],
+                        'titulo_1'          => ['label' => 'Título, primera parte', 'tipo' => 'texto', 'def' => 'ARMA'],
+                        'titulo_2'          => ['label' => 'Título, segunda parte (en morado)', 'tipo' => 'texto', 'def' => 'TU RUTA'],
+                        'bajada'            => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'Lo que conviene antes, junto o en lugar de este servicio, según cómo está tu negocio hoy.'],
+                        'pregunta'          => ['label' => 'Pregunta sobre los botones', 'tipo' => 'texto', 'def' => '¿Cómo está tu negocio hoy?'],
+                        'etapa_cero'        => ['label' => 'Botón · negocio nuevo', 'tipo' => 'texto', 'def' => 'Empiezo de cero'],
+                        'etapa_negocio'     => ['label' => 'Botón · negocio que ya funciona', 'tipo' => 'texto', 'def' => 'Ya tengo un negocio'],
+                        'tipo_base'         => ['label' => 'Etiqueta · lo que va antes', 'tipo' => 'texto', 'def' => 'Primero'],
+                        'tipo_complemento'  => ['label' => 'Etiqueta · lo que va junto', 'tipo' => 'texto', 'def' => 'Va con este'],
+                        'tipo_alcance'      => ['label' => 'Etiqueta · para llegar a más gente', 'tipo' => 'texto', 'def' => 'Más alcance'],
+                        'tipo_siguiente'    => ['label' => 'Etiqueta · lo que sigue', 'tipo' => 'texto', 'def' => 'Después'],
+                        'tipo_ruta'         => ['label' => 'Etiqueta · otra opción', 'tipo' => 'texto', 'def' => 'Otra ruta'],
+                        'ver'               => ['label' => 'Enlace de cada tarjeta', 'tipo' => 'texto', 'def' => 'Ver el servicio'],
+                    ],
+                ],
             ],
         ],
 

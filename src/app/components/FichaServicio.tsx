@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Check, Plus, Sparkles } from 'lucide-react';
 import { TopoLineas } from './TopoLineas';
 import { RecorridoProceso } from './RecorridoProceso';
+import { RutaServicio } from './RutaServicio';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
 
@@ -414,6 +415,12 @@ export function FichaServicio({ ficha }: { ficha: Ficha }) {
             </div>
           </section>
         )}
+
+        {/* ---------- ZONA 4b · ARMA TU RUTA ----------
+            Qué va antes, junto o en lugar de este servicio, según si el
+            negocio empieza de cero o ya funciona. Sin espacio doble cuando
+            viene justo después de «Ideal para». */}
+        <RutaServicio className={ficha.ideal.length > 0 ? 'pb-16 md:pb-24' : 'py-16 md:py-24'} />
       </div>
 
       {/* ---------- EL FONDO DEL ASUNTO, PLEGADO ----------
