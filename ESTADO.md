@@ -9,10 +9,10 @@
 |---|---|
 | Último commit de código | `823d13f` — Cada servicio de /servicios tiene su ícono animado |
 | En producción | El mismo: `assets/index-CnGKTPQo.js`, publicado y verificado en vivo el 23-sep (los 19 íconos de /servicios en escritorio y teléfono, español e inglés). La base, al día |
-| GitHub | Al día hasta `79ecd5f` (lo de después sigue solo en local). La historia reescrita (183 commits, todos de «Inédito Digital») se subió el 23-sep sobre `eaf1982`, el último que había allá (2-sep, contenido completo en la historia original). **El repositorio es público** (ver Trampas) |
+| GitHub | Al día: cada cambio se sube al terminarlo (ver Decisiones). La historia reescrita (183 commits, todos de «Inédito Digital») se subió el 23-sep sobre `eaf1982`, el último que había allá (2-sep, contenido completo en la historia original). **El repositorio es público** (ver Trampas) |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
-| Desplegar | `npm run build` y luego, en otro comando, `bash deploy.sh`: el candado revisa que `dist` sea más nuevo que `src` antes de dejar correr el despliegue (detalle en `docs/DESPLIEGUE.md`) |
+| Desplegar | Sin preguntar, al terminar cada cambio probado (ver Decisiones). `npm run build` y luego, en otro comando, `bash deploy.sh`: el candado revisa que `dist` sea más nuevo que `src` antes de dejar correr el despliegue (detalle en `docs/DESPLIEGUE.md`) |
 | Arquitectura | SPA React + Vite, `render.php` (HTML para bots y puente de datos), panel PHP en `/panel/`, MySQL en cPanel. Ver `README.md` |
 
 ## Lo último que se hizo (septiembre)
@@ -403,6 +403,7 @@ Para eso está la skill `/barrido` (`.claude/skills/barrido/`), que ya descarta 
 - Copy de venta directo: un título que dice el beneficio y una o dos frases de cómo se cumple.
 - Una sola oficina (Aguascalientes). Las otras ciudades son palabras clave, sin domicilios inventados.
 - La ficha de Google ya está configurada con las categorías de IA.
+- **Publicar y subir sin preguntar** (23-sep): cada cambio terminado y probado se publica en el sitio y se sube a GitHub (`git push origin main`) sin pedir permiso, y se comprueba en vivo. Lo irreversible se sigue preguntando: push forzado o reescribir historia, borrar datos, credenciales.
 - Sin precios en el sitio: todo se cotiza según el cliente y su necesidad.
 - Especialización por servicio y por tipo de relación, no por giro. El menú cuenta el método en tres pasos (`src/app/data/metodo.ts`).
 - Todo lead necesita un WhatsApp (lo ideal) o un correo válidos; sin eso no se registra.
