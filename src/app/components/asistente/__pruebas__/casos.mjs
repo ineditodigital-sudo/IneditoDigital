@@ -19,7 +19,7 @@ import { SERVICES } from './.compilado/svc.mjs';
 /* ficha-de-google y auditoria-con-ia solo existen en la base, no en
    data/services.ts. Sin anadirlos aqui la prueba da un falso negativo. */
 const base = {
-  icon: '', benefits: [], ideal: [], process: [], faq: [], relatedServices: [], order: 90,
+  icon: '', benefits: [], ideal: [], process: [], faq: [], order: 90,
 };
 const TODOS = [
   ...SERVICES,

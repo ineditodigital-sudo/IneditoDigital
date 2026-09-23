@@ -49,8 +49,10 @@ crud('servicios', [
     'faq'        => ['label'=>'Preguntas frecuentes','type'=>'pares','json'=>'faq','col'=>false,'grupo'=>'Preguntas',
                      'claves'=>['question'=>'Pregunta','answer'=>'Respuesta']],
 
-    'related'    => ['label'=>'Servicios relacionados','type'=>'lista','json'=>'relatedServices','col'=>false,'grupo'=>'Preguntas',
-                     'help'=>'El slug de cada uno, tal como aparece arriba.'],
+    /* «Servicios relacionados» salió el 23-sep: el sitio nunca lo mostró, y
+       lo que recomienda cada ficha ahora va por etapa en «Arma tu ruta»
+       (src/app/data/recomendaciones.ts). Lo que ya estaba guardado se queda
+       en el data_json, sin efecto: crud() parte del que ya existe. */
 
     'keywords'   => ['label'=>'Palabras clave','type'=>'lista','json'=>'seo.keywords','sep'=>'comas','grupo'=>'Buscadores'],
     'meta_title' => ['label'=>'Título para buscadores','type'=>'texto','json'=>'seo.metaTitle','grupo'=>'Buscadores','help'=>'Vacío es la mejor opción salvo que tengas un motivo: se arma solo como «Servicio en Aguascalientes | INÉDITO DIGITAL», y si no cabe en los 60 caracteres que Google muestra, se cae la marca antes que la ciudad. Si lo escribes, no pases de 60 y nombra la ciudad.'],

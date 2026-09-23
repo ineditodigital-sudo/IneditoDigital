@@ -43,8 +43,7 @@ def ts(v, sangria=4):
 
 
 CLAVES = ['id', 'slug', 'title', 'shortDescription', 'definicion', 'icon', 'category',
-          'bannerImage', 'features', 'benefits', 'ideal', 'process', 'faq',
-          'relatedServices', 'order']
+          'bannerImage', 'features', 'benefits', 'ideal', 'process', 'faq', 'order']
 
 bloques = []
 for x in faltan:

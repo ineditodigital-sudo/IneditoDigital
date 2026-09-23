@@ -125,7 +125,6 @@ prueba('servicios · crear uno nuevo con proceso y preguntas', function () use (
         'ideal'=>"Empresas\nComercios",
         'process'=>json_encode([['title'=>'Diagnostico','description'=>'Se revisa.'],['title'=>'Entrega','description'=>'Se publica.']]),
         'faq'=>json_encode([['question'=>'¿Cuánto tarda?','answer'=>'Dos semanas.']]),
-        'related'=>"google-ads\nbranding",
         'keywords'=>'uno, dos','meta_title'=>'Título SEO','meta_desc'=>'Descripción SEO',
     ];
     try { require $RAIZ . '/panel/pages/servicios.php'; }
@@ -142,7 +141,7 @@ prueba('servicios · crear uno nuevo con proceso y preguntas', function () use (
         'el proceso se numera solo'       => $j['process'][0]['step'] === 1 && $j['process'][1]['step'] === 2,
         'el proceso conserva el texto'    => $j['process'][1]['title'] === 'Entrega',
         'las preguntas se guardan'        => $j['faq'][0]['question'] === '¿Cuánto tarda?',
-        'los relacionados se guardan'     => $j['relatedServices'] === ['google-ads','branding'],
+        'relacionados ya no se escribe'   => !array_key_exists('relatedServices', $j),
         'el seo va anidado'               => $j['seo']['metaTitle'] === 'Título SEO' && $j['seo']['keywords'] === ['uno','dos'],
         'el id nuevo entra al data_json'  => $j['id'] === (string)$r['id'],
     ];

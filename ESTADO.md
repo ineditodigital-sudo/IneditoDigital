@@ -297,7 +297,7 @@ En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12�
 - Qué recomienda a qué, y por qué: `src/app/data/recomendaciones.ts` (94 razones, con su inglés en el diccionario). Los textos fijos de la sección, en el panel: Plantilla de página de servicio › «Arma tu ruta».
 - Componente `RutaServicio.tsx`, dentro de `FichaServicio.tsx` después de «Ideal para». Cada tarjeta lleva el ícono animado de su servicio.
 - Robots: al compilar, `vite.config.ts` deja la misma lista en `dist/datos/recomendaciones.json`, y `render.php` la lee (`rutaHtml`) para las fichas del panel, las de IA y la de posicionamiento en IA.
-- El campo «Servicios relacionados» del panel (relatedServices) ya no lo usa nadie: es del catálogo viejo y apunta a un «email-marketing» que no existe.
+- El campo «Servicios relacionados» salió del panel el 23-sep: el sitio nunca lo mostró y apuntaba a un «email-marketing» que no existe. Lo ya guardado se queda en el data_json de cada servicio, sin efecto.
 
 **Git**: todos los commits salen como «Inédito Digital <contacto@inedito.digital>». La historia se reescribió el 22-sep; la original está en `.claude/respaldos/2026-09-22-historia-original.bundle` (HEAD anterior `d171fa9`). Los hashes de este documento ya son los nuevos.
 

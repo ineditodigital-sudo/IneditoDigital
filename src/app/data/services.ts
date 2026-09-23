@@ -23,7 +23,6 @@ export interface Service {
   ideal: string[];
   process: { step: number; title: string; description: string }[];
   faq: { question: string; answer: string }[];
-  relatedServices: string[];
   order: number;
   seo?: SeoFicha;
 }
@@ -84,7 +83,6 @@ export const SERVICES: Service[] = [
       { question: '¿Incluye hosting y dominio?', answer: 'Te asesoramos en la contratación y podemos gestionar el hosting por ti. El primer año de dominio puede estar incluido según el paquete.' },
       { question: '¿Puedo actualizar el contenido yo mismo?', answer: 'Absolutamente. Incluimos un panel de administración fácil de usar y capacitación completa.' }
     ],
-    relatedServices: ['posicionamiento-organico', 'google-ads'],
     order: 1
   },
   {
@@ -127,7 +125,6 @@ export const SERVICES: Service[] = [
       { question: '¿Se integra con mi CRM actual?', answer: 'Sí, podemos integrarlo con la mayoría de CRMs populares como HubSpot, Salesforce, Zoho, etc.' },
       { question: '¿Cuánto tiempo toma implementarlo?', answer: 'Un chatbot básico puede estar listo en 1-2 semanas. Agentes más complejos requieren 3-4 semanas.' }
     ],
-    relatedServices: ['funnels-de-venta', 'diseno-y-desarrollo-web'],
     order: 2
   },
   {
@@ -170,7 +167,6 @@ export const SERVICES: Service[] = [
       { question: '¿Incluye las secuencias de email?', answer: 'Sí, incluimos el diseño y configuración de toda la secuencia de emails automatizados.' },
       { question: '¿Puedo usar mi plataforma de email actual?', answer: 'Sí, trabajamos con las principales plataformas como Mailchimp, ActiveCampaign, ConvertKit, etc.' }
     ],
-    relatedServices: ['google-ads', 'chatbots-y-agentes'],
     order: 3
   },
   {
@@ -213,7 +209,6 @@ export const SERVICES: Service[] = [
       { question: '¿Trabajan SEO local en Aguascalientes?', answer: 'Sí, somos expertos en SEO local. Optimizamos Google My Business y estrategias específicas para aparecer en búsquedas locales.' },
       { question: '¿Qué incluye el servicio mensual?', answer: 'Optimizaciones técnicas, creación de contenido, link building, monitoreo de posiciones y reporte mensual detallado.' }
     ],
-    relatedServices: ['diseno-y-desarrollo-web', 'google-ads'],
     order: 4
   },
   {
@@ -256,7 +251,6 @@ export const SERVICES: Service[] = [
       { question: '¿Qué ROI puedo esperar?', answer: 'Depende de tu industria y ciclo de venta. Nuestros clientes promedian 3:1 a 8:1 de retorno sobre inversión publicitaria.' },
       { question: '¿Hacen campañas en Facebook/Instagram también?', answer: 'Sí, manejamos todas las plataformas publicitarias principales con estrategias integradas.' }
     ],
-    relatedServices: ['funnels-de-venta', 'diseno-y-desarrollo-web'],
     order: 5
   },
   {
@@ -299,7 +293,6 @@ export const SERVICES: Service[] = [
       { question: '¿Incluye el registro de marca?', answer: 'No incluye el trámite legal, pero te asesoramos en el proceso y te conectamos con especialistas si lo necesitas.' },
       { question: '¿Hacen aplicaciones como tarjetas, papelería?', answer: 'Sí, podemos incluir diseño de papelería, tarjetas, templates de redes sociales, etc. según el paquete contratado.' }
     ],
-    relatedServices: ['creacion-de-logo', 'diseno-y-desarrollo-web'],
     order: 6
   },
   {
@@ -342,7 +335,6 @@ export const SERVICES: Service[] = [
       { question: '¿Los QR expiran?', answer: 'No, nuestros QRs dinámicos son permanentes mientras mantengas el servicio activo.' },
       { question: '¿Funcionan para menús de restaurantes?', answer: 'Sí, son perfectos para menús digitales. Puedes actualizar precios y platillos sin reimprimir.' }
     ],
-    relatedServices: ['diseno-y-desarrollo-web', 'branding'],
     order: 7
   },
   {
@@ -385,7 +377,6 @@ export const SERVICES: Service[] = [
       { question: '¿Qué formatos recibo?', answer: 'Recibes archivos vectoriales (AI, EPS, SVG, PDF) y rasterizados (PNG transparente, JPG) en alta resolución.' },
       { question: '¿Cuánto tiempo toma crear un logo?', answer: 'Aproximadamente 1-2 semanas, dependiendo de la cantidad de revisiones y feedback de tu parte.' }
     ],
-    relatedServices: ['branding', 'diseno-y-desarrollo-web'],
     order: 9
   },
   {
@@ -428,7 +419,6 @@ export const SERVICES: Service[] = [
       { question: '¿Qué pasa si hay problemas técnicos durante el evento?', answer: 'Proporcionamos soporte técnico presencial o remoto durante todo el evento para resolver cualquier incidencia.' },
       { question: '¿Puedo ver los datos capturados en tiempo real?', answer: 'Sí, tendrás acceso a un dashboard para ver leads, participaciones y métricas en tiempo real durante el evento.' }
     ],
-    relatedServices: ['servicios-qr', 'chatbots-y-agentes'],
     order: 10
   },
   {
@@ -473,7 +463,6 @@ export const SERVICES: Service[] = [
       { question: '¿Cuánto tarda la entrega?', answer: 'El diseño y la programación toman entre 3 y 5 días hábiles después de aprobar el diseño de tu tarjeta.' },
       { question: '¿Puedo pedir tarjetas para todo mi equipo?', answer: 'Sí. Cotizamos desde una sola persona hasta equipos completos, con diseño unificado para toda la empresa y una página de contacto propia para cada integrante. Nos adaptamos al tamaño de tu equipo.' }
     ],
-    relatedServices: ['branding', 'servicios-qr'],
     order: 11
   },
   {
@@ -546,10 +535,6 @@ export const SERVICES: Service[] = [
         question: '¿Qué pasa si mi dirección aparece distinta en varios sitios?',
         answer: 'Google pierde confianza en el dato y te muestra menos. Por eso el trabajo incluye unificar nombre, dirección y teléfono en tu web, tu ficha y los directorios donde ya apareces.'
       }
-    ],
-    relatedServices: [
-      'posicionamiento-organico',
-      'posicionamiento-en-ia'
     ],
     order: 90
   },
@@ -624,10 +609,6 @@ export const SERVICES: Service[] = [
         answer: 'La medición corre a diario de forma automática. La revisión completa tiene sentido cada mes o cada trimestre, según el ritmo de cambios del negocio.'
       }
     ],
-    relatedServices: [
-      'posicionamiento-en-ia',
-      'ficha-de-google'
-    ],
     order: 90
   },
   {
@@ -696,10 +677,6 @@ export const SERVICES: Service[] = [
         question: '¿Cómo sé que no estoy pagando por nada?',
         answer: 'Cada contacto que llega queda marcado con su origen y aparece en tu tablero junto a los de Google Ads y Meta. Al mes tienes el costo por contacto de cada canal en la misma pantalla, y si este sale caro se apaga.'
       }
-    ],
-    relatedServices: [
-      'posicionamiento-en-ia',
-      'google-ads'
     ],
     order: 91
   },
@@ -770,10 +747,6 @@ export const SERVICES: Service[] = [
         answer: 'Las fuentes se leen a diario, así que lo que ves es de ayer y no del mes pasado. El reporte formal se arma una vez al mes, que es el ritmo al que se toman decisiones de presupuesto.'
       }
     ],
-    relatedServices: [
-      'auditoria-con-ia',
-      'posicionamiento-organico'
-    ],
     order: 92
   },
   {
@@ -843,10 +816,6 @@ export const SERVICES: Service[] = [
         answer: 'No, la ordena. La publicidad es el acelerador; el canal es la dirección. Acelerar en la dirección equivocada solo hace que llegues más rápido a un lugar donde no quieres estar.'
       }
     ],
-    relatedServices: [
-      'tablero-de-resultados',
-      'funnels-de-venta'
-    ],
     order: 93
   },
   {
@@ -915,10 +884,6 @@ export const SERVICES: Service[] = [
         question: '¿En cuánto se ve algo?',
         answer: 'El perfil ordenado cambia la impresión desde la primera semana. La cadencia de contenido rinde a partir del tercer o cuarto mes, que es cuando ya hay suficiente publicado para que alguien que llega vea una empresa con actividad y no una racha.'
       }
-    ],
-    relatedServices: [
-      'estrategia-de-canales',
-      'funnels-de-venta'
     ],
     order: 94
   }
