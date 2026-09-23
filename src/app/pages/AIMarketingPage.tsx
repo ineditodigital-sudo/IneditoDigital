@@ -13,7 +13,6 @@ export default function AIMarketingPage() {
   return (
     <PaginaServicioIA
       pagina="servicios-ia-marketing"
-      claveMenu="marketing"
       nombre="IA para Marketing"
       seo={{
         title: 'IA para Marketing Digital - Automatización y Optimización - INÉDITO DIGITAL',

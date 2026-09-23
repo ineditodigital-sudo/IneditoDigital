@@ -13,7 +13,6 @@ export default function AISalesPage() {
   return (
     <PaginaServicioIA
       pagina="servicios-ia-ventas"
-      claveMenu="ventas"
       nombre="IA de Ventas"
       seo={{
         title: 'IA de Ventas - Automatización Comercial Inteligente - INÉDITO DIGITAL',

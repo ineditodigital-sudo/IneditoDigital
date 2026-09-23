@@ -39,15 +39,14 @@ const rango = (n: number) => Array.from({ length: n }, (_, i) => i + 1);
 
 export function PaginaServicioIA({
   pagina,
-  claveMenu,
   nombre,
   seo,
   respaldos,
 }: {
   /** El slug de la página en el panel, y también el de su escena del proceso. */
   pagina: string;
-  /** Su renglón en el submenú de Servicios IA, de donde sale el nombre para WhatsApp. */
-  claveMenu: string;
+  /** El nombre en una frase («IA de Ventas»), para WhatsApp y el asistente.
+      En el panel se cambia en la portada de cada página. */
   nombre: string;
   seo: { title: string; description: string; keywords: string[] };
   respaldos: RespaldosIA;
@@ -64,7 +63,7 @@ export function PaginaServicioIA({
 
   /* El nombre como se escribe en una frase («IA de Ventas»), no en mayúsculas
      como el título: va en el mensaje de WhatsApp y en el asistente. */
-  const nombreServicio = contenido('marca', 'menu_ia')(claveMenu, nombre);
+  const nombreServicio = tPor('nombre_frase', nombre);
 
   const ficha: Ficha = {
     slug: pagina,

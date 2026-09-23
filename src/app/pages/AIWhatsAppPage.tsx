@@ -13,7 +13,6 @@ export default function AIWhatsAppPage() {
   return (
     <PaginaServicioIA
       pagina="servicios-ia-whatsapp"
-      claveMenu="whatsapp"
       nombre="IA para WhatsApp"
       seo={{
         title: 'IA para WhatsApp - Agente Inteligente 24/7 - INÉDITO DIGITAL',

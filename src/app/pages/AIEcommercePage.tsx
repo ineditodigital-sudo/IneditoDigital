@@ -13,7 +13,6 @@ export default function AIEcommercePage() {
   return (
     <PaginaServicioIA
       pagina="servicios-ia-ecommerce"
-      claveMenu="ecommerce"
       nombre="IA para E-commerce"
       seo={{
         title: 'IA para E-commerce y Retail - INÉDITO DIGITAL',

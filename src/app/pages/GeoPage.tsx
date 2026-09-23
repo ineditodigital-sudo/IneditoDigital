@@ -186,7 +186,7 @@ export default function GeoPage() {
   ) : null;
 
   /* El nombre en frase, para WhatsApp y el asistente. */
-  const nombre = contenido('marca', 'menu_ia')('geo', 'Posicionamiento en IA');
+  const nombre = t('nombre_frase', 'Posicionamiento en IA');
 
   return (
     <>

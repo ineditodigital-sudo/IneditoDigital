@@ -771,6 +771,7 @@ function registro_paginas(): array {
                         'seo_titulo' => ['label' => 'Título para buscadores', 'tipo' => 'texto', 'def' => 'Posicionamiento en IA (GEO) en Aguascalientes'],
                         'seo_desc' => ['label' => 'Descripción para buscadores', 'tipo' => 'parrafo', 'def' => 'Logramos que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen bien a tu negocio. Diagnóstico gratuito en Aguascalientes.'],
                         'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'POSICIONAMIENTO GEO'],
+                        'nombre_frase' => ['label' => 'Nombre en una frase (va en el mensaje de WhatsApp y en el asistente)', 'tipo' => 'texto', 'def' => 'Posicionamiento en IA'],
                         'bajada' => ['label' => 'Texto debajo del título', 'tipo' => 'parrafo', 'def' => 'Cuando alguien le pregunta a una inteligencia artificial por un servicio como el tuyo en Aguascalientes, la respuesta menciona a unos cuantos negocios. Nuestro trabajo es que estés en esa lista, con tus datos correctos y sin que te confundan con nadie.'],
                         'boton_1' => ['label' => 'Botón principal', 'tipo' => 'texto', 'def' => 'DIAGNÓSTICO GRATUITO'],
                         'definicion' => ['label' => 'Qué es (la definición bajo los botones)', 'tipo' => 'parrafo', 'def' => 'El posicionamiento en inteligencia artificial —GEO, por Generative Engine Optimization— es el trabajo de lograr que ChatGPT, Gemini, Perplexity y los resúmenes de Google encuentren, entiendan y citen correctamente a tu negocio cuando alguien les pregunta por lo que vendes. Es el equivalente al SEO, pero para las respuestas de los asistentes en vez de la lista de resultados azules.'],
@@ -1107,6 +1108,7 @@ Trabajamos desde Aguascalientes con empresas de aquí y de otras ciudades del pa
                     'nombre' => 'Portada',
                     'campos' => [
                         'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA PARA WHATSAPP'],
+                        'nombre_frase' => ['label' => 'Nombre en una frase (va en el mensaje de WhatsApp y en el asistente)', 'tipo' => 'texto', 'def' => 'IA para WhatsApp'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Tu mejor vendedor, siempre disponible. Atiende, califica y da seguimiento automático por WhatsApp.'],
                     ],
                 ],
@@ -1220,6 +1222,7 @@ Todo queda registrado, y de ahí sale algo que casi ningún negocio tiene: la li
                     'nombre' => 'Portada',
                     'campos' => [
                         'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA DE VENTAS'],
+                        'nombre_frase' => ['label' => 'Nombre en una frase (va en el mensaje de WhatsApp y en el asistente)', 'tipo' => 'texto', 'def' => 'IA de Ventas'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Sistema de IA que automatiza prospección, califica leads y optimiza cada etapa de tu proceso comercial.'],
                     ],
                 ],
@@ -1333,6 +1336,7 @@ Y algo que conviene decir antes de empezar: esto ordena y acelera un proceso de 
                     'nombre' => 'Portada',
                     'campos' => [
                         'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA PARA MARKETING DIGITAL'],
+                        'nombre_frase' => ['label' => 'Nombre en una frase (va en el mensaje de WhatsApp y en el asistente)', 'tipo' => 'texto', 'def' => 'IA para Marketing'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Automatiza contenido, optimiza campañas y multiplica resultados con inteligencia artificial.'],
                     ],
                 ],
@@ -1446,6 +1450,7 @@ Y un cuarto frente que hace dos años no existía: qué dicen de tu marca ChatGP
                     'nombre' => 'Portada',
                     'campos' => [
                         'etiqueta' => ['label' => 'Nombre del servicio (el título grande)', 'tipo' => 'texto', 'def' => 'IA PARA E-COMMERCE'],
+                        'nombre_frase' => ['label' => 'Nombre en una frase (va en el mensaje de WhatsApp y en el asistente)', 'tipo' => 'texto', 'def' => 'IA para E-commerce'],
                         'bajada'   => ['label' => 'Texto de presentación', 'tipo' => 'parrafo', 'def' => 'Asistente inteligente dentro de tu tienda que recupera carritos, recomienda productos y atiende 24/7.'],
                     ],
                 ],
