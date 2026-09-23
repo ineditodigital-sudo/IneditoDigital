@@ -9,6 +9,7 @@ import DynamicSEO from '../components/DynamicSEO';
 import { useApp } from '../context/AppContext';
 import { contenido } from '../cms';
 import { tr } from '../idioma';
+import { pasosDelMetodo, diagnosticoDelMetodo } from '../data/metodo';
 
 const ProcesoCiclo = lazy(() => import('../components/ProcesoCiclo'));
 /* El carrusel de opiniones (con Embla) va en su propio trozo: la portada
@@ -115,8 +116,11 @@ export default function HomePage() {
   const tVal    = contenido('home', 'valores');
   const tEnf    = contenido('home', 'enfoque');
   const tCin    = contenido('home', 'cinta');
-  const tNiv    = contenido('home', 'niveles');
+  const tPas    = contenido('home', 'pasos');
   const tTab    = contenido('home', 'tablero');
+  /* Los tres pasos y el diagnóstico: los mismos del menú y de /servicios. */
+  const pasos = pasosDelMetodo();
+  const diag = diagnosticoDelMetodo();
 
   const process = [
     { step: '01', title: tProc('paso_1_titulo', 'OBJETIVOS'), description: tProc('paso_1_texto', 'Dirección define qué quiere lograr y en qué plazo') },
@@ -431,8 +435,13 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ============ Los tres niveles ============ */}
-      {tNiv.visible() && (
+      {/* ============ Los tres pasos ============
+          Hasta el 23-sep era «El servicio se adapta a dónde estás», con tres
+          niveles (Construir, Mejorar, Vender). Ahora cuenta el mismo método
+          que el menú y /servicios: los pasos y sus servicios salen de
+          data/metodo.ts, y la puerta de entrada es el diagnóstico. La tarjeta
+          no es un enlace: lo son sus servicios. */}
+      {tPas.visible() && (
         <section className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20 lg:px-8">
           <div className="container mx-auto max-w-5xl">
             <motion.div
@@ -443,32 +452,31 @@ export default function HomePage() {
               className="mb-10 text-center"
             >
               <h2 className="heading mb-3 text-2xl md:text-4xl">
-                {tNiv('titulo_1', 'EL SERVICIO SE ADAPTA')}{' '}
+                {tPas('titulo_1', 'TRES PASOS')}{' '}
                 <span
                   className="bg-clip-text text-transparent"
                   style={{ backgroundImage: 'linear-gradient(100deg,#9933FF,#CC66FF)' }}
                 >
-                  {tNiv('titulo_2', 'A DÓNDE ESTÁS')}
+                  {tPas('titulo_2', 'HASTA LA VENTA')}
                 </span>
               </h2>
               <p className="mx-auto max-w-2xl text-[15.5px] leading-relaxed text-white/70">
-                {tNiv('bajada', 'No es el mismo trabajo para una empresa que no tiene nada que para una que ya invierte y quiere vender más. Estos son los tres puntos de partida.')}
+                {tPas('bajada', 'Cada paso se mide antes de dar el siguiente. No tienes que contratar los tres: el diagnóstico te dice por cuál empezar.')}
               </p>
             </motion.div>
 
             <div className="grid gap-4 md:grid-cols-3">
-              {[1, 2, 3].map((i) => (
+              {pasos.map((p, i) => (
                 <motion.article
-                  key={i}
+                  key={p.numero}
                   initial={{ opacity: 0, y: 22 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.5, delay: (i - 1) * 0.1 }}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-6
-                             transition-all duration-300 hover:-translate-y-1 hover:border-[#AA66FF]/40 hover:bg-white/[.06]"
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] p-6"
                 >
                   <span
-                    className="absolute inset-x-0 top-0 h-px opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+                    className="absolute inset-x-0 top-0 h-px opacity-60"
                     style={{ background: 'linear-gradient(90deg,transparent,#9933FF,transparent)' }}
                   />
                   <div className="mb-3 flex items-end justify-between">
@@ -476,42 +484,47 @@ export default function HomePage() {
                       className="heading text-[2.6rem] leading-none bg-clip-text text-transparent"
                       style={{ backgroundImage: 'linear-gradient(120deg,#9933FF,#CC66FF)' }}
                     >
-                      0{i}
+                      {p.numero}
                     </span>
                     <span className="font-mono text-[10px] uppercase tracking-[.18em] text-white/40">
-                      Nivel {i}
+                      {tr('Paso')} {p.numero}
                     </span>
                   </div>
-                  <h3 className="heading mb-2 text-lg leading-tight">
-                    {tNiv(`n${i}_titulo`, ['CONSTRUIR', 'MEJORAR', 'VENDER'][i - 1])}
-                  </h3>
-                  <p className="mb-4 text-[14.5px] leading-relaxed text-white/70">
-                    {tNiv(`n${i}_texto`, [
-                      'Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.',
-                      'Para empresas con web y redes mal trabajadas. Empieza con una auditoría que dice exactamente qué está mal, con la evidencia de cada hallazgo.',
-                      'Para empresas que ya tienen todo. Estrategia de canales, campañas medidas en un solo tablero y —con ERP— el cruce de prospectos contra ventas cerradas.',
-                    ][i - 1])}
-                  </p>
-                  <div className="rounded-xl bg-[#7700CE]/10 px-3.5 py-2.5">
-                    <span className="font-mono text-[10px] uppercase tracking-[.16em] text-[#AA66FF]">Promesa</span>
-                    <p className="mt-1 text-[13.5px] leading-snug text-white/85">
-                      {tNiv(`n${i}_promesa`, [
-                        'Cuando te busquen, existes y te ves formal.',
-                        'Te decimos exactamente qué está mal y lo arreglamos.',
-                        'Cada peso invertido se mide contra ventas reales.',
-                      ][i - 1])}
-                    </p>
-                  </div>
+                  <h3 className="heading mb-1 text-lg leading-tight">{p.titulo}</h3>
+                  <p className="text-[14px] font-semibold leading-snug text-[#AA66FF]">{p.sub}</p>
+                  <ul className="mt-4 space-y-0.5 border-t border-white/10 pt-3">
+                    {p.items.map((it) => (
+                      <li key={it.ruta}>
+                        <Link
+                          to={it.ruta}
+                          className="group flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-[14px] text-white/75 transition-colors duration-200 hover:bg-white/[.06] hover:text-white"
+                        >
+                          <span className="min-w-0">{it.titulo}</span>
+                          <ArrowRight
+                            size={14}
+                            className="shrink-0 text-[#AA66FF] transition-transform duration-200 group-hover:translate-x-0.5"
+                          />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </motion.article>
               ))}
             </div>
 
-            <div className="mt-8 text-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                to={diag.ruta}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#7700CE] to-[#9933FF] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition-transform duration-200 hover:scale-[1.03]"
+              >
+                {diag.boton}
+                <ArrowRight size={16} />
+              </Link>
               <Link
                 to="/servicios"
                 className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-bold tracking-wider text-white transition-all duration-300 hover:border-[#AA66FF]/50 hover:bg-white/5"
               >
-                {tNiv('boton', 'VER LOS SERVICIOS')}
+                {tPas('boton', 'VER LOS TRES PASOS')}
                 <ArrowRight size={16} />
               </Link>
             </div>

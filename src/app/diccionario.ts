@@ -498,10 +498,6 @@ export const DICCIONARIO: Record<string, string> = {
   'No vendemos campañas sueltas. Conectamos los objetivos de tu dirección con los datos reales del negocio, y una IA audita cada mes si la estrategia está funcionando. Si no funciona, lo dice.':
     'We do not sell one-off campaigns. We connect your leadership’s objectives to the real numbers of the business, and an AI audits every month whether the strategy is working. If it is not, it says so.',
   'Presencia medida en': 'Presence measured across',
-  'EL SERVICIO SE ADAPTA': 'THE SERVICE ADAPTS',
-  'A DÓNDE ESTÁS': 'TO WHERE YOU ARE',
-  'No es el mismo trabajo para una empresa que no tiene nada que para una que ya invierte y quiere vender más. Estos son los tres puntos de partida.':
-    'It is not the same work for a company with nothing as for one already spending and wanting to sell more. These are the three starting points.',
   'UN TABLERO,': 'ONE DASHBOARD,',
   'NO UN REPORTE EN PDF': 'NOT A PDF REPORT',
   'Cada cliente tiene una pantalla conectada a sus datos reales, con el costo por contacto de cada canal lado a lado. Cuando el sistema de la empresa lo permite, llega hasta la venta facturada.':
@@ -513,7 +509,6 @@ export const DICCIONARIO: Record<string, string> = {
   'Soluciones digitales que generan resultados reales y medibles':
     'Digital work that produces real, measurable results',
   'VER TODOS LOS SERVICIOS': 'SEE ALL SERVICES',
-  'VER LOS SERVICIOS': 'SEE THE SERVICES',
   'IA APLICADA AL NEGOCIO': 'AI PUT TO WORK IN THE BUSINESS',
   'Inteligencia artificial puesta a trabajar donde se nota: atención, prospección, campañas y venta en línea. Todo conectado al mismo tablero.':
     'Artificial intelligence put to work where it shows: support, prospecting, campaigns and online sales. All of it wired to the same dashboard.',
@@ -566,12 +561,6 @@ export const DICCIONARIO: Record<string, string> = {
   'ROI promedio': 'Average ROI',
 
   /* ── servicios ─────────────────────────────────────────────────────── */
-  'CONSTRUIR': 'BUILD',
-  'Cuando te busquen, existes y te ves formal.': 'When they look you up, you exist and you look the part.',
-  'MEJORAR': 'IMPROVE',
-  'Te decimos exactamente qué está mal y lo arreglamos.': 'We tell you exactly what is wrong, and we fix it.',
-  'VENDER': 'SELL',
-  'Cada peso invertido se mide contra ventas reales.': 'Every peso spent is measured against real sales.',
 
   /* ── demos interactivos (páginas de servicio) ──────────────────────── */
   'PRUEBA NUESTROS': 'TRY OUR',
@@ -880,7 +869,6 @@ export const DICCIONARIO: Record<string, string> = {
   'Ver todo el bloque': 'See the whole section',
   'Todos los servicios': 'All services',
   'Servicios de IA': 'AI services',
-  'Y los tres niveles según tu punto de partida': 'And the three levels, depending on where you start',
   'Auditoría con IA': 'AI audit',
   'Cómo medimos y qué se entrega': 'How we measure and what gets delivered',
   'Cómo trabajamos y qué prometemos': 'How we work and what we promise',
@@ -936,12 +924,6 @@ export const DICCIONARIO: Record<string, string> = {
     'Not just Google: also the AI engines that already recommend suppliers. Almost nobody works on this.',
   'Tablero conectado a datos reales y, cuando tu sistema lo permite, el cruce directo entre campañas y ventas cerradas.':
     'A dashboard wired to real data and, when your system allows it, a direct match between campaigns and closed sales.',
-  'Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.':
-    'For companies with no digital presence. A fast site that passes Google’s measurements, with SEO, AEO and GEO from day one, a Google listing, LinkedIn and the starter dashboard.',
-  'Para empresas con web y redes mal trabajadas. Empieza con una auditoría que dice exactamente qué está mal, con la evidencia de cada hallazgo.':
-    'For companies whose site and social profiles were done badly. It starts with an audit that says exactly what is wrong, with the evidence behind every finding.',
-  'Para empresas que ya tienen todo. Estrategia de canales, campañas medidas en un solo tablero y —con ERP— el cruce de prospectos contra ventas cerradas.':
-    'For companies that already have everything. Channel strategy, campaigns measured on one dashboard and —with an ERP— leads matched against closed sales.',
   'Un agente que contesta en segundos, pregunta lo que preguntaría tu equipo y pasa la conversación cuando hay intención real de compra.':
     'An agent that answers in seconds, asks what your team would ask and hands the conversation over when there is real intent to buy.',
   'Contesta también fuera de horario': 'Answers outside office hours too',
@@ -1176,9 +1158,6 @@ export const DICCIONARIO: Record<string, string> = {
   /* 21-sep: textos cortos que salian en español en la version en ingles
      (lo encontro el barrido con __fugas). Las llaves son el texto publicado. */
   /* / */
-  'Los tres niveles de servicio': 'The three service levels',
-  'Construir, mejorar o vender: según en qué punto estés':
-    'Build, improve or sell: depending on where you stand',
   'Qué está mal en tu presencia digital, con evidencia':
     'What is wrong with your digital presence, backed by evidence',
   'El activo más importante y más descuidado': 'The most important asset, and the most neglected one',
@@ -1327,6 +1306,13 @@ export const DICCIONARIO: Record<string, string> = {
   'Listo': 'Done',
   'Te preparé el mensaje con todo lo que consultaste.\n\nDale al botón de abajo y solo tienes que enviarlo. Si no alcanzas, te escribimos nosotros.': 'I\'ve prepared the message with everything you asked about.\n\nTap the button below and you only need to send it. If you can\'t, we\'ll write to you.',
   /* /servicios en tres pasos (23-sep) */
+  /* La portada con los tres pasos (23-sep) */
+  'TRES PASOS': 'THREE STEPS',
+  'HASTA LA VENTA': 'TO THE SALE',
+  'Cada paso se mide antes de dar el siguiente. No tienes que contratar los tres: el diagnóstico te dice por cuál empezar.': 'Each step is measured before we take the next. You don\'t have to hire all three: the diagnosis tells you where to start.',
+  'VER LOS TRES PASOS': 'SEE THE THREE STEPS',
+  'Los tres pasos': 'The three steps',
+  'Que te encuentren, que te escriban y que te compren': 'Get found, get contacted and get sales',
   'No tienes que contratar todo. Trabajamos en tres pasos —que te encuentren, que te escriban y que te compren— y el diagnóstico con IA te dice por cuál empezar, con evidencia.': 'You don\'t have to hire everything. We work in three steps (get found, get contacted and get sales), and the AI diagnosis tells you where to start, with evidence.',
   'ya vi los tres pasos': 'I already saw the three steps',
   'La publicidad se invierte donde se puede medir, y cada campaña se juzga por los prospectos que trae, no por los clics.': 'Advertising goes where it can be measured, and every campaign is judged by the leads it brings in, not by clicks.',

@@ -177,6 +177,27 @@ $is404 = false; // rutas inexistentes -> 404 real + noindex (evita soft 404)
 $H = function($t){ return '<h1>'.e($t).'</h1>'; };
 $P = function($t){ return '<p>'.e($t).'</p>'; };
 
+/* Los tres pasos del método, en pareja con src/app/data/metodo.ts: la clave
+   de cada servicio en Marca › menu_servicios y a dónde lleva. Los usan la
+   portada y /servicios. Si un servicio cambia de paso o de ruta, se cambia
+   aquí y allá. */
+function metodoPasos(): array {
+  return [
+    1 => [['web', '/servicios/diseno-y-desarrollo-web'], ['seo', '/servicios/posicionamiento-organico'],
+          ['geo', '/servicios/posicionamiento-en-ia'], ['ficha', '/servicios/ficha-de-google']],
+    2 => [['agente', '/servicios-ia/whatsapp'], ['ventas', '/servicios-ia/ventas'], ['funnels', '/servicios/funnels-de-venta']],
+    3 => [['ads', '/servicios/google-ads'], ['chatgpt', '/servicios/chatgpt-ads'],
+          ['canales', '/servicios/estrategia-de-canales'], ['tablero', '/servicios/tablero-de-resultados']],
+  ];
+}
+
+/** Los textos de una página como los ve el sitio: lo guardado en la base
+    sobre los def del registro del panel. */
+function textosPagina(array $paginas, string $slug): array {
+  require_once __DIR__ . '/panel/inc/contenido.php';
+  return contenido_con_respaldo($slug, json_encode($paginas[$slug]['contenido'] ?? null));
+}
+
 if ($path === '/') {
   // 54 caracteres: entra completo en el resultado de Google (ONP-01)
   /* Las preguntas con las que la gente busca proveedor, respondidas por
@@ -194,11 +215,11 @@ if ($path === '/') {
     ['¿Inédito Digital es una agencia de IA o una agencia de marketing?',
      'Las dos cosas, y por diseño. Nació como agencia de marketing digital en Aguascalientes y hoy trabaja como dirección comercial asistida por IA: la inteligencia artificial no es un servicio suelto del catálogo, es lo que audita y corrige el trabajo de marketing cada mes. Por eso aparece en las dos categorías: agencia de marketing digital y agencia de inteligencia artificial aplicada a la operación comercial.'],
     ['¿Qué hace exactamente Inédito Digital?',
-     'Inédito Digital es una agencia de marketing digital y de inteligencia artificial en Aguascalientes. Su servicio se adapta a tres puntos de partida: construir presencia desde cero, mejorar una presencia mal trabajada, o vender más con estrategia de canales y campañas medidas. Todo entrega un tablero conectado a datos reales y una auditoría mensual hecha con IA contra los objetivos que fija la dirección de cada empresa.'],
+     'Inédito Digital es una agencia de marketing digital y de inteligencia artificial en Aguascalientes. Trabaja en tres pasos: que a la empresa la encuentren en Google y en los asistentes de IA, que le escriban y cada mensaje se conteste, y que le compren, midiendo cada canal. Se entra por un diagnóstico con IA que dice por cuál paso empezar. Todo entrega un tablero conectado a datos reales y una auditoría mensual hecha con IA contra los objetivos que fija la dirección de cada empresa.'],
     ['¿Inédito Digital atiende fuera de Aguascalientes?',
      'Sí, trabaja con empresas de toda la República Mexicana. La oficina está en Aguascalientes y ahí se atiende de forma presencial, pero el servicio se presta a distancia sin diferencia: el tablero, la auditoría mensual con IA y las campañas funcionan igual para una empresa de Ciudad de México, Guadalajara, Monterrey, León, Querétaro, San Luis Potosí, Zacatecas, Celaya, Irapuato o Durango. Las juntas de dirección son por videollamada y el tablero se consulta desde donde sea.'],
     ['¿Es confiable Inédito Digital? ¿Qué opinan sus clientes?',
-     'Tiene más de veinte reseñas en Google con calificación de cinco estrellas, y la ficha es pública: se puede entrar a leerlas antes de contratar. Además publica el detalle de cómo trabaja —los cuatro pasos, qué entrega cada nivel de servicio y qué mide el tablero— en lugar de pedir que se le crea. La forma más directa de comprobarlo sin compromiso es pedir la auditoría: entrega hallazgos con evidencia desde la primera semana.'],
+     'Tiene más de veinte reseñas en Google con calificación de cinco estrellas, y la ficha es pública: se puede entrar a leerlas antes de contratar. Además publica el detalle de cómo trabaja —los tres pasos, el ciclo mensual con el que se dirige y qué mide el tablero— en lugar de pedir que se le crea. La forma más directa de comprobarlo sin compromiso es pedir la auditoría: entrega hallazgos con evidencia desde la primera semana.'],
     ['¿Cuánto cuesta trabajar con una agencia de IA en Aguascalientes?',
      'Varía según el punto de partida. Construir presencia desde cero —web, ficha de Google, LinkedIn y tablero base— no cuesta lo mismo que una operación mensual con campañas y auditoría continua. La forma honesta de saberlo es empezar por una auditoría: dice qué está mal con evidencia, y de ahí sale el alcance real y su precio.'],
   ];
@@ -207,7 +228,7 @@ if ($path === '/') {
     $GLOBALS['preguntasHome'])];
   $title = 'Agencia de Marketing Digital con IA en Aguascalientes';
   $desc = 'Agencia de marketing digital en Aguascalientes. Conectamos tus campañas con tus ventas reales y cada mes una IA audita si la estrategia está funcionando.';
-  $bodyBuilder = function() use ($services,$settings,$P,$blog,$resenas) {
+  $bodyBuilder = function() use ($services,$settings,$P,$blog,$resenas,$paginas) {
     $h = '<h1>Inédito Digital · Agencia de Marketing Digital en Aguascalientes</h1>';
     $h .= '<p>Impulsamos tu negocio con estrategias de marketing digital, diseño web e inteligencia artificial. Diseño y desarrollo web, branding, SEO, Google Ads, embudos de venta, chatbots con IA, WhatsApp y e-commerce. Y como agencia de publicidad en Aguascalientes llevamos campañas en Google Ads, Meta y ChatGPT Ads, siempre conectadas a un tablero de resultados.</p>';
     $h .= '<h2>Nuestros servicios</h2><ul>';
@@ -216,7 +237,7 @@ if ($path === '/') {
     // La categoria que define direccion. Va debajo del H1, no en el:
       // arriba se conserva la frase que ya trae trafico.
     $h .= '<h2>Dirección comercial asistida por IA</h2>';
-    $h .= '<p>No vendemos marketing digital genérico. Dirección define los objetivos, todo queda conectado —búsquedas, tráfico, campañas y, donde aplica, la facturación— y una IA audita periódicamente si la estrategia está funcionando. El servicio se adapta al punto en que esté cada empresa: <a href="/servicios">construir, mejorar o vender</a>.</p>';
+    $h .= '<p>No vendemos marketing digital genérico. Dirección define los objetivos, todo queda conectado —búsquedas, tráfico, campañas y, donde aplica, la facturación— y una IA audita periódicamente si la estrategia está funcionando. Trabajamos en tres pasos: <a href="/servicios">que te encuentren, que te escriban y que te compren</a>.</p>';
     // La identidad de IA con todas sus letras: es el posicionamiento que se
     // quiere ganar en SEO y GEO sin soltar el de agencia de marketing.
     $h .= '<h2>Soluciones de inteligencia artificial</h2>';
@@ -228,12 +249,20 @@ if ($path === '/') {
     $h .= '<li><a href="/servicios-ia/marketing">IA para marketing</a> — optimización de campañas sobre datos reales.</li>';
     $h .= '<li><a href="/servicios-ia/ecommerce">IA para e-commerce</a> — convertir más de las visitas que ya tienes.</li>';
     $h .= '</ul>';
-    // Los tres niveles y el tablero: la capa nueva. Para un bot esto no
+    // Los tres pasos y el tablero: la capa nueva. Para un bot esto no
     // existia, y es justo lo que distingue el servicio de una agencia mas.
-    $h .= '<h2>El servicio se adapta a dónde estás</h2>';
-    $h .= '<h3>Nivel 1 · Construir</h3><p>Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base conectado a tus datos reales. La promesa: cuando te busquen, existes y te ves formal.</p>';
-    $h .= '<h3>Nivel 2 · Mejorar</h3><p>Para empresas con web y redes mal trabajadas. La puerta de entrada es una <a href="/servicios/auditoria-con-ia">auditoría con IA</a> que revisa velocidad, indexación, ficha de Google, LinkedIn y visibilidad ante los asistentes, con la evidencia de cada hallazgo. La promesa: te decimos exactamente qué está mal y lo arreglamos.</p>';
-    $h .= '<h3>Nivel 3 · Vender</h3><p>Para empresas que ya tienen todo y quieren resultados. <a href="/servicios/estrategia-de-canales">Estrategia de canales</a> entre venta B2B directa y marketplaces, campañas en Google Ads, <a href="/servicios/chatgpt-ads">ChatGPT Ads</a> y Meta con tablero unificado, y —cuando hay ERP— el cruce de prospectos contra ventas cerradas. La promesa: cada peso invertido se mide contra ventas reales.</p>';
+    // Mismos textos que la sección de la portada y nombres del menú.
+    $hp = textosPagina($paginas, 'home')['pasos'] ?? [];
+    $ms = textosPagina($paginas, 'marca')['menu_servicios'] ?? [];
+    $h .= '<h2>' . e(trim(($hp['titulo_1'] ?? '') . ' ' . ($hp['titulo_2'] ?? ''))) . '</h2><p>' . e($hp['bajada'] ?? '') . '</p>';
+    foreach (metodoPasos() as $n => $items) {
+      $h .= '<h3>Paso 0' . $n . ' · ' . e($ms['paso_' . $n] ?? '') . '</h3><p>' . e($ms['paso_' . $n . '_sub'] ?? '') . '.</p><ul>';
+      foreach ($items as [$k, $ruta]) {
+        $h .= '<li><a href="' . e($ruta) . '">' . e($ms[$k] ?? '') . '</a>: ' . e($ms[$k . '_desc'] ?? '') . '</li>';
+      }
+      $h .= '</ul>';
+    }
+    $h .= '<p><a href="/servicios/auditoria-con-ia">' . e($ms['diag_titulo'] ?? '') . '</a>: ' . e($ms['diag_texto'] ?? '') . '</p>';
     $h .= '<h2>Un tablero, no un reporte en PDF</h2>';
     $h .= '<p>Cada cliente recibe un <a href="/servicios/tablero-de-resultados">tablero de resultados</a> conectado a datos reales: cuántos contactos llegaron y a qué costo, de dónde vienen —buscador, campañas, redes y respuestas de IA—, dónde se cae la gente entre la visita y la venta, y en cuántas respuestas de ChatGPT, Claude, Gemini o Perplexity aparece la marca. Encima corre la auditoría mensual contra los objetivos que puso dirección. No es un PDF armado a mano con capturas: es una conexión directa que cualquiera puede entrar a comprobar.</p>';
     $h .= '<h2>Dónde atendemos</h2>';
@@ -381,21 +410,11 @@ elseif ($seg[0] === 'servicios') {
        diagnóstico y los complementos.
 
        Los textos salen de la base con los respaldos del registro del panel
-       (contenido_con_respaldo), así que aquí no se repite ninguno. Lo que sí
-       va en pareja con src/app/data/metodo.ts es qué servicio va en qué paso
-       y a dónde lleva: si se mueve uno allá, se mueve aquí. */
-    require_once __DIR__ . '/panel/inc/contenido.php';
-    $pc = fn(string $slug): array => contenido_con_respaldo($slug, json_encode($paginas[$slug]['contenido'] ?? null));
-    $sv = $pc('servicios');
-    $ms = $pc('marca')['menu_servicios'] ?? [];
+       (textosPagina), así que aquí no se repite ninguno; qué servicio va en
+       qué paso lo dice metodoPasos(). */
+    $sv = textosPagina($paginas, 'servicios');
+    $ms = textosPagina($paginas, 'marca')['menu_servicios'] ?? [];
     $enc = $sv['encabezado'] ?? []; $met = $sv['metodo'] ?? []; $otr = $sv['otros'] ?? [];
-    $pasos = [
-      1 => [['web', '/servicios/diseno-y-desarrollo-web'], ['seo', '/servicios/posicionamiento-organico'],
-            ['geo', '/servicios/posicionamiento-en-ia'], ['ficha', '/servicios/ficha-de-google']],
-      2 => [['agente', '/servicios-ia/whatsapp'], ['ventas', '/servicios-ia/ventas'], ['funnels', '/servicios/funnels-de-venta']],
-      3 => [['ads', '/servicios/google-ads'], ['chatgpt', '/servicios/chatgpt-ads'],
-            ['canales', '/servicios/estrategia-de-canales'], ['tablero', '/servicios/tablero-de-resultados']],
-    ];
     /* Fuera de los complementos: el diagnóstico, lo que ya está en un paso
        (se suma abajo), el agente que el paso 2 cuenta con otro nombre y la
        página que existe para una búsqueda y no es un servicio. */
@@ -404,7 +423,7 @@ elseif ($seg[0] === 'servicios') {
     $h = '<h1>Servicios · Agencia de marketing digital y publicidad en Aguascalientes</h1>';
     $h .= '<p>' . e($enc['bajada'] ?? '') . '</p>';
     $h .= '<h2>' . e($met['titulo'] ?? '') . '</h2><p>' . e($met['bajada'] ?? '') . '</p>';
-    foreach ($pasos as $n => $items) {
+    foreach (metodoPasos() as $n => $items) {
       $h .= '<h3>' . e(($met['paso'] ?? '') . ' 0' . $n . ' · ' . ($ms['paso_' . $n] ?? '')) . '</h3>';
       $h .= '<p><strong>' . e($ms['paso_' . $n . '_sub'] ?? '') . '.</strong> ' . e($met['p' . $n . '_texto'] ?? '') . '</p>';
       $h .= '<p><strong>' . e($met['se_mide'] ?? '') . '.</strong> ' . e($met['p' . $n . '_mide'] ?? '') . '</p><ul>';

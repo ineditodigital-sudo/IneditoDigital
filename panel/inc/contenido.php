@@ -162,8 +162,8 @@ function registro_paginas(): array {
                         'logos_texto' => ['label' => 'Texto sobre los logos de IA', 'tipo' => 'texto', 'def' => 'Presencia medida en'],
                         'indice_titulo' => ['label' => 'Rótulo sobre la lista de piezas', 'tipo' => 'texto', 'def' => 'Las cuatro piezas del sistema'],
                         'texto'    => ['label' => 'Texto', 'tipo' => 'area', 'def' => 'Somos una agencia de marketing digital y de inteligencia artificial, y nuestra forma de trabajar es un sistema: dirección pone el objetivo, todo lo que tu negocio hace en digital queda conectado, y una IA lo revisa cada mes contra ese objetivo. Casi nadie en Aguascalientes trabaja así.'],
-                        'e1_titulo'=> ['label' => 'Enlace 1 · título', 'tipo' => 'texto', 'def' => 'Los tres niveles de servicio'],
-                        'e1_texto' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Construir, mejorar o vender: según en qué punto estés'],
+                        'e1_titulo'=> ['label' => 'Enlace 1 · título', 'tipo' => 'texto', 'def' => 'Los tres pasos'],
+                        'e1_texto' => ['label' => 'Enlace 1 · texto', 'tipo' => 'texto', 'def' => 'Que te encuentren, que te escriban y que te compren'],
                         'e1_url'   => ['label' => 'Enlace 1 · URL', 'tipo' => 'texto', 'def' => '/servicios'],
                         'e2_titulo'=> ['label' => 'Enlace 2 · título', 'tipo' => 'texto', 'def' => 'Auditoría con IA'],
                         'e2_texto' => ['label' => 'Enlace 2 · texto', 'tipo' => 'texto', 'def' => 'Qué está mal en tu presencia digital, con evidencia'],
@@ -188,23 +188,19 @@ function registro_paginas(): array {
                     ],
                 ],
 
-                'niveles' => [
-                    'nombre' => 'Los tres niveles',
+                /* Los tres pasos (23-sep). Reemplazan a «Los tres niveles»:
+                   la portada cuenta el mismo método que el menú y /servicios.
+                   Los nombres de los pasos y de sus servicios viven en Marca ›
+                   menu_servicios; el botón morado es el del diagnóstico. */
+                'pasos' => [
+                    'nombre' => 'Los tres pasos',
+                    'ayuda'  => 'El nombre de cada paso, su frase y sus servicios se cambian en Marca › «Menú de servicios (los tres pasos)», igual que el botón del diagnóstico.',
                     'campos' => [
-                        'visible'    => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
-                        'titulo_1'   => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'EL SERVICIO SE ADAPTA'],
-                        'titulo_2'   => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'A DÓNDE ESTÁS'],
-                        'bajada'     => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'No es el mismo trabajo para una empresa que no tiene nada que para una que ya invierte y quiere vender más. Estos son los tres puntos de partida.'],
-                        'n1_titulo'  => ['label' => 'Nivel 1 · título', 'tipo' => 'texto', 'def' => 'CONSTRUIR'],
-                        'n1_texto'   => ['label' => 'Nivel 1 · texto', 'tipo' => 'area', 'def' => 'Para empresas sin presencia digital. Web veloz que pasa las mediciones de Google, con SEO, AEO y GEO desde el primer día, ficha de Google, LinkedIn y el tablero base.'],
-                        'n1_promesa' => ['label' => 'Nivel 1 · promesa', 'tipo' => 'texto', 'def' => 'Cuando te busquen, existes y te ves formal.'],
-                        'n2_titulo'  => ['label' => 'Nivel 2 · título', 'tipo' => 'texto', 'def' => 'MEJORAR'],
-                        'n2_texto'   => ['label' => 'Nivel 2 · texto', 'tipo' => 'area', 'def' => 'Para empresas con web y redes mal trabajadas. Empieza con una auditoría que dice exactamente qué está mal, con la evidencia de cada hallazgo.'],
-                        'n2_promesa' => ['label' => 'Nivel 2 · promesa', 'tipo' => 'texto', 'def' => 'Te decimos exactamente qué está mal y lo arreglamos.'],
-                        'n3_titulo'  => ['label' => 'Nivel 3 · título', 'tipo' => 'texto', 'def' => 'VENDER'],
-                        'n3_texto'   => ['label' => 'Nivel 3 · texto', 'tipo' => 'area', 'def' => 'Para empresas que ya tienen todo. Estrategia de canales, campañas medidas en un solo tablero y —con ERP— el cruce de prospectos contra ventas cerradas.'],
-                        'n3_promesa' => ['label' => 'Nivel 3 · promesa', 'tipo' => 'texto', 'def' => 'Cada peso invertido se mide contra ventas reales.'],
-                        'boton'      => ['label' => 'Texto del botón', 'tipo' => 'texto', 'def' => 'VER LOS SERVICIOS'],
+                        'visible'  => ['label' => 'Mostrar esta sección', 'tipo' => 'switch', 'def' => '1'],
+                        'titulo_1' => ['label' => 'Título · parte blanca', 'tipo' => 'texto', 'def' => 'TRES PASOS'],
+                        'titulo_2' => ['label' => 'Título · parte morada', 'tipo' => 'texto', 'def' => 'HASTA LA VENTA'],
+                        'bajada'   => ['label' => 'Bajada', 'tipo' => 'area', 'def' => 'Cada paso se mide antes de dar el siguiente. No tienes que contratar los tres: el diagnóstico te dice por cuál empezar.'],
+                        'boton'    => ['label' => 'Botón a /servicios', 'tipo' => 'texto', 'def' => 'VER LOS TRES PASOS'],
                     ],
                 ],
 
