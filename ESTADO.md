@@ -7,8 +7,9 @@
 
 | | |
 |---|---|
-| Último commit de código | `69e5344` — El asistente no registra un lead sin WhatsApp o correo |
-| En producción | El mismo: `assets/index-UGrtd-HW.js`, publicado y verificado en vivo el 23-sep (menú en español e inglés, asistente y `api/lead.php`) |
+| Último commit de código | `46db562` — La portada cuenta los tres pasos, no los tres niveles |
+| En producción | `5917f7e` — /servicios cuenta el método en tres pasos (`assets/index-Csl9MATb.js`, publicado y verificado en vivo el 23-sep, con la bajada corregida en la base) |
+| Sin publicar | `46db562`: la portada con los tres pasos. Al publicar, correr `.claude/respaldos/2026-09-23-portada_bd.php` en modo `aplicar` (ver Pendientes) |
 | GitHub | La historia se reescribió en local el 22-sep (todo con el autor «Inédito Digital»). Falta subirla con `git push --force-with-lease origin main`: desde esta máquina no se alcanza github.com |
 | Sin commit | Nada de código. Solo archivos sueltos sin trackear (ver Pendientes) |
 | Esperando a Google | La API de Perfil de Empresa, para que las opiniones se actualicen solas (ver Pendientes) |
@@ -264,17 +265,25 @@ Probado en local en español e inglés: número incompleto, correo con acento, c
 
 En vivo (23-sep): el menú en español e inglés; el asistente rechaza «449 12» y «test@correo» sin enviar nada, y con un WhatsApp válido arma el lead con el teléfono (se interceptó en el navegador para no crear uno real); `api/lead.php` contesta 422 con `fields: [phone, email]` a un envío sin contacto, así que no se guarda.
 
-**/servicios en tres pasos** (sin publicar). La página cuenta el mismo método que el menú, con espacio para explicarlo:
+**/servicios en tres pasos** (en vivo desde el 23-sep, `5917f7e`). La página cuenta el mismo método que el menú, con espacio para explicarlo:
 
 - Portada con la bajada nueva y los dos botones de siempre.
 - «Un sistema en tres pasos»: por cada paso, qué gana el cliente, un recuadro «Se mide» y las tarjetas de sus servicios. Los nombres y descripciones de los pasos y servicios salen de Marca › menu_servicios (los mismos del menú); los textos propios de la página, de Contenido › Servicios › «Los tres pasos».
 - «Empieza aquí»: el diagnóstico con IA. Sustituye a «¿En qué punto estás?» (Construir / Mejorar / Vender), que salió de la página y del registro.
 - «Complementos»: los servicios publicados que no están en ningún paso (branding, logo, QR, NFC, expo, espectaculares, LinkedIn). Se calculan solos a partir de los pasos (`otrosServicios` en `data/metodo.ts`). «Chatbots y Agentes» no sale ahí porque es el mismo agente de WhatsApp del paso 2.
 - `render.php` sirve a los robots lo mismo y en el mismo orden, con los textos de la base y los respaldos del registro (`contenido_con_respaldo`); antes listaba también las páginas de ciudad y de giro.
-- La base guardaba como bajada el texto por defecto ORIGINAL («Soluciones digitales integrales que impulsan tu crecimiento…», el def de antes del 24-ago): la bajada con palabras clave nunca se vio. Se cambia al publicar con `.claude/respaldos/2026-09-23-servicios_bd.php` (solo si sigue diciendo uno de los def viejos).
+- La base guardaba como bajada el texto por defecto ORIGINAL («Soluciones digitales integrales que impulsan tu crecimiento…», el def de antes del 24-ago): la bajada con palabras clave nunca se vio. Se cambió el 23-sep con `.claude/respaldos/2026-09-23-servicios_bd.php`, en contenido y borrador; el «antes» quedó en `.claude/respaldos/2026-09-23-antes-de-servicios.txt`.
 - Barrido limpio en los 9 tamaños, en español e inglés, y sin textos en español en la versión en inglés.
 - El asistente, a «¿por dónde empiezo?» o «¿qué me conviene?», ya no contesta con los tres niveles: responde con los tres pasos y el diagnóstico como punto de partida, con los mismos botones que «¿qué hacen?».
 - Revisor de marca: sin reglas rotas. Se corrigió el paso 3, que prometía sin condición «saber qué canal vendió» (eso depende de que el sistema del cliente lo permita, como dice la ficha del tablero). La portada sigue con los tres niveles: pendiente de decidir (abajo).
+
+**La portada con los tres pasos** (`46db562`, sin publicar). Seguía con «El servicio se adapta a dónde estás» (Construir / Mejorar / Vender), y su banda de enfoque mandaba a /servicios con «Los tres niveles de servicio»:
+
+- La sección ahora es «Tres pasos hasta la venta»: tres tarjetas con el paso, su frase y sus servicios como enlaces, y los botones «Pedir diagnóstico» y «Ver los tres pasos». Se edita en Contenido › Inicio › «Los tres pasos»; los nombres, en Marca › menú de servicios.
+- La pieza 01 de «Las cuatro piezas del sistema» pasa a «Los tres pasos · Que te encuentren, que te escriban y que te compren». Está guardada en la base con el texto viejo: `.claude/respaldos/2026-09-23-portada_bd.php` la cambia (probado en modo lectura: encuentra el texto viejo en contenido y en borrador).
+- «El ciclo completo» (Objetivos, Conectar, Auditar, Ajustar) se queda: es el ciclo mensual de dirección, no el método.
+- `render.php`: la portada para robots cuenta los tres pasos, y las preguntas «¿Qué hace exactamente?» y «¿Es confiable?» ya no hablan de niveles. Los pasos se escriben una vez (`metodoPasos()`) y los textos se leen con `textosPagina()`, para la portada y /servicios.
+- Barrido limpio en 9 tamaños y dos idiomas; la única «fuga» en inglés es el nombre de quien dejó una opinión.
 
 **Git**: todos los commits salen como «Inédito Digital <contacto@inedito.digital>». La historia se reescribió el 22-sep; la original está en `.claude/respaldos/2026-09-22-historia-original.bundle` (HEAD anterior `d171fa9`). Los hashes de este documento ya son los nuevos.
 
@@ -309,7 +318,7 @@ Si no fue a propósito, se arregla en el panel: Contenido › Presentación › 
 ### Técnicos (para la siguiente sesión)
 
 - [ ] **Subir la historia reescrita**: `git push --force-with-lease origin main`, desde una máquina que alcance github.com.
-- [ ] Sugerido: la portada todavía cuenta «El servicio se adapta a dónde estás» con tres niveles (Construir / Mejorar / Vender). Decidir si se alinea con los tres pasos o se queda como puerta de entrada.
+- [ ] **Publicar la portada con los tres pasos** (`46db562`) si el cliente la aprueba: `npm run build`, `bash deploy.sh` y luego `bash .claude/respaldos/correr_en_servidor.sh .claude/respaldos/2026-09-23-portada_bd.php aplicar <salida.txt>`. Después, comprobar en vivo la sección y la pieza 01 de la banda de enfoque, en español e inglés.
 - [ ] `docs/GUIA_DEL_PANEL.md` no menciona la sección Presentación.
 - [ ] En inglés solo quedan en español, a propósito, los textos largos de «El fondo del asunto», el blog y lo legal.
 - [ ] Errores viejos de TypeScript que no rompen el build: `TopographyCanvas.tsx` (25), `BlogPostPage.tsx` (1), `PortfolioPage.tsx` (1) y `vite.config.ts` (1).
@@ -355,7 +364,7 @@ Reglas:
 - **Una plantilla para todas las fichas.** Lo que se cambie en `FichaServicio.tsx` se ve en los 26 servicios, las 4 de IA y posicionamiento. Mide los tres tipos antes de entregar, y en la de espectaculares y la de activaciones, que traen bloques propios.
 - **Dos copias** en `services`, `blog_posts` y `portfolio`: el sitio lee `data_json`, y `crud()` escribe las dos. Corre `php scripts/probar_crud.php` antes de desplegar cambios del panel.
 - **`render.php` va junto con el bundle.** Se despliegan juntos; si se desfasan, los leads se duplican o se pierden.
-- **Los tres pasos van en pareja**: `src/app/data/metodo.ts` (menú, asistente y /servicios) y el bloque de `/servicios` en `render.php` (robots). Si un servicio cambia de paso o de ruta, se cambia en los dos.
+- **Los tres pasos van en pareja**: `src/app/data/metodo.ts` (menú, asistente, /servicios y portada) y `metodoPasos()` en `render.php` (robots). Si un servicio cambia de paso o de ruta, se cambia en los dos.
 - **CLI de Remotion:** la carpeta `auditoria/` lo confunde. Pasa siempre la entrada: `npx remotion still src/remotion/index.ts <escena> out.png --frame=150`.
 - **`deploy.sh` se detiene si algún asset no sube** (el FTP a veces corta la sesión) y no toca nada más. Volver a correrlo es seguro.
 - **Navegador de Claude:** el usuario deja una pestaña de ChatGPT abierta. Pasa siempre el `tabId` de la pestaña de pruebas.
